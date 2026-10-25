@@ -4,7 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MHX Tools Hub - Premium Gaming Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+        // লগইন ও রেজিস্ট্রেশন সিস্টেম ফিক্সড কোড
+        function handleLogin(e) {
+            if(e) e.preventDefault();
+            const user = document.getElementById("loginUser") ? document.getElementById("loginUser").value.trim() : "";
+            const pass = document.getElementById("loginPass") ? document.getElementById("loginPass").value.trim() : "";
+            
+            if(!user || !pass) {
+                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user] && db[user].password === pass) {
+                localStorage.setItem("mhx_current_user", user);
+                currentUser = user;
+                alert("সফলভাবে লগইন হয়েছে!");
+                location.reload();
+            } else {
+                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড!");
+            }
+        }
+
+        function handleRegister(e) {
+            if(e) e.preventDefault();
+            const user = document.getElementById("regUser") ? document.getElementById("regUser").value.trim() : "";
+            const pass = document.getElementById("regPass") ? document.getElementById("regPass").value.trim() : "";
+
+            if(!user || !pass) {
+                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user]) {
+                alert("এই ইউজারনেমটি আগে থেকেই রেজিস্টার্ড আছে!");
+                return;
+            }
+
+            db[user] = {
+                password: pass,
+                balance: 1000,
+                spent: 0
+            };
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            localStorage.setItem("mhx_current_user", user);
+            currentUser = user;
+            alert("সফলভাবে অ্যাকাউন্ট তৈরি ও রেজিস্টার সম্পন্ন হয়েছে!");
+            location.reload();
+        }
+
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Hind+Siliguri:wght@400;600;700&display=swap');
@@ -321,17 +372,7 @@
             alert("✅ অ্যাকাউন্ট তৈরি সফল হয়েছে! সাইন ইন করুন।");
             toggleAuth("login");
         }
-        function handleLogin() {
-            const u = document.getElementById("loginUser").value.trim();
-            const p = document.getElementById("loginPass").value.trim();
-            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
-            if(!db[u] || db[u].pass !== p) return alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!");
-            if(db[u].banned) return alert("⚠️ আপনার অ্যাকাউন্ট ব্যান করা আছে!");
-            localStorage.setItem("mhx_active_user", u);
-            currentUser = u;
-            addHistory("সফলভাবে লগইন করা হয়েছে");
-            showDashboard();
-        }
+        
         function logout() {
             localStorage.removeItem("mhx_active_user");
             currentUser = null;
@@ -621,6 +662,57 @@
             }
         }
         window.addEventListener("DOMContentLoaded", initApp);
-    </script>
+    
+        // লগইন ও রেজিস্ট্রেশন সিস্টেম ফিক্সড কোড
+        function handleLogin(e) {
+            if(e) e.preventDefault();
+            const user = document.getElementById("loginUser") ? document.getElementById("loginUser").value.trim() : "";
+            const pass = document.getElementById("loginPass") ? document.getElementById("loginPass").value.trim() : "";
+            
+            if(!user || !pass) {
+                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user] && db[user].password === pass) {
+                localStorage.setItem("mhx_current_user", user);
+                currentUser = user;
+                alert("সফলভাবে লগইন হয়েছে!");
+                location.reload();
+            } else {
+                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড!");
+            }
+        }
+
+        function handleRegister(e) {
+            if(e) e.preventDefault();
+            const user = document.getElementById("regUser") ? document.getElementById("regUser").value.trim() : "";
+            const pass = document.getElementById("regPass") ? document.getElementById("regPass").value.trim() : "";
+
+            if(!user || !pass) {
+                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user]) {
+                alert("এই ইউজারনেমটি আগে থেকেই রেজিস্টার্ড আছে!");
+                return;
+            }
+
+            db[user] = {
+                password: pass,
+                balance: 1000,
+                spent: 0
+            };
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            localStorage.setItem("mhx_current_user", user);
+            currentUser = user;
+            alert("সফলভাবে অ্যাকাউন্ট তৈরি ও রেজিস্টার সম্পন্ন হয়েছে!");
+            location.reload();
+        }
+
+</script>
 </body>
 </html>
