@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Fire Ultimate Tools & Admin Panel</title>
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+    body { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f8fafc; user-select: none; }
+    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.35); }
+    .glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.35); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 flex justify-center items-center p-0 sm:p-4">
+  <div id="root" class="w-full max-w-md min-h-screen sm:min-h-[844px] sm:max-h-[900px] bg-slate-900 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden relative"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const STORAGE_KEYS = { USERS: 'ff_tools_users_v2', CURRENT_USER: 'ff_tools_current_user_v2', TRANSACTIONS: 'ff_tools_tx_v2' };
+    const ADMIN_CREDENTIALS = { email: 'hadimd223@gmail.com', username: 'hadimd223', pass: 'mhxffv11' };
+
+    function App() {
+      const [users, setUsers] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEYS.USERS);
+        return saved ? JSON.parse(saved) : [];
+      });
+      const [currentUser, setCurrentUser] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+        return saved ? JSON.parse(saved) : null;
+      });
+      const [transactions, setTransactions] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
+        return saved ? JSON.parse(saved) : [];
+      });
+
+      const [activeTab, setActiveTab] = useState('home');
+      const [jwtSubTab, setJwtSubTab] = useState('generator');
+      const [authMode, setAuthMode] = useState('login');
+      const [regName, setRegName] = useState('');
+      const [regPass, setRegPass] = useState('');
+      const [loginInput, setLoginInput] = useState('');
+      const [loginPass, setLoginPass] = useState('');
+      const [toast, setToast] = useState(null);
+      const [addStep, setAddStep] = useState(1);
+      const [depositAmount, setDepositAmount] = useState('');
+      const [trxId, setTrxId] = useState('');
+      const [guestPass, setGuestPass] = useState('');
+      const [guestUid, setGuestUid] = useState('');
+      const [generatedToken, setGeneratedToken] = useState('');
+      const [searchUid, setSearchUid] = useState('');
+      const [profileResult, setProfileResult] = useState(null);
+
+      useEffect(() => { localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users)); }, [users]);
+      useEffect(() => {
+        if (currentUser) localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+        else localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+      }, [currentUser]);
+      useEffect(() => { localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions)); }, [transactions]);
+      useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
+
+      const showToast = (msg, type = 'info') => {
+        setToast({ msg, type });
+        setTimeout(() => setToast(null), 3000);
+      };
+
+      const handleRegister = (e) => {
+        e.preventDefault();
+        if (!regName.trim() || !regPass.trim()) { showToast('ইউজারনেম এবং পাসওয়ার্ড লিখুন', 'error'); return; }
+        if (users.find(u => u.name.toLowerCase() === regName.trim().toLowerCase())) { showToast('এই নামের ইউজার আগেই আছে!', 'error'); return; }
+        const newUser = { id: 'FF' + Math.floor(100000 + Math.random() * 900000), name: regName.trim(), password: regPass.trim(), balance: 5.00, isAdmin: false, avatar: regName.trim().charAt(0).toUpperCase() };
+        setUsers([...users, newUser]);
+        setCurrentUser(newUser);
+        showToast('অ্যাকাউন্ট তৈরি হয়েছে! ৫৳ বোনাস যোগ হয়েছে।', 'success');
+        setRegName(''); setRegPass('');
+      };
+
+      const handleLogin = (e) => {
+        e.preventDefault();
+        const input = loginInput.trim(); const pass = loginPass.trim();
+        if ((input === ADMIN_CREDENTIALS.email || input === ADMIN_CREDENTIALS.username) && pass === ADMIN_CREDENTIALS.pass) {
+          setCurrentUser({ id: 'ADMIN_001', name: 'Super Admin', password: ADMIN_CREDENTIALS.pass, balance: 999999, isAdmin: true, avatar: 'A' });
+          setActiveTab('admin');
+          showToast('এডমিন প্যানেলে স্বাগতম!', 'success');
+          return;
+        }
+        const user = users.find(u => (u.name.toLowerCase() === input.toLowerCase() || u.id === input) && u.password === pass);
+        if (user) { setCurrentUser(user); setActiveTab('home'); showToast(`স্বাগতম, ${user.name}!`, 'success'); }
+        else { showToast('ভুল ইউজারনেম বা পাসওয়ার্ড!', 'error'); }
+      };
+
+      const handleLogout = () => { setCurrentUser(null); setActiveTab('home'); showToast('লগআউট সফল হয়েছে'); };
+      const handleDepositSubmit = (e) => {
+        e.preventDefault();
+        if (!trxId.trim() || !depositAmount || Number(depositAmount) <= 0) { showToast('সঠিক অ্যামাউন্ট ও TrxID দিন', 'error'); return; }
+        setTransactions([{ id: 'TRX' + Date.now(), userId: currentUser.id, userName: currentUser.name, userPass: currentUser.password, amount: Number(depositAmount), trxId: trxId.trim(), status: 'pending', date: new Date().toLocaleString('bn-BD') }, ...transactions]);
+        setAddStep(3);
+      };
+      const approvePayment = (trx) => {
+        setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'approved' } : t));
+        setUsers(users.map(u => u.id === trx.userId ? { ...u, balance: u.balance + trx.amount } : u));
+        showToast('পেমেন্ট কনফার্ম করা হয়েছে!');
+      };
+      const cancelPayment = (trx) => {
+        setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'cancelled' } : t));
+        showToast('পেমেন্ট বাতিল করা হয়েছে', 'error');
+      };
+      const updateUserBalance = (userId, change) => {
+        setUsers(users.map(u => u.id === userId ? { ...u, balance: Math.max(0, u.balance + change) } : u));
+        showToast('ব্যালেন্স আপডেট করা হয়েছে');
+      };
+
+      if (!currentUser) {
+        return (
+          <div class="flex-1 flex flex-col justify-center items-center p-6 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+            <div class="w-full max-w-sm glass-card p-6 rounded-2xl border border-orange-500/20 shadow-xl">
+              <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl mx-auto flex items-center justify-center shadow-lg glow-orange mb-3">
+                  <span class="text-3xl font-extrabold text-white">FF</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Free Fire Tool Hub</h1>
+                <p class="text-slate-400 text-sm mt-1">লগইন বা রেজিস্টার করুন</p>
+              </div>
+              <div class="flex bg-slate-800/80 p-1 rounded-xl mb-6 border border-slate-700/50">
+                <button onClick={() => setAuthMode('login')} class={`flex-1 py-2 text-sm font-semibold rounded-lg ${authMode === 'login' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>লগইন</button>
+                <button onClick={() => setAuthMode('register')} class={`flex-1 py-2 text-sm font-semibold rounded-lg ${authMode === 'register' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>রেজিস্টার</button>
+              </div>
+              {authMode === 'login' ? (
+                <form onSubmit={handleLogin} class="space-y-4">
+                  <div><label class="text-xs text-slate-400 mb-1 block">ইউজারনেম বা আইডি</label><input type="text" value={loginInput} onChange={(e) => setLoginInput(e.target.value)} placeholder="Username" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
+                  <div><label class="text-xs text-slate-400 mb-1 block">পাসওয়ার্ড</label><input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} placeholder="Password" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
+                  <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">লগইন করুন</button>
+                </form>
+              ) : (
+                <form onSubmit={handleRegister} class="space-y-4">
+                  <div><label class="text-xs text-slate-400 mb-1 block">ইউজারনেম</label><input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} placeholder="Name" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
+                  <div><label class="text-xs text-slate-400 mb-1 block">পাসওয়ার্ড</label><input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} placeholder="Password" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
+                  <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">অ্যাকাউন্ট খুলুন (বোনাস ৳৫)</button>
+                </form>
+              )}
+            </div>
+            {toast && <div class={`fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-xl text-sm font-semibold z-50 text-white ${toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`}>{toast.msg}</div>}
+          </div>
+        );
+      }
+
+      return (
+        <div class="flex-1 flex flex-col justify-between h-full bg-slate-950 text-slate-100 overflow-hidden relative">
+          <div class="glass-card px-4 py-3 flex items-center justify-between border-b border-slate-800">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-bold text-lg">{currentUser.avatar}</div>
+              <div><h2 class="text-sm font-bold text-slate-100 leading-tight">{currentUser.name}</h2><p class="text-[11px] text-slate-400">UID: <span class="text-orange-400 font-mono">{currentUser.id}</span></p></div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl flex items-center space-x-2">
+                <span class="text-xs text-slate-400">ব্যালেন্স:</span><span class="text-sm font-bold text-emerald-400">৳{currentUser.balance.toFixed(2)}</span>
+                <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">+</button>
+              </div>
+            </div>
+          </div>
+
+          {toast && <div class={`absolute top-16 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-xs font-semibold z-50 text-white ${toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`}>{toast.msg}</div>}
+
+          <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            {activeTab === 'home' && (
+              <div class="space-y-4">
+                <div class="glass-card p-5 rounded-2xl border border-orange-500/30">
+                  <span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">অফার চলছে</span>
+                  <h3 class="text-lg font-bold text-slate-100 mt-2">ফ্রি ফায়ার টুলস হাব</h3>
+                  <p class="text-xs text-slate-400 mt-1">এখানে ২২টি লাইক টুলস, JWT জেনারেটর এবং প্রোফাইল চেকার ব্যবহার করুন।</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border border-slate-800">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2"><div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">♥</div><h4 class="text-sm font-bold text-slate-200">ফ্রি ফায়ার ২২০ টি লাইক</h4></div>
+                    <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">ফ্রি</span>
+                  </div>
+                  <button onClick={() => setActiveTab('tools')} class="w-full bg-slate-800 text-orange-400 border border-orange-500/30 font-semibold py-2.5 rounded-xl text-xs">টুলস ওপেন করুন</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div onClick={() => { setActiveTab('tools'); setJwtSubTab('generator'); }} class="glass-card p-4 rounded-2xl border border-slate-800 cursor-pointer"><div class="text-amber-400 text-lg mb-1">🔑</div><h5 class="text-xs font-bold text-slate-200">JWT Token</h5></div>
+                  <div onClick={() => { setActiveTab('tools'); setJwtSubTab('checker'); }} class="glass-card p-4 rounded-2xl border border-slate-800 cursor-pointer"><div class="text-purple-400 text-lg mb-1">🔍</div><h5 class="text-xs font-bold text-slate-200">Profile Check</h5></div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'tools' && (
+              <div class="space-y-4">
+                <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
+                  <button onClick={() => setJwtSubTab('generator')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'generator' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>JWT Generator</button>
+                  <button onClick={() => setJwtSubTab('checker')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'checker' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>Profile Checker</button>
+                </div>
+                {jwtSubTab === 'generator' && (
+                  <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-200">JWT Token Generator</h3>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির পাসওয়ার্ড</label><input type="password" value={guestPass} onChange={(e) => setGuestPass(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির UID</label><input type="text" value={guestUid} onChange={(e) => setGuestUid(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <button onClick={() => { if(!guestPass || !guestUid) { showToast('সব তথ্য পূরণ করুন', 'error'); return; } setGeneratedToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI' + guestUid + 'IiwiaWF0IjoxNzA4OTk5fQ'); showToast('টোকেন জেনারেট হয়েছে!', 'success'); }} class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs">GENERATE TOKEN</button>
+                    {generatedToken && <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800"><p class="text-[11px] font-mono text-emerald-400 break-all">{generatedToken}</p></div>}
+                  </div>
+                )}
+                {jwtSubTab === 'checker' && (
+                  <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-200">Free Fire Profile Checker</h3>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">ফ্রি ফায়ার আইডি (UID)</label><input type="text" value={searchUid} onChange={(e) => setSearchUid(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <button onClick={() => { if(!searchUid) { showToast('UID দিন', 'error'); return; } setProfileResult({ uid: searchUid, name: 'OP_GAMER_BD', level: 68, likes: 12450, region: 'BD' }); showToast('তথ্য পাওয়া গেছে!'); }} class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-xl text-xs">CHECK PROFILE</button>
+                    {profileResult && <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-xs"><div class="flex justify-between"><span class="text-slate-400">Name:</span> <span class="font-bold text-orange-400">{profileResult.name}</span></div><div class="flex justify-between"><span class="text-slate-400">Likes:</span> <span class="font-bold text-rose-400">{profileResult.likes}</span></div></div>}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'addMoney' && (
+              <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4">
+                <h3 class="text-sm font-bold text-slate-100 flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-pink-500"></span><span>bKash Add Money</span></h3>
+                {addStep === 1 && (
+                  <div class="space-y-3">
+                    <div><label class="text-xs text-slate-400 block mb-1">অ্যামাউন্ট (টাকা)</label><input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
+                    <button onClick={() => { if(!depositAmount || Number(depositAmount) <= 0) { showToast('সঠিক অ্যামাউন্ট দিন', 'error'); return; } setAddStep(2); }} class="w-full bg-pink-600 text-white font-bold py-3 rounded-xl text-xs">পরবর্তী ধাপে যান</button>
+                  </div>
+                )}
+                {addStep === 2 && (
+                  <form onSubmit={handleDepositSubmit} class="space-y-4">
+                    <div class="p-3 bg-pink-950/40 border border-pink-500/30 rounded-xl space-y-1">
+                      <p class="text-xs text-pink-300 font-semibold">বিকাশ পার্সোনাল নাম্বার:</p>
+                      <p class="text-lg font-mono font-bold text-white tracking-wider">01706517597</p>
+                      <p class="text-[11px] text-pink-400/80">টাকা Send Money করে TrxID নিচে দিন।</p>
+                    </div>
+                    <div><label class="text-xs text-slate-400 block mb-1">ট্রানজেকশন আইডি (TrxID)</label><input type="text" value={trxId} onChange={(e) => setTrxId(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase" /></div>
+                    <button type="submit" class="w-full bg-pink-600 text-white font-bold py-3 rounded-xl text-xs">কনফার্ম করুন</button>
+                  </form>
+                )}
+                {addStep === 3 && (
+                  <div class="text-center py-6 space-y-3">
+                    <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-xl font-bold">✓</div>
+                    <h4 class="text-base font-bold text-amber-400">YOUR PAYMENT IS PENDING</h4>
+                    <p class="text-xs text-slate-400">আপনার পেমেন্ট পেন্ডিং রয়েছে। এডমিন চেক করে ব্যালেন্স এড করে দেবেন।</p>
+                    <button onClick={() => setActiveTab('home')} class="bg-slate-800 text-slate-200 px-6 py-2 rounded-xl text-xs font-semibold">হোমে ফিরে যান</button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'profile' && (
+              <div class="space-y-4">
+                <div class="glass-card p-5 rounded-2xl border border-slate-800 text-center">
+                  <div class="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-full flex items-center justify-center text-white font-extrabold text-2xl mx-auto mb-3">{currentUser.avatar}</div>
+                  <h3 class="text-base font-bold text-white">{currentUser.name}</h3>
+                  <p class="text-xs text-slate-400 font-mono mt-0.5">Unique ID: {currentUser.id}</p>
+                  <div class="mt-4 p-3 bg-slate-950/80 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-500 block">YOUR ACCOUNT BALANCE</span><span class="text-lg font-extrabold text-emerald-400">৳{currentUser.balance.toFixed(2)}</span></div>
+                </div>
+                <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden divide-y divide-slate-800/60">
+                  <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-full p-4 text-left flex justify-between items-center"><span class="text-xs font-semibold text-slate-300">টাকা এড করুন (bKash)</span><span class="text-xs text-orange-400">+</span></button>
+                  {currentUser.isAdmin && <button onClick={() => setActiveTab('admin')} class="w-full p-4 text-left flex justify-between items-center bg-purple-950/20"><span class="text-xs font-bold text-purple-400">এডমিন কন্ট্রোল প্যানেল</span><span>★</span></button>}
+                  <button onClick={handleLogout} class="w-full p-4 text-left flex justify-between items-center"><span class="text-xs font-semibold text-rose-400">লগআউট</span><span>➔</span></button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'admin' && currentUser.isAdmin && (
+              <div class="space-y-4">
+                <div class="glass-card p-4 rounded-2xl border border-purple-500/30 bg-purple-950/10">
+                  <h3 class="text-sm font-bold text-purple-300">Admin Control Deck</h3>
+                  <p class="text-[11px] text-slate-400">ইউজার ম্যানেজমেন্ট ও পেমেন্ট রিভিউ</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                  <h4 class="text-xs font-bold text-amber-400 uppercase">পেন্ডিং পেমেন্ট ({transactions.filter(t => t.status === 'pending').length})</h4>
+                  {transactions.filter(t => t.status === 'pending').length === 0 ? (
+                    <p class="text-xs text-slate-500 py-2">কোনো পেন্ডিং পেমেন্ট নেই</p>
+                  ) : (
+                    transactions.filter(t => t.status === 'pending').map(trx => (
+                      <div key={trx.id} class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+                        <div class="flex justify-between font-semibold"><span class="text-slate-200">{trx.userName} (<span class="text-orange-400 font-mono">{trx.userId}</span>)</span><span class="text-emerald-400">৳{trx.amount}</span></div>
+                        <div class="text-[11px] text-slate-400">TrxID: <span class="font-mono text-slate-200">{trx.trxId}</span></div>
+                        <div class="text-[10px] text-slate-500">পাসওয়ার্ড: {trx.userPass}</div>
+                        <div class="flex space-x-2 pt-1">
+                          <button onClick={() => approvePayment(trx)} class="flex-1 bg-emerald-600 text-white font-bold py-1.5 rounded-lg text-[11px]">কনফার্ম</button>
+                          <button onClick={() => cancelPayment(trx)} class="flex-1 bg-rose-600 text-white font-bold py-1.5 rounded-lg text-[11px]">বাতিল</button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                  <h4 class="text-xs font-bold text-slate-300 uppercase">ইউজার তালিকা ({users.length})</h4>
+                  <div class="space-y-2 max-h-60 overflow-y-auto">
+                    {users.map(u => (
+                      <div key={u.id} class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                        <div class="flex justify-between items-center"><span class="font-bold text-slate-200">{u.name}</span><span class="text-emerald-400 font-mono font-bold">৳{u.balance.toFixed(2)}</span></div>
+                        <div class="flex justify-between text-[11px] text-slate-400"><span>ID: {u.id}</span><span>Pass: {u.password}</span></div>
+                        <div class="flex space-x-2 pt-1">
+                          <button onClick={() => updateUserBalance(u.id, 10)} class="flex-1 bg-slate-800 text-emerald-400 py-1 rounded text-[10px] font-bold">+১০৳</button>
+                          <button onClick={() => updateUserBalance(u.id, -10)} class="flex-1 bg-slate-800 text-rose-400 py-1 rounded text-[10px] font-bold">-১০৳</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div class="glass-card border-t border-slate-800 px-6 py-2.5 flex justify-around items-center">
+            <button onClick={() => setActiveTab('home')} class={`flex flex-col items-center space-y-1 ${activeTab === 'home' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🏠</span><span class="text-[10px]">হোম</span></button>
+            <button onClick={() => setActiveTab('tools')} class={`flex flex-col items-center space-y-1 ${activeTab === 'tools' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🛠️</span><span class="text-[10px]">টুলস</span></button>
+            <button onClick={() => setActiveTab('profile')} class={`flex flex-col items-center space-y-1 ${activeTab === 'profile' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">👤</span><span class="text-[10px]">প্রোফাইল</span></button>
+          </div>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
