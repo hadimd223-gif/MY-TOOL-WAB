@@ -492,7 +492,7 @@
 
             try {
                 // Termux API Call
-                const response = await fetch(`${termuxUrl}/generate-jwt`, {
+                const response = await fetch('/api/generate-jwt', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user: u, pass: p })
