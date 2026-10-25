@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Fire Tool Hub - Secure Login</title>
+    <title>Free Fire Tool Hub - Professional Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -21,6 +21,7 @@
             position: relative;
             padding: 20px 0;
         }
+        /* প্রিমিয়াম ভিআইপি ভিডিও ব্যাকগ্রাউন্ড */
         .bg-video-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden;
@@ -32,12 +33,12 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.82);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             z-index: -1;
         }
         .main-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             padding: 15px;
             z-index: 1;
         }
@@ -45,15 +46,15 @@
             background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 22px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-align: center;
         }
         h2 { font-size: 20px; margin-bottom: 5px; color: #f8fafc; }
-        p.subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 20px; }
-        .input-group { text-align: left; margin-bottom: 15px; }
+        p.subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 18px; }
+        .input-group { text-align: left; margin-bottom: 14px; }
         .input-group label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px; }
         .input-group input, .input-group select {
             width: 100%; padding: 12px 14px; background: rgba(15, 23, 42, 0.7);
@@ -97,6 +98,10 @@
             overflow-y: auto; font-size: 12px; color: #94a3b8; text-align: left; border: 1px solid rgba(255, 255, 255, 0.08); margin-top: 10px;
         }
         .history-item { padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .admin-badge-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(59,130,246,0.4);
+        }
     </style>
 </head>
 <body>
@@ -108,13 +113,13 @@
     <div class="bg-overlay"></div>
     <div class="main-container">
         
-        <!-- ১. লগইন সেকশন (প্রথমে এটি দেখাবে) -->
+        <!-- ১. সিকিউরড লগইন সেকশন -->
         <div id="loginSection" class="card-box">
             <h2>🔐 ইউজার লগইন</h2>
-            <p class="subtitle">আপনার অ্যাকাউন্ট দিয়ে প্রবেশ করুন</p>
+            <p class="subtitle">আপনার ইউনিক আইডি ও পাসওয়ার্ড দিন</p>
             
             <div class="input-group">
-                <label>ইউজার আইডি / ইউজারনেম</label>
+                <label>ইউজারনেম / ইউনিক আইডি</label>
                 <input type="text" id="loginUser" autocomplete="off" placeholder="আপনার ইউজার দিন">
             </div>
             <div class="input-group">
@@ -122,52 +127,85 @@
                 <input type="password" id="loginPass" autocomplete="new-password" placeholder="আপনার পাসওয়ার্ড দিন">
             </div>
             <button class="btn-primary" onclick="handleLogin()">লগইন করুন</button>
-            <div class="switch-auth" onclick="switchView('register')">অ্যাকাউন্ট নেই? রেজিস্টার করুন</div>
+            <div class="switch-auth" onclick="switchView('register')">অ্যাকাউন্ট নেই? নতুন রেজিস্টার করুন</div>
         </div>
 
-        <!-- ২. রেজিস্টার সেকশন (নতুন ইউজার তৈরির জন্য) -->
+        <!-- ২. রেজিস্টার সেকশন -->
         <div id="registerSection" class="card-box" style="display: none;">
             <h2>📝 নতুন অ্যাকাউন্ট রেজিস্টার</h2>
-            <p class="subtitle">আপনার ইউনিক কোড ও পাসওয়ার্ড তৈরি করুন</p>
+            <p class="subtitle">নিরাপদ ডেটাবেজের জন্য আপনার তথ্য দিন</p>
             
             <div class="input-group">
-                <label>ইউজারনেম (ইউনিক আইডি)</label>
-                <input type="text" id="regUser" autocomplete="off" placeholder="নতুন ইউজার দিন">
+                <label>নতুন ইউজারনেম</label>
+                <input type="text" id="regUser" autocomplete="off" placeholder="আপনার ইউজার দিন">
             </div>
             <div class="input-group">
-                <label>পাসওয়ার্ড</label>
-                <input type="password" id="regPass" autocomplete="new-password" placeholder="গোপন পাসওয়ার্ড দিন">
+                <label>নতুন পাসওয়ার্ড</label>
+                <input type="password" id="regPass" autocomplete="new-password" placeholder="আপনার পাসওয়ার্ড দিন">
             </div>
             <button class="btn-primary" onclick="handleRegister()">রেজিস্টার সম্পন্ন করুন</button>
             <div class="switch-auth" onclick="switchView('login')">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন</div>
         </div>
 
-        <!-- ৩. মূল ড্যাশবোর্ড সেকশন (লগইন করার পর দেখাবে) -->
+        <!-- ৩. মূল ড্যাশবোর্ড ও অ্যাডমিন প্যানেল সেকশন -->
         <div id="dashboardSection" style="display: none;">
-            <div class="card-box" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 15px;">
-                <div>
-                    <h3 style="font-size: 15px; color: #ff7e5f;" id="welcomeUser">স্বাগতম!</h3>
-                    <p style="font-size: 11px; color: #94a3b8;">সিস্টেম সচল আছে</p>
+            <!-- প্রিমিয়াম হেডার বার (অ্যাডমিন বাটনসহ) -->
+            <div class="card-box" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; margin-bottom: 15px;">
+                <div style="text-align: left;">
+                    <h3 style="font-size: 14px; color: #ff7e5f;" id="welcomeUser">স্বাগতম!</h3>
+                    <p style="font-size: 11px; color: #10b981; font-weight: bold;">🟢 সিস্টেম সচল আছে</p>
                 </div>
-                <button onclick="handleLogout()" style="background: #ef4444; border: none; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;">লগআউট</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="admin-badge-btn" onclick="toggleAdminPanel()">⚙️ অ্যাডমিন</button>
+                    <button onclick="handleLogout()" style="background: #ef4444; border: none; color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;">লগআউট</button>
+                </div>
             </div>
 
-            <div style="font-size: 14px; font-weight: bold; color: #38bdf8; margin: 10px 0 8px 5px; border-left: 4px solid #38bdf8; padding-left: 6px;">FF TOOLS & SERVICES</div>
+            <!-- অ্যাডমিন কন্ট্রোল প্যানেল (লুকানো থাকবে, ক্লিক করলে খুলবে) -->
+            <div id="adminPanelModal" class="card-box" style="display: none; border-color: #38bdf8; text-align: left;">
+                <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 8px;">🛠️ অ্যাডমিন কন্ট্রোল প্যানেল</h3>
+                <p style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">টুল মেইনটেনেন্স ও নতুন বাটন ম্যানেজমেন্ট</p>
+                
+                <div class="input-group">
+                    <label>মেইনটেনেন্সে রাখতে টুল সিলেক্ট করুন</label>
+                    <select id="adminToolSelect" onchange="loadToolStatus()">
+                        <option value="profile_check">প্রোফাইল চেক</option>
+                        <option value="jwt_token">JWT টোকেন</option>
+                        <option value="likes_220">ফ্রি ফায়ার ২২০ লাইক</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>স্ট্যাটাস</label>
+                    <select id="adminStatusSelect">
+                        <option value="false">সচল (Normal)</option>
+                        <option value="true">মেইনটেনেন্সে রাখুন (Maintenance)</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="saveAdminSettings()" style="padding: 10px; font-size: 13px; margin-bottom: 15px;">স্ট্যাটাস সেভ করুন</button>
 
-            <!-- পুতিবাজার স্টাইল বক্স গ্রিড -->
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 12px 0;">
+
+                <h4 style="color: #ff7e5f; font-size: 13px; margin-bottom: 8px;">➕ নতুন বাটন বা টুল যুক্ত করুন</h4>
+                <div class="input-group">
+                    <label>বাটন কি (Key)</label>
+                    <input type="text" id="newBtnKey" placeholder="যেমন: custom_tool">
+                </div>
+                <div class="input-group">
+                    <label>ডিসপ্লে নাম</label>
+                    <input type="text" id="newBtnName" placeholder="যেমন: স্পেশাল টপআপ">
+                </div>
+                <div class="input-group">
+                    <label>থাম্বনেইল ইমোজি বা ছবি</label>
+                    <input type="text" id="newBtnThumb" placeholder="যেমন: 💎">
+                </div>
+                <button class="btn-primary" onclick="addNewToolButton()" style="padding: 10px; font-size: 13px;">বাটন যুক্ত করুন</button>
+            </div>
+
+            <div style="font-size: 13px; font-weight: bold; color: #38bdf8; margin: 12px 0 8px 5px; border-left: 4px solid #38bdf8; padding-left: 6px;">FF TOOLS & SERVICES</div>
+
+            <!-- পুতিবাজার স্টাইল গ্রিড বক্সগুলো -->
             <div class="grid-container" id="dynamicGridContainer">
-                <div class="grid-card" onclick="openTool('profile_check', 'প্রোফাইল চেক')">
-                    <div class="card-thumb">🔍</div>
-                    <span>প্রোফাইল চেক</span>
-                </div>
-                <div class="grid-card" onclick="openTool('jwt_token', 'JWT টোকেন জেনারেট')">
-                    <div class="card-thumb">🔑</div>
-                    <span>JWT টোকেন</span>
-                </div>
-                <div class="grid-card" onclick="openTool('likes_220', 'ফ্রি ফায়ার ২২০ লাইক')">
-                    <div class="card-thumb">❤️</div>
-                    <span>২২০ লাইক</span>
-                </div>
+                <!-- ডাইনামিক্যালি রেন্ডার হবে -->
             </div>
 
             <!-- ইউজার হিস্টরি বক্স -->
@@ -180,60 +218,69 @@
         </div>
     </div>
     <script>
-        // পেজ ভিউ সুইচ করার ফাংশন (লগইন <-> রেজিস্টার)
+        let defaultTools = [
+            { key: "profile_check", name: "প্রোফাইল চেক", thumb: "🔍" },
+            { key: "jwt_token", name: "JWT টোকেন", thumb: "🔑" },
+            { key: "likes_220", name: "২২০ লাইক", thumb: "❤️" }
+        ];
+
+        function getToolsList() {
+            let saved = localStorage.getItem("custom_tools_list");
+            return saved ? JSON.parse(saved) : defaultTools;
+        }
+
+        function renderGrid() {
+            const container = document.getElementById("dynamicGridContainer");
+            const tools = getToolsList();
+            container.innerHTML = tools.map(tool => `
+                <div class="grid-card" onclick="handleToolClick('${tool.key}', '${tool.name}')">
+                    <div class="card-thumb">${tool.thumb}</div>
+                    <span>${tool.name}</span>
+                </div>
+            `).join('');
+        }
+
         function switchView(view) {
             document.getElementById("loginSection").style.display = view === "login" ? "block" : "none";
             document.getElementById("registerSection").style.display = view === "register" ? "block" : "none";
         }
 
-        // ডাটাবেজে ইউজার রেজিস্টার করার লজিক
+        // ডাটাবেজে ইউজার রেজিস্টার
         function handleRegister() {
             const user = document.getElementById("regUser").value.trim();
             const pass = document.getElementById("regPass").value.trim();
-
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return;
-            }
+            if(!user || !pass) { alert("ইউজার এবং পাসওয়ার্ড দিন!"); return; }
 
             let usersDB = JSON.parse(localStorage.getItem("app_users_db") || "{}");
-            if(usersDB[user]) {
-                alert("⚠️ এই ইউজারনেমটি আগেই রেজিস্টার্ড করা আছে! অন্য নাম দিন।");
-                return;
-            }
+            if(usersDB[user]) { alert("⚠️ এই ইউজারনেম আগেই রেজিস্টার্ড!"); return; }
 
-            // ডাটাবেজে ইউজার সেভ করা
             usersDB[user] = pass;
             localStorage.setItem("app_users_db", JSON.stringify(usersDB));
-            alert("✅ সফলভাবে রেজিস্টার সম্পন্ন হয়েছে! এখন লগইন করুন।");
+            alert("✅ সফলভাবে রেজিস্টার হয়েছে! এখন লগইন করুন।");
             switchView("login");
         }
 
-        // লগইন অথেন্টিকেশন চেক লজিক
+        // লগইন অথেন্টিকেশন চেক
         function handleLogin() {
             const user = document.getElementById("loginUser").value.trim();
             const pass = document.getElementById("loginPass").value.trim();
-
             let usersDB = JSON.parse(localStorage.getItem("app_users_db") || "{}");
 
             if(!usersDB[user] || usersDB[user] !== pass) {
-                alert("❌ ভুল ইউজার আইডি বা পাসওয়ার্ড! অথবা অ্যাকাউন্ট রেজিস্টার করা নেই।");
+                alert("❌ ভুল ইউজার আইডি বা পাসওয়ার্ড! অ্যাকাউন্ট রেজিস্টার্ড না থাকলে আগে রেজিস্টার করুন।");
                 return;
             }
 
-            // সফল লগইন হলে সেশন সেভ ও ড্যাশবোর্ড ওপেন
             localStorage.setItem("logged_in_user", user);
             checkSession();
             addHistory("সফলভাবে লগইন করা হয়েছে।");
         }
 
-        // লগআউট লজিক
         function handleLogout() {
             localStorage.removeItem("logged_in_user");
             checkSession();
         }
 
-        // সেশন চেক করে পেজ রেন্ডার করা
         function checkSession() {
             const loggedUser = localStorage.getItem("logged_in_user");
             if(loggedUser) {
@@ -241,6 +288,7 @@
                 document.getElementById("registerSection").style.display = "none";
                 document.getElementById("dashboardSection").style.display = "block";
                 document.getElementById("welcomeUser").innerText = `স্বাগতম, ${loggedUser}!`;
+                renderGrid();
                 renderHistory();
             } else {
                 document.getElementById("loginSection").style.display = "block";
@@ -269,17 +317,54 @@
             }
         }
 
-        // টুল ওপেন করার সময় মেইনটেনেন্স ও অ্যাকশন চেক
-        function openTool(key, name) {
+        // টুল ক্লিক ও মেইনটেনেন্স চেক
+        function handleToolClick(key, name) {
             const isMaintenance = localStorage.getItem("maintenance_" + key) === "true";
             if (isMaintenance) {
                 alert("⚠️ এই অপশনটি এখন মেইনটেনেন্সে আছে!");
                 addHistory(`[মেইনটেনেন্স] ${name} ব্যবহারের চেষ্টা করা হয়েছে।`);
                 return;
             }
-
             addHistory(`${name} টুলটি ওপেন করা হয়েছে।`);
-            alert(`${name} সেকশনে আপনাকে স্বাগতম!`);
+            alert(`${name} সেকশনে আপনাকে স্বাগতম! কাজ চলছে...`);
+        }
+
+        // অ্যাডমিন প্যানেল টগল
+        function toggleAdminPanel() {
+            const modal = document.getElementById("adminPanelModal");
+            modal.style.display = modal.style.display === "block" ? "none" : "block";
+        }
+
+        function loadToolStatus() {
+            const tool = document.getElementById("adminToolSelect").value;
+            const isMaint = localStorage.getItem("maintenance_" + tool) === "true";
+            document.getElementById("adminStatusSelect").value = isMaint ? "true" : "false";
+        }
+
+        function saveAdminSettings() {
+            const tool = document.getElementById("adminToolSelect").value;
+            const status = document.getElementById("adminStatusSelect").value;
+            localStorage.setItem("maintenance_" + tool, status);
+            alert("সফলভাবে স্ট্যাটাস আপডেট করা হয়েছে!");
+            toggleAdminPanel();
+        }
+
+        function addNewToolButton() {
+            let key = document.getElementById("newBtnKey").value.trim();
+            let name = document.getElementById("newBtnName").value.trim();
+            let thumb = document.getElementById("newBtnThumb").value.trim() || "⭐";
+
+            if(!key || !name) { alert("বাটনের কি (Key) এবং নাম দিন!"); return; }
+
+            let tools = getToolsList();
+            tools.push({ key: key, name: name, thumb: thumb });
+            localStorage.setItem("custom_tools_list", JSON.stringify(tools));
+            renderGrid();
+            alert("নতুন বাটন সফলভাবে যুক্ত করা হয়েছে!");
+            document.getElementById("newBtnKey").value = "";
+            document.getElementById("newBtnName").value = "";
+            document.getElementById("newBtnThumb").value = "";
+            toggleAdminPanel();
         }
 
         window.addEventListener("DOMContentLoaded", () => {
