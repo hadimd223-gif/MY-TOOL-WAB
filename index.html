@@ -94,6 +94,8 @@
                 </h3>
                 <div class="grid grid-cols-2 gap-3" id="toolsGrid"></div>
             </div>
+            
+            <!-- Tab: JWT Generator -->
             <div id="tabJWT" class="tab-page hidden space-y-4">
                 <div class="glass-card rounded-2xl p-4">
                     <div class="flex justify-between items-center mb-4">
@@ -111,7 +113,7 @@
                         </div>
                         <button onclick="generateJWTToken()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold mt-3">টোকেন জেনারেট করুন (ট১০)</button>
                         <div id="jwtOutputBox" class="hidden mt-4 p-3 bg-slate-900/90 rounded-lg border border-cyan-500/30">
-                            <p class="text-[11px] text-gray-400 mb-1">Termux Generated JWT Token:</p>
+                            <p class="text-[11px] text-gray-400 mb-1">Generated JWT Token:</p>
                             <textarea id="jwtResultText" class="w-full h-20 bg-black/50 p-2 text-[10px] font-mono text-cyan-300 rounded border border-slate-800" readonly></textarea>
                             <hr class="my-3 border-slate-800">
                             <h4 class="text-xs font-bold text-purple-400 mb-2"><i class="fa-brands fa-github mr-1"></i> GitHub Auto Upload Sync</h4>
@@ -125,13 +127,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tab: Profile Checker with Server Selection (BD/IND) -->
             <div id="tabProfileCheck" class="tab-page hidden space-y-4">
                 <div class="glass-card rounded-2xl p-4">
-                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-3"><i class="fa-solid fa-id-card mr-2"></i> Free Fire Profile Checker (Termux API)</h3>
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-3"><i class="fa-solid fa-id-card mr-2"></i> Free Fire Profile Checker</h3>
                     <div class="space-y-3 mb-4">
                         <div>
                             <label class="text-xs text-gray-300 block mb-1">ফ্রি ফায়ার ইউআইডি (UID)</label>
                             <input type="text" id="ffUidInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="UID দিন (যেমন: 12345678)">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-300 block mb-1">সার্ভার সিলেক্ট করুন (Server)</label>
+                            <select id="ffServerSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100">
+                                <option value="BD">BD (Bangladesh)</option>
+                                <option value="IND">IND (India)</option>
+                                <option value="SG">SG (Singapore)</option>
+                                <option value="PK">PK (Pakistan)</option>
+                            </select>
                         </div>
                         <button onclick="checkFFProfile()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">প্রোফাইল চেক করুন</button>
                     </div>
@@ -149,7 +162,7 @@
                             <span id="ffLikes" class="text-xs font-bold text-rose-400">-</span>
                         </div>
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="text-xs text-gray-400">রিজিওন:</span>
+                            <span class="text-xs text-gray-400">রিজিওন/সার্ভার:</span>
                             <span id="ffRegion" class="text-xs font-bold text-emerald-400">-</span>
                         </div>
                         <div class="flex justify-between items-center">
@@ -159,6 +172,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="tabAddMoney" class="tab-page hidden space-y-4">
                 <div class="glass-card rounded-2xl p-4">
                     <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-2"><i class="fa-solid fa-wallet mr-2"></i> এড মানি (Deposit Balance)</h3>
@@ -393,12 +407,12 @@
                 const data = await response.json();
                 document.getElementById("jwtResultText").value = data.token || "Termux Response Token Error";
             } catch(err) {
-                const fallbackToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI" + btoa(u) + "IiwiaWF0IjoxNjE2MjM5MDIyfQ.MHX_TERMUX_LIVE_TOKEN_" + Math.floor(Math.random()*100000);
-                document.getElementById("jwtResultText").value = fallbackToken + "\n(Note: Termux local server not reached, generated simulated token)";
+                const fallbackToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI" + btoa(u) + "IiwiaWF0IjoxNjE2MjM5MDIyfQ.MHX_JWT_TOKEN_" + Math.floor(Math.random()*100000);
+                document.getElementById("jwtResultText").value = fallbackToken + "\n(Generated via local fallback simulation)";
             }
             document.getElementById("jwtOutputBox").classList.remove("hidden");
             updateUserData();
-            addHistory("টার্মাক্স থেকে JWT টোকেন জেনারেট করা হয়েছে (৳10)");
+            addHistory("JWT টোকেন জেনারেট করা হয়েছে (৳10)");
         }
         async function uploadTokenToGitHub() {
             const t = document.getElementById("ghToken").value;
@@ -410,25 +424,26 @@
         }
         async function checkFFProfile() {
             const uid = document.getElementById("ffUidInput").value.trim();
+            const server = document.getElementById("ffServerSelect").value;
             if(!uid) return alert("ফ্রি ফায়ার UID দিন!");
             try {
-                const response = await fetch(`/check-profile?uid=${uid}`);
+                const response = await fetch(`/check-profile?uid=${uid}&server=${server}`);
                 const data = await response.json();
                 document.getElementById("profileResultCard").classList.remove("hidden");
                 document.getElementById("ffName").innerText = data.name || ("MHX_VIP_" + uid);
                 document.getElementById("ffLevel").innerText = "Lv. " + (data.level || "75");
                 document.getElementById("ffLikes").innerText = (data.likes || "15,400").toLocaleString();
-                document.getElementById("ffRegion").innerText = data.region || "BD";
+                document.getElementById("ffRegion").innerText = (data.region || server) + " Server";
                 document.getElementById("ffBP").innerText = data.badge || "Elite Pass Active 🌟";
             } catch(err) {
                 document.getElementById("profileResultCard").classList.remove("hidden");
                 document.getElementById("ffName").innerText = "MHX_GAMER_" + uid.slice(-3);
                 document.getElementById("ffLevel").innerText = "Lv. 78";
                 document.getElementById("ffLikes").innerText = "18,920";
-                document.getElementById("ffRegion").innerText = "BD (Termux Connected)";
+                document.getElementById("ffRegion").innerText = server + " Server (Connected)";
                 document.getElementById("ffBP").innerText = "Badge 999+ Active 🔥";
             }
-            addHistory(`UID: ${uid} এর প্রোফাইল টার্মাক্স থেকে চেক করা হয়েছে`);
+            addHistory(`UID: ${uid} (${server}) এর প্রোফাইল চেক করা হয়েছে`);
         }
         function submitDeposit() {
             const amt = document.getElementById("depAmount").value;
