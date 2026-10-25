@@ -26,7 +26,7 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
     const API_BASE_URL = "https://f6066045b96566af-122-99-98-43.serveousercontent.com";
-    const STORAGE_KEYS = { USERS: 'ff_tools_users_v2', CURRENT_USER: 'ff_tools_current_user_v2', TRANSACTIONS: 'ff_tools_tx_v2', GH_CONFIG: 'ff_gh_config_v2' };
+    const STORAGE_KEYS = { USERS: 'ff_tools_users_v2', CURRENT_USER: 'ff_tools_current_user_v2', TRANSACTIONS: 'ff_tools_tx_v2' };
     const ADMIN_CREDENTIALS = { email: 'hadimd223@gmail.com', username: 'hadimd223', pass: 'mhxffv11' };
 
     function App() {
@@ -51,12 +51,14 @@
       const [guestPass, setGuestPass] = useState('');
       const [generatedToken, setGeneratedToken] = useState('');
       const [loadingToken, setLoadingToken] = useState(false);
+      
+      // Profile Checker States
       const [searchUid, setSearchUid] = useState('');
       const [profileResult, setProfileResult] = useState(null);
 
-      const [ghOwner, setGhOwner] = useState('');
-      const [ghRepo, setGhRepo] = useState('');
-      const [ghToken, setGhToken] = useState('');
+      const [ghOwner, setGhOwner] = useState('hadimd223-gif');
+      const [ghRepo, setGhRepo] = useState('FF-INFO');
+      const [ghToken, setGhToken] = useState('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');
       const [ghPath, setGhPath] = useState('token.txt');
       const [autoGhStatus, setAutoGhStatus] = useState(false);
 
@@ -121,42 +123,6 @@
         navigator.clipboard.writeText(generatedToken);
         showToast('টোকেন ক্লিপবোর্ডে কপি করা হয়েছে!', 'success');
       };
-
-      const pushToGitHubRepo = async (tokenString) => {
-        try {
-          const fileUrl = `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}`;
-          let sha = "";
-          const getRes = await fetch(fileUrl, { headers: { Authorization: `token ${ghToken}` } });
-          if (getRes.ok) {
-            const getData = await getRes.json();
-            sha = getData.sha;
-          }
-          const contentBase64 = btoa(tokenString);
-          const putRes = await fetch(fileUrl, {
-            method: 'PUT',
-            headers: { Authorization: `token ${ghToken}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: 'Auto-Update JWT Token via FF Tools', content: contentBase64, sha: sha || undefined })
-          });
-          if (putRes.ok) showToast('গিটহাব ফাইলের টোকেন অটো-আপডেট হয়েছে!', 'success');
-          else showToast('গিটহাবে আপডেট করতে সমস্যা হয়েছে', 'error');
-        } catch (e) { showToast('GitHub API Error!', 'error'); }
-      };
-
-      useEffect(() => {
-        let timer = null;
-        if (autoGhStatus) {
-          timer = setInterval(async () => {
-            if (guestUid && guestPass && ghOwner && ghRepo && ghToken) {
-              try {
-                const res = await fetch(`${API_BASE_URL}/token?uid=${guestUid}&password=${guestPass}`);
-                const data = await res.json();
-                if (data.status === 'success' && data.token) await pushToGitHubRepo(data.token);
-              } catch (e) {}
-            }
-          }, 3600000);
-        }
-        return () => clearInterval(timer);
-      }, [autoGhStatus, guestUid, guestPass, ghOwner, ghRepo, ghToken]);
 
       if (!currentUser) {
         return (
@@ -227,7 +193,7 @@
               <div class="space-y-4">
                 <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
                   <button onClick={() => setJwtSubTab('generator')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'generator' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>জেনারেট JWT টোকেন</button>
-                  <button onClick={() => setJwtSubTab('github')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'github' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>JWT অটো আপডেট গিটহাব</button>
+                  <button onClick={() => setJwtSubTab('checker')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'checker' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>প্রোফাইল চেকার</button>
                 </div>
 
                 {jwtSubTab === 'generator' && (
@@ -247,14 +213,79 @@
                   </div>
                 )}
 
-                {jwtSubTab === 'github' && (
+                {jwtSubTab === 'checker' && (
                   <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
-                    <h3 class="text-xs font-bold text-slate-200">GitHub Access Config</h3>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">GitHub Username</label><input type="text" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} placeholder="your-username" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">Repository Name</label><input type="text" value={ghRepo} onChange={(e) => setGhRepo(e.target.value)} placeholder="ff-token-repo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">GitHub Personal Access Token (PAT)</label><input type="password" value={ghToken} onChange={(e) => setGhToken(e.target.value)} placeholder="ghp_xxxxxxxxxxxx" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">File Path (Location)</label><input type="text" value={ghPath} onChange={(e) => setGhPath(e.target.value)} placeholder="token.txt" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <button onClick={() => { if(!ghOwner || !ghRepo || !ghToken || !guestUid || !guestPass) return showToast('সকল ফিল্ড পূরণ করুন', 'error'); setAutoGhStatus(!autoGhStatus); showToast(autoGhStatus ? 'অটো আপডেট বন্ধ করা হয়েছে' : '১ ঘণ্টা পর পর অটো-আপডেট চালু হয়েছে!', 'success'); }} class={`w-full font-bold py-2.5 rounded-xl text-xs ${autoGhStatus ? 'bg-rose-600' : 'bg-emerald-600'} text-white`}>{autoGhStatus ? 'অটো আপডেট বন্ধ করুন' : 'কনফার্ম করুন (প্রতি ১ ঘণ্টা পর পর অটো আপডেট)'}</button>
+                    <h3 class="text-xs font-bold text-slate-200">ফ্রি ফায়ার প্রোফাইল ইনফো চেকার</h3>
+                    <div>
+                      <label class="text-[11px] text-slate-400 block mb-1">খেলোয়াড়ের ইউআইডি (UID) দিন</label>
+                      <input 
+                        type="text" 
+                        value={searchUid}
+                        onChange={(e) => setSearchUid(e.target.value)}
+                        placeholder="যেমন: 8323937347"
+                        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500" 
+                      />
+                    </div>
+
+                    <button 
+                      onClick={async () => {
+                        if (!searchUid) {
+                          showToast('দয়া করে একটি সঠিক UID দিন', 'error');
+                          return;
+                        }
+                        setLoadingToken(true);
+                        try {
+                          const res = await fetch(`${API_BASE_URL}/info?uid=${searchUid}`);
+                          const data = await res.json();
+                          if (data.status === 'success') {
+                            setProfileResult(data);
+                            showToast('আইডির তথ্য সফলভাবে লোড হয়েছে!', 'success');
+                          } else {
+                            showToast(data.error || 'প্লেয়ার পাওয়া যায়নি', 'error');
+                            setProfileResult(null);
+                          }
+                        } catch (err) {
+                          showToast('টার্মাক্স সার্ভারে সংযোগ স্থাপন করা যায়নি', 'error');
+                        } finally {
+                          setLoadingToken(false);
+                        }
+                      }}
+                      class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs shadow glow-purple">
+                      {loadingToken ? 'তথ্য খোঁজা হচ্ছে...' : 'প্রোফাইল চেক করুন'}
+                    </button>
+
+                    {profileResult && (
+                      <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                          <span class="text-slate-400">প্লেয়ারের নাম:</span> 
+                          <span class="font-bold text-orange-400">{profileResult.BasicInformation.Name}</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                          <span class="text-slate-400">ইউআইডি (UID):</span> 
+                          <span class="font-mono text-white">{profileResult.BasicInformation.UID}</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                          <span class="text-slate-400">লেভেল:</span> 
+                          <span class="font-bold text-emerald-400">{profileResult.BasicInformation.Level}</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                          <span class="text-slate-400">মোট লাইক:</span> 
+                          <span class="font-bold text-rose-400">{profileResult.BasicInformation.Likes}</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                          <span class="text-slate-400">গিল্ডের নাম:</span> 
+                          <span class="font-bold text-amber-400">{profileResult.GuildInformation.GuildName}</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1">
+                          <span class="text-slate-400">রিজিয়ন (Region):</span> 
+                          <span class="font-bold text-slate-200">{profileResult.BasicInformation.Region}</span>
+                        </div>
+                        <div class="flex justify-between">
+                          <span class="text-slate-400">ব্যান স্ট্যাটাস:</span> 
+                          <span class="font-bold">{profileResult.BanStatus}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
