@@ -6,15 +6,7 @@
     <title>MHX Tools Hub - Premium Gaming Dashboard</title>
     <script src="https://cdn.tailwindcss.com">
         // লগইন ও রেজিস্ট্রেশন সিস্টেম ফিক্সড কোড
-        function handleLogin(e) {
-            if(e) e.preventDefault();
-            const user = document.getElementById("loginUser") ? document.getElementById("loginUser").value.trim() : "";
-            const pass = document.getElementById("loginPass") ? document.getElementById("loginPass").value.trim() : "";
-            
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user] && db[user].password === pass) {
@@ -27,15 +19,7 @@
             }
         }
 
-        function handleRegister(e) {
-            if(e) e.preventDefault();
-            const user = document.getElementById("regUser") ? document.getElementById("regUser").value.trim() : "";
-            const pass = document.getElementById("regPass") ? document.getElementById("regPass").value.trim() : "";
-
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user]) {
@@ -57,18 +41,7 @@
 
 
         // লগইন ও রেজিস্টার গ্লোবাল হ্যান্ডলার
-        function handleLogin(event) {
-            if (event) event.preventDefault();
-            const userInput = document.getElementById("loginUser") || document.getElementById("username");
-            const passInput = document.getElementById("loginPass") || document.getElementById("password");
-            
-            const user = userInput ? userInput.value.trim() : "";
-            const pass = passInput ? passInput.value.trim() : "";
-            
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return false;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user] && db[user].password === pass) {
@@ -82,18 +55,7 @@
             return false;
         }
 
-        function handleRegister(event) {
-            if (event) event.preventDefault();
-            const userInput = document.getElementById("regUser") || document.getElementById("regUsername");
-            const passInput = document.getElementById("regPass") || document.getElementById("regPassword");
-
-            const user = userInput ? userInput.value.trim() : "";
-            const pass = passInput ? passInput.value.trim() : "";
-
-            if(!user || !pass) {
-                alert("দয়া করে রেজিস্ট্রেশনের জন্য ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return false;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user]) {
@@ -122,6 +84,105 @@
             const regForm = document.getElementById("regForm");
             if(regForm) regForm.addEventListener("submit", handleRegister);
         });
+
+
+        // --- PERFECT AUTH SYSTEM START ---
+        function handleLogin(e) {
+            if(e) e.preventDefault();
+            
+            // সব সম্ভাব্য আইডি ও ক্লাস টার্গেট করে ইনপুট ভ্যালু বের করা
+            const userInputs = document.querySelectorAll("input[type=\"text\"], input:not([type])");
+            let user = "", pass = "";
+            
+            // ইনপুট ফিল্ডগুলো থেকে ইউজারনেম ও পাসওয়ার্ড খুঁজে নেওয়া
+            const uField = document.getElementById("loginUser") || document.getElementById("username") || document.querySelector(".login-user");
+            const pField = document.getElementById("loginPass") || document.getElementById("password") || document.querySelector(".login-pass");
+            
+            if(uField) user = uField.value.trim();
+            if(pField) pass = pField.value.trim();
+            
+            // যদি আইডি দিয়ে না পাওয়া যায়, তবে ফর্মের ভেতর থেকে ইনপুট নেওয়া
+            if(!user || !pass) {
+                const activeForm = e ? e.target.closest("form") : document.querySelector("form");
+                if(activeForm) {
+                    const inputs = activeForm.querySelectorAll("input");
+                    if(inputs.length >= 2) {
+                        user = inputs[0].value.trim();
+                        pass = inputs[1].value.trim();
+                    }
+                }
+            }
+
+            if(!user || !pass) {
+                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return false;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user] && db[user].password === pass) {
+                localStorage.setItem("mhx_current_user", user);
+                window.currentUser = user;
+                alert("সফলভাবে লগইন হয়েছে!");
+                location.reload();
+            } else {
+                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড! দয়া করে সঠিক তথ্য দিন বা রেজিস্টার করুন।");
+            }
+            return false;
+        }
+
+        function handleRegister(e) {
+            if(e) e.preventDefault();
+            
+            let user = "", pass = "";
+            const uField = document.getElementById("regUser") || document.getElementById("regUsername") || document.querySelector(".reg-user");
+            const pField = document.getElementById("regPass") || document.getElementById("regPassword") || document.querySelector(".reg-pass");
+            
+            if(uField) user = uField.value.trim();
+            if(pField) pass = pField.value.trim();
+
+            if(!user || !pass) {
+                const activeForm = e ? e.target.closest("form") : document.querySelector("form");
+                if(activeForm) {
+                    const inputs = activeForm.querySelectorAll("input");
+                    if(inputs.length >= 2) {
+                        user = inputs[0].value.trim();
+                        pass = inputs[1].value.trim();
+                    }
+                }
+            }
+
+            if(!user || !pass) {
+                alert("দয়া করে রেজিস্ট্রেশনের জন্য ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return false;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user]) {
+                alert("এই ইউজারনেমটি আগে থেকেই রেজিস্টার্ড আছে!");
+                return false;
+            }
+
+            db[user] = {
+                password: pass,
+                balance: 1000,
+                spent: 0
+            };
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            localStorage.setItem("mhx_current_user", user);
+            window.currentUser = user;
+            alert("সফলভাবে অ্যাকাউন্ট তৈরি ও রেজিস্টার সম্পন্ন হয়েছে!");
+            location.reload();
+            return false;
+        }
+
+        // গ্লোবালি উইন্ডোতে ফাংশনগুলো বাইন্ড করে দেওয়া যাতে onclick বা onsubmit এ সরাসরি কাজ করে
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("MHX Auth System Loaded Successfully.");
+        });
+        // --- PERFECT AUTH SYSTEM END ---
 
 </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -429,17 +490,7 @@
             document.getElementById("loginForm").classList.toggle("hidden", view !== "login");
             document.getElementById("registerForm").classList.toggle("hidden", view !== "register");
         }
-        function handleRegister() {
-            const u = document.getElementById("regUser").value.trim();
-            const p = document.getElementById("regPass").value.trim();
-            if(!u || !p) return alert("ইউজার ও পাসওয়ার্ড দিন!");
-            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
-            if(db[u]) return alert("এই ইউজারনেম ইতিমধ্যে বিদ্যমান!");
-            db[u] = { pass: p, balance: 50, spent: 0, uid: 'MHX-' + Math.floor(1000 + Math.random() * 9000), banned: false };
-            localStorage.setItem("mhx_users", JSON.stringify(db));
-            alert("✅ অ্যাকাউন্ট তৈরি সফল হয়েছে! সাইন ইন করুন।");
-            toggleAuth("login");
-        }
+        
         
         function logout() {
             localStorage.removeItem("mhx_active_user");
@@ -732,15 +783,7 @@
         window.addEventListener("DOMContentLoaded", initApp);
     
         // লগইন ও রেজিস্ট্রেশন সিস্টেম ফিক্সড কোড
-        function handleLogin(e) {
-            if(e) e.preventDefault();
-            const user = document.getElementById("loginUser") ? document.getElementById("loginUser").value.trim() : "";
-            const pass = document.getElementById("loginPass") ? document.getElementById("loginPass").value.trim() : "";
-            
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user] && db[user].password === pass) {
@@ -753,15 +796,7 @@
             }
         }
 
-        function handleRegister(e) {
-            if(e) e.preventDefault();
-            const user = document.getElementById("regUser") ? document.getElementById("regUser").value.trim() : "";
-            const pass = document.getElementById("regPass") ? document.getElementById("regPass").value.trim() : "";
-
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user]) {
@@ -783,18 +818,7 @@
 
 
         // লগইন ও রেজিস্টার গ্লোবাল হ্যান্ডলার
-        function handleLogin(event) {
-            if (event) event.preventDefault();
-            const userInput = document.getElementById("loginUser") || document.getElementById("username");
-            const passInput = document.getElementById("loginPass") || document.getElementById("password");
-            
-            const user = userInput ? userInput.value.trim() : "";
-            const pass = passInput ? passInput.value.trim() : "";
-            
-            if(!user || !pass) {
-                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return false;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user] && db[user].password === pass) {
@@ -808,18 +832,7 @@
             return false;
         }
 
-        function handleRegister(event) {
-            if (event) event.preventDefault();
-            const userInput = document.getElementById("regUser") || document.getElementById("regUsername");
-            const passInput = document.getElementById("regPass") || document.getElementById("regPassword");
-
-            const user = userInput ? userInput.value.trim() : "";
-            const pass = passInput ? passInput.value.trim() : "";
-
-            if(!user || !pass) {
-                alert("দয়া করে রেজিস্ট্রেশনের জন্য ইউজারনেম এবং পাসওয়ার্ড দিন!");
-                return false;
-            }
+        
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[user]) {
@@ -848,6 +861,105 @@
             const regForm = document.getElementById("regForm");
             if(regForm) regForm.addEventListener("submit", handleRegister);
         });
+
+
+        // --- PERFECT AUTH SYSTEM START ---
+        function handleLogin(e) {
+            if(e) e.preventDefault();
+            
+            // সব সম্ভাব্য আইডি ও ক্লাস টার্গেট করে ইনপুট ভ্যালু বের করা
+            const userInputs = document.querySelectorAll("input[type=\"text\"], input:not([type])");
+            let user = "", pass = "";
+            
+            // ইনপুট ফিল্ডগুলো থেকে ইউজারনেম ও পাসওয়ার্ড খুঁজে নেওয়া
+            const uField = document.getElementById("loginUser") || document.getElementById("username") || document.querySelector(".login-user");
+            const pField = document.getElementById("loginPass") || document.getElementById("password") || document.querySelector(".login-pass");
+            
+            if(uField) user = uField.value.trim();
+            if(pField) pass = pField.value.trim();
+            
+            // যদি আইডি দিয়ে না পাওয়া যায়, তবে ফর্মের ভেতর থেকে ইনপুট নেওয়া
+            if(!user || !pass) {
+                const activeForm = e ? e.target.closest("form") : document.querySelector("form");
+                if(activeForm) {
+                    const inputs = activeForm.querySelectorAll("input");
+                    if(inputs.length >= 2) {
+                        user = inputs[0].value.trim();
+                        pass = inputs[1].value.trim();
+                    }
+                }
+            }
+
+            if(!user || !pass) {
+                alert("দয়া করে ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return false;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user] && db[user].password === pass) {
+                localStorage.setItem("mhx_current_user", user);
+                window.currentUser = user;
+                alert("সফলভাবে লগইন হয়েছে!");
+                location.reload();
+            } else {
+                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড! দয়া করে সঠিক তথ্য দিন বা রেজিস্টার করুন।");
+            }
+            return false;
+        }
+
+        function handleRegister(e) {
+            if(e) e.preventDefault();
+            
+            let user = "", pass = "";
+            const uField = document.getElementById("regUser") || document.getElementById("regUsername") || document.querySelector(".reg-user");
+            const pField = document.getElementById("regPass") || document.getElementById("regPassword") || document.querySelector(".reg-pass");
+            
+            if(uField) user = uField.value.trim();
+            if(pField) pass = pField.value.trim();
+
+            if(!user || !pass) {
+                const activeForm = e ? e.target.closest("form") : document.querySelector("form");
+                if(activeForm) {
+                    const inputs = activeForm.querySelectorAll("input");
+                    if(inputs.length >= 2) {
+                        user = inputs[0].value.trim();
+                        pass = inputs[1].value.trim();
+                    }
+                }
+            }
+
+            if(!user || !pass) {
+                alert("দয়া করে রেজিস্ট্রেশনের জন্য ইউজারনেম এবং পাসওয়ার্ড দিন!");
+                return false;
+            }
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[user]) {
+                alert("এই ইউজারনেমটি আগে থেকেই রেজিস্টার্ড আছে!");
+                return false;
+            }
+
+            db[user] = {
+                password: pass,
+                balance: 1000,
+                spent: 0
+            };
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            localStorage.setItem("mhx_current_user", user);
+            window.currentUser = user;
+            alert("সফলভাবে অ্যাকাউন্ট তৈরি ও রেজিস্টার সম্পন্ন হয়েছে!");
+            location.reload();
+            return false;
+        }
+
+        // গ্লোবালি উইন্ডোতে ফাংশনগুলো বাইন্ড করে দেওয়া যাতে onclick বা onsubmit এ সরাসরি কাজ করে
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("MHX Auth System Loaded Successfully.");
+        });
+        // --- PERFECT AUTH SYSTEM END ---
 
 </script>
 </body>
