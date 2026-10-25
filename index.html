@@ -123,13 +123,6 @@
                         <div>
                             <label class="text-xs text-gray-300 block mb-1">গেস্ট পাসওয়ার্ড (Password)</label>
                             <input type="password" id="jwtPass" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Guest Password দিন">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-300 block mb-1">টার্মাক্স এপিআই ইউআরএল (Termux API URL)</label>
-                            <input type="text" id="termuxApiUrl" value="http://localhost:8080" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="যেমন: http://localhost:8080">
-                        </div>
-                        <button onclick="generateJWTToken()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">টার্মাক্সে জেনারেট করুন (৳10)</button>
-
                         <div id="jwtOutputBox" class="hidden mt-4 p-3 bg-slate-900/90 rounded-lg border border-cyan-500/30">
                             <p class="text-[11px] text-gray-400 mb-1">Termux Generated JWT Token:</p>
                             <textarea id="jwtResultText" class="w-full h-20 bg-black/50 p-2 text-[10px] font-mono text-cyan-300 rounded border border-slate-800" readonly></textarea>
