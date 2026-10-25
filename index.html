@@ -123,6 +123,8 @@
                         <div>
                             <label class="text-xs text-gray-300 block mb-1">গেস্ট পাসওয়ার্ড (Password)</label>
                             <input type="password" id="jwtPass" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Guest Password দিন">
+                        </div>
+
                         <div id="jwtOutputBox" class="hidden mt-4 p-3 bg-slate-900/90 rounded-lg border border-cyan-500/30">
                             <p class="text-[11px] text-gray-400 mb-1">Termux Generated JWT Token:</p>
                             <textarea id="jwtResultText" class="w-full h-20 bg-black/50 p-2 text-[10px] font-mono text-cyan-300 rounded border border-slate-800" readonly></textarea>
@@ -150,10 +152,6 @@
                             <label class="text-xs text-gray-300 block mb-1">ফ্রি ফায়ার ইউআইডি (UID)</label>
                             <input type="text" id="ffUidInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="UID দিন (যেমন: 12345678)">
                         </div>
-                        <div>
-                            <label class="text-xs text-gray-300 
-                        </div>
-                        <button onclick="checkFFProfile()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">টার্মাক্স থেকে প্রোফাইল চেক করুন</button>
                     </div>
 
                     <div id="profileResultCard" class="hidden bg-slate-900/90 border border-cyan-500/40 rounded-xl p-4 space-y-2">
@@ -499,10 +497,6 @@
             document.getElementById("jwtOutputBox").classList.remove("hidden");
             updateUserData();
             addHistory("টার্মাক্স থেকে JWT টোকেন জেনারেট করা হয়েছে (৳10)");
-            alert("✅ টার্মাক্স এপিআই সফলভাবে টোকেন রিসিভ করেছে!");
-        }
-
-        function uploadTokenToGitHub() {
             const t = document.getElementById("ghToken").value;
             const r = document.getElementById("ghRepo").value;
             const p = document.getElementById("ghPath").value;
