@@ -420,12 +420,69 @@
             addHistory("টার্মাক্স এপিআই থেকে রিয়েল JWT টোকেন জেনারেট করা হয়েছে (৳10)");
         }
         async function uploadTokenToGitHub() {
-            const t = document.getElementById("ghToken").value;
-            const r = document.getElementById("ghRepo").value;
-            const p = document.getElementById("ghPath").value;
-            if(!t || !r || !p) return alert("গিটহাবের সকল ফিল্ড ফিলাপ করুন!");
-            addHistory("গিটহাবে টোকেন আপলোড করা হয়েছে (" + r + ")");
-            alert("🚀 গিটহাব রিপোজিটরিতে সফলভাবে টোকেন সিঙ্ক সম্পন্ন হয়েছে!");
+            const token = document.getElementById("ghToken").value.trim();
+            const repo = document.getElementById("ghRepo").value.trim();
+            const path = document.getElementById("ghPath").value.trim();
+            const jwtToken = document.getElementById("jwtResultText").value.trim();
+
+            if (!token || !repo || !path) {
+                return alert("দয়া করে গিটহাব টোকেন, রিপো এবং পাথ সঠিকভাবে দিন!");
+            }
+            if (!jwtToken) {
+                return alert("আগে JWT টোকেন জেনারেট করুন!");
+            }
+
+            try {
+                const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
+                let sha = "";
+
+                // প্রথমে চেক করা ফাইলটি আগে থেকে আছে কিনা (SHA পাওয়ার জন্য)
+                const getRes = await fetch(apiUrl, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Accept": "application/vnd.github+json"
+                    }
+                });
+
+                if (getRes.ok) {
+                    const fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                // ফাইলের ভেতরের কন্টেন্ট JSON ফরম্যাটে প্রস্তুত করা
+                const fileContentObj = {
+                    jwt_token: jwtToken,
+                    updated_at: new Date().toISOString(),
+                    generated_by: "MHX Tools Hub"
+                };
+                const contentEncoded = btoa(JSON.stringify(fileContentObj, null, 2));
+
+                // গিটহাবে ফাইল ক্রিয়েট বা আপডেট করার জন্য PUT রিকোয়েস্ট পাঠানো
+                const putRes = await fetch(apiUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Accept": "application/vnd.github+json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: "Auto update JWT token via MHX Tools Hub",
+                        content: contentEncoded,
+                        sha: sha ? sha : undefined
+                    })
+                });
+
+                const putData = await putRes.json();
+
+                if (putRes.ok) {
+                    alert("🚀 গিটহাবে সফলভাবে রিয়েল-টাইমে JWT টোকেন আপডেট ও সিঙ্ক হয়েছে!");
+                    addHistory(`গিটহাবে টোকেন সিঙ্ক করা হয়েছে (${path})`);
+                } else {
+                    alert("❌ গিটহাব আপডেট ফেইল করেছে: " + (putData.message || "Unknown error"));
+                }
+            } catch (err) {
+                alert("⚠️ গিটহাব এপিআই কানেকشن এরর: " + err.message);
+            }
         }
         async function checkFFProfile() {
             const uid = document.getElementById("ffUidInput").value.trim();
