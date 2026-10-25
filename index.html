@@ -9,7 +9,6 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
@@ -23,25 +22,17 @@
   </style>
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100 flex justify-center items-center p-0 sm:p-4">
-  <div id="root" class="w-full max-w-md min-h-screen sm:min-h-[844px] sm:max-h-[900px] bg-slate-900 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden relative"></div>
+  <div id="root" class="w-full max-w-md min-h-screen sm:min-h-[844px] bg-slate-900 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden relative"></div>
   <script type="text/babel">
     const { useState, useEffect } = React;
-    const STORAGE_KEYS = { USERS: 'ff_tools_users_v2', CURRENT_USER: 'ff_tools_current_user_v2', TRANSACTIONS: 'ff_tools_tx_v2' };
+    const API_BASE_URL = "https://cdcce283345f2ea7-122-99-98-43.serveousercontent.com";
+    const STORAGE_KEYS = { USERS: 'ff_tools_users_v2', CURRENT_USER: 'ff_tools_current_user_v2', TRANSACTIONS: 'ff_tools_tx_v2', GH_CONFIG: 'ff_gh_config_v2' };
     const ADMIN_CREDENTIALS = { email: 'hadimd223@gmail.com', username: 'hadimd223', pass: 'mhxffv11' };
 
     function App() {
-      const [users, setUsers] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.USERS);
-        return saved ? JSON.parse(saved) : [];
-      });
-      const [currentUser, setCurrentUser] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-        return saved ? JSON.parse(saved) : null;
-      });
-      const [transactions, setTransactions] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-        return saved ? JSON.parse(saved) : [];
-      });
+      const [users, setUsers] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]'));
+      const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER) || 'null'));
+      const [transactions, setTransactions] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '[]'));
 
       const [activeTab, setActiveTab] = useState('home');
       const [jwtSubTab, setJwtSubTab] = useState('generator');
@@ -51,14 +42,23 @@
       const [loginInput, setLoginInput] = useState('');
       const [loginPass, setLoginPass] = useState('');
       const [toast, setToast] = useState(null);
+      
       const [addStep, setAddStep] = useState(1);
       const [depositAmount, setDepositAmount] = useState('');
       const [trxId, setTrxId] = useState('');
-      const [guestPass, setGuestPass] = useState('');
+
       const [guestUid, setGuestUid] = useState('');
+      const [guestPass, setGuestPass] = useState('');
       const [generatedToken, setGeneratedToken] = useState('');
+      const [loadingToken, setLoadingToken] = useState(false);
       const [searchUid, setSearchUid] = useState('');
       const [profileResult, setProfileResult] = useState(null);
+
+      const [ghOwner, setGhOwner] = useState('');
+      const [ghRepo, setGhRepo] = useState('');
+      const [ghToken, setGhToken] = useState('');
+      const [ghPath, setGhPath] = useState('token.txt');
+      const [autoGhStatus, setAutoGhStatus] = useState(false);
 
       useEffect(() => { localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users)); }, [users]);
       useEffect(() => {
@@ -66,22 +66,20 @@
         else localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
       }, [currentUser]);
       useEffect(() => { localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions)); }, [transactions]);
-      useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
 
       const showToast = (msg, type = 'info') => {
         setToast({ msg, type });
-        setTimeout(() => setToast(null), 3000);
+        setTimeout(() => setToast(null), 3500);
       };
 
       const handleRegister = (e) => {
         e.preventDefault();
-        if (!regName.trim() || !regPass.trim()) { showToast('ইউজারনেম এবং পাসওয়ার্ড লিখুন', 'error'); return; }
-        if (users.find(u => u.name.toLowerCase() === regName.trim().toLowerCase())) { showToast('এই নামের ইউজার আগেই আছে!', 'error'); return; }
+        if (!regName.trim() || !regPass.trim()) return showToast('ইউজারনেম এবং পাসওয়ার্ড দিন', 'error');
+        if (users.find(u => u.name.toLowerCase() === regName.trim().toLowerCase())) return showToast('এই নামের ইউজার আগেই রেজিস্টার করেছে!', 'error');
         const newUser = { id: 'FF' + Math.floor(100000 + Math.random() * 900000), name: regName.trim(), password: regPass.trim(), balance: 5.00, isAdmin: false, avatar: regName.trim().charAt(0).toUpperCase() };
         setUsers([...users, newUser]);
         setCurrentUser(newUser);
-        showToast('অ্যাকাউন্ট তৈরি হয়েছে! ৫৳ বোনাস যোগ হয়েছে।', 'success');
-        setRegName(''); setRegPass('');
+        showToast('অ্যাকাউন্ট তৈরি সফল! ৳৫ বোনাস যোগ হয়েছে।', 'success');
       };
 
       const handleLogin = (e) => {
@@ -90,45 +88,84 @@
         if ((input === ADMIN_CREDENTIALS.email || input === ADMIN_CREDENTIALS.username) && pass === ADMIN_CREDENTIALS.pass) {
           setCurrentUser({ id: 'ADMIN_001', name: 'Super Admin', password: ADMIN_CREDENTIALS.pass, balance: 999999, isAdmin: true, avatar: 'A' });
           setActiveTab('admin');
-          showToast('এডমিন প্যানেলে স্বাগতম!', 'success');
-          return;
+          return showToast('এডমিন প্যানেলে স্বাগতম!', 'success');
         }
         const user = users.find(u => (u.name.toLowerCase() === input.toLowerCase() || u.id === input) && u.password === pass);
         if (user) { setCurrentUser(user); setActiveTab('home'); showToast(`স্বাগতম, ${user.name}!`, 'success'); }
-        else { showToast('ভুল ইউজারনেম বা পাসওয়ার্ড!', 'error'); }
+        else showToast('ভুল ইউজারনেম বা পাসওয়ার্ড!', 'error');
       };
 
-      const handleLogout = () => { setCurrentUser(null); setActiveTab('home'); showToast('লগআউট সফল হয়েছে'); };
-      const handleDepositSubmit = (e) => {
-        e.preventDefault();
-        if (!trxId.trim() || !depositAmount || Number(depositAmount) <= 0) { showToast('সঠিক অ্যামাউন্ট ও TrxID দিন', 'error'); return; }
-        setTransactions([{ id: 'TRX' + Date.now(), userId: currentUser.id, userName: currentUser.name, userPass: currentUser.password, amount: Number(depositAmount), trxId: trxId.trim(), status: 'pending', date: new Date().toLocaleString('bn-BD') }, ...transactions]);
-        setAddStep(3);
+      const handleLogout = () => { setCurrentUser(null); setActiveTab('home'); showToast('লগআউট করা হয়েছে'); };
+
+      const handleFetchJWT = async () => {
+        if (!guestUid || !guestPass) return showToast('UID এবং পাসওয়ার্ড প্রদান করুন', 'error');
+        setLoadingToken(true);
+        try {
+          const res = await fetch(`${API_BASE_URL}/token?uid=${guestUid}&password=${guestPass}`);
+          const data = await res.json();
+          if (data.status === 'success' && data.token) {
+            setGeneratedToken(data.token);
+            showToast('JWT টোকেন সফলভাবে জেনারেট হয়েছে!', 'success');
+          } else {
+            showToast(data.error || 'টোকেন জেনারেট হতে ব্যর্থ হয়েছে', 'error');
+          }
+        } catch (err) {
+          showToast('টার্মাক্স সার্ভারে সংযোগ পাওয়া যায়নি!', 'error');
+        } finally {
+          setLoadingToken(false);
+        }
       };
-      const approvePayment = (trx) => {
-        setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'approved' } : t));
-        setUsers(users.map(u => u.id === trx.userId ? { ...u, balance: u.balance + trx.amount } : u));
-        showToast('পেমেন্ট কনফার্ম করা হয়েছে!');
+
+      const handleCopyToken = () => {
+        if (!generatedToken) return;
+        navigator.clipboard.writeText(generatedToken);
+        showToast('টোকেন ক্লিপবোর্ডে কপি করা হয়েছে!', 'success');
       };
-      const cancelPayment = (trx) => {
-        setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'cancelled' } : t));
-        showToast('পেমেন্ট বাতিল করা হয়েছে', 'error');
+
+      const pushToGitHubRepo = async (tokenString) => {
+        try {
+          const fileUrl = `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}`;
+          let sha = "";
+          const getRes = await fetch(fileUrl, { headers: { Authorization: `token ${ghToken}` } });
+          if (getRes.ok) {
+            const getData = await getRes.json();
+            sha = getData.sha;
+          }
+          const contentBase64 = btoa(tokenString);
+          const putRes = await fetch(fileUrl, {
+            method: 'PUT',
+            headers: { Authorization: `token ${ghToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: 'Auto-Update JWT Token via FF Tools', content: contentBase64, sha: sha || undefined })
+          });
+          if (putRes.ok) showToast('গিটহাব ফাইলের টোকেন অটো-আপডেট হয়েছে!', 'success');
+          else showToast('গিটহাবে আপডেট করতে সমস্যা হয়েছে', 'error');
+        } catch (e) { showToast('GitHub API Error!', 'error'); }
       };
-      const updateUserBalance = (userId, change) => {
-        setUsers(users.map(u => u.id === userId ? { ...u, balance: Math.max(0, u.balance + change) } : u));
-        showToast('ব্যালেন্স আপডেট করা হয়েছে');
-      };
+
+      useEffect(() => {
+        let timer = null;
+        if (autoGhStatus) {
+          timer = setInterval(async () => {
+            if (guestUid && guestPass && ghOwner && ghRepo && ghToken) {
+              try {
+                const res = await fetch(`${API_BASE_URL}/token?uid=${guestUid}&password=${guestPass}`);
+                const data = await res.json();
+                if (data.status === 'success' && data.token) await pushToGitHubRepo(data.token);
+              } catch (e) {}
+            }
+          }, 3600000);
+        }
+        return () => clearInterval(timer);
+      }, [autoGhStatus, guestUid, guestPass, ghOwner, ghRepo, ghToken]);
 
       if (!currentUser) {
         return (
           <div class="flex-1 flex flex-col justify-center items-center p-6 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
             <div class="w-full max-w-sm glass-card p-6 rounded-2xl border border-orange-500/20 shadow-xl">
               <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl mx-auto flex items-center justify-center shadow-lg glow-orange mb-3">
-                  <span class="text-3xl font-extrabold text-white">FF</span>
-                </div>
+                <div class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl mx-auto flex items-center justify-center shadow-lg glow-orange mb-3 text-white font-extrabold text-2xl">FF</div>
                 <h1 class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Free Fire Tool Hub</h1>
-                <p class="text-slate-400 text-sm mt-1">লগইন বা রেজিস্টার করুন</p>
+                <p class="text-slate-400 text-sm mt-1">লগইন বা অ্যাকাউন্ট রেজিস্টার করুন</p>
               </div>
               <div class="flex bg-slate-800/80 p-1 rounded-xl mb-6 border border-slate-700/50">
                 <button onClick={() => setAuthMode('login')} class={`flex-1 py-2 text-sm font-semibold rounded-lg ${authMode === 'login' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>লগইন</button>
@@ -136,19 +173,19 @@
               </div>
               {authMode === 'login' ? (
                 <form onSubmit={handleLogin} class="space-y-4">
-                  <div><label class="text-xs text-slate-400 mb-1 block">ইউজারনেম বা আইডি</label><input type="text" value={loginInput} onChange={(e) => setLoginInput(e.target.value)} placeholder="Username" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
-                  <div><label class="text-xs text-slate-400 mb-1 block">পাসওয়ার্ড</label><input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} placeholder="Password" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
+                  <div><label class="text-xs text-slate-400 block mb-1">ইমেইল / ইউজারনেম</label><input type="text" value={loginInput} onChange={(e) => setLoginInput(e.target.value)} placeholder="hadimd223" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
+                  <div><label class="text-xs text-slate-400 block mb-1">পাসওয়ার্ড</label><input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} placeholder="mhxffv11" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
                   <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">লগইন করুন</button>
                 </form>
               ) : (
                 <form onSubmit={handleRegister} class="space-y-4">
-                  <div><label class="text-xs text-slate-400 mb-1 block">ইউজারনেম</label><input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} placeholder="Name" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
-                  <div><label class="text-xs text-slate-400 mb-1 block">পাসওয়ার্ড</label><input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} placeholder="Password" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
-                  <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">অ্যাকাউন্ট খুলুন (বোনাস ৳৫)</button>
+                  <div><label class="text-xs text-slate-400 block mb-1">ইউজারনেম</label><input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} placeholder="আপনার নাম" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
+                  <div><label class="text-xs text-slate-400 block mb-1">পাসওয়ার্ড</label><input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} placeholder="পাসওয়ার্ড" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
+                  <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">রেজিস্টার করুন (বোনাস ৳৫)</button>
                 </form>
               )}
             </div>
-            {toast && <div class={`fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-xl text-sm font-semibold z-50 text-white ${toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`}>{toast.msg}</div>}
+            {toast && <div class={`fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-xl text-xs font-semibold z-50 text-white ${toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`}>{toast.msg}</div>}
           </div>
         );
       }
@@ -160,11 +197,9 @@
               <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-bold text-lg">{currentUser.avatar}</div>
               <div><h2 class="text-sm font-bold text-slate-100 leading-tight">{currentUser.name}</h2><p class="text-[11px] text-slate-400">UID: <span class="text-orange-400 font-mono">{currentUser.id}</span></p></div>
             </div>
-            <div class="flex items-center space-x-2">
-              <div class="bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl flex items-center space-x-2">
-                <span class="text-xs text-slate-400">ব্যালেন্স:</span><span class="text-sm font-bold text-emerald-400">৳{currentUser.balance.toFixed(2)}</span>
-                <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">+</button>
-              </div>
+            <div class="bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl flex items-center space-x-2">
+              <span class="text-xs text-slate-400">ব্যালেন্স:</span><span class="text-sm font-bold text-emerald-400">৳{currentUser.balance.toFixed(2)}</span>
+              <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">+</button>
             </div>
           </div>
 
@@ -176,7 +211,7 @@
                 <div class="glass-card p-5 rounded-2xl border border-orange-500/30">
                   <span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">অফার চলছে</span>
                   <h3 class="text-lg font-bold text-slate-100 mt-2">ফ্রি ফায়ার টুলস হাব</h3>
-                  <p class="text-xs text-slate-400 mt-1">এখানে ২২টি লাইক টুলস, JWT জেনারেটর এবং প্রোফাইল চেকার ব্যবহার করুন।</p>
+                  <p class="text-xs text-slate-400 mt-1">এখানে ২২টি লাইক টুলস, JWT জেনারেটর এবং প্রোফাইল চেকার ব্যবহার করতে পারবেন।</p>
                 </div>
                 <div class="glass-card p-4 rounded-2xl border border-slate-800">
                   <div class="flex items-center justify-between mb-3">
@@ -185,34 +220,41 @@
                   </div>
                   <button onClick={() => setActiveTab('tools')} class="w-full bg-slate-800 text-orange-400 border border-orange-500/30 font-semibold py-2.5 rounded-xl text-xs">টুলস ওপেন করুন</button>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                  <div onClick={() => { setActiveTab('tools'); setJwtSubTab('generator'); }} class="glass-card p-4 rounded-2xl border border-slate-800 cursor-pointer"><div class="text-amber-400 text-lg mb-1">🔑</div><h5 class="text-xs font-bold text-slate-200">JWT Token</h5></div>
-                  <div onClick={() => { setActiveTab('tools'); setJwtSubTab('checker'); }} class="glass-card p-4 rounded-2xl border border-slate-800 cursor-pointer"><div class="text-purple-400 text-lg mb-1">🔍</div><h5 class="text-xs font-bold text-slate-200">Profile Check</h5></div>
-                </div>
               </div>
             )}
 
             {activeTab === 'tools' && (
               <div class="space-y-4">
                 <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
-                  <button onClick={() => setJwtSubTab('generator')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'generator' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>JWT Generator</button>
-                  <button onClick={() => setJwtSubTab('checker')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'checker' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>Profile Checker</button>
+                  <button onClick={() => setJwtSubTab('generator')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'generator' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>জেনারেট JWT টোকেন</button>
+                  <button onClick={() => setJwtSubTab('github')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'github' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>JWT অটো আপডেট গিটহাব</button>
                 </div>
+
                 {jwtSubTab === 'generator' && (
                   <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
-                    <h3 class="text-sm font-bold text-slate-200">JWT Token Generator</h3>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির পাসওয়ার্ড</label><input type="password" value={guestPass} onChange={(e) => setGuestPass(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির UID</label><input type="text" value={guestUid} onChange={(e) => setGuestUid(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <button onClick={() => { if(!guestPass || !guestUid) { showToast('সব তথ্য পূরণ করুন', 'error'); return; } setGeneratedToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI' + guestUid + 'IiwiaWF0IjoxNzA4OTk5fQ'); showToast('টোকেন জেনারেট হয়েছে!', 'success'); }} class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs">GENERATE TOKEN</button>
-                    {generatedToken && <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800"><p class="text-[11px] font-mono text-emerald-400 break-all">{generatedToken}</p></div>}
+                    <h3 class="text-xs font-bold text-slate-200">গেস্ট আইডির ইনফরমেশন দিন</h3>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির UID</label><input type="text" value={guestUid} onChange={(e) => setGuestUid(e.target.value)} placeholder="e.g. 8323937347" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির পাসওয়ার্ড</label><input type="password" value={guestPass} onChange={(e) => setGuestPass(e.target.value)} placeholder="Password" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <button onClick={handleFetchJWT} disabled={loadingToken} class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs">{loadingToken ? 'জেনারেট হচ্ছে...' : 'GENERATE YOUR TOKEN'}</button>
+
+                    {generatedToken && (
+                      <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+                        <p class="text-[10px] text-slate-400">Generated JWT Token:</p>
+                        <p class="text-[11px] font-mono text-emerald-400 break-all bg-slate-900 p-2 rounded">{generatedToken}</p>
+                        <button onClick={handleCopyToken} class="w-full bg-slate-800 text-orange-400 font-bold py-1.5 rounded-lg text-xs border border-orange-500/30">📋 টোকেন কপি করুন</button>
+                      </div>
+                    )}
                   </div>
                 )}
-                {jwtSubTab === 'checker' && (
+
+                {jwtSubTab === 'github' && (
                   <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
-                    <h3 class="text-sm font-bold text-slate-200">Free Fire Profile Checker</h3>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">ফ্রি ফায়ার আইডি (UID)</label><input type="text" value={searchUid} onChange={(e) => setSearchUid(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <button onClick={() => { if(!searchUid) { showToast('UID দিন', 'error'); return; } setProfileResult({ uid: searchUid, name: 'OP_GAMER_BD', level: 68, likes: 12450, region: 'BD' }); showToast('তথ্য পাওয়া গেছে!'); }} class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-xl text-xs">CHECK PROFILE</button>
-                    {profileResult && <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-xs"><div class="flex justify-between"><span class="text-slate-400">Name:</span> <span class="font-bold text-orange-400">{profileResult.name}</span></div><div class="flex justify-between"><span class="text-slate-400">Likes:</span> <span class="font-bold text-rose-400">{profileResult.likes}</span></div></div>}
+                    <h3 class="text-xs font-bold text-slate-200">GitHub Access Config</h3>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">GitHub Username</label><input type="text" value={ghOwner} onChange={(e) => setGhOwner(e.target.value)} placeholder="your-username" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">Repository Name</label><input type="text" value={ghRepo} onChange={(e) => setGhRepo(e.target.value)} placeholder="ff-token-repo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">GitHub Personal Access Token (PAT)</label><input type="password" value={ghToken} onChange={(e) => setGhToken(e.target.value)} placeholder="ghp_xxxxxxxxxxxx" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <div><label class="text-[11px] text-slate-400 block mb-1">File Path (Location)</label><input type="text" value={ghPath} onChange={(e) => setGhPath(e.target.value)} placeholder="token.txt" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
+                    <button onClick={() => { if(!ghOwner || !ghRepo || !ghToken || !guestUid || !guestPass) return showToast('সকল ফিল্ড পূরণ করুন', 'error'); setAutoGhStatus(!autoGhStatus); showToast(autoGhStatus ? 'অটো আপডেট বন্ধ করা হয়েছে' : '১ ঘণ্টা পর পর অটো-আপডেট চালু হয়েছে!', 'success'); }} class={`w-full font-bold py-2.5 rounded-xl text-xs ${autoGhStatus ? 'bg-rose-600' : 'bg-emerald-600'} text-white`}>{autoGhStatus ? 'অটো আপডেট বন্ধ করুন' : 'কনফার্ম করুন (প্রতি ১ ঘণ্টা পর পর অটো আপডেট)'}</button>
                   </div>
                 )}
               </div>
@@ -220,98 +262,58 @@
 
             {activeTab === 'addMoney' && (
               <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4">
-                <h3 class="text-sm font-bold text-slate-100 flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-pink-500"></span><span>bKash Add Money</span></h3>
+                <h3 class="text-sm font-bold text-slate-100">bKash Add Money</h3>
                 {addStep === 1 && (
                   <div class="space-y-3">
-                    <div><label class="text-xs text-slate-400 block mb-1">অ্যামাউন্ট (টাকা)</label><input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" /></div>
-                    <button onClick={() => { if(!depositAmount || Number(depositAmount) <= 0) { showToast('সঠিক অ্যামাউন্ট দিন', 'error'); return; } setAddStep(2); }} class="w-full bg-pink-600 text-white font-bold py-3 rounded-xl text-xs">পরবর্তী ধাপে যান</button>
+                    <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} placeholder="অ্যামাউন্ট দিন" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" />
+                    <button onClick={() => { if(!depositAmount || Number(depositAmount)<=0) return showToast('সঠিক অ্যামাউন্ট দিন', 'error'); setAddStep(2); }} class="w-full bg-pink-600 font-bold py-3 rounded-xl text-xs text-white">পরবর্তী ধাপ</button>
                   </div>
                 )}
                 {addStep === 2 && (
-                  <form onSubmit={handleDepositSubmit} class="space-y-4">
-                    <div class="p-3 bg-pink-950/40 border border-pink-500/30 rounded-xl space-y-1">
-                      <p class="text-xs text-pink-300 font-semibold">বিকাশ পার্সোনাল নাম্বার:</p>
-                      <p class="text-lg font-mono font-bold text-white tracking-wider">01706517597</p>
-                      <p class="text-[11px] text-pink-400/80">টাকা Send Money করে TrxID নিচে দিন।</p>
-                    </div>
-                    <div><label class="text-xs text-slate-400 block mb-1">ট্রানজেকশন আইডি (TrxID)</label><input type="text" value={trxId} onChange={(e) => setTrxId(e.target.value)} class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase" /></div>
-                    <button type="submit" class="w-full bg-pink-600 text-white font-bold py-3 rounded-xl text-xs">কনফার্ম করুন</button>
-                  </form>
+                  <div class="space-y-3">
+                    <div class="p-3 bg-pink-950/40 border border-pink-500/30 rounded-xl"><p class="text-xs text-pink-300">বিকাশ পার্সোনাল:</p><p class="text-lg font-mono font-bold text-white">01706517597</p></div>
+                    <input type="text" value={trxId} onChange={(e) => setTrxId(e.target.value)} placeholder="TrxID দিন" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase" />
+                    <button onClick={() => { if(!trxId) return showToast('TrxID দিন', 'error'); setTransactions([{ id: 'TRX' + Date.now(), userId: currentUser.id, userName: currentUser.name, userPass: currentUser.password, amount: Number(depositAmount), trxId, status: 'pending' }, ...transactions]); setAddStep(3); }} class="w-full bg-pink-600 font-bold py-3 rounded-xl text-xs text-white">কনফার্ম করুন</button>
+                  </div>
                 )}
                 {addStep === 3 && (
-                  <div class="text-center py-6 space-y-3">
-                    <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-xl font-bold">✓</div>
-                    <h4 class="text-base font-bold text-amber-400">YOUR PAYMENT IS PENDING</h4>
-                    <p class="text-xs text-slate-400">আপনার পেমেন্ট পেন্ডিং রয়েছে। এডমিন চেক করে ব্যালেন্স এড করে দেবেন।</p>
-                    <button onClick={() => setActiveTab('home')} class="bg-slate-800 text-slate-200 px-6 py-2 rounded-xl text-xs font-semibold">হোমে ফিরে যান</button>
-                  </div>
+                  <div class="text-center py-6 space-y-2"><h4 class="text-amber-400 font-bold">YOUR PAYMENT IS PENDING</h4><button onClick={() => setActiveTab('home')} class="bg-slate-800 text-xs px-4 py-2 rounded-xl mt-2 text-white">হোমে যান</button></div>
                 )}
               </div>
             )}
 
             {activeTab === 'profile' && (
-              <div class="space-y-4">
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 text-center">
-                  <div class="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-full flex items-center justify-center text-white font-extrabold text-2xl mx-auto mb-3">{currentUser.avatar}</div>
-                  <h3 class="text-base font-bold text-white">{currentUser.name}</h3>
-                  <p class="text-xs text-slate-400 font-mono mt-0.5">Unique ID: {currentUser.id}</p>
-                  <div class="mt-4 p-3 bg-slate-950/80 rounded-xl border border-slate-800"><span class="text-[10px] text-slate-500 block">YOUR ACCOUNT BALANCE</span><span class="text-lg font-extrabold text-emerald-400">৳{currentUser.balance.toFixed(2)}</span></div>
-                </div>
-                <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden divide-y divide-slate-800/60">
-                  <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-full p-4 text-left flex justify-between items-center"><span class="text-xs font-semibold text-slate-300">টাকা এড করুন (bKash)</span><span class="text-xs text-orange-400">+</span></button>
-                  {currentUser.isAdmin && <button onClick={() => setActiveTab('admin')} class="w-full p-4 text-left flex justify-between items-center bg-purple-950/20"><span class="text-xs font-bold text-purple-400">এডমিন কন্ট্রোল প্যানেল</span><span>★</span></button>}
-                  <button onClick={handleLogout} class="w-full p-4 text-left flex justify-between items-center"><span class="text-xs font-semibold text-rose-400">লগআউট</span><span>➔</span></button>
-                </div>
+              <div class="glass-card p-5 rounded-2xl border border-slate-800 text-center space-y-3">
+                <div class="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-full flex items-center justify-center text-white font-extrabold text-2xl mx-auto">{currentUser.avatar}</div>
+                <h3 class="text-base font-bold text-white">{currentUser.name}</h3>
+                <p class="text-xs text-slate-400 font-mono">ID: {currentUser.id}</p>
+                <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-full bg-slate-800 py-3 rounded-xl text-xs font-semibold text-orange-400 border border-orange-500/30">টাকা এড করুন (bKash)</button>
+                {currentUser.isAdmin && <button onClick={() => setActiveTab('admin')} class="w-full bg-purple-950/40 text-purple-300 py-3 rounded-xl text-xs font-bold border border-purple-500/30">এডমিন প্যানেল</button>}
+                <button onClick={handleLogout} class="w-full bg-rose-950/30 text-rose-400 py-3 rounded-xl text-xs font-semibold">লগআউট</button>
               </div>
             )}
 
             {activeTab === 'admin' && currentUser.isAdmin && (
               <div class="space-y-4">
-                <div class="glass-card p-4 rounded-2xl border border-purple-500/30 bg-purple-950/10">
-                  <h3 class="text-sm font-bold text-purple-300">Admin Control Deck</h3>
-                  <p class="text-[11px] text-slate-400">ইউজার ম্যানেজমেন্ট ও পেমেন্ট রিভিউ</p>
-                </div>
+                <div class="glass-card p-4 rounded-2xl border border-purple-500/30"><h3 class="text-sm font-bold text-purple-300">Admin Control Deck</h3></div>
                 <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
                   <h4 class="text-xs font-bold text-amber-400 uppercase">পেন্ডিং পেমেন্ট ({transactions.filter(t => t.status === 'pending').length})</h4>
-                  {transactions.filter(t => t.status === 'pending').length === 0 ? (
-                    <p class="text-xs text-slate-500 py-2">কোনো পেন্ডিং পেমেন্ট নেই</p>
-                  ) : (
-                    transactions.filter(t => t.status === 'pending').map(trx => (
-                      <div key={trx.id} class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
-                        <div class="flex justify-between font-semibold"><span class="text-slate-200">{trx.userName} (<span class="text-orange-400 font-mono">{trx.userId}</span>)</span><span class="text-emerald-400">৳{trx.amount}</span></div>
-                        <div class="text-[11px] text-slate-400">TrxID: <span class="font-mono text-slate-200">{trx.trxId}</span></div>
-                        <div class="text-[10px] text-slate-500">পাসওয়ার্ড: {trx.userPass}</div>
-                        <div class="flex space-x-2 pt-1">
-                          <button onClick={() => approvePayment(trx)} class="flex-1 bg-emerald-600 text-white font-bold py-1.5 rounded-lg text-[11px]">কনফার্ম</button>
-                          <button onClick={() => cancelPayment(trx)} class="flex-1 bg-rose-600 text-white font-bold py-1.5 rounded-lg text-[11px]">বাতিল</button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-                <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
-                  <h4 class="text-xs font-bold text-slate-300 uppercase">ইউজার তালিকা ({users.length})</h4>
-                  <div class="space-y-2 max-h-60 overflow-y-auto">
-                    {users.map(u => (
-                      <div key={u.id} class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 text-xs">
-                        <div class="flex justify-between items-center"><span class="font-bold text-slate-200">{u.name}</span><span class="text-emerald-400 font-mono font-bold">৳{u.balance.toFixed(2)}</span></div>
-                        <div class="flex justify-between text-[11px] text-slate-400"><span>ID: {u.id}</span><span>Pass: {u.password}</span></div>
-                        <div class="flex space-x-2 pt-1">
-                          <button onClick={() => updateUserBalance(u.id, 10)} class="flex-1 bg-slate-800 text-emerald-400 py-1 rounded text-[10px] font-bold">+১০৳</button>
-                          <button onClick={() => updateUserBalance(u.id, -10)} class="flex-1 bg-slate-800 text-rose-400 py-1 rounded text-[10px] font-bold">-১০৳</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {transactions.filter(t => t.status === 'pending').map(trx => (
+                    <div key={trx.id} class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+                      <div class="flex justify-between font-semibold"><span class="text-slate-200">{trx.userName} ({trx.userId})</span><span class="text-emerald-400">৳{trx.amount}</span></div>
+                      <div class="text-slate-400">TrxID: {trx.trxId}</div>
+                      <div class="flex space-x-2"><button onClick={() => { setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'approved' } : t)); setUsers(users.map(u => u.id === trx.userId ? { ...u, balance: u.balance + trx.amount } : u)); }} class="flex-1 bg-emerald-600 py-1.5 rounded text-white font-bold">কনফার্ম</button><button onClick={() => setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'cancelled' } : t))} class="flex-1 bg-rose-600 py-1.5 rounded text-white font-bold">বাতিল</button></div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
 
           <div class="glass-card border-t border-slate-800 px-6 py-2.5 flex justify-around items-center">
-            <button onClick={() => setActiveTab('home')} class={`flex flex-col items-center space-y-1 ${activeTab === 'home' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🏠</span><span class="text-[10px]">হোম</span></button>
-            <button onClick={() => setActiveTab('tools')} class={`flex flex-col items-center space-y-1 ${activeTab === 'tools' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🛠️</span><span class="text-[10px]">টুলস</span></button>
-            <button onClick={() => setActiveTab('profile')} class={`flex flex-col items-center space-y-1 ${activeTab === 'profile' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">👤</span><span class="text-[10px]">প্রোফাইল</span></button>
+            <button onClick={() => setActiveTab('home')} class={`flex flex-col items-center ${activeTab === 'home' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🏠</span><span class="text-[10px]">হোম</span></button>
+            <button onClick={() => setActiveTab('tools')} class={`flex flex-col items-center ${activeTab === 'tools' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🛠️</span><span class="text-[10px]">টুলস</span></button>
+            <button onClick={() => setActiveTab('profile')} class={`flex flex-col items-center ${activeTab === 'profile' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">👤</span><span class="text-[10px]">প্রোফাইল</span></button>
           </div>
         </div>
       );
