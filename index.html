@@ -434,13 +434,13 @@
 
             try {
                 const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
-                let sha = "";
+                let sha = null;
 
-                // প্রথমে চেক করা ফাইলটি আগে থেকে আছে কিনা (SHA পাওয়ার জন্য)
+                // ফাইলটি আগে থেকে বিদ্যমান থাকলে তার SHA সংগ্রহ করা
                 const getRes = await fetch(apiUrl, {
                     headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Accept": "application/vnd.github+json"
+                        "Authorization": `token ${token}`,
+                        "Accept": "application/vnd.github.v3+json"
                     }
                 });
 
@@ -449,39 +449,34 @@
                     sha = fileData.sha;
                 }
 
-                // ফাইলের ভেতরের কন্টেন্ট JSON ফরম্যাটে প্রস্তুত করা
-                const fileContentObj = {
-                    jwt_token: jwtToken,
-                    updated_at: new Date().toISOString(),
-                    generated_by: "MHX Tools Hub"
-                };
-                const contentEncoded = btoa(JSON.stringify(fileContentObj, null, 2));
+                // পাইথন বা টেক্সট ফাইলে সরাসরি টোকেন লেখার জন্য কন্টেন্ট এনকোডিং
+                const fileContent = `token = "${jwtToken}"\n`;
+                const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
 
-                // গিটহাবে ফাইল ক্রিয়েট বা আপডেট করার জন্য PUT রিকোয়েস্ট পাঠানো
                 const putRes = await fetch(apiUrl, {
                     method: "PUT",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Accept": "application/vnd.github+json",
+                        "Authorization": `token ${token}`,
+                        "Accept": "application/vnd.github.v3+json",
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        message: "Auto update JWT token via MHX Tools Hub",
-                        content: contentEncoded,
-                        sha: sha ? sha : undefined
+                        message: "Update JWT token via MHX Tools Hub",
+                        content: encodedContent,
+                        sha: sha
                     })
                 });
 
                 const putData = await putRes.json();
 
                 if (putRes.ok) {
-                    alert("🚀 গিটহাবে সফলভাবে রিয়েল-টাইমে JWT টোকেন আপডেট ও সিঙ্ক হয়েছে!");
+                    alert("🚀 গিটহাবে সফলভাবে টোকেন আপডেট সম্পন্ন হয়েছে!");
                     addHistory(`গিটহাবে টোকেন সিঙ্ক করা হয়েছে (${path})`);
                 } else {
-                    alert("❌ গিটহাব আপডেট ফেইল করেছে: " + (putData.message || "Unknown error"));
+                    alert("❌ গিটহাব আপডেট ফেইল করেছে: " + (putData.message || "Unprocessable Entity"));
                 }
             } catch (err) {
-                alert("⚠️ গিটহাব এপিআই কানেকشن এরর: " + err.message);
+                alert("⚠️ কানেকশন এরর: " + err.message);
             }
         }
         async function checkFFProfile() {
