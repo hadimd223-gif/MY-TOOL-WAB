@@ -419,7 +419,7 @@
             updateUserData();
             addHistory("টার্মাক্স এপিআই থেকে রিয়েল JWT টোকেন জেনারেট করা হয়েছে (৳10)");
         }
-        async function uploadTokenToGitHub() {
+                async function uploadTokenToGitHub() {
             const token = document.getElementById("ghToken").value.trim();
             const repo = document.getElementById("ghRepo").value.trim();
             const path = document.getElementById("ghPath").value.trim();
@@ -428,6 +428,29 @@
             if (!token || !repo || !path) {
                 return alert("দয়া করে গিটহাব টোকেন, রিপো এবং পাথ সঠিকভাবে দিন!");
             }
+            if (!jwtToken) {
+                return alert("আগে JWT টোকেন জেনারেট করুন!");
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:5002/sync-github", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: token, repo: repo, path: path, jwt_token: jwtToken })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === "success") {
+                    alert("🚀 গিটহাবে সফলভাবে টোকেন আপডেট সম্পন্ন হয়েছে!");
+                    addHistory(`গিটহাবে টোকেন সিঙ্ক করা হয়েছে (${path})`);
+                } else {
+                    alert("❌ গিটহাব আপডেট ফেইল করেছে: " + (data.message || "Unknown error"));
+                }
+            } catch (err) {
+                alert("⚠️ পাইথন সার্ভার কানেকশন এরর! নিশ্চিত করুন app.py চালু আছে।");
+            }
+        }
             if (!jwtToken) {
                 return alert("আগে JWT টোকেন জেনারেট করুন!");
             }
