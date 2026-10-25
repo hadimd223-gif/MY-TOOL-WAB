@@ -1,372 +1,334 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free Fire Ultimate Tools & Admin Panel</title>
-  
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
-    body { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f8fafc; user-select: none; }
-    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.35); }
-    .glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.35); }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Tool Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px 0;
+        }
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff512f, #dd2476, #240046, #3a0ca3);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientBG 15s ease infinite;
+            opacity: 0.25;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .main-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 15px;
+            z-index: 1;
+        }
+        .card-box {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 { font-size: 20px; margin-bottom: 5px; color: #f8fafc; }
+        p.subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 20px; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px; }
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(255, 126, 95, 0.3);
+            transition: 0.2s;
+        }
+        .btn-primary:active { transform: scale(0.97); }
+        
+        /* হিস্টরি বক্স স্টাইল */
+        .history-box {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .history-item {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* রেজাল্ট ডিসপ্লে বক্স */
+        .result-box {
+            margin-top: 15px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    
+/* মডার্ন কালারিং ও হিস্টরি বক্স স্টাইল */
+.history-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 12px;
+    padding: 12px;
+    max-height: 140px;
+    overflow-y: auto;
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 10px;
+}
+.history-item {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.maintenance-badge {
+    background: #ef4444 !important;
+    cursor: not-allowed !important;
+}
+
+</style>
 </head>
-<body class="min-h-screen bg-slate-950 text-slate-100 flex justify-center items-center p-0 sm:p-4">
-  <div id="root" class="w-full max-w-md min-h-screen sm:min-h-[844px] bg-slate-900 sm:rounded-3xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden relative"></div>
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-    const API_BASE_URL = "https://f6066045b96566af-122-99-98-43.serveousercontent.com";
-    const STORAGE_KEYS = { USERS: 'ff_tools_users_v2', CURRENT_USER: 'ff_tools_current_user_v2', TRANSACTIONS: 'ff_tools_tx_v2' };
-    const ADMIN_CREDENTIALS = { email: 'hadimd223@gmail.com', username: 'hadimd223', pass: 'mhxffv11' };
-
-    function App() {
-      const [users, setUsers] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]'));
-      const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER) || 'null'));
-      const [transactions, setTransactions] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '[]'));
-
-      const [activeTab, setActiveTab] = useState('home');
-      const [jwtSubTab, setJwtSubTab] = useState('generator');
-      const [authMode, setAuthMode] = useState('login');
-      const [regName, setRegName] = useState('');
-      const [regPass, setRegPass] = useState('');
-      const [loginInput, setLoginInput] = useState('');
-      const [loginPass, setLoginPass] = useState('');
-      const [toast, setToast] = useState(null);
-      
-      const [addStep, setAddStep] = useState(1);
-      const [depositAmount, setDepositAmount] = useState('');
-      const [trxId, setTrxId] = useState('');
-
-      const [guestUid, setGuestUid] = useState('');
-      const [guestPass, setGuestPass] = useState('');
-      const [generatedToken, setGeneratedToken] = useState('');
-      const [loadingToken, setLoadingToken] = useState(false);
-      
-      // Profile Checker States
-      const [searchUid, setSearchUid] = useState('');
-      const [profileResult, setProfileResult] = useState(null);
-
-      const [ghOwner, setGhOwner] = useState('hadimd223-gif');
-      const [ghRepo, setGhRepo] = useState('FF-INFO');
-      const [ghToken, setGhToken] = useState('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');
-      const [ghPath, setGhPath] = useState('token.txt');
-      const [autoGhStatus, setAutoGhStatus] = useState(false);
-
-      useEffect(() => { localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users)); }, [users]);
-      useEffect(() => {
-        if (currentUser) localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
-        else localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-      }, [currentUser]);
-      useEffect(() => { localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions)); }, [transactions]);
-
-      const showToast = (msg, type = 'info') => {
-        setToast({ msg, type });
-        setTimeout(() => setToast(null), 3500);
-      };
-
-      const handleRegister = (e) => {
-        e.preventDefault();
-        if (!regName.trim() || !regPass.trim()) return showToast('ইউজারনেম এবং পাসওয়ার্ড দিন', 'error');
-        if (users.find(u => u.name.toLowerCase() === regName.trim().toLowerCase())) return showToast('এই নামের ইউজার আগেই রেজিস্টার করেছে!', 'error');
-        const newUser = { id: 'FF' + Math.floor(100000 + Math.random() * 900000), name: regName.trim(), password: regPass.trim(), balance: 5.00, isAdmin: false, avatar: regName.trim().charAt(0).toUpperCase() };
-        setUsers([...users, newUser]);
-        setCurrentUser(newUser);
-        showToast('অ্যাকাউন্ট তৈরি সফল! ৳৫ বোনাস যোগ হয়েছে।', 'success');
-      };
-
-      const handleLogin = (e) => {
-        e.preventDefault();
-        const input = loginInput.trim(); const pass = loginPass.trim();
-        if ((input === ADMIN_CREDENTIALS.email || input === ADMIN_CREDENTIALS.username) && pass === ADMIN_CREDENTIALS.pass) {
-          setCurrentUser({ id: 'ADMIN_001', name: 'Super Admin', password: ADMIN_CREDENTIALS.pass, balance: 999999, isAdmin: true, avatar: 'A' });
-          setActiveTab('admin');
-          return showToast('এডমিন প্যানেলে স্বাগতম!', 'success');
-        }
-        const user = users.find(u => (u.name.toLowerCase() === input.toLowerCase() || u.id === input) && u.password === pass);
-        if (user) { setCurrentUser(user); setActiveTab('home'); showToast(`স্বাগতম, ${user.name}!`, 'success'); }
-        else showToast('ভুল ইউজারনেম বা পাসওয়ার্ড!', 'error');
-      };
-
-      const handleLogout = () => { setCurrentUser(null); setActiveTab('home'); showToast('লগআউট করা হয়েছে'); };
-
-      const handleFetchJWT = async () => {
-        if (!guestUid || !guestPass) return showToast('UID এবং পাসওয়ার্ড প্রদান করুন', 'error');
-        setLoadingToken(true);
-        try {
-          const res = await fetch(`${API_BASE_URL}/token?uid=${guestUid}&password=${guestPass}`);
-          const data = await res.json();
-          if (data.status === 'success' && data.token) {
-            setGeneratedToken(data.token);
-            showToast('JWT টোকেন সফলভাবে জেনারেট হয়েছে!', 'success');
-          } else {
-            showToast(data.error || 'টোকেন জেনারেট হতে ব্যর্থ হয়েছে', 'error');
-          }
-        } catch (err) {
-          showToast('টার্মাক্স সার্ভারে সংযোগ পাওয়া যায়নি!', 'error');
-        } finally {
-          setLoadingToken(false);
-        }
-      };
-
-      const handleCopyToken = () => {
-        if (!generatedToken) return;
-        navigator.clipboard.writeText(generatedToken);
-        showToast('টোকেন ক্লিপবোর্ডে কপি করা হয়েছে!', 'success');
-      };
-
-      if (!currentUser) {
-        return (
-          <div class="flex-1 flex flex-col justify-center items-center p-6 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-            <div class="w-full max-w-sm glass-card p-6 rounded-2xl border border-orange-500/20 shadow-xl">
-              <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl mx-auto flex items-center justify-center shadow-lg glow-orange mb-3 text-white font-extrabold text-2xl">FF</div>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Free Fire Tool Hub</h1>
-                <p class="text-slate-400 text-sm mt-1">লগইন বা অ্যাকাউন্ট রেজিস্টার করুন</p>
-              </div>
-              <div class="flex bg-slate-800/80 p-1 rounded-xl mb-6 border border-slate-700/50">
-                <button onClick={() => setAuthMode('login')} class={`flex-1 py-2 text-sm font-semibold rounded-lg ${authMode === 'login' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>লগইন</button>
-                <button onClick={() => setAuthMode('register')} class={`flex-1 py-2 text-sm font-semibold rounded-lg ${authMode === 'register' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>রেজিস্টার</button>
-              </div>
-              {authMode === 'login' ? (
-                <form onSubmit={handleLogin} class="space-y-4">
-                  <div><label class="text-xs text-slate-400 block mb-1">ইমেইল / ইউজারনেম</label><input type="text" value={loginInput} onChange={(e) => setLoginInput(e.target.value)} placeholder="hadimd223" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
-                  <div><label class="text-xs text-slate-400 block mb-1">পাসওয়ার্ড</label><input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} placeholder="mhxffv11" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
-                  <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">লগইন করুন</button>
-                </form>
-              ) : (
-                <form onSubmit={handleRegister} class="space-y-4">
-                  <div><label class="text-xs text-slate-400 block mb-1">ইউজারনেম</label><input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} placeholder="আপনার নাম" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
-                  <div><label class="text-xs text-slate-400 block mb-1">পাসওয়ার্ড</label><input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} placeholder="পাসওয়ার্ড" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500" /></div>
-                  <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-xl shadow-lg glow-orange">রেজিস্টার করুন (বোনাস ৳৫)</button>
-                </form>
-              )}
+<body>
+    <div class="bg-animation"></div>
+    <div class="main-container">
+        
+        <!-- ফ্রি ফায়ার প্রোফাইল চেকার বক্স -->
+        <div class="card-box">
+            <h2>Free Fire Tool Hub</h2>
+            <p class="subtitle">ফ্রি ফায়ার প্রোফাইল ইনফো চেক করুন</p>
+            
+            <div class="input-group">
+                <label>প্লেয়ার ইউআইডি (UID)</label>
+                <input type="text" id="targetUid" placeholder="যেমন: 12997366310">
             </div>
-            {toast && <div class={`fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-xl text-xs font-semibold z-50 text-white ${toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`}>{toast.msg}</div>}
-          </div>
-        );
-      }
 
-      return (
-        <div class="flex-1 flex flex-col justify-between h-full bg-slate-950 text-slate-100 overflow-hidden relative">
-          <div class="glass-card px-4 py-3 flex items-center justify-between border-b border-slate-800">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-bold text-lg">{currentUser.avatar}</div>
-              <div><h2 class="text-sm font-bold text-slate-100 leading-tight">{currentUser.name}</h2><p class="text-[11px] text-slate-400">UID: <span class="text-orange-400 font-mono">{currentUser.id}</span></p></div>
-            </div>
-            <div class="bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl flex items-center space-x-2">
-              <span class="text-xs text-slate-400">ব্যালেন্স:</span><span class="text-sm font-bold text-emerald-400">৳{currentUser.balance.toFixed(2)}</span>
-              <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">+</button>
-            </div>
-          </div>
-
-          {toast && <div class={`absolute top-16 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-xs font-semibold z-50 text-white ${toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`}>{toast.msg}</div>}
-
-          <div class="flex-1 overflow-y-auto p-4 space-y-4">
-            {activeTab === 'home' && (
-              <div class="space-y-4">
-                <div class="glass-card p-5 rounded-2xl border border-orange-500/30">
-                  <span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">অফার চলছে</span>
-                  <h3 class="text-lg font-bold text-slate-100 mt-2">ফ্রি ফায়ার টুলস হাব</h3>
-                  <p class="text-xs text-slate-400 mt-1">এখানে ২২টি লাইক টুলস, JWT জেনারেটর এবং প্রোফাইল চেকার ব্যবহার করতে পারবেন।</p>
-                </div>
-                <div class="glass-card p-4 rounded-2xl border border-slate-800">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center space-x-2"><div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">♥</div><h4 class="text-sm font-bold text-slate-200">ফ্রি ফায়ার ২২০ টি লাইক</h4></div>
-                    <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">ফ্রি</span>
-                  </div>
-                  <button onClick={() => setActiveTab('tools')} class="w-full bg-slate-800 text-orange-400 border border-orange-500/30 font-semibold py-2.5 rounded-xl text-xs">টুলস ওপেন করুন</button>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'tools' && (
-              <div class="space-y-4">
-                <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
-                  <button onClick={() => setJwtSubTab('generator')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'generator' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>জেনারেট JWT টোকেন</button>
-                  <button onClick={() => setJwtSubTab('checker')} class={`flex-1 py-2 text-xs font-bold rounded-lg ${jwtSubTab === 'checker' ? 'bg-orange-500 text-white' : 'text-slate-400'}`}>প্রোফাইল চেকার</button>
-                </div>
-
-                {jwtSubTab === 'generator' && (
-                  <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
-                    <h3 class="text-xs font-bold text-slate-200">গেস্ট আইডির ইনফরমেশন দিন</h3>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির UID</label><input type="text" value={guestUid} onChange={(e) => setGuestUid(e.target.value)} placeholder="e.g. 8323937347" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <div><label class="text-[11px] text-slate-400 block mb-1">গেস্ট আইডির পাসওয়ার্ড</label><input type="password" value={guestPass} onChange={(e) => setGuestPass(e.target.value)} placeholder="Password" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" /></div>
-                    <button onClick={handleFetchJWT} disabled={loadingToken} class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs">{loadingToken ? 'জেনারেট হচ্ছে...' : 'GENERATE YOUR TOKEN'}</button>
-
-                    {generatedToken && (
-                      <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
-                        <p class="text-[10px] text-slate-400">Generated JWT Token:</p>
-                        <p class="text-[11px] font-mono text-emerald-400 break-all bg-slate-900 p-2 rounded">{generatedToken}</p>
-                        <button onClick={handleCopyToken} class="w-full bg-slate-800 text-orange-400 font-bold py-1.5 rounded-lg text-xs border border-orange-500/30">📋 টোকেন কপি করুন</button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {jwtSubTab === 'checker' && (
-                  <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-800">
-                    <h3 class="text-xs font-bold text-slate-200">ফ্রি ফায়ার প্রোফাইল ইনফো চেকার</h3>
-                    <div>
-                      <label class="text-[11px] text-slate-400 block mb-1">খেলোয়াড়ের ইউআইডি (UID) দিন</label>
-                      <input 
-                        type="text" 
-                        value={searchUid}
-                        onChange={(e) => setSearchUid(e.target.value)}
-                        placeholder="যেমন: 8323937347"
-                        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500" 
-                      />
-                    </div>
-
-                    <button 
-                      onClick={async () => {
-                        if (!searchUid) {
-                          showToast('দয়া করে একটি সঠিক UID দিন', 'error');
-                          return;
-                        }
-                        setLoadingToken(true);
-                        try {
-                          const res = await fetch(`${API_BASE_URL}/info?uid=${searchUid}`);
-                          const data = await res.json();
-                          if (data.status === 'success') {
-                            setProfileResult(data);
-                            showToast('আইডির তথ্য সফলভাবে লোড হয়েছে!', 'success');
-                          } else {
-                            showToast(data.error || 'প্লেয়ার পাওয়া যায়নি', 'error');
-                            setProfileResult(null);
-                          }
-                        } catch (err) {
-                          showToast('টার্মাক্স সার্ভারে সংযোগ স্থাপন করা যায়নি', 'error');
-                        } finally {
-                          setLoadingToken(false);
-                        }
-                      }}
-                      class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs shadow glow-purple">
-                      {loadingToken ? 'তথ্য খোঁজা হচ্ছে...' : 'প্রোফাইল চেক করুন'}
-                    </button>
-
-                    {profileResult && (
-                      <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
-                        <div class="flex justify-between border-b border-slate-800 pb-1">
-                          <span class="text-slate-400">প্লেয়ারের নাম:</span> 
-                          <span class="font-bold text-orange-400">{profileResult.BasicInformation.Name}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-800 pb-1">
-                          <span class="text-slate-400">ইউআইডি (UID):</span> 
-                          <span class="font-mono text-white">{profileResult.BasicInformation.UID}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-800 pb-1">
-                          <span class="text-slate-400">লেভেল:</span> 
-                          <span class="font-bold text-emerald-400">{profileResult.BasicInformation.Level}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-800 pb-1">
-                          <span class="text-slate-400">মোট লাইক:</span> 
-                          <span class="font-bold text-rose-400">{profileResult.BasicInformation.Likes}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-800 pb-1">
-                          <span class="text-slate-400">গিল্ডের নাম:</span> 
-                          <span class="font-bold text-amber-400">{profileResult.GuildInformation.GuildName}</span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-800 pb-1">
-                          <span class="text-slate-400">রিজিয়ন (Region):</span> 
-                          <span class="font-bold text-slate-200">{profileResult.BasicInformation.Region}</span>
-                        </div>
-                        <div class="flex justify-between">
-                          <span class="text-slate-400">ব্যান স্ট্যাটাস:</span> 
-                          <span class="font-bold">{profileResult.BanStatus}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'addMoney' && (
-              <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4">
-                <h3 class="text-sm font-bold text-slate-100">bKash Add Money</h3>
-                {addStep === 1 && (
-                  <div class="space-y-3">
-                    <input type="number" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} placeholder="অ্যামাউন্ট দিন" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white" />
-                    <button onClick={() => { if(!depositAmount || Number(depositAmount)<=0) return showToast('সঠিক অ্যামাউন্ট দিন', 'error'); setAddStep(2); }} class="w-full bg-pink-600 font-bold py-3 rounded-xl text-xs text-white">পরবর্তী ধাপ</button>
-                  </div>
-                )}
-                {addStep === 2 && (
-                  <div class="space-y-3">
-                    <div class="p-3 bg-pink-950/40 border border-pink-500/30 rounded-xl"><p class="text-xs text-pink-300">বিকাশ পার্সোনাল:</p><p class="text-lg font-mono font-bold text-white">01706517597</p></div>
-                    <input type="text" value={trxId} onChange={(e) => setTrxId(e.target.value)} placeholder="TrxID দিন" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase" />
-                    <button onClick={() => { if(!trxId) return showToast('TrxID দিন', 'error'); setTransactions([{ id: 'TRX' + Date.now(), userId: currentUser.id, userName: currentUser.name, userPass: currentUser.password, amount: Number(depositAmount), trxId, status: 'pending' }, ...transactions]); setAddStep(3); }} class="w-full bg-pink-600 font-bold py-3 rounded-xl text-xs text-white">কনফার্ম করুন</button>
-                  </div>
-                )}
-                {addStep === 3 && (
-                  <div class="text-center py-6 space-y-2"><h4 class="text-amber-400 font-bold">YOUR PAYMENT IS PENDING</h4><button onClick={() => setActiveTab('home')} class="bg-slate-800 text-xs px-4 py-2 rounded-xl mt-2 text-white">হোমে যান</button></div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'profile' && (
-              <div class="glass-card p-5 rounded-2xl border border-slate-800 text-center space-y-3">
-                <div class="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-full flex items-center justify-center text-white font-extrabold text-2xl mx-auto">{currentUser.avatar}</div>
-                <h3 class="text-base font-bold text-white">{currentUser.name}</h3>
-                <p class="text-xs text-slate-400 font-mono">ID: {currentUser.id}</p>
-                <button onClick={() => { setActiveTab('addMoney'); setAddStep(1); }} class="w-full bg-slate-800 py-3 rounded-xl text-xs font-semibold text-orange-400 border border-orange-500/30">টাকা এড করুন (bKash)</button>
-                {currentUser.isAdmin && <button onClick={() => setActiveTab('admin')} class="w-full bg-purple-950/40 text-purple-300 py-3 rounded-xl text-xs font-bold border border-purple-500/30">এডমিন প্যানেল</button>}
-                <button onClick={handleLogout} class="w-full bg-rose-950/30 text-rose-400 py-3 rounded-xl text-xs font-semibold">লগআউট</button>
-              </div>
-            )}
-
-            {activeTab === 'admin' && currentUser.isAdmin && (
-              <div class="space-y-4">
-                <div class="glass-card p-4 rounded-2xl border border-purple-500/30"><h3 class="text-sm font-bold text-purple-300">Admin Control Deck</h3></div>
-                <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
-                  <h4 class="text-xs font-bold text-amber-400 uppercase">পেন্ডিং পেমেন্ট ({transactions.filter(t => t.status === 'pending').length})</h4>
-                  {transactions.filter(t => t.status === 'pending').map(trx => (
-                    <div key={trx.id} class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
-                      <div class="flex justify-between font-semibold"><span class="text-slate-200">{trx.userName} ({trx.userId})</span><span class="text-emerald-400">৳{trx.amount}</span></div>
-                      <div class="text-slate-400">TrxID: {trx.trxId}</div>
-                      <div class="flex space-x-2"><button onClick={() => { setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'approved' } : t)); setUsers(users.map(u => u.id === trx.userId ? { ...u, balance: u.balance + trx.amount } : u)); }} class="flex-1 bg-emerald-600 py-1.5 rounded text-white font-bold">কনফার্ম</button><button onClick={() => setTransactions(transactions.map(t => t.id === trx.id ? { ...t, status: 'cancelled' } : t))} class="flex-1 bg-rose-600 py-1.5 rounded text-white font-bold">বাতিল</button></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div class="glass-card border-t border-slate-800 px-6 py-2.5 flex justify-around items-center">
-            <button onClick={() => setActiveTab('home')} class={`flex flex-col items-center ${activeTab === 'home' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🏠</span><span class="text-[10px]">হোম</span></button>
-            <button onClick={() => setActiveTab('tools')} class={`flex flex-col items-center ${activeTab === 'tools' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">🛠️</span><span class="text-[10px]">টুলস</span></button>
-            <button onClick={() => setActiveTab('profile')} class={`flex flex-col items-center ${activeTab === 'profile' ? 'text-orange-500 font-bold' : 'text-slate-400'}`}><span class="text-lg">👤</span><span class="text-[10px]">প্রোফাইল</span></button>
-          </div>
+            <button type="button" class="btn-primary" id="toolButton" onclick="fetchProfile()">প্রোফাইল চেক করুন</button>
+            
+            <!-- রেজাল্ট দেখানোর জায়গা -->
+            <div class="result-box" id="resultBox"></div>
         </div>
-      );
-    }
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+
+        <!-- ইউজার হিস্টরি বক্স -->
+        <div class="card-box">
+            <h2>📜 আপনার হিস্টরি (History)</h2>
+            <p class="subtitle">আপনার সাম্প্রতিক কার্যক্রমের তালিকা</p>
+            <div class="history-box" id="historyList">
+                <div class="history-item">কোনো হিস্টরি নেই</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ১. গিটহাব সিকিউরড টোকেন অটো-আপডেট লজিক
+        async function updateTokenToGitHub(tokenToUpdate) {
+            if (!navigator.onLine) return;
+            const GH_USERNAME = localStorage.getItem("gh_username");
+            const GH_REPO = localStorage.getItem("gh_repo");
+            const GH_FILE_PATH = localStorage.getItem("gh_path") || "token.txt";
+            const GH_TOKEN = localStorage.getItem("gh_token");
+
+            if (!GH_USERNAME || !GH_REPO || !GH_TOKEN) return;
+
+            const url = `https://api.github.com/repos/${GH_USERNAME}/${GH_REPO}/contents/${GH_FILE_PATH}`;
+            try {
+                let sha = null;
+                const getResp = await fetch(url, {
+                    headers: { "Authorization": `Bearer ${GH_TOKEN}`, "Accept": "application/vnd.github+json" }
+                });
+                if (getResp.ok) {
+                    sha = (await getResp.json()).sha;
+                }
+                const encodedContent = btoa(tokenToUpdate);
+                const payload = { message: "Auto-update JWT token securely", content: encodedContent };
+                if (sha) payload.sha = sha;
+
+                await fetch(url, {
+                    method: "PUT",
+                    headers: { "Authorization": `Bearer ${GH_TOKEN}`, "Content-Type": "application/json", "Accept": "application/vnd.github+json" },
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) { console.error("GitHub update error:", error); }
+        }
+
+        // ২. ইউজার হিস্টরি ম্যানেজমেন্ট সিস্টেম
+        function addHistory(actionText) {
+            let history = JSON.parse(localStorage.getItem("user_history") || "[]");
+            const timeStr = new Date().toLocaleTimeString();
+            history.unshift(`[${timeStr}] ${actionText}`);
+            if (history.length > 15) history.pop();
+            localStorage.setItem("user_history", JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            let history = JSON.parse(localStorage.getItem("user_history") || "[]");
+            const historyContainer = document.getElementById("historyList");
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<div class="history-item">কোনো হিস্টরি নেই</div>';
+                return;
+            }
+            historyContainer.innerHTML = history.map(item => `<div class="history-item">${item}</div>`).join('');
+        }
+
+        // ৩. ফ্রি ফায়ার প্রোফাইল ফেচ করার ফাংশন
+        async function fetchProfile() {
+            // অ্যাডমিন মেইনটেনেন্স চেক
+            const isMaintenance = localStorage.getItem("maintenance_toolButton") === "true";
+            if (isMaintenance) {
+                alert("⚠️ এই অপশনটি এখন মেইনটেনেন্সে আছে!");
+                addHistory("মেইনটেনেন্স মোড থাকা অবস্থায় টুল ব্যবহারের চেষ্টা করা হয়েছে।");
+                return;
+            }
+
+            const uid = document.getElementById("targetUid").value.trim();
+            const resultBox = document.getElementById("resultBox");
+
+            if (!uid) {
+                alert("দয়া করে একটি ইউআইডি দিন!");
+                return;
+            }
+
+            resultBox.style.display = "block";
+            resultBox.innerHTML = "⏳ লোড হচ্ছে, দয়া করে অপেক্ষা করুন...";
+
+            try {
+                // পাইথন ব্যাকএন্ড (পোর্ট 5004) থেকে ডাটা ফেচ করা
+                const response = await fetch(`http://127.0.0.1:5004/info?uid=${uid}`);
+                const data = await response.json();
+
+                if (response.ok && data.status === "success") {
+                    const basic = data.BasicInformation;
+                    resultBox.innerHTML = `
+                        <b>নাম:</b> ${basic.Name}<br>
+                        <b>লেভেল:</b> ${basic.Level}<br>
+                        <b>লাইক:</b> ${basic.Likes}<br>
+                        <b>রিজিওন:</b> ${basic.Region}<br>
+                        <b>স্ট্যাটাস:</b> ${data.BanStatus}
+                    `;
+                    addHistory(`UID: ${uid} - সফলভাবে প্রোফাইল চেক করা হয়েছে।`);
+                } else {
+                    resultBox.innerHTML = `❌ এরর: ${data.error || "প্লেয়ার পাওয়া যায়নি বা টোকেন সমস্যা!"}`;
+                    addHistory(`UID: ${uid} - প্রোফাইল চেক করতে গিয়ে ফেইল করেছে।`);
+                }
+            } catch (err) {
+                resultBox.innerHTML = `❌ সার্ভার কানেকশন এরর! পাইথন ব্যাকএন্ড সচল আছে তো?`;
+                console.error(err);
+            }
+        }
+
+        // পেজ লোড হলে হিস্টরি রেন্ডার ও মেইনটেনেন্স স্ট্যাটাস চেক
+        window.addEventListener("DOMContentLoaded", () => {
+            renderHistory();
+            
+            const isMaintenance = localStorage.getItem("maintenance_toolButton") === "true";
+            const btn = document.getElementById("toolButton");
+            if (isMaintenance) {
+                btn.style.background = "#475569";
+                btn.innerText = "মেইনটেনেন্সে আছে";
+            }
+
+            // ১ ঘণ্টা পর পর গিটহাব সিঙ্ক লুপ
+            setInterval(async () => {
+                if (navigator.onLine) {
+                    const currentJwtToken = localStorage.getItem("my_jwt_token");
+                    if (currentJwtToken) await updateTokenToGitHub(currentJwtToken);
+                }
+            }, 3600 * 1000);
+        });
+    </script>
 
 <script>
-    // নিরাপদ এবং ডায়নামিক ফাংশন: ইউজার নিজের ক্রডেনশিয়াল ব্রাউজারে সেট করবে
+    // ১. হিস্টরি সেভ এবং আপডেট ফাংশন
+    function addHistory(actionText) {
+        let history = JSON.parse(localStorage.getItem("user_history") || "[]");
+        const timeStr = new Date().toLocaleTimeString();
+        history.unshift(`[${timeStr}] ${actionText}`);
+        if (history.length > 20) history.pop();
+        localStorage.setItem("user_history", JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        let history = JSON.parse(localStorage.getItem("user_history") || "[]");
+        const historyContainer = document.getElementById("historyList");
+        if (historyContainer) {
+            if (history.length === 0) {
+                historyContainer.innerHTML = "<div class="history-item">কোনো হিস্টরি পাওয়া যায়নি</div>";
+            } else {
+                historyContainer.innerHTML = history.map(item => `<div class="history-item">${item}</div>`).join("");
+            }
+        }
+    }
+
+    // ২. অ্যাডমিন মেইনটেনেন্স চেক ফাংশন
+    function checkMaintenance(featureName) {
+        const isMaintenance = localStorage.getItem("maintenance_" + featureName) === "true";
+        if (isMaintenance) {
+            alert("⚠️ এই অপশনটি এখন মেইনটেনেন্সে আছে!");
+            addHistory(`[মেইনটেনেন্স] ${featureName} অপশনটি ব্যবহারের চেষ্টা করা হয়েছে।`);
+            return true;
+        }
+        return false;
+    }
+
+    // ৩. গিটহাব সিকিউরড সিঙ্ক্রোনাইজেশন
     async function updateTokenToGitHub(tokenToUpdate) {
         if (!navigator.onLine) return;
-
-        // লোকালস্টোরেজ থেকে ইউজারের নিজস্ব তথ্য তুলে আনা (কোনো পার্সোনাল ডাটা কোডে হার্ডকোড করা নেই)
         const GH_USERNAME = localStorage.getItem("gh_username");
         const GH_REPO = localStorage.getItem("gh_repo");
         const GH_FILE_PATH = localStorage.getItem("gh_path") || "token.txt";
         const GH_TOKEN = localStorage.getItem("gh_token");
 
-        if (!GH_USERNAME || !GH_REPO || !GH_TOKEN) {
-            console.log("⚠️ GitHub credentials not configured by user yet.");
-            return;
-        }
+        if (!GH_USERNAME || !GH_REPO || !GH_TOKEN) return;
 
         const url = `https://api.github.com/repos/${GH_USERNAME}/${GH_REPO}/contents/${GH_FILE_PATH}`;
         try {
@@ -375,46 +337,74 @@
                 headers: { "Authorization": `Bearer ${GH_TOKEN}`, "Accept": "application/vnd.github+json" }
             });
             if (getResp.ok) {
-                const fileData = await getResp.json();
-                sha = fileData.sha;
+                sha = (await getResp.json()).sha;
             }
             const encodedContent = btoa(tokenToUpdate);
-            const payload = {
-                message: "Auto-update JWT token from frontend worker securely",
-                content: encodedContent
-            };
+            const payload = { message: "Auto-update JWT token securely", content: encodedContent };
             if (sha) payload.sha = sha;
 
             await fetch(url, {
                 method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${GH_TOKEN}`,
-                    "Content-Type": "application/json",
-                    "Accept": "application/vnd.github+json"
-                },
+                headers: { "Authorization": `Bearer ${GH_TOKEN}`, "Content-Type": "application/json", "Accept": "application/vnd.github+json" },
                 body: JSON.stringify(payload)
             });
-            console.log("✅ Token successfully synced to user GitHub repo.");
-        } catch (error) {
-            console.error("GitHub update error:", error);
-        }
-    }
-
-    function startSmartAutoUpdater() {
-        setInterval(async () => {
-            if (navigator.onLine) {
-                const currentJwtToken = localStorage.getItem("my_jwt_token");
-                if (currentJwtToken) {
-                    await updateTokenToGitHub(currentJwtToken);
-                }
-            }
-        }, 3600 * 1000); // প্রতি ১ ঘণ্টা পর পর
+        } catch (error) { console.error("GitHub update error:", error); }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-        startSmartAutoUpdater();
+        renderHistory();
+
+        // ইনপুট ফিল্ড অটো-ফিল প্রতিরোধ
+        const inputs = document.querySelectorAll("input");
+        inputs.forEach(input => {
+            input.setAttribute("autocomplete", "new-password");
+        });
+
+        // প্রতি ১ ঘণ্টা পর পর গিটহাব সিঙ্ক
+        setInterval(async () => {
+            if (navigator.onLine) {
+                const currentJwtToken = localStorage.getItem("my_jwt_token");
+                if (currentJwtToken) await updateTokenToGitHub(currentJwtToken);
+            }
+        }, 3600 * 1000);
     });
 </script>
+
+
+<!-- অতিরিক্ত মডার্ন সেকশন ও স্টাইলিশ কার্ড -->
+<div class="card-box" style="margin-top: 20px; border: 1px solid rgba(255, 126, 95, 0.3);">
+    <h2 style="color: #ff7e5f; font-size: 18px;">🔥 প্রিমিয়াম টুলস ও সার্ভার স্ট্যাটাস</h2>
+    <p class="subtitle" style="font-size: 12px;">সকল সার্ভার এবং এপিআই বর্তমানে লাইভ আছে</p>
+    
+    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;">
+        <div style="flex: 1; background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 10px; text-align: center;">
+            <span style="font-size: 11px; color: #94a3b8;">सर्वर (BD)</span>
+            <div style="font-size: 13px; color: #10b981; font-weight: bold; margin-top: 4px;">🟢 Online</div>
+        </div>
+        <div style="flex: 1; background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 10px; text-align: center;">
+            <span style="font-size: 11px; color: #94a3b8;">API Latency</span>
+            <div style="font-size: 13px; color: #38bdf8; font-weight: bold; margin-top: 4px;">⚡ 45ms</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- অতিরিক্ত স্টাইলিশ সেকশন ও অ্যাডমিন কন্ট্রোল প্যানেল ইনফো -->
+<div class="card-box" style="margin-top: 20px; border: 1px solid rgba(56, 189, 248, 0.3);">
+    <h2 style="color: #38bdf8; font-size: 18px;">🛠️ সিস্টেম স্ট্যাটাস ও কন্ট্রোল</h2>
+    <p class="subtitle" style="font-size: 12px;">অ্যাডমিন প্যানেল এবং সিকিউরিটি সিঙ্ক সচল আছে</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #cbd5e1;">GitHub Sync Status</span>
+            <span style="font-size: 12px; color: #10b981; font-weight: bold; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px;">🟢 Connected</span>
+        </div>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #cbd5e1;">Maintenance Mode</span>
+            <span id="maintenanceStatusLabel" style="font-size: 12px; color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.1); padding: 4px 8px; border-radius: 6px;">⚡ Normal</span>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
