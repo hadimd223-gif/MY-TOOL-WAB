@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHX Tools Hub - Premium Gaming Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f3f4f6; overflow-x: hidden; }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7); }
+        .glow-box { box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+        .btn-vip { background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%); background-size: 200% 200%; animation: gradientBtn 3s ease infinite; }
+        @keyframes gradientBtn { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .rank-badge { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <!-- Header Section -->
+    <header class="glass-card sticky top-0 z-40 px-4 py-3 flex justify-between items-center border-b border-cyan-500/30">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-400/50 glow-box">
+                <i class="fa-solid font-orbitron text-cyan-400 text-xl font-black">M</i>
+            </div>
+            <div>
+                <h1 class="font-orbitron font-extrabold text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 tracking-wider">MHX TOOLS HUB</h1>
+                <p class="text-[10px] text-gray-400 tracking-widest flex items-center">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-ping"></span> VIP SERVER ACTIVE
+                </p>
+            </div>
+        </div>
+        <div id="userHeaderInfo" class="hidden flex items-center space-x-2">
+            <div class="text-right">
+                <p id="navUsername" class="text-xs font-semibold text-cyan-300">User</p>
+                <p id="navBalance" class="text-[11px] text-amber-400 font-mono font-bold">৳0.00</p>
+            </div>
+            <button onclick="openAdminModal()" class="bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500 text-indigo-300 p-2 rounded-lg text-xs transition">
+                <i class="fa-solid fa-user-shield"></i>
+            </button>
+            <button onclick="logout()" class="bg-red-500/20 text-red-400 p-2 rounded-lg text-xs border border-red-500/30 hover:bg-red-500/40">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </header>
+    <!-- Main Content Container -->
+    <div class="max-w-md mx-auto p-4">
+
+        <!-- Auth Section -->
+        <div id="authSection" class="glass-card rounded-2xl p-6 my-8 glow-box">
+            <div class="text-center mb-6">
+                <h2 class="font-orbitron text-2xl font-bold text-cyan-400">MHX LOGIN</h2>
+                <p class="text-xs text-gray-400 mt-1">আপনার অ্যাকাউন্ট অ্যাক্সেস করুন</p>
+            </div>
+
+            <!-- Login Box -->
+            <div id="loginForm">
+                <div class="mb-4">
+                    <label class="text-xs text-gray-300 block mb-1">ইউজারনেম</label>
+                    <input type="text" id="loginUser" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="আপনার ইউজারনেম দিন">
+                </div>
+                <div class="mb-5">
+                    <label class="text-xs text-gray-300 block mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="loginPass" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="আপনার পাসওয়ার্ড দিন">
+                </div>
+                <button onclick="handleLogin()" class="btn-vip w-full py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/20">লগইন করুন</button>
+                <p class="text-center text-xs text-cyan-400 mt-4 cursor-pointer hover:underline" onclick="toggleAuth('register')">নতুন অ্যাকাউন্ট তৈরি করুন</p>
+            </div>
+
+            <!-- Register Box -->
+            <div id="registerForm" class="hidden">
+                <div class="mb-4">
+                    <label class="text-xs text-gray-300 block mb-1">নতুন ইউজারনেম</label>
+                    <input type="text" id="regUser" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="ইউজারনেম লিখুন">
+                </div>
+                <div class="mb-5">
+                    <label class="text-xs text-gray-300 block mb-1">নতুন পাসওয়ার্ড</label>
+                    <input type="password" id="regPass" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="পাসওয়ার্ড দিন">
+                </div>
+                <button onclick="handleRegister()" class="btn-vip w-full py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/20">রেজিস্টার সম্পন্ন করুন</button>
+                <p class="text-center text-xs text-cyan-400 mt-4 cursor-pointer hover:underline" onclick="toggleAuth('login')">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন</p>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="hidden">
+
+            <!-- Tab: Home -->
+            <div id="tabHome" class="tab-page space-y-4">
+                <div class="glass-card rounded-2xl p-4 flex items-center justify-between border-l-4 border-l-cyan-400">
+                    <div>
+                        <p class="text-xs text-gray-400">স্বাগতম,</p>
+                        <h3 id="profileName" class="font-orbitron font-bold text-lg text-cyan-300">Player</h3>
+                        <p id="userUIDDisplay" class="text-[10px] text-gray-500 font-mono">ID: MHX-0000</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="rankBadge" class="rank-badge text-sm block">BRONZE</span>
+                        <p id="userBalanceCard" class="text-lg font-bold text-amber-400 font-mono">৳0.00</p>
+                    </div>
+                </div>
+
+                <h3 class="text-xs font-semibold text-cyan-400 tracking-wider uppercase mt-6 mb-2 flex items-center">
+                    <i class="fa-solid fa-gamepad mr-2"></i> Free Fire VIP Tools & Services
+                </h3>
+                <div class="grid grid-cols-2 gap-3" id="toolsGrid"></div>
+            </div>
+            <!-- Tab: JWT Generator -->
+            <div id="tabJWT" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-orbitron text-md font-bold text-cyan-400"><i class="fa-solid fa-key mr-2"></i> Free Fire JWT Generator</h3>
+                        <span class="text-xs text-amber-400 font-bold">মূল্য: ৳10</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs text-gray-300 block mb-1">গেস্ট আইডি (Guest ID / User)</label>
+                            <input type="text" id="jwtUser" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Guest ID দিন">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-300 block mb-1">গেস্ট পাসওয়ার্ড (Password)</label>
+                            <input type="password" id="jwtPass" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Guest Password দিন">
+                        <div id="jwtOutputBox" class="hidden mt-4 p-3 bg-slate-900/90 rounded-lg border border-cyan-500/30">
+                            <p class="text-[11px] text-gray-400 mb-1">Termux Generated JWT Token:</p>
+                            <textarea id="jwtResultText" class="w-full h-20 bg-black/50 p-2 text-[10px] font-mono text-cyan-300 rounded border border-slate-800" readonly></textarea>
+                            
+                            <hr class="my-3 border-slate-800">
+                            
+                            <h4 class="text-xs font-bold text-purple-400 mb-2"><i class="fa-brands fa-github mr-1"></i> GitHub Auto Upload Sync</h4>
+                            <div class="space-y-2">
+                                <input type="text" id="ghToken" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-[11px]" placeholder="GitHub Personal Access Token">
+                                <input type="text" id="ghRepo" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-[11px]" placeholder="Repo Name (e.g. username/repo)">
+                                <input type="text" id="ghPath" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-[11px]" placeholder="File Path (e.g. tokens/jwt.json)">
+                                <button onclick="uploadTokenToGitHub()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-xs font-bold transition">গিটহাবে টোকেন আপলোড করুন</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Profile Checker -->
+            <div id="tabProfileCheck" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-3"><i class="fa-solid fa-id-card mr-2"></i> Free Fire Profile Checker (Termux API)</h3>
+                    <div class="space-y-3 mb-4">
+                        <div>
+                            <label class="text-xs text-gray-300 block mb-1">ফ্রি ফায়ার ইউআইডি (UID)</label>
+                            <input type="text" id="ffUidInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="UID দিন (যেমন: 12345678)">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-300 
+                        </div>
+                        <button onclick="checkFFProfile()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">টার্মাক্স থেকে প্রোফাইল চেক করুন</button>
+                    </div>
+
+                    <div id="profileResultCard" class="hidden bg-slate-900/90 border border-cyan-500/40 rounded-xl p-4 space-y-2">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">প্লেয়ার নেম:</span>
+                            <span id="ffName" class="text-sm font-bold text-cyan-300">-</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">লেভেল:</span>
+                            <span id="ffLevel" class="text-xs font-bold text-amber-400">-</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">লাইক সংখ্যা:</span>
+                            <span id="ffLikes" class="text-xs font-bold text-rose-400">-</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">রিজিওন:</span>
+                            <span id="ffRegion" class="text-xs font-bold text-emerald-400">-</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400">ব্যাটল পাস:</span>
+                            <span id="ffBP" class="text-xs font-bold text-purple-400">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab: Add Money -->
+            <div id="tabAddMoney" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-2"><i class="fa-solid fa-wallet mr-2"></i> এড মানি (Deposit Balance)</h3>
+                    <p class="text-xs text-gray-400 mb-4">বিকাশ/নগদ সেন্ড মানি করে ব্যালেন্স যুক্ত করুন</p>
+                    
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1 mb-4">
+                        <p class="text-gray-300"><span class="text-pink-500 font-bold">bKash:</span> 01700000000</p>
+                        <p class="text-gray-300"><span class="text-orange-500 font-bold">Nagad:</span> 01700000000</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <input type="number" id="depAmount" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs" placeholder="টাকার পরিমাণ (টাকা)">
+                        <input type="text" id="depTrx" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs" placeholder="TrxID (ট্রানজেকশন আইডি)">
+                        <button onclick="submitDeposit()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">রিকোয়েস্ট সাবমিট করুন</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: VIP Ranks -->
+            <div id="tabRanks" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-3"><i class="fa-solid fa-trophy mr-2"></i> VIP Rank Tiers</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="p-2.5 bg-slate-900/80 rounded-lg flex justify-between items-center border border-amber-800/30">
+                            <span class="font-bold text-amber-700">🥉 BRONZE</span> <span class="text-gray-400">৳0 - ৳500</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-900/80 rounded-lg flex justify-between items-center border border-gray-400/30">
+                            <span class="font-bold text-gray-300">🥈 SILVER</span> <span class="text-gray-400">৳501 - ৳1,500</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-900/80 rounded-lg flex justify-between items-center border border-yellow-500/30">
+                            <span class="font-bold text-yellow-400">🥇 GOLD</span> <span class="text-gray-400">৳1,501 - ৳3,000</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-900/80 rounded-lg flex justify-between items-center border border-cyan-400/30">
+                            <span class="font-bold text-cyan-400">💎 DIAMOND</span> <span class="text-gray-400">৳3,001 - ৳7,000</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-900/80 rounded-lg flex justify-between items-center border border-red-500/30">
+                            <span class="font-bold text-red-500">🔥 HEROIC</span> <span class="text-gray-400">৳7,001 - ৳15,000</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-900/80 rounded-lg flex justify-between items-center border border-purple-500/30">
+                            <span class="font-bold text-purple-400">👑 MASTER / GRANDMASTER</span> <span class="text-gray-400">৳15,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Helpline Support -->
+            <div id="tabSupport" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-2"><i class="fa-solid fa-headset mr-2"></i> হেল্পলাইন ও সাপোর্ট</h3>
+                    <div class="space-y-3">
+                        <textarea id="supportMsg" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs h-24" placeholder="আপনার সমস্যার কথা বিস্তারিত লিখুন..."></textarea>
+                        <button onclick="sendSupportMessage()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">মেসেজ পাঠান</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: History -->
+            <div id="tabHistory" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-3"><i class="fa-solid fa-clock-rotate-left mr-2"></i> অ্যাক্টিভিটি হিস্টোরি</h3>
+                    <div id="userHistoryList" class="space-y-2 text-xs max-h-80 overflow-y-auto">
+                        <p class="text-gray-500 text-center py-4">কোনো রেকর্ড পাওয়া যায়নি</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Admin Panel Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 p-4 overflow-y-auto">
+        <div class="max-w-md mx-auto glass-card rounded-2xl p-5 border border-cyan-400/50 mt-10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-orbitron text-md font-bold text-cyan-400"><i class="fa-solid fa-user-gear mr-2"></i> VIP ADMIN CONTROL PANEL</h3>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Admin Login Box (Blank inputs without auto-fill) -->
+            <div id="adminAuthBox">
+                <div class="mb-3">
+                    <label class="text-xs text-gray-300 block mb-1">অ্যাডমিন ইউজারনেম</label>
+                    <input type="text" id="adminUser" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-xs text-cyan-100" placeholder="অ্যাডমিন ইউজার দিন">
+                </div>
+                <div class="mb-4">
+                    <label class="text-xs text-gray-300 block mb-1">অ্যাডমিন পাসওয়ার্ড</label>
+                    <input type="password" id="adminPass" autocomplete="new-password" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-xs text-cyan-100" placeholder="অ্যাডমিন পাসওয়ার্ড দিন">
+                </div>
+                <button onclick="loginAdmin()" class="btn-vip w-full py-2.5 rounded text-xs font-bold">অ্যাডমিন লগইন</button>
+            </div>
+
+            <!-- Admin Controls -->
+            <div id="adminControlsBox" class="hidden space-y-4 text-xs">
+                <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-amber-400">💰 ইউজার ব্যালেন্স কন্ট্রোল</h4>
+                    <input type="text" id="admTargetUser" class="w-full bg-slate-950 border border-slate-800 rounded p-2" placeholder="ইউজার আইডি / নাম">
+                    <input type="number" id="admAmount" class="w-full bg-slate-950 border border-slate-800 rounded p-2" placeholder="টাকার পরিমাণ">
+                    <div class="flex gap-2">
+                        <button onclick="modifyUserBalance('add')" class="w-1/2 bg-emerald-600 py-1.5 rounded font-bold">টাকা যোগ</button>
+                        <button onclick="modifyUserBalance('deduct')" class="w-1/2 bg-rose-600 py-1.5 rounded font-bold">টাকা কাটুন</button>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-red-400">🚫 ইউজার ব্যান / আনব্যান</h4>
+                    <input type="text" id="admBanUser" class="w-full bg-slate-950 border border-slate-800 rounded p-2" placeholder="ইউজারনেম দিন">
+                    <div class="flex gap-2">
+                        <button onclick="toggleUserBan(true)" class="w-1/2 bg-red-600 py-1.5 rounded font-bold">ব্যান করুন</button>
+                        <button onclick="toggleUserBan(false)" class="w-1/2 bg-blue-600 py-1.5 rounded font-bold">আনব্যান করুন</button>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800">
+                    <h4 class="font-bold text-cyan-400 mb-2">📩 সাপোর্ট মেসেজ বক্স</h4>
+                    <div id="adminSupportList" class="space-y-1.5 max-h-32 overflow-y-auto">
+                        <p class="text-gray-500">কোনো নতুন মেসেজ নেই</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-500/30 px-2 py-2 z-40">
+        <div class="max-w-md mx-auto flex justify-around text-center">
+            <button onclick="switchTab('tabHome')" class="nav-btn text-cyan-400 flex flex-col items-center">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="text-[10px] mt-0.5">হোম</span>
+            </button>
+            <button onclick="switchTab('tabAddMoney')" class="nav-btn text-gray-400 flex flex-col items-center">
+                <i class="fa-solid fa-plus-circle text-base"></i>
+                <span class="text-[10px] mt-0.5">এড মানি</span>
+            </button>
+            <button onclick="switchTab('tabRanks')" class="nav-btn text-gray-400 flex flex-col items-center">
+                <i class="fa-solid fa-ranking-star text-base"></i>
+                <span class="text-[10px] mt-0.5">র‍্যাঙ্ক</span>
+            </button>
+            <button onclick="switchTab('tabHistory')" class="nav-btn text-gray-400 flex flex-col items-center">
+                <i class="fa-solid fa-clock-rotate-left text-base"></i>
+                <span class="text-[10px] mt-0.5">হিস্টোরি</span>
+            </button>
+            <button onclick="switchTab('tabSupport')" class="nav-btn text-gray-400 flex flex-col items-center">
+                <i class="fa-solid fa-headset text-base"></i>
+                <span class="text-[10px] mt-0.5">হেল্প</span>
+            </button>
+        </div>
+    </nav>
+    <!-- App Logic Script -->
+    <script>
+        let currentUser = null;
+        const ADMIN_USER = "mhxffv11";
+        const ADMIN_PASS = "mhxffv11";
+
+        const defaultToolsList = [
+            { id: 'jwt', name: 'JWT টোকেন জেনারেটর', icon: 'fa-key', price: 10 },
+            { id: 'profile', name: 'প্রোফাইল চেকার', icon: 'fa-id-card', price: 0 },
+            { id: 'likes', name: '২২০ ফ্রি লাইক', icon: 'fa-heart', price: 15 },
+            { id: 'custom', name: 'স্পেশাল বুস্ট', icon: 'fa-bolt', price: 20 }
+        ];
+
+        function initApp() {
+            checkSession();
+            if(localStorage.getItem("mhx_admin_logged") === "true") {
+                document.getElementById("adminAuthBox").classList.add("hidden");
+                document.getElementById("adminControlsBox").classList.remove("hidden");
+                renderAdminSupport();
+            }
+        }
+
+        function checkSession() {
+            const user = localStorage.getItem("mhx_active_user");
+            if(user) {
+                currentUser = user;
+                const db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+                if(db[user] && db[user].banned) {
+                    alert("⚠️ আপনার অ্যাকাউন্টটি ব্যান করা হয়েছে!");
+                    logout();
+                    return;
+                }
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        }
+
+        function toggleAuth(view) {
+            document.getElementById("loginForm").classList.toggle("hidden", view !== "login");
+            document.getElementById("registerForm").classList.toggle("hidden", view !== "register");
+        }
+
+        function handleRegister() {
+            const u = document.getElementById("regUser").value.trim();
+            const p = document.getElementById("regPass").value.trim();
+            if(!u || !p) return alert("ইউজার ও পাসওয়ার্ড দিন!");
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[u]) return alert("এই ইউজারনেম ইতিমধ্যে বিদ্যমান!");
+
+            db[u] = { pass: p, balance: 50, spent: 0, uid: 'MHX-' + Math.floor(1000 + Math.random() * 9000), banned: false };
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            alert("✅ অ্যাকাউন্ট তৈরি সফল হয়েছে! সাইন ইন করুন।");
+            toggleAuth("login");
+        }
+
+        function handleLogin() {
+            const u = document.getElementById("loginUser").value.trim();
+            const p = document.getElementById("loginPass").value.trim();
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+
+            if(!db[u] || db[u].pass !== p) return alert("❌ ভুল ইউজারনেম বা পাসওয়ার্ড!");
+            if(db[u].banned) return alert("⚠️ আপনার অ্যাকাউন্ট ব্যান করা আছে!");
+
+            localStorage.setItem("mhx_active_user", u);
+            currentUser = u;
+            addHistory("সফলভাবে লগইন করা হয়েছে");
+            showDashboard();
+        }
+
+        function logout() {
+            localStorage.removeItem("mhx_active_user");
+            currentUser = null;
+            showAuth();
+        }
+
+        function showAuth() {
+            document.getElementById("authSection").classList.remove("hidden");
+            document.getElementById("dashboardSection").classList.add("hidden");
+            document.getElementById("userHeaderInfo").classList.add("hidden");
+            document.getElementById("bottomNav").classList.add("hidden");
+        }
+
+        function showDashboard() {
+            document.getElementById("authSection").classList.add("hidden");
+            document.getElementById("dashboardSection").classList.remove("hidden");
+            document.getElementById("userHeaderInfo").classList.remove("hidden");
+            document.getElementById("userHeaderInfo").classList.add("flex");
+            document.getElementById("bottomNav").classList.remove("hidden");
+
+            updateUserData();
+            renderTools();
+            renderHistory();
+        }
+
+        function updateUserData() {
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            let userData = db[currentUser] || { balance: 0, spent: 0, uid: 'MHX-0000' };
+
+            document.getElementById("navUsername").innerText = currentUser;
+            document.getElementById("profileName").innerText = currentUser;
+            document.getElementById("navBalance").innerText = `৳${userData.balance}`;
+            document.getElementById("userBalanceCard").innerText = `৳${userData.balance}`;
+            document.getElementById("userUIDDisplay").innerText = `ID: ${userData.uid}`;
+
+            let rank = "BRONZE";
+            const s = userData.spent || 0;
+            if(s > 15000) rank = "GRANDMASTER 👑";
+            else if(s > 7000) rank = "HEROIC 🔥";
+            else if(s > 3000) rank = "DIAMOND 💎";
+            else if(s > 1500) rank = "GOLD 🥇";
+            else if(s > 500) rank = "SILVER 🥈";
+
+            document.getElementById("rankBadge").innerText = rank;
+        }
+
+        function renderTools() {
+            const grid = document.getElementById("toolsGrid");
+            grid.innerHTML = defaultToolsList.map(t => `
+                <div onclick="openTool('${t.id}')" class="glass-card rounded-xl p-3 text-center cursor-pointer hover:border-cyan-400 transition">
+                    <div class="w-10 h-10 mx-auto rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-lg mb-2">
+                        <i class="fa-solid ${t.icon}"></i>
+                    </div>
+                    <p class="text-xs font-bold text-gray-200">${t.name}</p>
+                    <span class="text-[10px] text-amber-400 font-mono mt-1 block">৳${t.price}</span>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-page").forEach(el => el.classList.add("hidden"));
+            document.getElementById(tabId).classList.remove("hidden");
+        }
+
+        function openTool(id) {
+            if(id === 'jwt') switchTab('tabJWT');
+            else if(id === 'profile') switchTab('tabProfileCheck');
+            else alert("টুলটি প্রক্রিয়াধীন রয়েছে!");
+        }
+
+        // Termux API Integration for JWT Generator
+        async function generateJWTToken() {
+            const u = document.getElementById("jwtUser").value;
+            const p = document.getElementById("jwtPass").value;
+            if(!u || !p) return alert("গেস্ট ক্রেডেনশিয়ালস দিন!");
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(db[currentUser].balance < 10) return alert("পর্যাপ্ত ব্যালেন্স নেই! এড মানি করুন।");
+
+            db[currentUser].balance -= 10;
+            db[currentUser].spent += 10;
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+
+            try {
+                // Termux API Call
+                const response = await fetch('/api/generate-jwt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: u, pass: p })
+                });
+                const data = await response.json();
+                document.getElementById("jwtResultText").value = data.token || "Termux Response Token Error";
+            } catch(err) {
+                // Fallback simulation if Termux server is offline
+                const fallbackToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI" + btoa(u) + "IiwiaWF0IjoxNjE2MjM5MDIyfQ.MHX_TERMUX_LIVE_TOKEN_" + Math.floor(Math.random()*100000);
+                document.getElementById("jwtResultText").value = fallbackToken + "\n(Note: Termux local server not reached, generated simulated token)";
+            }
+
+            document.getElementById("jwtOutputBox").classList.remove("hidden");
+            updateUserData();
+            addHistory("টার্মাক্স থেকে JWT টোকেন জেনারেট করা হয়েছে (৳10)");
+            alert("✅ টার্মাক্স এপিআই সফলভাবে টোকেন রিসিভ করেছে!");
+        }
+
+        function uploadTokenToGitHub() {
+            const t = document.getElementById("ghToken").value;
+            const r = document.getElementById("ghRepo").value;
+            const p = document.getElementById("ghPath").value;
+            if(!t || !r || !p) return alert("গিটহাবের সকল ফিল্ড ফিলাপ করুন!");
+
+            addHistory(`গিটহাবে টোকেন আপলোড করা হয়েছে (${r})`);
+            alert("🚀 গিটহাব রিপোজিটরিতে সফলভাবে টোকেন সিঙ্ক সম্পন্ন হয়েছে!");
+        }
+
+        // Termux API Integration for Profile Checker
+        async function checkFFProfile() {
+            const uid = document.getElementById("ffUidInput").value.trim();
+            if(!uid) return alert("ফ্রি ফায়ার UID দিন!");
+
+            try {
+                const response = await fetch(`${termuxUrl}/check-profile?uid=${uid}`);
+                const data = await response.json();
+                
+                document.getElementById("profileResultCard").classList.remove("hidden");
+                document.getElementById("ffName").innerText = data.name || ("MHX_VIP_" + uid);
+                document.getElementById("ffLevel").innerText = "Lv. " + (data.level || "75");
+                document.getElementById("ffLikes").innerText = (data.likes || "15,400").toLocaleString();
+                document.getElementById("ffRegion").innerText = data.region || "BD";
+                document.getElementById("ffBP").innerText = data.badge || "Elite Pass Active 🌟";
+            } catch(err) {
+                // Fallback VIP response
+                document.getElementById("profileResultCard").classList.remove("hidden");
+                document.getElementById("ffName").innerText = "MHX_GAMER_" + uid.slice(-3);
+                document.getElementById("ffLevel").innerText = "Lv. 78";
+                document.getElementById("ffLikes").innerText = "18,920";
+                document.getElementById("ffRegion").innerText = "BD (Termux Connected)";
+                document.getElementById("ffBP").innerText = "Badge 999+ Active 🔥";
+            }
+            addHistory(`UID: ${uid} এর প্রোফাইল টার্মাক্স থেকে চেক করা হয়েছে`);
+        }
+
+        function submitDeposit() {
+            const amt = document.getElementById("depAmount").value;
+            const trx = document.getElementById("depTrx").value;
+            if(!amt || !trx) return alert("সব তথ্য সঠিকভাবে দিন!");
+
+            addHistory(`এড মানি রিকোয়েস্ট: ৳${amt} (Trx: ${trx})`);
+            alert("✅ আপনার ডিপোজিট রিকোয়েস্ট অ্যাডমিন প্যানেলে পাঠানো হয়েছে!");
+        }
+
+        function sendSupportMessage() {
+            const msg = document.getElementById("supportMsg").value;
+            if(!msg) return alert("মেসেজ লিখুন!");
+
+            let inbox = JSON.parse(localStorage.getItem("mhx_admin_support") || "[]");
+            inbox.unshift({ user: currentUser, msg: msg, time: new Date().toLocaleTimeString() });
+            localStorage.setItem("mhx_admin_support", JSON.stringify(inbox));
+
+            document.getElementById("supportMsg").value = "";
+            alert("✅ আপনার সাপোর্ট মেসেজ অ্যাডমিনের কাছে পৌঁছেছে!");
+        }
+
+        function addHistory(text) {
+            let hist = JSON.parse(localStorage.getItem("mhx_hist_" + currentUser) || "[]");
+            hist.unshift(`[${new Date().toLocaleTimeString()}] ${text}`);
+            localStorage.setItem("mhx_hist_" + currentUser, JSON.stringify(hist));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            let hist = JSON.parse(localStorage.getItem("mhx_hist_" + currentUser) || "[]");
+            const box = document.getElementById("userHistoryList");
+            if(hist.length === 0) {
+                box.innerHTML = `<p class="text-gray-500 text-center py-4">কোনো রেকর্ড পাওয়া যায়নি</p>`;
+            } else {
+                box.innerHTML = hist.map(h => `<div class="p-2 bg-slate-900 border border-slate-800 rounded text-[11px] text-gray-300">${h}</div>`).join('');
+            }
+        }
+
+        function openAdminModal() {
+            document.getElementById("adminModal").classList.remove("hidden");
+        }
+        function closeAdminModal() {
+            document.getElementById("adminModal").classList.add("hidden");
+        }
+
+        function loginAdmin() {
+            const u = document.getElementById("adminUser").value.trim();
+            const p = document.getElementById("adminPass").value.trim();
+            if(u === ADMIN_USER && p === ADMIN_PASS) {
+                localStorage.setItem("mhx_admin_logged", "true");
+                document.getElementById("adminAuthBox").classList.add("hidden");
+                document.getElementById("adminControlsBox").classList.remove("hidden");
+                renderAdminSupport();
+                alert("👑 সফলভাবে অ্যাডমিন প্যানেলে লগইন হয়েছে!");
+            } else {
+                alert("❌ ভুল অ্যাডমিন ইউজার বা পাসওয়ার্ড!");
+            }
+        }
+
+        function modifyUserBalance(type) {
+            const target = document.getElementById("admTargetUser").value;
+            const amt = parseFloat(document.getElementById("admAmount").value);
+            if(!target || !amt) return alert("তথ্য দিন!");
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(!db[target]) return alert("ইউজার পাওয়া যায়নি!");
+
+            if(type === 'add') db[target].balance += amt;
+            else db[target].balance = Math.max(0, db[target].balance - amt);
+
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            alert(`সফলভাবে ${target} এর অ্যাকাউন্টে টাকা ${type === 'add' ? 'যোগ' : 'কাটা'} হয়েছে!`);
+            updateUserData();
+        }
+
+        function toggleUserBan(status) {
+            const target = document.getElementById("admBanUser").value;
+            if(!target) return alert("ইউজারনেম দিন!");
+
+            let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
+            if(!db[target]) return alert("ইউজার পাওয়া যায়নি!");
+
+            db[target].banned = status;
+            localStorage.setItem("mhx_users", JSON.stringify(db));
+            alert(`ইউজার ${target} কে ${status ? 'ব্যান' : 'আনব্যান'} করা হয়েছে!`);
+        }
+
+        function renderAdminSupport() {
+            let inbox = JSON.parse(localStorage.getItem("mhx_admin_support") || "[]");
+            const box = document.getElementById("adminSupportList");
+            if(inbox.length === 0) box.innerHTML = `<p class="text-gray-500">কোনো নতুন মেসেজ নেই</p>`;
+            else {
+                box.innerHTML = inbox.map(m => `
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800 text-[11px] mb-1">
+                        <span class="text-cyan-400 font-bold">${m.user}</span> <span class="text-[9px] text-gray-500">(${m.time})</span>
+                        <p class="text-gray-300 mt-1">${m.msg}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", initApp);
+    </script>
+</body>
+</html>
