@@ -390,29 +390,34 @@
             else alert("টুলটি প্রক্রিয়াধীন রয়েছে!");
         }
         async function generateJWTToken() {
-            const u = document.getElementById("jwtUser").value;
-            const p = document.getElementById("jwtPass").value;
-            if(!u || !p) return alert("গেস্ট ক্রেডেনশিয়ালস দিন!");
+            const u = document.getElementById("jwtUser").value.trim();
+            const p = document.getElementById("jwtPass").value.trim();
+            if(!u || !p) return alert("গেস্ট আইডি এবং পাসওয়ার্ড দিন!");
+            
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
             if(db[currentUser].balance < 10) return alert("পর্যাপ্ত ব্যালেন্স নেই! এড মানি করুন।");
             db[currentUser].balance -= 10;
             db[currentUser].spent += 10;
             localStorage.setItem("mhx_users", JSON.stringify(db));
+
             try {
-                const response = await fetch('/api/generate-jwt', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user: u, pass: p })
-                });
+                // টার্মাক্সে চলা পাইথন ফ্লুয়েন্ট এপিআই সার্ভার থেকে রিয়েল টোকেন ফেচ করা
+                const apiUrl = `http://127.0.0.1:5002/token?uid=${u}&password=${p}`;
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                document.getElementById("jwtResultText").value = data.token || "Termux Response Token Error";
+
+                if(data.status === "success" && data.token) {
+                    document.getElementById("jwtResultText").value = data.token;
+                } else {
+                    document.getElementById("jwtResultText").value = "Error: " + (data.error || "Token generation failed");
+                }
             } catch(err) {
-                const fallbackToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI" + btoa(u) + "IiwiaWF0IjoxNjE2MjM5MDIyfQ.MHX_JWT_TOKEN_" + Math.floor(Math.random()*100000);
-                document.getElementById("jwtResultText").value = fallbackToken + "\n(Generated via local fallback simulation)";
+                document.getElementById("jwtResultText").value = "⚠️ API Connection Error! Make sure python app.py is running on port 5002.";
             }
+
             document.getElementById("jwtOutputBox").classList.remove("hidden");
             updateUserData();
-            addHistory("JWT টোকেন জেনারেট করা হয়েছে (৳10)");
+            addHistory("টার্মাক্স এপিআই থেকে রিয়েল JWT টোকেন জেনারেট করা হয়েছে (৳10)");
         }
         async function uploadTokenToGitHub() {
             const t = document.getElementById("ghToken").value;
