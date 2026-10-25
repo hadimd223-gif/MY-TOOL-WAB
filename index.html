@@ -47,6 +47,136 @@
             </button>
         </div>
     </header>
+    <!-- Main Content Container -->
+    <div class="max-w-md mx-auto p-4">
+
+        <!-- Auth Section -->
+        <div id="authSection" class="glass-card rounded-2xl p-6 my-8 glow-box">
+            <div class="text-center mb-6">
+                <h2 class="font-orbitron text-2xl font-bold text-cyan-400">MHX LOGIN</h2>
+                <p class="text-xs text-gray-400 mt-1">আপনার অ্যাকাউন্ট অ্যাক্সেস করুন</p>
+            </div>
+
+            <!-- Login Box -->
+            <div id="loginForm">
+                <div class="mb-4">
+                    <label class="text-xs text-gray-300 block mb-1">ইউজারনেম</label>
+                    <input type="text" id="loginUser" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="আপনার ইউজারনেম দিন">
+                </div>
+                <div class="mb-5">
+                    <label class="text-xs text-gray-300 block mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="loginPass" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="আপনার পাসওয়ার্ড দিন">
+                </div>
+                <button onclick="handleLogin()" class="btn-vip w-full py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/20">লগইন করুন</button>
+                <p class="text-center text-xs text-cyan-400 mt-4 cursor-pointer hover:underline" onclick="toggleAuth('register')">নতুন অ্যাকাউন্ট তৈরি করুন</p>
+            </div>
+
+            <!-- Register Box -->
+            <div id="registerForm" class="hidden">
+                <div class="mb-4">
+                    <label class="text-xs text-gray-300 block mb-1">নতুন ইউজারনেম</label>
+                    <input type="text" id="regUser" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="ইউজারনেম লিখুন">
+                </div>
+                <div class="mb-5">
+                    <label class="text-xs text-gray-300 block mb-1">নতুন পাসওয়ার্ড</label>
+                    <input type="password" id="regPass" class="w-full bg-slate-900/80 border border-cyan-500/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-100" placeholder="পাসওয়ার্ড দিন">
+                </div>
+                <button onclick="handleRegister()" class="btn-vip w-full py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/20">রেজিস্টার সম্পন্ন করুন</button>
+                <p class="text-center text-xs text-cyan-400 mt-4 cursor-pointer hover:underline" onclick="toggleAuth('login')">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন</p>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="hidden">
+
+            <!-- Tab: Home -->
+            <div id="tabHome" class="tab-page space-y-4">
+                <div class="glass-card rounded-2xl p-4 flex items-center justify-between border-l-4 border-l-cyan-400">
+                    <div>
+                        <p class="text-xs text-gray-400">স্বাগতম,</p>
+                        <h3 id="profileName" class="font-orbitron font-bold text-lg text-cyan-300">Player</h3>
+                        <p id="userUIDDisplay" class="text-[10px] text-gray-500 font-mono">ID: MHX-0000</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="rankBadge" class="rank-badge text-sm block">BRONZE</span>
+                        <p id="userBalanceCard" class="text-lg font-bold text-amber-400 font-mono">৳0.00</p>
+                    </div>
+                </div>
+
+                <h3 class="text-xs font-semibold text-cyan-400 tracking-wider uppercase mt-6 mb-2 flex items-center">
+                    <i class="fa-solid fa-gamepad mr-2"></i> Free Fire VIP Tools & Services
+                </h3>
+                <div class="grid grid-cols-2 gap-3" id="toolsGrid"></div>
+            </div>
+            <!-- Tab: JWT Generator -->
+            <div id="tabJWT" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-orbitron text-md font-bold text-cyan-400"><i class="fa-solid fa-key mr-2"></i> Free Fire JWT Generator</h3>
+                        <span class="text-xs text-amber-400 font-bold">মূল্য: ৳10</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs text-gray-300 block mb-1">গেস্ট আইডি (Guest ID / User)</label>
+                            <input type="text" id="jwtUser" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Guest ID দিন">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-300 block mb-1">গেস্ট পাসওয়ার্ড (Password)</label>
+                            <input type="password" id="jwtPass" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Guest Password দিন">
+                        </div>
+                        <button onclick="generateJWTToken()" class="btn-vip w-full py-2.5 rounded-lg text-xs font-bold">টোকেন জেনারেট করুন (৳10)</button>
+
+                        <div id="jwtOutputBox" class="hidden mt-4 p-3 bg-slate-900/90 rounded-lg border border-cyan-500/30">
+                            <p class="text-[11px] text-gray-400 mb-1">Generated JWT Token:</p>
+                            <textarea id="jwtResultText" class="w-full h-20 bg-black/50 p-2 text-[10px] font-mono text-cyan-300 rounded border border-slate-800" readonly></textarea>
+                            
+                            <hr class="my-3 border-slate-800">
+                            
+                            <h4 class="text-xs font-bold text-purple-400 mb-2"><i class="fa-brands fa-github mr-1"></i> GitHub Auto Upload Sync</h4>
+                            <div class="space-y-2">
+                                <input type="text" id="ghToken" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-[11px]" placeholder="GitHub Personal Access Token">
+                                <input type="text" id="ghRepo" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-[11px]" placeholder="Repo Name (e.g. username/repo)">
+                                <input type="text" id="ghPath" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-[11px]" placeholder="File Path (e.g. tokens/jwt.json)">
+                                <button onclick="uploadTokenToGitHub()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-xs font-bold transition">গিটহাবে টোকেন আপলোড করুন</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Profile Checker -->
+            <div id="tabProfileCheck" class="tab-page hidden space-y-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <h3 class="font-orbitron text-md font-bold text-cyan-400 mb-3"><i class="fa-solid fa-id-card mr-2"></i> Free Fire Profile Checker</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="ffUidInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-cyan-100" placeholder="Free Fire UID দিন">
+                        <button onclick="checkFFProfile()" class="btn-vip px-4 rounded-lg text-xs font-bold">চেক</button>
+                    </div>
+
+                    <div id="profileResultCard" class="hidden bg-slate-900/90 border border-cyan-500/40 rounded-xl p-4 space-y-2">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">প্লেয়ার নেম:</span>
+                            <span id="ffName" class="text-sm font-bold text-cyan-300">MHX_GAMER</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">লেভেল:</span>
+                            <span id="ffLevel" class="text-xs font-bold text-amber-400">Lv. 72</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">লাইক সংখ্যা:</span>
+                            <span id="ffLikes" class="text-xs font-bold text-rose-400">14,250</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs text-gray-400">রিজিওন:</span>
+                            <span id="ffRegion" class="text-xs font-bold text-emerald-400">BD</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400">ব্যাটল পাস:</span>
+                            <span id="ffBP" class="text-xs font-bold text-purple-400">Elite Pass Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Tab: Add Money -->
             <div id="tabAddMoney" class="tab-page hidden space-y-4">
                 <div class="glass-card rounded-2xl p-4">
@@ -54,8 +184,8 @@
                     <p class="text-xs text-gray-400 mb-4">বিকাশ/নগদ সেন্ড মানি করে ব্যালেন্স যুক্ত করুন</p>
                     
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1 mb-4">
-                        <p class="text-gray-300"><span class="text-pink-500 font-bold">bKash (Personal):</span> 01700000000</p>
-                        <p class="text-gray-300"><span class="text-orange-500 font-bold">Nagad (Personal):</span> 01700000000</p>
+                        <p class="text-gray-300"><span class="text-pink-500 font-bold">bKash:</span> 01700000000</p>
+                        <p class="text-gray-300"><span class="text-orange-500 font-bold">Nagad:</span> 01700000000</p>
                     </div>
 
                     <div class="space-y-3">
@@ -117,7 +247,6 @@
         </div>
 
     </div>
-
     <!-- Admin Panel Modal -->
     <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 p-4 overflow-y-auto">
         <div class="max-w-md mx-auto glass-card rounded-2xl p-5 border border-cyan-400/50 mt-10">
@@ -128,14 +257,13 @@
 
             <!-- Admin Login Box -->
             <div id="adminAuthBox">
-                <input type="text" id="adminUser" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs mb-2" placeholder="Admin Username">
-                <input type="password" id="adminPass" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs mb-3" placeholder="Admin Password">
+                <input type="text" id="adminUser" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs mb-2" placeholder="Admin Username (mhxffv11)">
+                <input type="password" id="adminPass" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs mb-3" placeholder="Admin Password (mhxffv11)">
                 <button onclick="loginAdmin()" class="btn-vip w-full py-2 rounded text-xs font-bold">অ্যাডমিন লগইন</button>
             </div>
 
             <!-- Admin Controls -->
             <div id="adminControlsBox" class="hidden space-y-4 text-xs">
-                <!-- User Balance Modify -->
                 <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
                     <h4 class="font-bold text-amber-400">💰 ইউজার ব্যালেন্স কন্ট্রোল</h4>
                     <input type="text" id="admTargetUser" class="w-full bg-slate-950 border border-slate-800 rounded p-2" placeholder="ইউজার আইডি / নাম">
@@ -146,17 +274,15 @@
                     </div>
                 </div>
 
-                <!-- Ban / Unban -->
                 <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
                     <h4 class="font-bold text-red-400">🚫 ইউজার ব্যান / আনব্যান</h4>
-                    <input type="text" id="admBanUser" class="w-full bg-slate-950 border border-slate-800 rounded p-2" placeholder="ইউজার আইডি">
+                    <input type="text" id="admBanUser" class="w-full bg-slate-950 border border-slate-800 rounded p-2" placeholder="ইউজারনেম দিন">
                     <div class="flex gap-2">
                         <button onclick="toggleUserBan(true)" class="w-1/2 bg-red-600 py-1.5 rounded font-bold">ব্যান করুন</button>
                         <button onclick="toggleUserBan(false)" class="w-1/2 bg-blue-600 py-1.5 rounded font-bold">আনব্যান করুন</button>
                     </div>
                 </div>
 
-                <!-- Support Inbox -->
                 <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800">
                     <h4 class="font-bold text-cyan-400 mb-2">📩 সাপোর্ট মেসেজ বক্স</h4>
                     <div id="adminSupportList" class="space-y-1.5 max-h-32 overflow-y-auto">
@@ -166,6 +292,7 @@
             </div>
         </div>
     </div>
+
     <!-- Bottom Navigation Bar -->
     <nav id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-500/30 px-2 py-2 z-40">
         <div class="max-w-md mx-auto flex justify-around text-center">
@@ -191,7 +318,6 @@
             </button>
         </div>
     </nav>
-
     <!-- App Logic Script -->
     <script>
         let currentUser = null;
@@ -293,7 +419,6 @@
             document.getElementById("userBalanceCard").innerText = `৳${userData.balance}`;
             document.getElementById("userUIDDisplay").innerText = `ID: ${userData.uid}`;
 
-            // Calc Rank
             let rank = "BRONZE";
             const s = userData.spent || 0;
             if(s > 15000) rank = "GRANDMASTER 👑";
@@ -409,7 +534,6 @@
             }
         }
 
-        /* Admin Functions */
         function openAdminModal() {
             document.getElementById("adminModal").classList.remove("hidden");
         }
@@ -461,12 +585,14 @@
             let inbox = JSON.parse(localStorage.getItem("mhx_admin_support") || "[]");
             const box = document.getElementById("adminSupportList");
             if(inbox.length === 0) box.innerHTML = `<p class="text-gray-500">কোনো নতুন মেসেজ নেই</p>`;
+            else {
                 box.innerHTML = inbox.map(m => `
-                    <div class="p-2 bg-slate-950 rounded border border-slate-800 text-[11px]">
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800 text-[11px] mb-1">
                         <span class="text-cyan-400 font-bold">${m.user}</span> <span class="text-[9px] text-gray-500">(${m.time})</span>
                         <p class="text-gray-300 mt-1">${m.msg}</p>
                     </div>
                 `).join('');
+            }
         }
 
         window.addEventListener("DOMContentLoaded", initApp);
