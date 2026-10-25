@@ -480,7 +480,6 @@
         async function generateJWTToken() {
             const u = document.getElementById("jwtUser").value;
             const p = document.getElementById("jwtPass").value;
-            const termuxUrl = document.getElementById("termuxApiUrl").value.trim();
             if(!u || !p) return alert("গেস্ট ক্রেডেনশিয়ালস দিন!");
 
             let db = JSON.parse(localStorage.getItem("mhx_users") || "{}");
@@ -524,7 +523,6 @@
         // Termux API Integration for Profile Checker
         async function checkFFProfile() {
             const uid = document.getElementById("ffUidInput").value.trim();
-            const termuxUrl = document.getElementById("termuxProfileUrl").value.trim();
             if(!uid) return alert("ফ্রি ফায়ার UID দিন!");
 
             try {
