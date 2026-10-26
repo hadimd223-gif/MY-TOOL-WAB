@@ -17,38 +17,44 @@
 
     <style>
         @keyframes slowWhiteGlow {
-            0% { border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
-            50% { border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 40px rgba(255, 255, 255, 0.2); }
-            100% { border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
+            0% { border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 15px rgba(255, 255, 255, 0.04); }
+            50% { border-color: rgba(255, 255, 255, 0.45); box-shadow: 0 0 30px rgba(255, 255, 255, 0.15); }
+            100% { border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 15px rgba(255, 255, 255, 0.04); }
+        }
+        html {
+            scroll-behavior: smooth;
         }
         body { 
             font-family: 'Poppins', sans-serif; 
             background: #000000 !important;
             color: #f8fafc;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
         .vip-card {
             background: rgba(8, 8, 8, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1.5px solid rgba(255, 255, 255, 0.2);
             animation: slowWhiteGlow 8s ease-in-out infinite;
+            will-change: transform, box-shadow;
+            transform: translateZ(0);
         }
         .btn-vip {
             background: linear-gradient(135deg, #111111, #2b2b2b);
             border: 1px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
         }
         .btn-vip:hover {
             background: linear-gradient(135deg, #222222, #3d3d3d);
-            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.3);
             transform: translateY(-1px);
         }
         .btn-vip:active { transform: scale(0.98); }
         .product-card {
             background: rgba(12, 12, 12, 0.8);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             padding: 12px;
@@ -56,36 +62,40 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
         .product-card.selected {
             border: 2px solid #ffffff;
             background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
         .product-bullet { height: 10px; width: 10px; background-color: #555555; border-radius: 50%; margin-right: 8px; }
-        .product-card.selected .product-bullet { background-color: #ffffff; box-shadow: 0 0 10px #ffffff; }
-        .active-tab { color: #ffffff !important; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
+        .product-card.selected .product-bullet { background-color: #ffffff; box-shadow: 0 0 8px #ffffff; }
+        .pay-option-card.selected {
+            border: 2px solid #ffffff !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        .active-tab { color: #ffffff !important; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)); }
         .hidden { display: none !important; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
         
         input, select, textarea {
             background: rgba(3, 3, 3, 0.95) !important;
             color: #fff !important;
             border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            backdrop-filter: blur(10px);
         }
-        input:focus { border-color: #ffffff !important; box-shadow: 0 0 12px rgba(255, 255, 255, 0.3) !important; outline: none; }
+        input:focus { border-color: #ffffff !important; box-shadow: 0 0 10px rgba(255, 255, 255, 0.3) !important; outline: none; }
     </style>
 </head>
 <body class="select-none bg-black">
 <div id="app-content" class="relative max-w-md mx-auto min-h-screen border-x border-white/10 pb-24 bg-black">
-    <header class="bg-black/95 backdrop-blur-2xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/15 shadow-2xl">
+    <header class="bg-black/95 backdrop-blur-xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/15 shadow-xl">
         <div class="flex items-center gap-2">
             <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-10 object-contain">
         </div>
-        <div id="header-balance-container" class="hidden bg-black/60 border border-white/30 px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-[0_0_12px_rgba(255,255,255,0.15)]">
+        <div id="header-balance-container" class="hidden bg-black/60 border border-white/30 px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]">
             <i class="fas fa-wallet mr-1 text-white"></i> ৳ <span id="header-balance">0</span>
         </div>
         <div id="header-login-container">
@@ -114,8 +124,8 @@
                     <i class="fas fa-times text-lg"></i>
                 </button>
                 <div id="login-view">
-                    <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">VIP LOGIN</h2>
-                    <button onclick="handleGoogleLogin()" class="w-full bg-black/80 border border-white/20 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs hover:border-white/50">
+                    <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP LOGIN</h2>
+                    <button onclick="handleGoogleLogin()" class="w-full bg-black/90 border border-white/25 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs hover:border-white/60">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4" alt="Google"> Login with Google
                     </button>
                     <div class="mb-4">
@@ -132,7 +142,7 @@
                     </div>
                 </div>
                 <div id="register-view" class="hidden">
-                    <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">VIP REGISTER</h2>
+                    <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP REGISTER</h2>
                     <div class="space-y-3 mb-5">
                         <input type="text" id="reg-name" placeholder="Name" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
                         <input type="number" id="reg-phone" placeholder="Phone" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
@@ -174,7 +184,7 @@
             </div>
 
             <div class="mt-6 mb-5">
-                <h3 class="text-center font-bold text-white text-sm mb-3 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">Latest Orders</h3>
+                <h3 class="text-center font-bold text-white text-sm mb-3">Latest Orders</h3>
                 <div id="latest-orders-list" class="space-y-2 px-0.5">
                     <div class="vip-card p-3 rounded-xl flex items-center justify-between">
                         <div class="h-3 bg-white/20 rounded w-24"></div>
@@ -279,7 +289,7 @@
             <span id="total-price" class="hidden">0</span>
         </section>
 
-        <!-- Floating UID Profile Modal with Close Button -->
+        <!-- Floating UID Profile Modal -->
         <div id="uid-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden animate-fade-in">
             <div class="vip-card w-full max-w-sm rounded-2xl p-5 relative border border-white/30 shadow-2xl max-h-[85vh] overflow-y-auto">
                 <button onclick="closeUidModal()" class="absolute top-3 right-3 text-white bg-black/90 w-7 h-7 rounded-full flex items-center justify-center border border-white/30 hover:bg-white hover:text-black transition"><i class="fas fa-times text-xs"></i></button>
@@ -352,7 +362,7 @@
         </section>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black/95 backdrop-blur-2xl border-t border-white/15 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-[0_-5px_25px_rgba(0,0,0,0.9)]">
+    <nav class="fixed bottom-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/15 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-2xl">
         <div class="flex justify-between items-center">
             <button onclick="showSec('home')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400 active-tab" id="nav-home"><i class="fas fa-home text-base"></i><span class="text-[9px] font-semibold">Home</span></button>
             <button onclick="showSec('tutorial')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400" id="nav-tutorial"><i class="fas fa-video text-base"></i><span class="text-[9px] font-semibold">Tutorial</span></button>
@@ -440,8 +450,9 @@
         auth.signInWithEmailAndPassword(email, pass).then(() => { showSec('home'); Swal.close(); }).catch((err) => Swal.fire('Login Failed', err.message, 'error'));
     }
     
+    // Fixed Google Popup Authentication
     function handleGoogleLogin() {
-        var provider = new firebase.auth.GoogleAuthProvider();
+        const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider).then((result) => {
             const user = result.user;
             db.collection('users').doc(user.uid).get().then((docSnapshot) => {
@@ -450,7 +461,11 @@
                 }
             });
             showSec('home');
-        }).catch((error) => { Swal.fire('Error', error.message, 'error'); });
+            Swal.fire({ toast: true, icon: 'success', title: 'Login Successful!', position: 'top', showConfirmButton: false, timer: 1500 });
+        }).catch((error) => { 
+            console.error(error);
+            Swal.fire('Error', error.message, 'error'); 
+        });
     }
 
     function showAuthPage() { showSec('auth'); }
@@ -592,7 +607,7 @@
         document.getElementById('opt-' + option).classList.add('selected');
     }
 
-    // UID Checker API integration with Fixed Name & Avatar parsing
+    // UID Checker API Integration
     async function checkPlayerUID() {
         const uid = document.getElementById('game-player-id').value.trim();
         if(!uid) return Swal.fire('Error', 'Please Enter Player UID First!', 'warning');
@@ -608,7 +623,6 @@
             
             if(data) {
                 const info = data.basicInfo || data.accountInfo || data.playerInfo || data;
-                
                 const name = info.nickname || info.name || data.nickname || data.name || "Unknown Player";
                 const level = info.level || data.level || "N/A";
                 const likes = info.likes || data.likes || "N/A";
@@ -650,24 +664,63 @@
         document.getElementById('uid-modal').classList.add('hidden');
     }
 
+    // Fixed Payment and Order Logic
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         let playerId = document.getElementById('game-player-id').value.trim();
         if(!playerId) return Swal.fire('Error', 'Please Enter Player ID!', 'warning');
         if(!selectedProduct) return Swal.fire('Error', 'Select a package!', 'warning');
+
         if (selectedPaymentMethod === 'instant') {
-            isDirectBuy = true; currentDepositAmount = selectedProduct.price;
-            pendingDirectOrder = { playerId, product: selectedProduct, gameId: selectedGameId, gameName: selectedGameName, gameType: selectedGameType };
+            currentDepositAmount = selectedProduct.price;
             document.getElementById('topup-sec').classList.add('hidden');
             document.getElementById('addmoney-sec').classList.remove('hidden');
             document.getElementById('am-step-1').classList.add('hidden');
             document.getElementById('am-step-2').classList.remove('hidden');
             return;
         }
-        if(userBalance < selectedProduct.price) return Swal.fire('Error', 'Low Balance. Please Add Money.', 'error');
+
+        // Wallet Payment Logic
+        if (userBalance < selectedProduct.price) {
+            Swal.fire({
+                title: 'Low Balance!',
+                text: 'আপনার ওয়ালেটে পর্যাপ্ত টাকা নেই। কি বিকাশ বা অনলাইন পেমেন্ট করতে চান?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Add Money',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    currentDepositAmount = selectedProduct.price;
+                    document.getElementById('topup-sec').classList.add('hidden');
+                    document.getElementById('addmoney-sec').classList.remove('hidden');
+                    document.getElementById('am-step-1').classList.add('hidden');
+                    document.getElementById('am-step-2').classList.remove('hidden');
+                }
+            });
+            return;
+        }
+
+        Swal.showLoading();
         db.collection('users').doc(currentUser.uid).update({ balance: userBalance - selectedProduct.price }).then(() => {
-            return db.collection('orders').add({ userId: currentUser.uid, userName: currentUser.email, gameName: selectedGameName, gameId: selectedGameId, playerId, productName: selectedProduct.name, price: selectedProduct.price, type: selectedGameType, status: 'pending', date: new Date() });
-        }).then(() => { Swal.fire('Success', 'Order Placed Successfully!', 'success'); showSec('home'); });
+            return db.collection('orders').add({ 
+                userId: currentUser.uid, 
+                userName: currentUser.email, 
+                gameName: selectedGameName, 
+                gameId: selectedGameId, 
+                playerId, 
+                productName: selectedProduct.name, 
+                price: selectedProduct.price, 
+                type: selectedGameType, 
+                status: 'pending', 
+                date: new Date() 
+            });
+        }).then(() => { 
+            Swal.fire('Success', 'Order Placed Successfully!', 'success'); 
+            showSec('home'); 
+        }).catch((err) => {
+            Swal.fire('Error', err.message, 'error');
+        });
     }
 
     function showSec(secId) {
@@ -678,6 +731,7 @@
         const activeNav = document.getElementById('nav-' + secId);
         if(activeNav) activeNav.classList.add('active-tab');
         if(secId === 'history') loadHistory();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
     function loadHistory() {
