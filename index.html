@@ -543,7 +543,8 @@
             });
         } catch (error) { console.error(error); }
     }
-
+</script>
+<script>
     function loadTutorials() {
         db.collection("tutorials").onSnapshot((snapshot) => {
             const container = document.getElementById('tutorial-list-container');
@@ -591,7 +592,7 @@
         document.getElementById('opt-' + option).classList.add('selected');
     }
 
-    // UID Checker API integration with Detailed Floating Profile Window
+    // UID Checker API integration with Fixed Name & Avatar parsing
     async function checkPlayerUID() {
         const uid = document.getElementById('game-player-id').value.trim();
         if(!uid) return Swal.fire('Error', 'Please Enter Player UID First!', 'warning');
@@ -606,14 +607,14 @@
             const data = await res.json();
             
             if(data) {
-                const basic = data.basicInfo || data.accountInfo || data;
-                const name = basic.nickname || data.nickname || "Unknown Player";
-                const level = basic.level || data.level || "N/A";
-                const likes = basic.likes || data.likes || "N/A";
-                const region = basic.region || data.region || "BD";
-                const signature = basic.signature || data.signature || "No signature available";
-                const avatar = basic.avatar || data.avatar || "https://placehold.co/100";
-                const banner = basic.banner || data.banner || "";
+                const info = data.basicInfo || data.accountInfo || data.playerInfo || data;
+                
+                const name = info.nickname || info.name || data.nickname || data.name || "Unknown Player";
+                const level = info.level || data.level || "N/A";
+                const likes = info.likes || data.likes || "N/A";
+                const region = info.region || data.region || "BD";
+                const signature = info.signature || data.signature || "No signature available";
+                const avatar = info.avatar || info.avatarUrl || info.profilePic || data.avatar || "https://placehold.co/100";
 
                 body.innerHTML = `
                     <div class="bg-black/90 p-3.5 rounded-xl border border-white/20 space-y-3">
@@ -728,26 +729,20 @@
     function goToPaymentPage(method, theme, logo) {
         currentPaymentMethod = method;
         document.getElementById('pay-method-logo').src = logo;
-document.getElementById('am-step-3').classList.add('hidden');
-    document.getElementById('am-step-2').classList.remove('hidden');
-}
-function goToPaymentPage(method, theme, logo) {
-    currentPaymentMethod = method;
-    document.getElementById('pay-method-logo').src = logo;
-    document.getElementById('pay-amount-display').innerText = currentDepositAmount;
-    document.getElementById('am-step-2').classList.add('hidden');
-    document.getElementById('am-step-3').classList.remove('hidden');
-}
-function copyPayNumber() {
-    navigator.clipboard.writeText("01635068564");
-    Swal.fire({ toast: true, icon: 'success', title: 'Number Copied!', position: 'top', showConfirmButton: false, timer: 1500 });
-}
-function handleNewVerify() {
-    const trxId = document.getElementById('pay-trx-input').value.trim();
-    if(!trxId) return Swal.fire('Error', 'Enter Transaction ID', 'warning');
-    db.collection('deposits').add({ userId: currentUser.uid, amount: currentDepositAmount, trxId: trxId.toUpperCase(), status: 'pending', date: new Date(), userEmail: currentUser.email, method: currentPaymentMethod })
-    .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
-}
+        document.getElementById('pay-amount-display').innerText = currentDepositAmount;
+        document.getElementById('am-step-2').classList.add('hidden');
+        document.getElementById('am-step-3').classList.remove('hidden');
+    }
+    function copyPayNumber() {
+        navigator.clipboard.writeText("01635068564");
+        Swal.fire({ toast: true, icon: 'success', title: 'Number Copied!', position: 'top', showConfirmButton: false, timer: 1500 });
+    }
+    function handleNewVerify() {
+        const trxId = document.getElementById('pay-trx-input').value.trim();
+        if(!trxId) return Swal.fire('Error', 'Enter Transaction ID', 'warning');
+        db.collection('deposits').add({ userId: currentUser.uid, amount: currentDepositAmount, trxId: trxId.toUpperCase(), status: 'pending', date: new Date(), userEmail: currentUser.email, method: currentPaymentMethod })
+        .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
+    }
 </script>
 </body>
 </html>
