@@ -16,19 +16,24 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     
+    
     <style>
-        @keyframes smoothWhiteFreshGlow {
+        @keyframes flashWhiteGlow {
             0% { 
-                border-color: rgba(255, 255, 255, 0.15); 
-                box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 10px rgba(255, 255, 255, 0.02); 
+                border-color: rgba(255, 255, 255, 0.2); 
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), inset 0 0 8px rgba(255, 255, 255, 0.03); 
             }
-            50% { 
-                border-color: rgba(255, 255, 255, 0.55); 
-                box-shadow: 0 0 35px rgba(255, 255, 255, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.08); 
+            33% { 
+                border-color: rgba(34, 211, 238, 0.8); 
+                box-shadow: 0 0 30px rgba(34, 211, 238, 0.4), inset 0 0 15px rgba(34, 211, 238, 0.15); 
+            }
+            66% { 
+                border-color: rgba(255, 255, 255, 0.85); 
+                box-shadow: 0 0 35px rgba(255, 255, 255, 0.5), inset 0 0 18px rgba(255, 255, 255, 0.2); 
             }
             100% { 
-                border-color: rgba(255, 255, 255, 0.15); 
-                box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 10px rgba(255, 255, 255, 0.02); 
+                border-color: rgba(255, 255, 255, 0.2); 
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), inset 0 0 8px rgba(255, 255, 255, 0.03); 
             }
         }
         html { scroll-behavior: smooth; }
@@ -41,28 +46,28 @@
             touch-action: manipulation;
         }
         .vip-card {
-            background: rgba(12, 12, 12, 0.65);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: rgba(12, 12, 12, 0.7);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
             border: 1.5px solid rgba(255, 255, 255, 0.2);
-            animation: smoothWhiteFreshGlow 5s ease-in-out infinite;
+            animation: flashWhiteGlow 4s ease-in-out infinite;
             will-change: transform, box-shadow, border-color;
             transform: translateZ(0);
             border-radius: 16px;
         }
         .btn-vip {
-            background: linear-gradient(135deg, #1a1a1a, #333333);
-            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: linear-gradient(135deg, #161616, #2d2d2d);
+            border: 1px solid rgba(34, 211, 238, 0.4);
             transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.15);
         }
-        .btn-vip:hover { border-color: rgba(255, 255, 255, 0.8); }
+        .btn-vip:hover { border-color: rgba(255, 255, 255, 0.9); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
         .btn-vip:active { transform: scale(0.97); }
         .product-card {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(15, 15, 15, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 14px;
             padding: 12px;
             display: flex;
@@ -72,29 +77,30 @@
             transition: all 0.15s ease;
         }
         .product-card.selected {
-            border: 2px solid #ffffff;
-            background: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            border: 2px solid #22d3ee;
+            background: rgba(34, 211, 238, 0.15);
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.5);
         }
         .product-bullet { height: 10px; width: 10px; background-color: #666666; border-radius: 50%; margin-right: 8px; }
-        .product-card.selected .product-bullet { background-color: #ffffff; box-shadow: 0 0 10px #ffffff; }
+        .product-card.selected .product-bullet { background-color: #22d3ee; box-shadow: 0 0 10px #22d3ee; }
         .pay-option-card.selected {
-            border: 2px solid #ffffff !important;
-            background: rgba(255, 255, 255, 0.18) !important;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            border: 2px solid #22d3ee !important;
+            background: rgba(34, 211, 238, 0.15) !important;
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.5);
         }
-        .active-tab { color: #ffffff !important; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)); }
+        .active-tab { color: #ffffff !important; filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.9)); }
         .hidden { display: none !important; }
         .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         input, select, textarea {
-            background: rgba(8, 8, 8, 0.85) !important;
-            backdrop-filter: blur(15px);
+            background: rgba(8, 8, 8, 0.9) !important;
+            backdrop-filter: blur(20px);
             color: #fff !important;
             border: 1px solid rgba(255, 255, 255, 0.25) !important;
         }
-        input:focus { border-color: #ffffff !important; box-shadow: 0 0 15px rgba(255, 255, 255, 0.4) !important; }
+        input:focus { border-color: #22d3ee !important; box-shadow: 0 0 20px rgba(34, 211, 238, 0.5) !important; }
     </style>
+
 
 </head>
 <body class="select-none bg-black">
