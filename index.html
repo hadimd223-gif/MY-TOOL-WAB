@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dream TopUp - Smooth VIP Edition</title>
+    <title>Dream TopUp - Dark VIP Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -16,40 +16,35 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        /* Slow, smooth transition between Soft Pink/Red and Soft Blue/Cyan */
-        @keyframes smoothGlow {
-            0% { border-color: rgba(244, 63, 94, 0.4); box-shadow: 0 0 12px rgba(244, 63, 94, 0.2); }
-            50% { border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 0 12px rgba(6, 182, 212, 0.2); }
-            100% { border-color: rgba(244, 63, 94, 0.4); box-shadow: 0 0 12px rgba(244, 63, 94, 0.2); }
-        }
-        @keyframes slowBgGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes slowGlow {
+            0% { border-color: rgba(244, 63, 94, 0.5); box-shadow: 0 0 15px rgba(244, 63, 94, 0.25); }
+            50% { border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 0 15px rgba(6, 182, 212, 0.25); }
+            100% { border-color: rgba(244, 63, 94, 0.5); box-shadow: 0 0 15px rgba(244, 63, 94, 0.25); }
         }
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(-45deg, #090d16, #0f172a, #0d1322, #090d16);
-            background-size: 300% 300%;
-            animation: slowBgGradient 20s ease-in-out infinite;
+            background: #000000;
             color: #f8fafc;
             -webkit-tap-highlight-color: transparent;
         }
         .vip-card {
-            background: #111827;
-            border: 1.5px solid rgba(255, 255, 255, 0.08);
-            animation: smoothGlow 10s ease-in-out infinite;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            animation: slowGlow 12s ease-in-out infinite;
             will-change: border-color, box-shadow;
         }
         .btn-vip {
             background: linear-gradient(135deg, #f43f5e, #0284c7);
             background-size: 200% auto;
             transition: background-position 0.4s ease, transform 0.2s ease;
-            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
+            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
         }
         .btn-vip:active { transform: scale(0.98); }
         .product-card {
-            background: #1e293b;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 12px;
@@ -61,7 +56,7 @@
         }
         .product-card.selected {
             border: 2px solid #f43f5e;
-            background: rgba(244, 63, 94, 0.12);
+            background: rgba(244, 63, 94, 0.15);
         }
         .product-bullet { height: 10px; width: 10px; background-color: #64748b; border-radius: 50%; margin-right: 8px; }
         .product-card.selected .product-bullet { background-color: #f43f5e; }
@@ -71,7 +66,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         input, select, textarea {
-            background: #0f172a !important;
+            background: rgba(5, 5, 10, 0.9) !important;
             color: #fff !important;
             border: 1px solid rgba(255,255,255,0.15) !important;
         }
@@ -80,11 +75,11 @@
 </head>
 <body class="select-none">
 <div id="app-content" class="relative max-w-md mx-auto min-h-screen border-x border-white/5 pb-24">
-    <header class="bg-slate-900/90 p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/10 shadow-md">
+    <header class="bg-black/90 backdrop-blur-xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/10 shadow-lg">
         <div class="flex items-center gap-2">
             <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-10 object-contain">
         </div>
-        <div id="header-balance-container" class="hidden bg-slate-800 border border-sky-500/30 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-400">
+        <div id="header-balance-container" class="hidden bg-black/60 border border-sky-500/30 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-400">
             <i class="fas fa-wallet mr-1 text-pink-500"></i> ৳ <span id="header-balance">0</span>
         </div>
         <div id="header-login-container">
@@ -101,7 +96,7 @@
             </button>
             <div class="pr-6">
                 <div class="font-bold text-xs text-sky-400 mb-1 flex items-center gap-1"><i class="fas fa-bullhorn text-pink-500"></i> Notice</div>
-                <div id="notice-text" class="text-xs text-gray-300">স্বাগতম আমাদের স্মুথ ভিআইপি সিস্টেমে...</div>
+                <div id="notice-text" class="text-xs text-gray-300">স্বাগতম আমাদের ডার্ক ভিআইপি সিস্টেমে...</div>
             </div>
         </div>
     </div>
@@ -114,7 +109,7 @@
                 </button>
                 <div id="login-view">
                     <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP LOGIN</h2>
-                    <button onclick="handleGoogleLogin()" class="w-full bg-slate-800 border border-white/10 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs">
+                    <button onclick="handleGoogleLogin()" class="w-full bg-black/60 border border-white/10 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4" alt="Google"> Login with Google
                     </button>
                     <div class="mb-4">
@@ -148,7 +143,7 @@
         <section id="home-sec" class="animate-fade-in pb-8">
             <div id="banner-container" class="mb-5 overflow-hidden rounded-2xl h-40 vip-card relative">
                 <div id="slider-wrapper" class="flex h-full w-full transition-transform duration-300 ease-out">
-                    <img src="https://placehold.co/600x300/0f172a/FFF?text=Loading..." class="w-full h-full object-cover flex-shrink-0">
+                    <img src="https://placehold.co/600x300/000/FFF?text=Loading..." class="w-full h-full object-cover flex-shrink-0">
                 </div>
                 <div id="slider-dots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
@@ -176,8 +171,8 @@
                 <h3 class="text-center font-bold text-sky-400 text-sm mb-3">Latest Orders</h3>
                 <div id="latest-orders-list" class="space-y-2 px-0.5">
                     <div class="vip-card p-3 rounded-xl flex items-center justify-between">
-                        <div class="h-3 bg-slate-800 rounded w-24"></div>
-                        <div class="h-3 bg-slate-800 rounded w-12"></div>
+                        <div class="h-3 bg-white/10 rounded w-24"></div>
+                        <div class="h-3 bg-white/10 rounded w-12"></div>
                     </div>
                 </div>
             </div>
@@ -194,17 +189,17 @@
                     <h2 id="about-site-name" class="text-xs font-bold text-white">Nenox Shop</h2>
                     <p class="text-[10px] text-gray-400">Free Fire Diamond TopUp | VIP Platform</p>
                 </div>
-                <p class="text-[10px] text-center text-gray-300 mb-4 p-2.5 bg-slate-900/80 rounded-lg border border-white/5">
+                <p class="text-[10px] text-center text-gray-300 mb-4 p-2.5 bg-black/60 rounded-lg border border-white/5">
                     <b>নোটিশ:</b> যেকোন সমস্যায় সাপোর্ট মেসেজারে অর্ডার আইডি সহ জানান।
                 </p>
                 <div class="grid grid-cols-2 gap-2 mb-4">
-                    <a id="about-facebook" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-slate-800 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-facebook-f text-blue-400"></i> Facebook</a>
-                    <a id="about-youtube" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-slate-800 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-youtube text-red-400"></i> YouTube</a>
-                    <a id="about-telegram" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-slate-800 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-telegram-plane text-sky-400"></i> Telegram</a>
-                    <a id="about-whatsapp" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-slate-800 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-whatsapp text-green-400"></i> WhatsApp</a>
+                    <a id="about-facebook" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-facebook-f text-blue-400"></i> Facebook</a>
+                    <a id="about-youtube" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-youtube text-red-400"></i> YouTube</a>
+                    <a id="about-telegram" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-telegram-plane text-sky-400"></i> Telegram</a>
+                    <a id="about-whatsapp" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-whatsapp text-green-400"></i> WhatsApp</a>
                 </div>
                 <div class="text-center border-t border-white/5 pt-3">
-                    <p class="text-[9px] text-gray-500">© 2026 Nano TopUp BD | Ultra Fast Edition</p>
+                    <p class="text-[9px] text-gray-500">© 2026 Nano TopUp BD | Dark VIP Edition</p>
                 </div>
             </div>
         </section>
@@ -224,7 +219,7 @@
 
         <section id="topup-sec" class="hidden animate-fade-in pb-10">
             <div class="vip-card p-3 rounded-2xl flex items-center gap-3 mb-3 relative">
-                <button onclick="showSec('home')" class="text-gray-400 w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-slate-800"><i class="fas fa-times text-xs"></i></button>
+                <button onclick="showSec('home')" class="text-gray-400 w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/50"><i class="fas fa-times text-xs"></i></button>
                 <img id="topup-game-img" src="" class="w-12 h-12 rounded-lg object-cover border border-white/10">
                 <div>
                     <h3 class="font-bold text-white text-xs" id="topup-game-title">Game Name</h3>
@@ -295,9 +290,9 @@
                     <button onclick="backToAmountStep()" class="text-gray-400 mb-3 float-left text-xs"><i class="fas fa-arrow-left"></i> Back</button>
                     <h2 class="text-white font-bold mb-5 text-xs">Select Auto Pay Method</h2>
                     <div class="grid grid-cols-3 gap-2.5">
-                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-slate-800 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" class="h-5 object-contain"></button>
-                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-slate-800 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" class="h-4 object-contain"></button>
-                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-slate-800 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" class="h-4 object-contain"></button>
+                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-black/50 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" class="h-5 object-contain"></button>
+                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-black/50 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" class="h-4 object-contain"></button>
+                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-black/50 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" class="h-4 object-contain"></button>
                     </div>
                 </div>
             </div>
@@ -310,7 +305,7 @@
                     
                     <div class="space-y-2 mb-4">
                         <p class="text-xs text-gray-300">• এই নম্বরে টাকা পাঠান:</p>
-                        <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-white/10">
+                        <div class="flex items-center justify-between bg-black/60 p-2.5 rounded-xl border border-white/10">
                             <span id="pay-admin-number" class="text-base font-bold text-yellow-300">01635068564</span>
                             <button onclick="copyPayNumber()" class="btn-vip px-2.5 py-1 rounded-lg text-xs text-white">COPY</button>
                         </div>
@@ -328,7 +323,7 @@
         <section id="account-sec" class="hidden animate-fade-in pb-20">
             <div class="vip-card p-5 rounded-2xl text-center">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-sky-500 p-0.5 mx-auto mb-2.5">
-                    <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-white text-xl font-bold" id="profile-initial">U</div>
+                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-white text-xl font-bold" id="profile-initial">U</div>
                 </div>
                 <h2 class="text-xs font-bold text-white mb-1">Hi, <span id="acc-profile-name">User</span></h2>
                 <p class="text-xs text-sky-400 font-bold mb-4">Balance: <span id="acc-profile-balance">0</span> Tk</p>
@@ -337,7 +332,7 @@
         </section>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-slate-900/95 border-t border-white/10 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-xl">
+    <nav class="fixed bottom-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-2xl">
         <div class="flex justify-between items-center">
             <button onclick="showSec('home')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400 active-tab" id="nav-home"><i class="fas fa-home text-base"></i><span class="text-[9px] font-semibold">Home</span></button>
             <button onclick="showSec('tutorial')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400" id="nav-tutorial"><i class="fas fa-video text-base"></i><span class="text-[9px] font-semibold">Tutorial</span></button>
@@ -624,7 +619,7 @@
             list.innerHTML = "";
             snapshot.forEach(doc => {
                 const d = doc.data();
-                list.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs"><div><span class="font-bold text-white">${d.gameName}</span><br><span class="text-gray-400 text-[10px]">${d.productName}</span></div><div class="text-right"><span class="text-sky-400 font-bold">৳${d.price}</span><br><span class="text-yellow-400 text-[10px]">${d.status}</span></div></div>`;
+                list.innerHTML += `<div class="bg-black/50 p-2.5 rounded-xl flex justify-between items-center text-xs border border-white/5"><div><span class="font-bold text-white">${d.gameName}</span><br><span class="text-gray-400 text-[10px]">${d.productName}</span></div><div class="text-right"><span class="text-sky-400 font-bold">৳${d.price}</span><br><span class="text-yellow-400 text-[10px]">${d.status}</span></div></div>`;
             });
         });
     }
