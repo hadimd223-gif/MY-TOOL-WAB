@@ -21,9 +21,7 @@
             50% { border-color: rgba(255, 255, 255, 0.45); box-shadow: 0 0 30px rgba(255, 255, 255, 0.15); }
             100% { border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 15px rgba(255, 255, 255, 0.04); }
         }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body { 
             font-family: 'Poppins', sans-serif; 
             background: #000000 !important;
@@ -47,10 +45,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
         }
-        .btn-vip:hover {
-            background: linear-gradient(135deg, #222222, #3d3d3d);
-            transform: translateY(-1px);
-        }
+        .btn-vip:hover { background: linear-gradient(135deg, #222222, #3d3d3d); transform: translateY(-1px); }
         .btn-vip:active { transform: scale(0.98); }
         .product-card {
             background: rgba(12, 12, 12, 0.8);
@@ -80,7 +75,6 @@
         .hidden { display: none !important; }
         .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
-        
         input, select, textarea {
             background: rgba(3, 3, 3, 0.95) !important;
             color: #fff !important;
@@ -193,12 +187,6 @@
                 </div>
             </div>
 
-            <div id="promo-banner-container" class="mt-6 mb-5 hidden">
-                <a id="promo-banner-link" href="#" target="_blank" class="block w-full aspect-video rounded-2xl overflow-hidden vip-card">
-                    <img id="promo-banner-img" src="" class="w-full h-full object-cover">
-                </a>
-            </div>
-            
             <div class="mt-6 vip-card p-4 rounded-2xl">
                 <div class="text-center mb-4">
                     <img id="about-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-8 mx-auto object-contain mb-1">
@@ -396,8 +384,6 @@
     let gamesData = {};
     let isAutoPayEnabled = false;
     let selectedPaymentMethod = 'wallet';
-    let isDirectBuy = false;
-    let pendingDirectOrder = null;
     let currentDepositAmount = 0;
     let currentPaymentMethod = '';
 
@@ -411,9 +397,7 @@
                 document.getElementById('header-logo-img').src = logoUrl;
                 document.getElementById('about-logo-img').src = logoUrl;
                 document.getElementById('about-site-name').innerText = siteName;
-                if(data.appLink) {
-                    document.getElementById('home-app-dl').href = data.appLink;
-                }
+                if(data.appLink) document.getElementById('home-app-dl').href = data.appLink;
                 document.title = siteName;
             }
         });
@@ -450,9 +434,10 @@
         auth.signInWithEmailAndPassword(email, pass).then(() => { showSec('home'); Swal.close(); }).catch((err) => Swal.fire('Login Failed', err.message, 'error'));
     }
     
-    // Fixed Google Popup Authentication
+    // Fixed Google Popup Authentication (Direct Pop-up on mobile/desktop without redirect issues)
     function handleGoogleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
         auth.signInWithPopup(provider).then((result) => {
             const user = result.user;
             db.collection('users').doc(user.uid).get().then((docSnapshot) => {
@@ -463,8 +448,8 @@
             showSec('home');
             Swal.fire({ toast: true, icon: 'success', title: 'Login Successful!', position: 'top', showConfirmButton: false, timer: 1500 });
         }).catch((error) => { 
-            console.error(error);
-            Swal.fire('Error', error.message, 'error'); 
+            console.error("Google Auth Error:", error);
+            Swal.fire('Login Error', error.message, 'error'); 
         });
     }
 
@@ -524,6 +509,38 @@
         loadRecentOrdersGlobal(); 
     }
 
+    // Fixed Banner Loader Function
+    function loadBanners() {
+        db.collection("banners").onSnapshot((snapshot) => {
+            const wrapper = document.getElementById('slider-wrapper');
+            const dotsContainer = document.getElementById('slider-dots');
+            if (!wrapper) return;
+
+            let slidesHTML = "";
+            let dotsHTML = "";
+            let index = 0;
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const imgUrl = data.image || data.imageUrl || data.url;
+                if (imgUrl) {
+                    slidesHTML += `<img src="${imgUrl}" class="w-full h-full object-cover flex-shrink-0" onerror="this.src='https://placehold.co/600x300/000/FFF?text=Banner+Error'">`;
+                    dotsHTML += `<button class="w-2 h-2 rounded-full bg-white/${index === 0 ? '100' : '40'} transition-all"></button>`;
+                    index++;
+                }
+            });
+
+            if (slidesHTML) {
+                wrapper.innerHTML = slidesHTML;
+                if (dotsContainer) dotsContainer.innerHTML = dotsHTML;
+            } else {
+                wrapper.innerHTML = `<img src="https://placehold.co/600x300/000/FFF?text=No+Banner+Found" class="w-full h-full object-cover flex-shrink-0">`;
+            }
+        }, (error) => {
+            console.error("Banner load error: ", error);
+        });
+    }
+
     async function loadGamesAndCategories() {
         const listContainer = document.getElementById('services-list');
         listContainer.innerHTML = `<div class="text-center py-8 text-white"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
@@ -558,8 +575,7 @@
             });
         } catch (error) { console.error(error); }
     }
-</script>
-<script>
+
     function loadTutorials() {
         db.collection("tutorials").onSnapshot((snapshot) => {
             const container = document.getElementById('tutorial-list-container');
@@ -607,7 +623,6 @@
         document.getElementById('opt-' + option).classList.add('selected');
     }
 
-    // UID Checker API Integration
     async function checkPlayerUID() {
         const uid = document.getElementById('game-player-id').value.trim();
         if(!uid) return Swal.fire('Error', 'Please Enter Player UID First!', 'warning');
@@ -664,7 +679,6 @@
         document.getElementById('uid-modal').classList.add('hidden');
     }
 
-    // Fixed Payment and Order Logic
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         let playerId = document.getElementById('game-player-id').value.trim();
@@ -680,7 +694,6 @@
             return;
         }
 
-        // Wallet Payment Logic
         if (userBalance < selectedProduct.price) {
             Swal.fire({
                 title: 'Low Balance!',
@@ -737,7 +750,8 @@
     function loadHistory() {
         const list = document.getElementById('history-list');
         if (!currentUser) return;
-        db.collection('orders').where('userId', '==', currentUser.uid).limit(20).get().then(snapshot => {
+        db.collecticat << 'EOF' >> index.html
+on('orders').where('userId', '==', currentUser.uid).limit(20).get().then(snapshot => {
             list.innerHTML = "";
             snapshot.forEach(doc => {
                 const d = doc.data();
@@ -754,15 +768,6 @@
                 const data = doc.data();
                 container.innerHTML += `<div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs"><div><span class="font-bold text-white">${data.userName ? data.userName.split('@')[0] : 'User'}</span><br><span class="text-gray-400 text-[10px]">${data.productName}</span></div><span class="text-white font-bold">৳${data.price}</span></div>`;
             });
-        });
-    }
-
-    function loadBanners() {
-        db.collection("banners").onSnapshot((snapshot) => {
-            const wrapper = document.getElementById('slider-wrapper');
-            let slidesHTML = "";
-            snapshot.forEach((doc) => { if(doc.data().image) slidesHTML += `<img src="${doc.data().image}" class="w-full h-full object-cover flex-shrink-0">`; });
-            if(slidesHTML) wrapper.innerHTML = slidesHTML;
         });
     }
 
