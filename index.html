@@ -158,9 +158,17 @@
                 <div id="slider-dots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-2.5 mb-5 px-0.5">
-                <a id="home-whatsapp" href="#" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
-                    <div class="w-6 h-6 rounded-full flex items-center justify-center bg-white/10 text-white"><i class="fab fa-whatsapp text-sm"></i></div>
+            
+            <div class="grid grid-cols-2 gap-2.5 mb-5 px-0.5">
+                <a id="home-telegram" href="https://t.me/mhxffv111" target="_blank" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center bg-white/10 text-white"><i class="fab fa-telegram-plane text-sm"></i></div>
+                    <span class="text-[10px] font-bold text-gray-200">Telegram Support</span>
+                </a>
+                <a id="home-app-dl" href="#" target="_blank" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
+                    <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-white/10 text-white"><i class="fas fa-download text-xs"></i></div>
+                    <span class="text-[10px] font-bold text-gray-200">App Download</span>
+                </a>
+            </div>
                     <span class="text-[10px] font-bold text-gray-200">WhatsApp</span>
                 </a>
                 <a id="home-telegram" href="#" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
@@ -510,6 +518,11 @@
     }
 
     // Fixed Banner Loader Function
+    
+    let bannerInterval = null;
+    let currentSlideIndex = 0;
+    let totalSlides = 0;
+
     function loadBanners() {
         db.collection("banners").onSnapshot((snapshot) => {
             const wrapper = document.getElementById('slider-wrapper');
@@ -525,20 +538,48 @@
                 const imgUrl = data.image || data.imageUrl || data.url;
                 if (imgUrl) {
                     slidesHTML += `<img src="${imgUrl}" class="w-full h-full object-cover flex-shrink-0" onerror="this.src='https://placehold.co/600x300/000/FFF?text=Banner+Error'">`;
-                    dotsHTML += `<button class="w-2 h-2 rounded-full bg-white/${index === 0 ? '100' : '40'} transition-all"></button>`;
+                    dotsHTML += `<button class="w-2 h-2 rounded-full ${index === 0 ? 'bg-white w-4' : 'bg-white/40'} transition-all duration-300"></button>`;
                     index++;
                 }
             });
 
+            totalSlides = index;
+
             if (slidesHTML) {
                 wrapper.innerHTML = slidesHTML;
                 if (dotsContainer) dotsContainer.innerHTML = dotsHTML;
+                startBannerAutoSlide();
             } else {
                 wrapper.innerHTML = `<img src="https://placehold.co/600x300/000/FFF?text=No+Banner+Found" class="w-full h-full object-cover flex-shrink-0">`;
             }
         }, (error) => {
             console.error("Banner load error: ", error);
         });
+    }
+
+    function startBannerAutoSlide() {
+        if (bannerInterval) clearInterval(bannerInterval);
+        if (totalSlides <= 1) return;
+
+        bannerInterval = setInterval(() => {
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+            const wrapper = document.getElementById('slider-wrapper');
+            const dotsContainer = document.getElementById('slider-dots');
+            
+            if (wrapper) {
+                wrapper.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+            }
+            if (dotsContainer) {
+                const dots = dotsContainer.children;
+                for (let i = 0; i < dots.length; i++) {
+                    if (i === currentSlideIndex) {
+                        dots[i].className = 'w-4 h-2 rounded-full bg-white transition-all duration-300';
+                    } else {
+                        dots[i].className = 'w-2 h-2 rounded-full bg-white/40 transition-all duration-300';
+                    }
+                }
+            }
+        }, 5000); // Change banner every 5 seconds
     }
 
     async function loadGamesAndCategories() {
@@ -803,5 +844,10 @@ on('orders').where('userId', '==', currentUser.uid).limit(20).get().then(snapsho
         .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
     }
 </script>
+
+    <!-- Floating Telegram Support Button -->
+    <a href="https://t.me/mhxffv111" target="_blank" class="fixed bottom-20 right-4 z-50 bg-[#229ED9] text-white p-3.5 rounded-full shadow-[0_0_15px_rgba(34,158,217,0.6)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all border border-white/20">
+        <i class="fab fa-telegram-plane text-2xl"></i>
+    </a>
 </body>
 </html>
