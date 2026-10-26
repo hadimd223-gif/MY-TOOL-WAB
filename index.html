@@ -245,11 +245,14 @@
             <div id="player-id-section" class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2">
                     <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">2</span>
-                    <h3 class="font-bold text-white text-xs">Account Info</h3>
+                    <h3 class="font-bold text-white text-xs">Account Info & UID Checker</h3>
                 </div>
-                <div class="mb-1">
+                <div class="mb-2">
                     <label class="block text-[10px] font-bold text-white/80 mb-1">Enter Player ID (UID)</label>
-                    <input type="text" id="game-player-id" placeholder="Enter Free Fire Player ID" class="w-full p-2.5 rounded-xl text-xs">
+                    <div class="flex gap-2">
+                        <input type="text" id="game-player-id" placeholder="Enter Free Fire UID" class="w-full p-2.5 rounded-xl text-xs">
+                        <button onclick="checkPlayerUID()" class="btn-vip px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap">Check UID</button>
+                    </div>
                 </div>
             </div>
 
@@ -275,6 +278,20 @@
             </div>
             <span id="total-price" class="hidden">0</span>
         </section>
+
+        <!-- Floating UID Profile Modal -->
+        <div id="uid-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden animate-fade-in">
+            <div class="vip-card w-full max-w-sm rounded-2xl p-5 relative border border-white/30 shadow-2xl">
+                <button onclick="closeUidModal()" class="absolute top-3 right-3 text-white bg-black/80 w-7 h-7 rounded-full flex items-center justify-center border border-white/20"><i class="fas fa-times text-xs"></i></button>
+                <h3 class="text-xs font-bold text-white mb-3 text-center tracking-wide">Player Profile Details</h3>
+                
+                <div id="uid-modal-body" class="space-y-3 text-xs">
+                    <div class="text-center py-6 text-white"><i class="fas fa-spinner fa-spin text-lg"></i> Fetching Details...</div>
+                </div>
+
+                <button onclick="closeUidModal()" class="w-full mt-4 btn-vip text-white py-2 rounded-xl text-xs font-bold">Confirm & Use UID</button>
+            </div>
+        </div>
         <section id="addmoney-sec" class="hidden animate-fade-in pb-16">
             <div id="am-step-1">
                 <div class="vip-card p-4 rounded-2xl mb-3"><h2 class="font-bold text-sm text-white">Add Money</h2></div>
@@ -447,8 +464,8 @@
             loadUserData(user.uid);
         } else {
             currentUser = null;
-            document.getElementById('header-login-container').classList.remove('hidden');
-            document.getElementById('header-balance-container').classList.add('hidden');
+            document.getElementById('header-login-container').classList.add('hidden');
+            document.getElementById('header-balance-container').classList.remove('hidden'); // keep header balanced view active or hide
         }
     });
     
@@ -574,6 +591,61 @@
         document.getElementById('opt-' + option).classList.add('selected');
     }
 
+    // UID Checker API integration with Floating Window
+    async function checkPlayerUID() {
+        const uid = document.getElementById('game-player-id').value.trim();
+        if(!uid) return Swal.fire('Error', 'Please Enter Player UID First!', 'warning');
+
+        const modal = document.getElementById('uid-modal');
+        const body = document.getElementById('uid-modal-body');
+        modal.classList.remove('hidden');
+        body.innerHTML = `<div class="text-center py-6 text-white"><i class="fas fa-spinner fa-spin text-lg"></i> Fetching Player Info...</div>`;
+
+        try {
+            const res = await fetch(`https://auraffxserverinfocheckerapi.onrender.com/api/player?uid=${uid}`);
+            const data = await res.json();
+            
+            if(data && (data.nickname || data.basicInfo || data.accountInfo)) {
+                // Parsing generic structure safely
+                const basic = data.basicInfo || data;
+                const name = basic.nickname || data.nickname || "Unknown Player";
+                const level = basic.level || data.level || "N/A";
+                const likes = basic.likes || data.likes || "N/A";
+                const region = basic.region || data.region || "BD";
+                const signature = basic.signature || data.signature || "No signature";
+
+                body.innerHTML = `
+                    <div class="bg-black/90 p-3 rounded-xl border border-white/20 space-y-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center font-bold text-white text-lg overflow-hidden border border-white/20">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">${name}</h4>
+                                <p class="text-[10px] text-white/70">UID: ${uid} (${region})</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/1rip">Level: <span class="font-bold text-white">${level}</span></div>
+                            <div class="bg-white/5 p-2 rounded-lg border border-white/10">Likes: <span class="font-bold text-white">${likes}</span></div>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded-lg border border-white/10 text-[10px]">
+                            <span class="text-white/60">Bio/Signature:</span> <p class="text-white font-medium truncate">${signature}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                body.innerHTML = `<div class="text-center py-6 text-red-400">Player ID Not Found or Invalid UID!</div>`;
+            }
+        } catch(err) {
+            body.innerHTML = `<div class="text-center py-6 text-red-400">Failed to fetch details. Try again.</div>`;
+        }
+    }
+
+    function closeUidModal() {
+        document.getElementById('uid-modal').classList.add('hidden');
+    }
+
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         let playerId = document.getElementById('game-player-id').value.trim();
@@ -655,18 +727,19 @@
         document.getElementById('pay-method-logo').src = logo;
         document.getElementById('pay-amount-display').innerText = currentDepositAmount;
         document.getElementById('am-step-2').classList.add('hidden');
-        document.getElementById('am-step-3').classList.remove('hidden');
-    }
-    function copyPayNumber() {
-        navigator.clipboard.writeText("01635068564");
-        Swal.fire({ toast: true, icon: 'success', title: 'Number Copied!', position: 'top', showConfirmButton: false, timer: 1500 });
-    }
-    function handleNewVerify() {
-        const trxId = document.getElementById('pay-trx-input').value.trim();
-        if(!trxId) return Swal.fire('Error', 'Enter Transaction ID', 'warning');
-        db.collection('deposits').add({ userId: currentUser.uid, amount: currentDepositAmount, trxId: trxId.toUpperCase(), status: 'pending', date: new Date(), userEmail: currentUser.email, method: currentPaymentMethod })
-        .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
-    }
+        document.getElementById('am-step-3').classList.classList.add('hidden');
+    document.getElementById('am-step-2').classList.remove('hidden');
+}
+function copyPayNumber() {
+    navigator.clipboard.writeText("01635068564");
+    Swal.fire({ toast: true, icon: 'success', title: 'Number Copied!', position: 'top', showConfirmButton: false, timer: 1500 });
+}
+function handleNewVerify() {
+    const trxId = document.getElementById('pay-trx-input').value.trim();
+    if(!trxId) return Swal.fire('Error', 'Enter Transaction ID', 'warning');
+    db.collection('deposits').add({ userId: currentUser.uid, amount: currentDepositAmount, trxId: trxId.toUpperCase(), status: 'pending', date: new Date(), userEmail: currentUser.email, method: currentPaymentMethod })
+    .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
+}
 </script>
 </body>
 </html>
