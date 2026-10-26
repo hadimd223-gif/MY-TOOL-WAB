@@ -180,7 +180,18 @@
 
             <div class="mt-6 mb-5">
                 <h3 class="text-center font-bold text-white text-sm mb-3">Latest Orders</h3>
-                <div id="latest-orders-list" class="space-y-2 px-0.5"></div>
+                
+            <div id="latest-orders-list" class="space-y-2 px-0.5"></div>
+            </div>
+
+            <div class="mt-6 mb-5">
+                <h3 class="text-center font-bold text-white text-sm mb-3">Latest Orders</h3>
+                <div id="global-latest-orders" class="space-y-2 px-0.5">
+                    <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
+                        <div class="h-3 bg-white/20 rounded w-24"></div>
+                        <div class="h-3 bg-white/20 rounded w-12"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -522,6 +533,27 @@
         } catch (error) { console.error(error); }
     }
     loadGamesAndCategories();
+
+    
+    function loadRecentOrdersGlobal() {
+        const container = document.getElementById('global-latest-orders');
+        if (!container) return;
+        db.collection('orders').orderBy('date', 'desc').limit(5).onSnapshot((snapshot) => {
+            container.innerHTML = "";
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const userName = data.userName ? data.userName.split('@')[0] : 'VIP User';
+                container.innerHTML += `<div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
+                    <div>
+                        <span class="font-bold text-white">${userName}</span><br>
+                        <span class="text-gray-400 text-[10px]">${data.gameName || 'Free Fire'} - ${data.productName}</span>
+                    </div>
+                    <span class="text-white font-bold">৳${data.price}</span>
+                </div>`;
+            });
+        });
+    }
+    loadRecentOrdersGlobal();
 
     function loadHistory() {
         const list = document.getElementById('history-list');
