@@ -16,74 +16,78 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @keyframes slowGlow {
-            0% { border-color: rgba(244, 63, 94, 0.5); box-shadow: 0 0 15px rgba(244, 63, 94, 0.25); }
-            50% { border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 0 15px rgba(6, 182, 212, 0.25); }
-            100% { border-color: rgba(244, 63, 94, 0.5); box-shadow: 0 0 15px rgba(244, 63, 94, 0.25); }
+        @keyframes blueGlow {
+            0% { border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+            50% { border-color: rgba(14, 165, 233, 0.7); box-shadow: 0 0 30px rgba(14, 165, 233, 0.4); }
+            100% { border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
         }
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: #000000;
+            background: #000000 !important;
             color: #f8fafc;
             -webkit-tap-highlight-color: transparent;
         }
         .vip-card {
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            animation: slowGlow 12s ease-in-out infinite;
-            will-change: border-color, box-shadow;
+            background: rgba(8, 15, 30, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(56, 189, 248, 0.3);
+            animation: blueGlow 8s ease-in-out infinite;
         }
         .btn-vip {
-            background: linear-gradient(135deg, #f43f5e, #0284c7);
-            background-size: 200% auto;
-            transition: background-position 0.4s ease, transform 0.2s ease;
-            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
+        }
+        .btn-vip:hover {
+            box-shadow: 0 6px 25px rgba(56, 189, 248, 0.6);
+            transform: translateY(-1px);
         }
         .btn-vip:active { transform: scale(0.98); }
         .product-card {
-            background: rgba(20, 20, 30, 0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 20, 40, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
             border-radius: 12px;
             padding: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: border-color 0.2s ease;
+            transition: all 0.2s ease;
         }
         .product-card.selected {
-            border: 2px solid #f43f5e;
-            background: rgba(244, 63, 94, 0.15);
+            border: 2px solid #38bdf8;
+            background: rgba(56, 189, 248, 0.2);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
         }
         .product-bullet { height: 10px; width: 10px; background-color: #64748b; border-radius: 50%; margin-right: 8px; }
-        .product-card.selected .product-bullet { background-color: #f43f5e; }
-        .active-tab { color: #38bdf8 !important; }
+        .product-card.selected .product-bullet { background-color: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
+        .active-tab { color: #38bdf8 !important; filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8)); }
         .hidden { display: none !important; }
         .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
         input, select, textarea {
-            background: rgba(5, 5, 10, 0.9) !important;
+            background: rgba(5, 12, 25, 0.8) !important;
             color: #fff !important;
-            border: 1px solid rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(56, 189, 248, 0.3) !important;
+            backdrop-filter: blur(10px);
         }
-        input:focus { border-color: #38bdf8 !important; outline: none; }
+        input:focus { border-color: #38bdf8 !important; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4) !important; outline: none; }
     </style>
 </head>
-<body class="select-none">
-<div id="app-content" class="relative max-w-md mx-auto min-h-screen border-x border-white/5 pb-24">
-    <header class="bg-black/90 backdrop-blur-xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/10 shadow-lg">
+<body class="select-none bg-black">
+<div id="app-content" class="relative max-w-md mx-auto min-h-screen border-x border-sky-900/30 pb-24 bg-black">
+    <header class="bg-black/80 backdrop-blur-2xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-sky-500/20 shadow-2xl">
         <div class="flex items-center gap-2">
             <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-10 object-contain">
         </div>
-        <div id="header-balance-container" class="hidden bg-black/60 border border-sky-500/30 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-400">
-            <i class="fas fa-wallet mr-1 text-pink-500"></i> ৳ <span id="header-balance">0</span>
+        <div id="header-balance-container" class="hidden bg-black/60 border border-sky-500/40 px-4 py-1.5 rounded-full text-xs font-bold text-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.2)]">
+            <i class="fas fa-wallet mr-1 text-sky-400"></i> ৳ <span id="header-balance">0</span>
         </div>
         <div id="header-login-container">
-            <button onclick="showAuthPage()" class="btn-vip text-white px-4 py-2 rounded-full text-xs font-bold">
+            <button onclick="showAuthPage()" class="btn-vip text-white px-5 py-2 rounded-full text-xs font-bold">
                 <i class="fas fa-sign-in-alt mr-1"></i> Login
             </button>
         </div>
@@ -91,11 +95,11 @@
 
     <div id="notice-section" class="mb-2 px-3 mt-3">
         <div class="vip-card text-white p-3.5 rounded-2xl relative">
-            <button onclick="this.parentElement.parentElement.style.display='none'" class="absolute top-2 right-2 text-gray-400 hover:text-white">
+            <button onclick="this.parentElement.parentElement.style.display='none'" class="absolute top-2 right-2 text-sky-400 hover:text-white">
                 <i class="fas fa-times text-sm"></i>
             </button>
             <div class="pr-6">
-                <div class="font-bold text-xs text-sky-400 mb-1 flex items-center gap-1"><i class="fas fa-bullhorn text-pink-500"></i> Notice</div>
+                <div class="font-bold text-xs text-sky-400 mb-1 flex items-center gap-1"><i class="fas fa-bullhorn text-sky-300"></i> Notice</div>
                 <div id="notice-text" class="text-xs text-gray-300">স্বাগতম আমাদের ভিআইপি সিস্টেমে...</div>
             </div>
         </div>
@@ -104,29 +108,29 @@
     <main class="p-3 relative">
         <section id="auth-sec" class="hidden animate-fade-in">
             <div class="vip-card rounded-2xl p-6 relative">
-                <button onclick="showSec('home')" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10">
+                <button onclick="showSec('home')" class="absolute top-4 right-4 text-sky-400 hover:text-white z-10">
                     <i class="fas fa-times text-lg"></i>
                 </button>
                 <div id="login-view">
-                    <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP LOGIN</h2>
-                    <button onclick="handleGoogleLogin()" class="w-full bg-black/60 border border-white/10 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs">
+                    <h2 class="text-lg font-bold text-sky-400 mb-6 text-center tracking-wide drop-shadow-[0_0_10px_rgba(56,189,248,0.5)]">VIP LOGIN</h2>
+                    <button onclick="handleGoogleLogin()" class="w-full bg-black/80 border border-sky-500/30 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs hover:border-sky-400">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4" alt="Google"> Login with Google
                     </button>
                     <div class="mb-4">
-                        <label class="block text-gray-300 text-xs font-bold mb-1.5">Email</label>
+                        <label class="block text-sky-200 text-xs font-bold mb-1.5">Email</label>
                         <input type="email" id="login-email" placeholder="Email" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
                     </div>
                     <div class="mb-5">
-                        <label class="block text-gray-300 text-xs font-bold mb-1.5">Password</label>
+                        <label class="block text-sky-200 text-xs font-bold mb-1.5">Password</label>
                         <input type="password" id="login-pass" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
                     </div>
                     <button onclick="handleLogin()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">Login</button>
                     <div class="mt-5 text-center text-xs text-gray-400">
-                        New user? <button onclick="toggleAuth('register')" class="text-sky-400 font-bold">Register Now</button>
+                        New user? <button onclick="toggleAuth('register')" class="text-sky-400 font-bold underline">Register Now</button>
                     </div>
                 </div>
                 <div id="register-view" class="hidden">
-                    <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP REGISTER</h2>
+                    <h2 class="text-lg font-bold text-sky-400 mb-6 text-center tracking-wide drop-shadow-[0_0_10px_rgba(56,189,248,0.5)]">VIP REGISTER</h2>
                     <div class="space-y-3 mb-5">
                         <input type="text" id="reg-name" placeholder="Name" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
                         <input type="number" id="reg-phone" placeholder="Phone" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
@@ -135,7 +139,7 @@
                     </div>
                     <button onclick="handleRegister()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">Register</button>
                     <div class="mt-4 text-center text-xs text-gray-400">
-                        Already member? <button onclick="toggleAuth('login')" class="text-sky-400 font-bold">Login Now</button>
+                        Already member? <button onclick="toggleAuth('login')" class="text-sky-400 font-bold underline">Login Now</button>
                     </div>
                 </div>
             </div>
@@ -150,7 +154,7 @@
 
             <div class="grid grid-cols-3 gap-2.5 mb-5 px-0.5">
                 <a id="home-whatsapp" href="#" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
-                    <div class="w-6 h-6 rounded-full flex items-center justify-center bg-green-500/20 text-green-400"><i class="fab fa-whatsapp text-sm"></i></div>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center bg-sky-500/20 text-sky-400"><i class="fab fa-whatsapp text-sm"></i></div>
                     <span class="text-[10px] font-bold text-gray-200">WhatsApp</span>
                 </a>
                 <a id="home-telegram" href="#" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
@@ -158,7 +162,7 @@
                     <span class="text-[10px] font-bold text-gray-200">Telegram</span>
                 </a>
                 <a id="home-app-dl" href="#" target="_blank" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
-                    <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-pink-500/20 text-pink-400"><i class="fas fa-download text-xs"></i></div>
+                    <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-sky-500/20 text-sky-400"><i class="fas fa-download text-xs"></i></div>
                     <span class="text-[10px] font-bold text-gray-200">App Download</span>
                 </a>
             </div>
@@ -168,11 +172,11 @@
             </div>
 
             <div class="mt-6 mb-5">
-                <h3 class="text-center font-bold text-sky-400 text-sm mb-3">Latest Orders</h3>
+                <h3 class="text-center font-bold text-sky-400 text-sm mb-3 drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">Latest Orders</h3>
                 <div id="latest-orders-list" class="space-y-2 px-0.5">
                     <div class="vip-card p-3 rounded-xl flex items-center justify-between">
-                        <div class="h-3 bg-white/10 rounded w-24"></div>
-                        <div class="h-3 bg-white/10 rounded w-12"></div>
+                        <div class="h-3 bg-sky-500/20 rounded w-24"></div>
+                        <div class="h-3 bg-sky-500/20 rounded w-12"></div>
                     </div>
                 </div>
             </div>
@@ -187,40 +191,40 @@
                 <div class="text-center mb-4">
                     <img id="about-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-8 mx-auto object-contain mb-1">
                     <h2 id="about-site-name" class="text-xs font-bold text-white">Nenox Shop</h2>
-                    <p class="text-[10px] text-gray-400">Free Fire Diamond TopUp | VIP Platform</p>
+                    <p class="text-[10px] text-sky-400">Free Fire Diamond TopUp | Ultra VIP Platform</p>
                 </div>
-                <p class="text-[10px] text-center text-gray-300 mb-4 p-2.5 bg-black/60 rounded-lg border border-white/5">
+                <p class="text-[10px] text-center text-gray-300 mb-4 p-2.5 bg-black/80 rounded-lg border border-sky-500/20">
                     <b>নোটিশ:</b> যেকোন সমস্যায় সাপোর্ট মেসেজারে অর্ডার আইডি সহ জানান।
                 </p>
                 <div class="grid grid-cols-2 gap-2 mb-4">
-                    <a id="about-facebook" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-facebook-f text-blue-400"></i> Facebook</a>
-                    <a id="about-youtube" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-youtube text-red-400"></i> YouTube</a>
-                    <a id="about-telegram" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-telegram-plane text-sky-400"></i> Telegram</a>
-                    <a id="about-whatsapp" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/40 p-2 rounded-lg border border-white/5 text-[10px] font-semibold text-gray-200"><i class="fab fa-whatsapp text-green-400"></i> WhatsApp</a>
+                    <a id="about-facebook" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/60 p-2 rounded-lg border border-sky-500/20 text-[10px] font-semibold text-gray-200 hover:border-sky-400"><i class="fab fa-facebook-f text-sky-400"></i> Facebook</a>
+                    <a id="about-youtube" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/60 p-2 rounded-lg border border-sky-500/20 text-[10px] font-semibold text-gray-200 hover:border-sky-400"><i class="fab fa-youtube text-sky-400"></i> YouTube</a>
+                    <a id="about-telegram" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/60 p-2 rounded-lg border border-sky-500/20 text-[10px] font-semibold text-gray-200 hover:border-sky-400"><i class="fab fa-telegram-plane text-sky-400"></i> Telegram</a>
+                    <a id="about-whatsapp" href="#" target="_blank" class="flex items-center justify-center gap-1.5 bg-black/60 p-2 rounded-lg border border-sky-500/20 text-[10px] font-semibold text-gray-200 hover:border-sky-400"><i class="fab fa-whatsapp text-sky-400"></i> WhatsApp</a>
                 </div>
-                <div class="text-center border-t border-white/5 pt-3">
-                    <p class="text-[9px] text-gray-500">© 2026 Nano TopUp BD | Ultra VIP Edition</p>
+                <div class="text-center border-t border-sky-500/20 pt-3">
+                    <p class="text-[9px] text-sky-400/60">© 2026 Nano TopUp BD | Ultra VIP Edition</p>
                 </div>
             </div>
         </section>
         <section id="tutorial-sec" class="hidden animate-fade-in pb-16">
             <div class="vip-card rounded-2xl overflow-hidden">
-                <div class="p-4 border-b border-white/10"><h2 class="font-bold text-sm text-white">Video Tutorials</h2></div>
+                <div class="p-4 border-b border-sky-500/20"><h2 class="font-bold text-sm text-sky-400">Video Tutorials</h2></div>
                 <div class="p-3"><div id="tutorial-list-container" class="space-y-3"></div></div>
             </div>
         </section>
 
         <section id="history-sec" class="hidden animate-fade-in pb-20">
-            <div class="vip-card rounded-2xl overflow-hidden border border-white/10">
-                <div class="border-b border-white/10 px-4 py-3"><h2 class="text-xs font-bold text-white">Order History</h2></div>
+            <div class="vip-card rounded-2xl overflow-hidden">
+                <div class="border-b border-sky-500/20 px-4 py-3"><h2 class="text-xs font-bold text-sky-400">Order History</h2></div>
                 <div id="history-list" class="px-3 py-2.5 space-y-2.5"></div>
             </div>
         </section>
 
         <section id="topup-sec" class="hidden animate-fade-in pb-10">
             <div class="vip-card p-3 rounded-2xl flex items-center gap-3 mb-3 relative">
-                <button onclick="showSec('home')" class="text-gray-400 w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/50"><i class="fas fa-times text-xs"></i></button>
-                <img id="topup-game-img" src="" class="w-12 h-12 rounded-lg object-cover border border-white/10">
+                <button onclick="showSec('home')" class="text-sky-400 w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/80 border border-sky-500/30"><i class="fas fa-times text-xs"></i></button>
+                <img id="topup-game-img" src="" class="w-12 h-12 rounded-lg object-cover border border-sky-500/30">
                 <div>
                     <h3 class="font-bold text-white text-xs" id="topup-game-title">Game Name</h3>
                     <p class="text-[10px] text-sky-400 font-medium" id="topup-sub-title">Game / Topup</p>
@@ -229,7 +233,7 @@
 
             <div class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2.5">
-                    <span class="bg-pink-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">1</span>
+                    <span class="bg-sky-500 text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">1</span>
                     <h3 class="font-bold text-white text-xs">Select Package</h3>
                 </div>
                 <div id="product-loader" class="text-center py-6 hidden"><i class="fas fa-spinner fa-spin text-sky-400"></i></div>
@@ -238,21 +242,18 @@
 
             <div id="player-id-section" class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-pink-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">2</span>
+                    <span class="bg-sky-500 text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">2</span>
                     <h3 class="font-bold text-white text-xs">Account Info</h3>
                 </div>
-                <div class="mb-2">
-                    <label class="block text-[10px] font-bold text-gray-300 mb-1">Player Id</label>
-                    <input type="text" id="game-player-id" placeholder="Player Id" class="w-full p-2 rounded-lg text-xs">
-                </div>
-                <div id="uidCheckBtn" onclick="uidCheck()" class="w-full btn-vip text-white text-center py-2 rounded-lg font-bold text-xs cursor-pointer">
-                    Click to check player name
+                <div class="mb-1">
+                    <label class="block text-[10px] font-bold text-sky-200 mb-1">Enter Player ID (UID)</label>
+                    <input type="text" id="game-player-id" placeholder="Enter Free Fire Player ID" class="w-full p-2.5 rounded-xl text-xs">
                 </div>
             </div>
 
             <div class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2.5">
-                    <span class="bg-pink-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">3</span>
+                    <span class="bg-sky-500 text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">3</span>
                     <h3 class="font-bold text-white text-xs">Select Payment Method</h3>
                 </div>
                 <div class="grid grid-cols-2 gap-2.5 mb-2">
@@ -274,11 +275,11 @@
         </section>
         <section id="addmoney-sec" class="hidden animate-fade-in pb-16">
             <div id="am-step-1">
-                <div class="vip-card p-4 rounded-2xl mb-3"><h2 class="font-bold text-sm text-white">Add Money</h2></div>
+                <div class="vip-card p-4 rounded-2xl mb-3"><h2 class="font-bold text-sm text-sky-400">Add Money</h2></div>
                 <div class="vip-card rounded-2xl p-5 text-center mb-5">
-                    <label class="block text-gray-400 text-xs font-bold mb-3">ENTER AMOUNT TO DEPOSIT</label>
+                    <label class="block text-sky-200 text-xs font-bold mb-3">ENTER AMOUNT TO DEPOSIT</label>
                     <div class="relative mb-5 max-w-[180px] mx-auto">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-400">৳</span>
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold text-sky-400">৳</span>
                         <input type="number" id="new-amount-input" value="100" class="w-full border-b-2 border-sky-400 py-1.5 pl-7 pr-2 text-center text-xl font-bold text-white bg-transparent">
                     </div>
                     <button onclick="goToMethodStep()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">PROCEED TO PAYMENT</button>
@@ -287,32 +288,32 @@
 
             <div id="am-step-2" class="hidden min-h-[60vh] flex flex-col justify-center">
                 <div class="vip-card p-4 rounded-2xl text-center">
-                    <button onclick="backToAmountStep()" class="text-gray-400 mb-3 float-left text-xs"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button onclick="backToAmountStep()" class="text-sky-400 mb-3 float-left text-xs"><i class="fas fa-arrow-left"></i> Back</button>
                     <h2 class="text-white font-bold mb-5 text-xs">Select Auto Pay Method</h2>
                     <div class="grid grid-cols-3 gap-2.5">
-                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-black/50 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" class="h-5 object-contain"></button>
-                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-black/50 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" class="h-4 object-contain"></button>
-                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-black/50 border border-white/10 rounded-xl p-2.5 flex items-center justify-center h-14"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" class="h-4 object-contain"></button>
+                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-black/80 border border-sky-500/30 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-sky-400"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" class="h-5 object-contain"></button>
+                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-black/80 border border-sky-500/30 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-sky-400"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" class="h-4 object-contain"></button>
+                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-black/80 border border-sky-500/30 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-sky-400"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" class="h-4 object-contain"></button>
                     </div>
                 </div>
             </div>
 
             <div id="am-step-3" class="hidden relative pb-16">
                 <div class="vip-card p-4 rounded-2xl mb-3">
-                    <button onclick="backToMethodStep()" class="text-gray-400 mb-2 text-xs"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button onclick="backToMethodStep()" class="text-sky-400 mb-2 text-xs"><i class="fas fa-arrow-left"></i> Back</button>
                     <div class="text-center mb-3"><img id="pay-method-logo" src="" class="h-8 mx-auto object-contain"></div>
                     <div class="text-center mb-3 text-white font-bold text-base">Amount: ৳<span id="pay-amount-display">100</span></div>
                     
                     <div class="space-y-2 mb-4">
-                        <p class="text-xs text-gray-300">• এই নম্বরে টাকা পাঠান:</p>
-                        <div class="flex items-center justify-between bg-black/60 p-2.5 rounded-xl border border-white/10">
-                            <span id="pay-admin-number" class="text-base font-bold text-yellow-300">01635068564</span>
-                            <button onclick="copyPayNumber()" class="btn-vip px-2.5 py-1 rounded-lg text-xs text-white">COPY</button>
+                        <p class="text-xs text-sky-200">• এই নম্বরে টাকা পাঠান:</p>
+                        <div class="flex items-center justify-between bg-black/80 p-2.5 rounded-xl border border-sky-500/30">
+                            <span id="pay-admin-number" class="text-base font-bold text-sky-300">01635068564</span>
+                            <button onclick="copyPayNumber()" class="btn-vip px-3 py-1 rounded-lg text-xs text-white">COPY</button>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs text-gray-300 mb-1.5 font-bold">Transaction ID (TrxID)</label>
+                        <label class="block text-xs text-sky-200 mb-1.5 font-bold">Transaction ID (TrxID)</label>
                         <input type="text" id="pay-trx-input" class="w-full p-2.5 rounded-xl text-xs" placeholder="Enter TrxID here">
                     </div>
                     <button onclick="handleNewVerify()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">VERIFY PAYMENT</button>
@@ -322,17 +323,17 @@
 
         <section id="account-sec" class="hidden animate-fade-in pb-20">
             <div class="vip-card p-5 rounded-2xl text-center">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-sky-500 p-0.5 mx-auto mb-2.5">
-                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-white text-xl font-bold" id="profile-initial">U</div>
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 p-0.5 mx-auto mb-2.5 shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-sky-400 text-xl font-bold" id="profile-initial">U</div>
                 </div>
                 <h2 class="text-xs font-bold text-white mb-1">Hi, <span id="acc-profile-name">User</span></h2>
                 <p class="text-xs text-sky-400 font-bold mb-4">Balance: <span id="acc-profile-balance">0</span> Tk</p>
-                <button onclick="handleLogout()" class="w-full bg-red-500/20 border border-red-500/30 text-red-400 p-2 rounded-xl text-xs font-bold">Log Out</button>
+                <button onclick="handleLogout()" class="w-full bg-black/80 border border-sky-500/40 text-sky-400 p-2.5 rounded-xl text-xs font-bold hover:border-sky-400">Log Out</button>
             </div>
         </section>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-2xl">
+    <nav class="fixed bottom-0 w-full bg-black/90 backdrop-blur-2xl border-t border-sky-500/20 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-[0_-5px_25px_rgba(0,0,0,0.8)]">
         <div class="flex justify-between items-center">
             <button onclick="showSec('home')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400 active-tab" id="nav-home"><i class="fas fa-home text-base"></i><span class="text-[9px] font-semibold">Home</span></button>
             <button onclick="showSec('tutorial')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400" id="nav-tutorial"><i class="fas fa-video text-base"></i><span class="text-[9px] font-semibold">Tutorial</span></button>
@@ -574,7 +575,7 @@
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         let playerId = document.getElementById('game-player-id').value.trim();
-        if(!playerId && selectedGameType === 'uid') return Swal.fire('Error', 'Enter Player ID!', 'warning');
+        if(!playerId) return Swal.fire('Error', 'Please Enter Player ID!', 'warning');
         if(!selectedProduct) return Swal.fire('Error', 'Select a package!', 'warning');
         if (selectedPaymentMethod === 'instant') {
             isDirectBuy = true; currentDepositAmount = selectedProduct.price;
@@ -588,29 +589,7 @@
         if(userBalance < selectedProduct.price) return Swal.fire('Error', 'Low Balance. Please Add Money.', 'error');
         db.collection('users').doc(currentUser.uid).update({ balance: userBalance - selectedProduct.price }).then(() => {
             return db.collection('orders').add({ userId: currentUser.uid, userName: currentUser.email, gameName: selectedGameName, gameId: selectedGameId, playerId, productName: selectedProduct.name, price: selectedProduct.price, type: selectedGameType, status: 'pending', date: new Date() });
-        }).then(() => { Swal.fire('Success', 'Order Placed!', 'success'); showSec('home'); });
-    }
-
-    // UPDATED VERCEL API UID CHECK FUNCTION
-    async function uidCheck() {
-        const uid = document.getElementById("game-player-id").value.trim();
-        const box = document.getElementById("uidCheckBtn");
-        if(!uid) {
-            Swal.fire('Warning', 'Please enter Player ID first!', 'warning');
-            return;
-        }
-        box.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking Name...';
-
-        try {
-            let res = await fetch(`https://wabinfoapi.vercel.app/api/check?uid=${uid}`);
-            let data = await res.json();
-            if(data && data.nickname) {
-                box.innerHTML = `<i class="fas fa-check-circle text-green-400"></i> ${data.nickname}`;
-                return;
-            }
-        } catch(e){}
-
-        box.innerHTML = '<i class="fas fa-exclamation-circle text-red-400"></i> Invalid Player ID';
+        }).then(() => { Swal.fire('Success', 'Order Placed Successfully!', 'success'); showSec('home'); });
     }
 
     function showSec(secId) {
@@ -630,7 +609,7 @@
             list.innerHTML = "";
             snapshot.forEach(doc => {
                 const d = doc.data();
-                list.innerHTML += `<div class="bg-black/50 p-2.5 rounded-xl flex justify-between items-center text-xs border border-white/5"><div><span class="font-bold text-white">${d.gameName}</span><br><span class="text-gray-400 text-[10px]">${d.productName}</span></div><div class="text-right"><span class="text-sky-400 font-bold">৳${d.price}</span><br><span class="text-yellow-400 text-[10px]">${d.status}</span></div></div>`;
+                list.innerHTML += `<div class="bg-black/80 p-2.5 rounded-xl flex justify-between items-center text-xs border border-sky-500/20"><div><span class="font-bold text-white">${d.gameName}</span><br><span class="text-gray-400 text-[10px]">${d.productName}</span></div><div class="text-right"><span class="text-sky-400 font-bold">৳${d.price}</span><br><span class="text-sky-300 text-[10px]">${d.status}</span></div></div>`;
             });
         });
     }
