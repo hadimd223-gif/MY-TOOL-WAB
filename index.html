@@ -132,6 +132,7 @@
     </div>
     
     <main class="p-3 relative">
+        
         <section id="auth-sec" class="hidden animate-fade-in">
             <div class="vip-card rounded-2xl p-6 relative">
                 <button onclick="showSec('home')" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
@@ -158,10 +159,22 @@
                 <div id="register-view" class="hidden">
                     <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP REGISTER</h2>
                     <div class="space-y-3 mb-5">
-                        <input type="text" id="reg-name" placeholder="Name" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
-                        <input type="number" id="reg-phone" placeholder="Phone" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
-                        <input type="email" id="reg-email" placeholder="Email" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
-                        <input type="password" id="reg-pass" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
+                        <div>
+                            <label class="block text-white/80 text-xs font-bold mb-1">Name</label>
+                            <input type="text" id="reg-name" placeholder="Your Name" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-white/80 text-xs font-bold mb-1">Phone</label>
+                            <input type="number" id="reg-phone" placeholder="Phone Number" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-white/80 text-xs font-bold mb-1">Email</label>
+                            <input type="email" id="reg-email" placeholder="Email Address" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-white/80 text-xs font-bold mb-1">Password</label>
+                            <input type="password" id="reg-pass" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
+                        </div>
                     </div>
                     <button onclick="handleRegister()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">Register</button>
                     <div class="mt-4 text-center text-xs text-gray-400">
@@ -170,6 +183,7 @@
                 </div>
             </div>
         </section>
+
 
         <section id="home-sec" class="animate-fade-in pb-8">
             <div id="banner-container" class="mb-5 overflow-hidden rounded-2xl h-40 vip-card relative">
