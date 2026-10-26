@@ -785,15 +785,36 @@
         if (!container) return;
         db.collection('orders').orderBy('date', 'desc').limit(5).onSnapshot((snapshot) => {
             container.innerHTML = "";
+            if(snapshot.empty) {
+                container.innerHTML = '<div class="text-center text-gray-400 text-xs py-2">No Recent Orders</div>';
+                return;
+            }
             snapshot.forEach(doc => {
                 const data = doc.data();
-                const userName = data.userName ? data.userName.split('@')[0] : 'VIP User';
+                let userName = 'VIP User';
+                if(data.userName) {
+                    userName = data.userName.includes('@') ? data.userName.split('@')[0] : data.userName;
+                }
+                
+                const status = (data.status || 'pending').toLowerCase();
+                let statusBadge = '<span class="text-yellow-400 bg-yellow-400/10 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Pending</span>';
+                if(status === 'success' || status === 'completed') {
+                    statusBadge = '<span class="text-green-400 bg-green-400/10 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Success</span>';
+                } else if(status === 'processing') {
+                    statusBadge = '<span class="text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Processing</span>';
+                } else if(status === 'cancel' || status === 'rejected') {
+                    statusBadge = '<span class="text-red-400 bg-red-400/10 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Canceled</span>';
+                }
+
                 container.innerHTML += `<div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
                     <div>
                         <span class="font-bold text-white">${userName}</span><br>
                         <span class="text-gray-400 text-[10px]">${data.gameName || 'Free Fire'} - ${data.productName}</span>
                     </div>
-                    <span class="text-white font-bold">৳${data.price}</span>
+                    <div class="text-right flex flex-col items-end gap-1">
+                        <span class="text-white font-bold">৳${data.price}</span>
+                        ${statusBadge}
+                    </div>
                 </div>`;
             });
         });
