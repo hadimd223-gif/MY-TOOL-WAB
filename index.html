@@ -1119,7 +1119,7 @@
             listContainer.innerHTML = "";
             
             if (snapshot.empty) {
-                listContainer.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো ইউজার ডাটা পাওয়া যায়নি</div>";
+                listContainer.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো ডাটা পাওয়া যায়নি</div>";
                 return;
             }
             
@@ -1131,16 +1131,16 @@
                     name = name.split("@")[0];
                 }
                 
-                // সরাসরি 'balance' ফিল্ডকে প্রাধান্য দেওয়া হয়েছে (যা আপনার ডাটাবেজে রয়েছে)
-                const totalDeposit = Number(data.balance || data.totalDeposit || data.deposit || data.amount || 0);
+                // ব্যালেন্স বা ডিপোজিট অ্যামাউন্ট নিশ্চিত করার জন্য সব ফিল্ড চেক করা
+                let balance = Number(data.balance || data.totalDeposit || data.deposit || data.amount || 0);
                 
                 usersList.push({
                     name: name,
-                    totalDeposit: totalDeposit
+                    totalDeposit: balance
                 });
             });
             
-            // বেশি ব্যালেন্স বা ডিপোজিটকারীকে উপরে সাজানো
+            // সবচেয়ে বেশি ব্যালেন্স ওয়ালাকে সবার উপরে (১ নম্বরে) নিয়ে আসার জন্য সর্টিং
             usersList.sort((a, b) => b.totalDeposit - a.totalDeposit);
             const top10 = usersList.slice(0, 10);
             
@@ -1187,7 +1187,7 @@
                 }
             });
 
-            podiumContainer.innerHTML = top3HTML || '<div class="col-span-3 text-center text-gray-400 text-xs">টপ ৩ খালি আছে</div>';
+            podiumContainer.innerHTML = top3HTML || '<div class="col-span-3 text-center text-gray-400 text-xs">টপ ৩ খালি</div>';
             listContainer.innerHTML = restHTML || '';
         });
     }
