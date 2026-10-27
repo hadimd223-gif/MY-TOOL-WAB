@@ -1263,3 +1263,113 @@
     </script>
 </body>
 </html>
+<script>
+    // Tools Management Dynamic Addition for Admin Panel
+    document.addEventListener("DOMContentLoaded", function() {
+        // ১. সাইডবারে নতুন Tools Settings মেনু যুক্ত করা
+        const navContainer = document.querySelector('aside nav');
+        if (navContainer && !document.getElementById('nav-tools-settings')) {
+            const toolsNav = document.createElement('a');
+            toolsNav.href = "#";
+            toolsNav.id = "nav-tools-settings";
+            toolsNav.className = "nav-link flex items-center px-4 py-3";
+            toolsNav.onclick = function() { switchView('tools-settings'); };
+            toolsNav.innerHTML = `<i class="fas fa-tools w-8 text-center"></i> Tools Settings`;
+            navContainer.appendChild(toolsNav);
+        }
+
+        // ২. মেইন কন্টেইনারে নতুন Tools Settings ভিউ কার্ড যুক্ত করা
+        const mainContainer = document.querySelector('main .flex-1');
+        if (mainContainer && !document.getElementById('view-tools-settings')) {
+            const viewToolsSection = document.createElement('div');
+            viewToolsSection.id = "view-tools-settings";
+            viewToolsSection.className = "view-section hidden";
+            viewToolsSection.innerHTML = `
+                <div class="card mb-6 md:mb-8">
+                    <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border">
+                        <i class="fas fa-sliders-h mr-2"></i> Free Fire JWT Generator & Tools Control
+                    </h3>
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2 font-medium">Tools Banner / Icon URL</label>
+                            <input type="text" id="set-tool-img" placeholder="https://..." class="flat-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2 font-medium">Tools Module Title</label>
+                            <input type="text" id="set-tool-title" placeholder="Free Fire JWT Generator" class="flat-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2 font-medium">Token Generation Service Charge / Price (৳)</label>
+                            <input type="number" id="set-tool-price" placeholder="0 (Leave 0 for Free)" class="flat-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2 font-medium">Instructions / Custom Notice for Users</label>
+                            <textarea id="set-tool-notice" placeholder="Enter instructions..." class="flat-input h-20"></textarea>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 bg-dark-bg rounded-lg border border-dark-border">
+                            <input type="checkbox" id="set-tool-active" class="w-5 h-5 accent-orange-500 rounded">
+                            <label for="set-tool-active" class="text-sm md:text-base font-bold text-white cursor-pointer">Enable Tools Module on Website</label>
+                        </div>
+                    </div>
+                    <button onclick="saveToolsSettings()" class="flat-btn mt-6 w-full">Save Tools Configuration</button>
+                </div>
+            `;
+            mainContainer.appendChild(viewToolsSection);
+        }
+    });
+
+    // ৩. সেটিং তথ্যাদি Firestore থেকে লোড করার ফাংশন
+    function loadToolsSettings() {
+        if(typeof db === 'undefined') return;
+        db.collection('settings').doc('tools').get().then(doc => {
+            if(doc.exists) {
+                const d = doc.data();
+                if(document.getElementById('set-tool-img')) document.getElementById('set-tool-img').value = d.imageUrl || '';
+                if(document.getElementById('set-tool-title')) document.getElementById('set-tool-title').value = d.title || '';
+                if(document.getElementById('set-tool-price')) document.getElementById('set-tool-price').value = d.price || 0;
+                if(document.getElementById('set-tool-notice')) document.getElementById('set-tool-notice').value = d.notice || '';
+                if(document.getElementById('set-tool-active')) document.getElementById('set-tool-active').checked = d.enabled !== false;
+            }
+        });
+    }
+
+    // ৪. সেটিং তথ্যাদি Firestore এ সেভ করার ফাংশন
+    function saveToolsSettings() {
+        if(typeof showLoading === 'function') showLoading();
+        db.collection('settings').doc('tools').set({
+            imageUrl: document.getElementById('set-tool-img').value,
+            title: document.getElementById('set-tool-title').value,
+            price: parseInt(document.getElementById('set-tool-price').value || 0),
+            notice: document.getElementById('set-tool-notice').value,
+            enabled: document.getElementById('set-tool-active').checked,
+            updatedAt: new Date()
+        }, {merge: true}).then(() => {
+            if(typeof hideLoading === 'function') hideLoading();
+            Swal.fire('Saved!', 'Tools settings updated successfully.', 'success');
+        }).catch(err => {
+            if(typeof hideLoading === 'function') hideLoading();
+            Swal.fire('Error', err.message, 'error');
+        });
+    }
+
+    // মূল switchView ফাংশনের সাথে ইন্টিগ্রেট করা
+    const origSwitchView = window.switchView;
+    window.switchView = function(viewId, p1, p2, p3) {
+        if (typeof origSwitchView === 'function') {
+            origSwitchView(viewId, p1, p2, p3);
+        }
+        if (viewId === 'tools-settings') {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            const viewEl = document.getElementById('view-tools-settings');
+            if(viewEl) viewEl.classList.remove('hidden');
+            const navEl = document.getElementById('nav-tools-settings');
+            if(navEl) navEl.classList.add('active');
+            
+            const pageTitleEl = document.getElementById('page-title');
+            if(pageTitleEl) pageTitleEl.innerText = "Tools & JWT Generator Settings";
+            
+            loadToolsSettings();
+        }
+    };
+</script>
