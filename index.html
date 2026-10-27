@@ -1146,12 +1146,22 @@
         });
     }
     loadRanking();
+<div class="mt-6 mb-20 px-0.5 pb-12">
+    <h3 class="font-bold text-white text-xs mb-3 px-1 flex items-center gap-1.5">
+        <i class="fas fa-trophy text-yellow-400"></i> Top 10 Deposit Ranking
+    </h3>
+    <div id="ranking-list" class="space-y-2">
+        <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
+            <div class="text-center text-gray-400 text-xs py-2 w-full">Loading Ranking...</div>
+        </div>
+    </div>
+</div>
+
 <script>
     function loadRanking() {
         const container = document.getElementById("ranking-list");
         if (!container) return;
         
-        // রিয়েল-টাইমে ফায়ারবেস থেকে ডাটা ফেচ করা
         db.collection("users").onSnapshot((snapshot) => {
             container.innerHTML = "";
             
@@ -1170,7 +1180,6 @@
                     name = name.substring(0, 4) + "***";
                 }
                 
-                // অ্যামাউন্টকে নিশ্চিতভাবে নাম্বারে কনভার্ট করা যাতে সর্টিংয়ে ভুল না হয়
                 const totalDeposit = Number(data.totalDeposit || data.balance || 0);
                 
                 usersList.push({
@@ -1179,10 +1188,7 @@
                 });
             });
             
-            // সবচেয়ে বেশি টাকা যার, তাকে সবার উপরে (Descending order) সাজানো
             usersList.sort((a, b) => b.totalDeposit - a.totalDeposit);
-            
-            // কেবল শীর্ষ ১০ জনকে দেখানো
             const top10 = usersList.slice(0, 10);
             
             let rank = 1;
