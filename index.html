@@ -75,7 +75,6 @@
         }
         input:focus { border-color: #00d2ff !important; box-shadow: 0 0 10px rgba(0, 210, 255, 0.3) !important; }
 
-        /* Floating Modal Custom Style */
         .custom-modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 1000;
@@ -103,7 +102,6 @@
             </button>
         </div>
     </header>
-
     <div id="notice-section" class="mb-2 px-3 mt-3">
         <div class="vip-card text-white p-3.5 rounded-2xl relative">
             <button onclick="this.parentElement.parentElement.style.display='none'" class="absolute top-2 right-2 text-white/70 hover:text-white">
@@ -115,6 +113,7 @@
             </div>
         </div>
     </div>
+
     <main class="p-3 relative">
         <section id="auth-sec" class="hidden animate-fade-in">
             <div class="vip-card rounded-2xl p-6 relative">
@@ -166,7 +165,6 @@
                 </div>
             </div>
         </section>
-
         <section id="home-sec" class="animate-fade-in pb-8">
             <div id="banner-container" class="mb-5 overflow-hidden rounded-2xl h-40 vip-card relative">
                 <div id="slider-wrapper" class="flex h-full w-full transition-transform duration-500 ease-out">
@@ -175,7 +173,6 @@
                 <div id="slider-dots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
 
-            <!-- Special Tools Category Card -->
             <div class="mb-5 px-0.5">
                 <h3 class="font-bold text-white text-xs mb-2.5 px-1">Special Category</h3>
                 <div class="vip-card flex items-center justify-between p-3 cursor-pointer hover:border-cyan-400/50 transition" onclick="showSec('tools-module')">
@@ -190,7 +187,6 @@
                 </div>
             </div>
 
-            <!-- WhatsApp, Telegram & App Download -->
             <div class="grid grid-cols-3 gap-2.5 mb-5 px-0.5">
                 <a id="home-whatsapp" href="#" target="_blank" class="vip-card py-2.5 px-2 rounded-xl flex items-center justify-between h-11 no-underline">
                     <div class="w-6 h-6 rounded-full flex items-center justify-center bg-white/10 text-white"><i class="fab fa-whatsapp text-sm"></i></div>
@@ -220,7 +216,6 @@
                 </div>
             </div>
         </section>
-        <!-- Dedicated Tools Page -->
         <section id="tools-module-sec" class="hidden animate-fade-in pb-16">
             <div class="vip-card p-4 rounded-2xl mb-4 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -239,14 +234,12 @@
                     <input type="password" id="toolPassword" placeholder="Enter Guest Password..." class="w-full p-2.5 rounded-xl text-xs">
                 </div>
 
-                <!-- Generate Button -->
                 <button onclick="handleTokenGeneration()" class="w-full btn-vip py-3 rounded-xl font-bold text-xs mt-2">
                     <i class="fas fa-key mr-1"></i> Generate Your Token
                 </button>
 
                 <hr class="border-white/10 my-4">
 
-                <!-- GitHub Auto Update Options -->
                 <div class="bg-black/40 p-3.5 rounded-xl border border-white/10 space-y-3">
                     <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
                         <i class="fab fa-github"></i> Auto Update GitHub (Optional)
@@ -270,7 +263,6 @@
             </div>
         </section>
 
-        <!-- Floating Result Modal -->
         <div id="jwtResultModal" class="custom-modal-overlay">
             <div class="custom-modal-box text-center">
                 <h3 class="text-sm font-bold text-cyan-400 mb-3"><i class="fas fa-check-circle mr-1"></i> Generated JWT Token</h3>
@@ -288,7 +280,6 @@
                 </div>
             </div>
         </div>
-
         <section id="tutorial-sec" class="hidden animate-fade-in pb-16">
             <div class="vip-card rounded-2xl overflow-hidden">
                 <div class="p-4 border-b border-white/15"><h2 class="font-bold text-sm text-white">Video Tutorials</h2></div>
@@ -302,6 +293,7 @@
                 <div id="history-list" class="px-3 py-2.5 space-y-2.5"></div>
             </div>
         </section>
+
         <section id="account-sec" class="hidden animate-fade-in pb-20">
             <div class="vip-card p-5 rounded-2xl text-center">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 p-0.5 mx-auto mb-2.5 shadow-lg">
@@ -417,7 +409,6 @@
             <span id="total-price" class="hidden">0</span>
         </section>
 
-        <!-- Floating UID Profile Modal -->
         <div id="uid-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden animate-fade-in">
             <div class="vip-card w-full max-w-sm rounded-2xl p-5 relative border border-white/20 shadow-2xl max-h-[85vh] overflow-y-auto">
                 <button onclick="closeUidModal()" class="absolute top-3 right-3 text-white bg-black/80 w-7 h-7 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:text-black transition"><i class="fas fa-times text-xs"></i></button>
@@ -934,7 +925,7 @@
         .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
     }
 
-    /* New JWT Generation & Floating Modal Logic */
+    /* JWT Generation & Floating Modal Logic */
     function handleTokenGeneration() {
         const uid = document.getElementById('toolUid').value.trim();
         const password = document.getElementById('toolPassword').value.trim();
