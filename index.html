@@ -1097,10 +1097,10 @@
         </h3>
     </div>
     
-    <!-- শীর্ষ ৩ জনের পোডিয়াম ডিজাইন -->
+    <!-- ভিডিওর স্টাইলে সাজানো শীর্ষ ৩ জনের পোডিয়াম (বামে ২, মাঝখানে ১, ডানে ৩) -->
     <div id="podium-top3" class="grid grid-cols-3 gap-2 mb-3"></div>
 
-    <!-- ৪ থেকে ১০ জনের লিস্ট -->
+    <!-- বাকি ৪ থেকে ১০ জনের লিস্ট -->
     <div id="ranking-list" class="space-y-2">
         <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
             <div class="text-center text-gray-400 text-xs py-2 w-full">Loading Leaderboard...</div>
@@ -1119,7 +1119,8 @@
             listContainer.innerHTML = "";
             
             if (snapshot.empty) {
-                listContainer.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো ডাটা পাওয়া যায়নি</div>";
+                podiumContainer.innerHTML = `<div class="col-span-3 text-center text-gray-400 text-xs py-4">কোনো ইউজার ডাটা পাওয়া যায়নি</div>`;
+                listContainer.innerHTML = "";
                 return;
             }
             
@@ -1131,64 +1132,79 @@
                     name = name.split("@")[0];
                 }
                 
-                // ব্যালেন্স বা ডিপোজিট অ্যামাউন্ট নিশ্চিত করার জন্য সব ফিল্ড চেক করা
+                // আপনার ফায়ারবেসের 'balance' ফিল্ডকে সঠিকভাবে রিড করা
                 let balance = Number(data.balance || data.totalDeposit || data.deposit || data.amount || 0);
                 
                 usersList.push({
                     name: name,
-                    totalDeposit: balance
+                    balance: balance
                 });
             });
             
-            // সবচেয়ে বেশি ব্যালেন্স ওয়ালাকে সবার উপরে (১ নম্বরে) নিয়ে আসার জন্য সর্টিং
-            usersList.sort((a, b) => b.totalDeposit - a.totalDeposit);
-            const top10 = usersList.slice(0, 10);
+            // যার ব্যালেন্স বেশি সে সবার উপরে থাকবে (সর্টিং)
+            usersList.sort((a, b) => b.balance - a.balance);
+            
+            const top3 = usersList.slice(0, 3);
+            const rest = usersList.slice(3, 10);
+            
+            // পোডিয়ামের জন্য ভিজ্যুয়াল অর্ডার সাজানো: [Rank 2, Rank 1, Rank 3]
+            let slot1 = top3[1] ? {user: top3[1], rank: 2} : null;
+            let slot2 = top3[0] ? {user: top3[0], rank: 1} : null;
+            let slot3 = top3[2] ? {user: top3[2], rank: 3} : null;
             
             let top3HTML = "";
-            let restHTML = "";
-            
-            top10.forEach((user, index) => {
-                let rank = index + 1;
-                let firstLetter = user.name ? user.name.charAt(0).toUpperCase() : "U";
-
-                if (rank <= 3) {
-                    let crownColor = rank === 1 ? "text-yellow-400" : (rank === 2 ? "text-gray-300" : "text-amber-500");
-                    let borderColor = rank === 1 ? "border-yellow-500/50 bg-yellow-500/10" : (rank === 2 ? "border-gray-400/40 bg-gray-400/10" : "border-amber-600/40 bg-amber-600/10");
-                    
-                    top3HTML += `
-                        <div class="vip-card p-3 rounded-2xl flex flex-col items-center text-center border ${borderColor} relative">
-                            <div class="absolute -top-2 px-2 py-0.5 rounded-full text-[9px] font-bold bg-black/80 text-white border border-white/20">
-                                <i class="fas fa-crown ${crownColor}"></i> ${rank}
-                            </div>
-                            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md mb-2 mt-1">
-                                ${firstLetter}
-                            </div>
-                            <h4 class="font-bold text-white text-[11px] truncate w-full mb-1">${user.name}</h4>
-                            <span class="text-cyan-400 font-bold text-[10px]">৳${user.totalDeposit}</span>
-                        </div>
-                    `;
-                } else {
-                    restHTML += `
-                        <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs border border-white/10">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-[10px]">${rank}</span>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white font-bold text-[10px]">
-                                        ${firstLetter}
-                                    </div>
-                                    <span class="font-bold text-white">${user.name}</span>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-cyan-400 font-bold">৳${user.totalDeposit}</span>
-                            </div>
-                        </div>
-                    `;
+            [slot1, slot2, slot3].forEach(slot => {
+                if (!slot) {
+                    top3HTML += `<div class="vip-card p-3 rounded-2xl opacity-30 flex flex-col items-center justify-center text-center border border-white/10"><span class="text-[9px] text-gray-400">Empty</span></div>`;
+                    return;
                 }
+                let user = slot.user;
+                let actualRank = slot.rank;
+                let crownColor = actualRank === 1 ? "text-yellow-400" : (actualRank === 2 ? "text-gray-300" : "text-amber-500");
+                let borderStyle = actualRank === 1 ? "border-yellow-500/60 bg-yellow-500/15 -translate-y-1 shadow-lg" : "border-white/15 bg-white/5";
+                let firstLetter = user.name ? user.name.charAt(0).toUpperCase() : "U";
+                
+                top3HTML += `
+                    <div class="vip-card p-2.5 rounded-2xl flex flex-col items-center text-center border ${borderStyle} relative">
+                        <div class="absolute -top-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-black/90 text-white border border-white/20">
+                            <i class="fas fa-crown ${crownColor}"></i> ${actualRank}
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-xs shadow-md mb-1.5 mt-1">
+                            ${firstLetter}
+                        </div>
+                        <h4 class="font-bold text-white text-[10px] truncate w-full mb-0.5">${user.name}</h4>
+                        <span class="text-cyan-400 font-bold text-[10px]">৳${user.balance}</span>
+                    </div>
+                `;
+            });
+            
+            let restHTML = "";
+            rest.forEach((user, index) => {
+                let rank = index + 4;
+                let firstLetter = user.name ? user.name.charAt(0).toUpperCase() : "U";
+                restHTML += `
+                    <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs border border-white/10">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-[10px]">${rank}</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white font-bold text-[10px]">
+                                    ${firstLetter}
+                                </div>
+                                <span class="font-bold text-white">${user.name}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-cyan-400 font-bold">৳${user.balance}</span>
+                        </div>
+                    </div>
+                `;
             });
 
-            podiumContainer.innerHTML = top3HTML || '<div class="col-span-3 text-center text-gray-400 text-xs">টপ ৩ খালি</div>';
-            listContainer.innerHTML = restHTML || '';
+            podiumContainer.innerHTML = top3HTML;
+            listContainer.innerHTML = restHTML || (usersList.length > 3 ? '' : '<div class="text-center text-gray-400 text-xs py-2">৪ থেকে ১০ নম্বরের জন্য আরও ইউজারের প্রয়োজন</div>');
+        }, (error) => {
+            console.error("Firestore Error:", error);
+            listContainer.innerHTML = `<div class="text-center text-red-400 text-xs py-2">ডাটা লোড করতে সমস্যা হচ্ছে</div>`;
         });
     }
     loadRanking();
