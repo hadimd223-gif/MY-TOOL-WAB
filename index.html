@@ -1097,10 +1097,10 @@
         </h3>
     </div>
     
-    <!-- ভিডিওর স্টাইলে সাজানো শীর্ষ ৩ জনের পোডিয়াম (বামে ২, মাঝখানে ১, ডানে ৩) -->
+    <!-- পোডিয়াম স্টাইল: বামে ২, মাঝখানে ১, ডানে ৩ -->
     <div id="podium-top3" class="grid grid-cols-3 gap-2 mb-3"></div>
 
-    <!-- বাকি ৪ থেকে ১০ জনের লিস্ট -->
+    <!-- ৪ থেকে ১০ জনের লিস্ট -->
     <div id="ranking-list" class="space-y-2">
         <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
             <div class="text-center text-gray-400 text-xs py-2 w-full">Loading Leaderboard...</div>
@@ -1119,7 +1119,7 @@
             listContainer.innerHTML = "";
             
             if (snapshot.empty) {
-                podiumContainer.innerHTML = `<div class="col-span-3 text-center text-gray-400 text-xs py-4">কোনো ইউজার ডাটা পাওয়া যায়নি</div>`;
+                podiumContainer.innerHTML = `<div class="col-span-3 text-center text-gray-400 text-xs py-4">কোনো ডাটা পাওয়া যায়নি</div>`;
                 listContainer.innerHTML = "";
                 return;
             }
@@ -1132,7 +1132,6 @@
                     name = name.split("@")[0];
                 }
                 
-                // আপনার ফায়ারবেসের 'balance' ফিল্ডকে সঠিকভাবে রিড করা
                 let balance = Number(data.balance || data.totalDeposit || data.deposit || data.amount || 0);
                 
                 usersList.push({
@@ -1141,13 +1140,11 @@
                 });
             });
             
-            // যার ব্যালেন্স বেশি সে সবার উপরে থাকবে (সর্টিং)
             usersList.sort((a, b) => b.balance - a.balance);
             
             const top3 = usersList.slice(0, 3);
             const rest = usersList.slice(3, 10);
             
-            // পোডিয়ামের জন্য ভিজ্যুয়াল অর্ডার সাজানো: [Rank 2, Rank 1, Rank 3]
             let slot1 = top3[1] ? {user: top3[1], rank: 2} : null;
             let slot2 = top3[0] ? {user: top3[0], rank: 1} : null;
             let slot3 = top3[2] ? {user: top3[2], rank: 3} : null;
@@ -1201,15 +1198,11 @@
             });
 
             podiumContainer.innerHTML = top3HTML;
-            listContainer.innerHTML = restHTML || (usersList.length > 3 ? '' : '<div class="text-center text-gray-400 text-xs py-2">৪ থেকে ১০ নম্বরের জন্য আরও ইউজারের প্রয়োজন</div>');
-        }, (error) => {
-            console.error("Firestore Error:", error);
-            listContainer.innerHTML = `<div class="text-center text-red-400 text-xs py-2">ডাটা লোড করতে সমস্যা হচ্ছে</div>`;
+            listContainer.innerHTML = restHTML;
         });
     }
     loadRanking();
 </script>
-
 <div class="h-32 w-full"></div>
 <!--RANKING_END-->
 
