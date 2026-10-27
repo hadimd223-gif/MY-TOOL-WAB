@@ -1091,44 +1091,46 @@
 <script>
 <!--RANKING_START-->
 <div class="mt-6 mb-10 px-0.5">
-    <h3 class="font-bold text-white text-xs mb-3 px-1 flex items-center gap-1.5">
-        <i class="fas fa-trophy text-yellow-400"></i> Top 10 Deposit Ranking
-    </h3>
+    <div class="flex items-center justify-between mb-3 px-1">
+        <h3 class="font-bold text-white text-xs flex items-center gap-1.5">
+            <i class="fas fa-trophy text-yellow-400"></i> Top 10 Spend Leaderboard
+        </h3>
+    </div>
+    
+    <!-- শীর্ষ ৩ জনের স্পেশাল পোডিয়াম ডিজাইন -->
+    <div id="podium-top3" class="grid grid-cols-3 gap-2 mb-3"></div>
+
+    <!-- বাকি ৪ থেকে ১০ জনের লিস্ট -->
     <div id="ranking-list" class="space-y-2">
         <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
-            <div class="text-center text-gray-400 text-xs py-2 w-full">Loading Ranking...</div>
+            <div class="text-center text-gray-400 text-xs py-2 w-full">Loading Leaderboard...</div>
         </div>
     </div>
 </div>
 
 <script>
     function loadRanking() {
-        const container = document.getElementById("ranking-list");
-        if (!container) return;
+        const podiumContainer = document.getElementById("podium-top3");
+        const listContainer = document.getElementById("ranking-list");
+        if (!podiumContainer || !listContainer) return;
         
         db.collection("users").onSnapshot((snapshot) => {
-            container.innerHTML = "";
+            podiumContainer.innerHTML = "";
+            listContainer.innerHTML = "";
             
             if (snapshot.empty) {
-                container.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো র‍্যাঙ্কিং ডাটা পাওয়া যায়নি</div>";
+                listContainer.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো ডাটা পাওয়া যায়নি</div>";
                 return;
             }
             
             let usersList = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
-                // ইউজারের নাম সঠিকভাবে খুঁজে বের করা (name, username অথবা email থেকে)
                 let name = data.name || data.username || data.email || "VIP User";
                 if (typeof name === "string" && name.includes("@")) {
                     name = name.split("@")[0];
                 }
                 
-                // নাম বেশি বড় হলে ছোট করে দেওয়া
-                if (name.length > 5) {
-                    name = name.substring(0, 4) + "***";
-                }
-                
-                // ডিপোজিট অ্যামাউন্ট নাম্বারে কনভার্ট করা
                 const totalDeposit = Number(data.totalDeposit || data.balance || data.deposit || 0);
                 
                 usersList.push({
@@ -1141,38 +1143,53 @@
             usersList.sort((a, b) => b.totalDeposit - a.totalDeposit);
             const top10 = usersList.slice(0, 10);
             
-            let rank = 1;
-            top10.forEach(user => {
-                let badgeColor = "bg-white/10 text-white";
-                let iconColor = "text-gray-400";
-                if (rank === 1) { 
-                    badgeColor = "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40"; 
-                    iconColor = "text-yellow-400"; 
-                } else if (rank === 2) { 
-                    badgeColor = "bg-gray-300/20 text-gray-300 border border-gray-300/40"; 
-                    iconColor = "text-gray-300"; 
-                } else if (rank === 3) { 
-                    badgeColor = "bg-amber-600/20 text-amber-500 border border-amber-600/40"; 
-                    iconColor = "text-amber-500"; 
-                }
+            let top3HTML = "";
+            let restHTML = "";
+            
+            top10.forEach((user, index) => {
+                let rank = index + 1;
+                let firstLetter = user.name.charAt(0).toUpperCase();
 
-                container.innerHTML += `
-                    <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs border border-white/10">
-                        <div class="flex items-center gap-2.5">
-                            <span class="w-6 h-6 rounded-full ${badgeColor} flex items-center justify-center font-bold text-[10px]">${rank}</span>
-                            <div>
-                                <span class="font-bold text-white flex items-center gap-1">
-                                    <i class="fas fa-medal ${iconColor} text-[10px]"></i> ${user.name}
-                                </span>
+                if (rank <= 3) {
+                    // শীর্ষ ৩ জনের জন্য স্পেশাল কার্ড ডিজাইন
+                    let crownColor = rank === 1 ? "text-yellow-400" : (rank === 2 ? "text-gray-300" : "text-amber-500");
+                    let borderColor = rank === 1 ? "border-yellow-500/50 bg-yellow-500/10" : (rank === 2 ? "border-gray-400/40 bg-gray-400/10" : "border-amber-600/40 bg-amber-600/10");
+                    
+                    top3HTML += `
+                        <div class="vip-card p-3 rounded-2xl flex flex-col items-center text-center border ${borderColor} relative">
+                            <div class="absolute -top-2 px-2 py-0.5 rounded-full text-[9px] font-bold bg-black/80 text-white border border-white/20">
+                                <i class="fas fa-crown ${crownColor}"></i> ${rank}
+                            </div>
+                            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md mb-2 mt-1">
+                                ${firstLetter}
+                            </div>
+                            <h4 class="font-bold text-white text-[11px] truncate w-full mb-1">${user.name}</h4>
+                            <span class="text-cyan-400 font-bold text-[10px]">৳${user.totalDeposit}</span>
+                        </div>
+                    `;
+                } else {
+                    // ৪ থেকে ১০ নম্বর পর্যন্ত লিস্ট ডিজাইন
+                    restHTML += `
+                        <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs border border-white/10">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-[10px]">${rank}</span>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white font-bold text-[10px]">
+                                        ${firstLetter}
+                                    </div>
+                                    <span class="font-bold text-white">${user.name}</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-cyan-400 font-bold">৳${user.totalDeposit}</span>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <span class="text-cyan-400 font-bold">৳${user.totalDeposit}</span>
-                        </div>
-                    </div>
-                `;
-                rank++;
+                    `;
+                }
             });
+
+            podiumContainer.innerHTML = top3HTML;
+            listContainer.innerHTML = restHTML || '<div class="text-center text-gray-400 text-xs py-2">অন্যান্য র‍্যাংক খালি আছে</div>';
         });
     }
     loadRanking();
@@ -1180,5 +1197,6 @@
 
 <div class="h-32 w-full"></div>
 <!--RANKING_END-->
+
 </body>
 </html>
