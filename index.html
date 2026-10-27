@@ -179,8 +179,8 @@
                     <div class="flex items-center gap-3">
                         <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500" alt="Tools Icon" class="w-12 h-12 rounded-xl object-cover border border-cyan-400/40">
                         <div class="text-left">
-                            <h4 class="font-bold text-cyan-400 text-xs">Tools</h4>
-                            <p class="text-[10px] text-gray-300">Free Fire JWT Generator & GitHub Auto-Update</p>
+                            <h4 class="font-bold text-cyan-400 text-xs">Tools & JWT Generator</h4>
+                            <p class="text-[10px] text-gray-300">Paid Token & 1-Hour Real-Time GitHub Auto-Update</p>
                         </div>
                     </div>
                     <i class="fas fa-chevron-right text-cyan-400 text-xs"></i>
@@ -220,11 +220,16 @@
             <div class="vip-card p-4 rounded-2xl mb-4 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <button onclick="showSec('home')" class="text-white bg-black/50 w-7 h-7 rounded-full flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left text-xs"></i></button>
-                    <h3 class="font-bold text-cyan-400 text-sm">Free Fire JWT Generator</h3>
+                    <h3 class="font-bold text-cyan-400 text-sm">Free Fire JWT Generator & Auto Sync</h3>
                 </div>
             </div>
 
             <div class="vip-card p-5 rounded-2xl space-y-4">
+                <div class="flex justify-between items-center bg-black/50 p-3 rounded-xl border border-cyan-400/20">
+                    <span class="text-xs text-gray-300 font-medium">Service Fee / Price:</span>
+                    <span class="text-xs font-bold text-cyan-400">৳ <span id="display-tool-price">0</span></span>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-gray-300 mb-1.5">গেস্ট আইডির ইউআইডি (UID):</label>
                     <input type="text" id="toolUid" placeholder="Enter Guest UID..." class="w-full p-2.5 rounded-xl text-xs">
@@ -242,7 +247,7 @@
 
                 <div class="bg-black/40 p-3.5 rounded-xl border border-white/10 space-y-3">
                     <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                        <i class="fab fa-github"></i> Auto Update GitHub (Optional)
+                        <i class="fab fa-github"></i> 1-Hour Real-Time GitHub Auto Update
                     </h4>
                     <div>
                         <label class="block text-[10px] text-gray-400 mb-1">GitHub Personal Access Token:</label>
@@ -257,7 +262,7 @@
                         <input type="text" id="ghPath" placeholder="e.g. src/config.py" class="w-full p-2 rounded-lg text-xs">
                     </div>
                     <button onclick="handleGitHubUpdate()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-xl font-bold text-xs mt-1">
-                        <i class="fas fa-sync-alt mr-1"></i> Update to GitHub Directly
+                        <i class="fas fa-sync-alt mr-1"></i> Start 1-Hour Auto Sync to GitHub
                     </button>
                 </div>
             </div>
@@ -352,7 +357,6 @@
                 </div>
             </div>
         </section>
-
         <section id="topup-sec" class="hidden animate-fade-in pb-10">
             <div class="vip-card p-3 rounded-2xl flex items-center gap-3 mb-3 relative">
                 <button onclick="showSec('home')" class="text-white w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/80 border border-white/20"><i class="fas fa-times text-xs"></i></button>
@@ -458,6 +462,7 @@
     let bannerInterval = null;
     let currentSlideIndex = 0;
     let totalSlides = 0;
+    let toolServicePrice = 0;
 
     function loadGlobalSettings() {
         db.collection("settings").doc("general").onSnapshot((doc) => {
@@ -468,6 +473,17 @@
                 if(data.notice) document.getElementById('notice-text').innerText = data.notice;
                 if(data.whatsapp) document.getElementById('home-whatsapp').href = `https://wa.me/${data.whatsapp}`;
                 if(data.appLink) document.getElementById('home-app-dl').href = data.appLink;
+            }
+        });
+
+        // Load Tools Settings & Price from Firestore
+        db.collection("settings").doc("tools").onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                toolServicePrice = parseInt(data.price || 0);
+                if(document.getElementById('display-tool-price')) {
+                    document.getElementById('display-tool-price').innerText = toolServicePrice;
+                }
             }
         });
     }
@@ -766,6 +782,7 @@
     function closeUidModal() {
         document.getElementById('uid-modal').classList.add('hidden');
     }
+
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         let playerId = document.getElementById('game-player-id').value.trim();
@@ -822,7 +839,6 @@
             Swal.fire('Error', err.message, 'error');
         });
     }
-
     function loadTutorials() {
         db.collection("tutorials").onSnapshot((snapshot) => {
             const container = document.getElementById('tutorial-list-container');
@@ -925,8 +941,50 @@
         .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
     }
 
-    /* JWT Generation & Floating Modal Logic */
-    function handleTokenGeneration() {
+    async function verifyAndDeductToolFee() {
+        if (!currentUser) { showSec('auth'); return false; }
+        if (toolServicePrice <= 0) return true;
+
+        if (userBalance < toolServicePrice) {
+            await Swal.fire({
+                title: 'Insufficient Balance!',
+                text: `এই টুলটি ব্যবহারের জন্য সার্ভিস ফি ৳${toolServicePrice} প্রয়োজন। আপনার ওয়ালেটে পর্যাপ্ত টাকা নেই।`,
+                icon: 'warning',
+                confirmButtonText: 'Add Money Now'
+            });
+            showSec('addmoney');
+            return false;
+        }
+
+        const confirm = await Swal.fire({
+            title: 'Confirm Service Fee',
+            text: `আপনার ওয়ালেট থেকে ৳${toolServicePrice} কেটে নেওয়া হবে। আপনি কি টোকেন জেনারেট করতে চান?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Proceed'
+        });
+
+        if (!confirm.isConfirmed) return false;
+
+        try {
+            await db.collection('users').doc(currentUser.uid).update({ balance: userBalance - toolServicePrice });
+            await db.collection('orders').add({
+                userId: currentUser.uid,
+                userName: currentUser.email,
+                gameName: 'VIP Tools & JWT',
+                productName: 'JWT Token Generation / Auto Sync',
+                price: toolServicePrice,
+                status: 'success',
+                date: new Date()
+            });
+            return true;
+        } catch(err) {
+            Swal.fire('Error', 'Balance deduction failed: ' + err.message, 'error');
+            return false;
+        }
+    }
+
+    async function handleTokenGeneration() {
         const uid = document.getElementById('toolUid').value.trim();
         const password = document.getElementById('toolPassword').value.trim();
 
@@ -934,6 +992,9 @@
             Swal.fire('Error', 'দয়া করে গেস্ট আইডির UID এবং Password দিন!', 'warning');
             return;
         }
+
+        const paidOk = await verifyAndDeductToolFee();
+        if (!paidOk) return;
 
         Swal.showLoading();
         const apiBaseUrl = "https://mhxffv111.pythonanywhere.com";
@@ -956,7 +1017,7 @@
             });
     }
 
-    function handleGitHubUpdate() {
+    async function handleGitHubUpdate() {
         const uid = document.getElementById('toolUid').value.trim();
         const password = document.getElementById('toolPassword').value.trim();
         const ghToken = document.getElementById('ghToken').value.trim();
@@ -973,6 +1034,9 @@
             return;
         }
 
+        const paidOk = await verifyAndDeductToolFee();
+        if (!paidOk) return;
+
         Swal.showLoading();
         const apiBaseUrl = "https://mhxffv111.pythonanywhere.com";
         const url = `${apiBaseUrl}/update-github?gh_token=${ghToken}&repo=${repo}&path=${encodeURIComponent(path)}&uid=${uid}&password=${encodeURIComponent(password)}`;
@@ -984,7 +1048,7 @@
                     Swal.close();
                     document.getElementById('modalJwtText').innerText = data.updated_token;
                     document.getElementById('jwtResultModal').style.display = 'flex';
-                    Swal.fire('Success', 'গিটহাবে টোকেন সফলভাবে আপডেট করা হয়েছে!', 'success');
+                    Swal.fire('Success', 'গিটহাবে রিয়েল-টাইম অটো আপডেট সফলভাবে চালু হয়েছে (প্রতি ১ ঘণ্টা পর পর সিংক হবে)!', 'success');
                 } else {
                     Swal.fire('Error', data.error || 'গিটহাবে আপডেট করতে সমস্যা হয়েছে!', 'error');
                 }
