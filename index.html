@@ -1117,15 +1117,18 @@
             let usersList = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
-                let name = data.name || data.email || data.username || "VIP User";
+                // ইউজারের নাম সঠিকভাবে খুঁজে বের করা (name, username অথবা email থেকে)
+                let name = data.name || data.username || data.email || "VIP User";
                 if (typeof name === "string" && name.includes("@")) {
                     name = name.split("@")[0];
                 }
                 
+                // নাম বেশি বড় হলে ছোট করে দেওয়া
                 if (name.length > 5) {
                     name = name.substring(0, 4) + "***";
                 }
                 
+                // ডিপোজিট অ্যামাউন্ট নাম্বারে কনভার্ট করা
                 const totalDeposit = Number(data.totalDeposit || data.balance || data.deposit || 0);
                 
                 usersList.push({
@@ -1134,6 +1137,7 @@
                 });
             });
             
+            // সবচেয়ে বেশি ডিপোজিটকারীকে উপরে সাজানো
             usersList.sort((a, b) => b.totalDeposit - a.totalDeposit);
             const top10 = usersList.slice(0, 10);
             
