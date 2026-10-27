@@ -1232,6 +1232,9 @@
 
 
 
+
+
+
 <!--RANKING_START-->
 <div class="mt-6 mb-10 px-0.5">
     <h3 class="font-bold text-white text-xs mb-3 px-1 flex items-center gap-1.5">
@@ -1253,21 +1256,23 @@
             container.innerHTML = "";
             
             if (snapshot.empty) {
-                container.innerHTML = "<div class="text-center text-gray-400 text-xs py-2">কোনো র‍্যাঙ্কিং ডাটা পাওয়া যায়নি</div>";
+                container.innerHTML = "<div class="text-center text-gray-400 text-xs py-2">কোনো ডাটা পাওয়া যায়নি</div>";
                 return;
             }
             
             let usersList = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
-                let name = data.name || data.email || "VIP User";
-                if (name.includes("@")) name = name.split("@")[0];
+                let name = data.name || data.email || data.username || "VIP User";
+                if (typeof name === "string" && name.includes("@")) {
+                    name = name.split("@")[0];
+                }
                 
                 if (name.length > 5) {
                     name = name.substring(0, 4) + "***";
                 }
                 
-                const totalDeposit = Number(data.totalDeposit || data.balance || 0);
+                const totalDeposit = Number(data.totalDeposit || data.balance || data.deposit || 0);
                 
                 usersList.push({
                     name: name,
@@ -1315,7 +1320,6 @@
     loadRanking();
 </script>
 
-<!-- স্ক্রল সমস্যা সমাধানের জন্য অতিরিক্ত স্পেস -->
 <div class="h-32 w-full"></div>
 <!--RANKING_END-->
 
