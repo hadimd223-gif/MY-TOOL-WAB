@@ -16,44 +16,35 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @keyframes flashWhiteGlow {
-            0% { border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), inset 0 0 8px rgba(255, 255, 255, 0.03); }
-            33% { border-color: rgba(34, 211, 238, 0.8); box-shadow: 0 0 30px rgba(34, 211, 238, 0.4), inset 0 0 15px rgba(34, 211, 238, 0.15); }
-            66% { border-color: rgba(255, 255, 255, 0.85); box-shadow: 0 0 35px rgba(255, 255, 255, 0.5), inset 0 0 18px rgba(255, 255, 255, 0.2); }
-            100% { border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), inset 0 0 8px rgba(255, 255, 255, 0.03); }
-        }
         html { scroll-behavior: smooth; }
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: #000000 !important;
+            background: #0d0e12 !important;
             color: #f8fafc;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
             touch-action: manipulation;
         }
         .vip-card {
-            background: rgba(12, 12, 12, 0.7);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            animation: flashWhiteGlow 4s ease-in-out infinite;
-            will-change: transform, box-shadow, border-color;
-            transform: translateZ(0);
+            background: rgba(22, 24, 33, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             border-radius: 16px;
         }
         .btn-vip {
-            background: linear-gradient(135deg, #161616, #2d2d2d);
-            border: 1px solid rgba(34, 211, 238, 0.4);
+            background: linear-gradient(135deg, #1e2638, #00d2ff);
+            border: 1px solid rgba(0, 210, 255, 0.4);
             transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.15);
+            color: #ffffff;
+            font-weight: 600;
         }
-        .btn-vip:hover { border-color: rgba(255, 255, 255, 0.9); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+        .btn-vip:hover { border-color: rgba(255, 255, 255, 0.9); box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); }
         .btn-vip:active { transform: scale(0.97); }
         .product-card {
-            background: rgba(15, 15, 15, 0.75);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(18, 20, 29, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 14px;
             padding: 12px;
             display: flex;
@@ -63,66 +54,48 @@
             transition: all 0.15s ease;
         }
         .product-card.selected {
-            border: 2px solid #22d3ee;
-            background: rgba(34, 211, 238, 0.15);
-            box-shadow: 0 0 25px rgba(34, 211, 238, 0.5);
+            border: 2px solid #00d2ff;
+            background: rgba(0, 210, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
         }
-        .product-bullet { height: 10px; width: 10px; background-color: #666666; border-radius: 50%; margin-right: 8px; }
-        .product-card.selected .product-bullet { background-color: #22d3ee; box-shadow: 0 0 10px #22d3ee; }
+        .product-bullet { height: 10px; width: 10px; background-color: #666; border-radius: 50%; margin-right: 8px; }
+        .product-card.selected .product-bullet { background-color: #00d2ff; box-shadow: 0 0 8px #00d2ff; }
         .pay-option-card.selected {
-            border: 2px solid #22d3ee !important;
-            background: rgba(34, 211, 238, 0.15) !important;
-            box-shadow: 0 0 25px rgba(34, 211, 238, 0.5);
+            border: 2px solid #00d2ff !important;
+            background: rgba(0, 210, 255, 0.15) !important;
         }
-        .active-tab { color: #ffffff !important; filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.9)); }
+        .active-tab { color: #00d2ff !important; filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.8)); }
         .hidden { display: none !important; }
         .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         input, select, textarea {
-            background: rgba(8, 8, 8, 0.9) !important;
-            backdrop-filter: blur(20px);
+            background: rgba(13, 15, 23, 0.9) !important;
             color: #fff !important;
-            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
         }
-        input:focus { border-color: #22d3ee !important; box-shadow: 0 0 20px rgba(34, 211, 238, 0.5) !important; }
+        input:focus { border-color: #00d2ff !important; box-shadow: 0 0 10px rgba(0, 210, 255, 0.3) !important; }
 
-        /* Tools Category & Modal Styles */
-        .tools-category-card {
-            background: rgba(15, 15, 25, 0.8);
-            border: 1.5px solid rgba(0, 210, 255, 0.3);
-            border-radius: 16px;
-            padding: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.1);
-        }
-        .tools-category-card:hover { border-color: rgba(0, 210, 255, 0.8); transform: translateY(-2px); }
-        .tools-modal-overlay {
+        /* Floating Modal Custom Style */
+        .custom-modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 1000;
             justify-content: center; align-items: center; padding: 15px;
         }
-        .tools-modal-content {
-            background: #11111a; border: 1.5px solid rgba(0, 210, 255, 0.4);
-            padding: 20px; border-radius: 16px; width: 100%; max-width: 420px; color: #fff;
-            position: relative; max-height: 90vh; overflow-y: auto;
-        }
-        .result-box {
-            margin-top: 12px; background: #080810; padding: 10px; border-radius: 8px;
-            word-break: break-all; font-size: 11px; color: #00ffcc; max-height: 80px; overflow-y: auto;
-            border: 1px solid rgba(0, 255, 204, 0.3);
+        .custom-modal-box {
+            background: #141722; border: 1.5px solid rgba(0, 210, 255, 0.3);
+            padding: 22px; border-radius: 18px; width: 100%; max-width: 420px; color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); position: relative;
         }
     </style>
 </head>
-<body class="select-none bg-black">
-<div id="app-content" class="relative max-w-md mx-auto min-h-screen border-x border-white/10 pb-24 bg-black">
-    <header class="bg-black/80 backdrop-blur-2xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/15 shadow-2xl">
+<body class="select-none bg-[#0d0e12]">
+<div id="app-content" class="relative max-w-md mx-auto min-h-screen border-x border-white/10 pb-24 bg-[#0d0e12]">
+    <header class="bg-[#10121a]/90 backdrop-blur-xl p-4 sticky top-0 z-40 flex justify-between items-center border-b border-white/10 shadow-lg">
         <div class="flex items-center gap-2">
             <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" alt="Logo" class="h-10 object-contain">
         </div>
-        <div id="header-balance-container" class="hidden bg-black/60 border border-white/30 px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]">
-            <i class="fas fa-wallet mr-1 text-white"></i> ৳ <span id="header-balance">0</span>
+        <div id="header-balance-container" class="hidden bg-black/40 border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold text-white">
+            <i class="fas fa-wallet mr-1 text-cyan-400"></i> ৳ <span id="header-balance">0</span>
         </div>
         <div id="header-login-container">
             <button onclick="showAuthPage()" class="btn-vip text-white px-5 py-2 rounded-full text-xs font-bold">
@@ -137,7 +110,7 @@
                 <i class="fas fa-times text-sm"></i>
             </button>
             <div class="pr-6">
-                <div class="font-bold text-xs text-white mb-1 flex items-center gap-1"><i class="fas fa-bullhorn text-white"></i> Notice</div>
+                <div class="font-bold text-xs text-cyan-400 mb-1 flex items-center gap-1"><i class="fas fa-bullhorn"></i> Notice</div>
                 <div id="notice-text" class="text-xs text-gray-300">স্বাগতম আমাদের ভিআইপি সিস্টেমে...</div>
             </div>
         </div>
@@ -150,7 +123,7 @@
                 </button>
                 <div id="login-view">
                     <h2 class="text-lg font-bold text-white mb-6 text-center tracking-wide">VIP LOGIN</h2>
-                    <button onclick="handleGoogleLogin()" class="w-full bg-black/90 border border-white/25 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs hover:border-white/60">
+                    <button onclick="handleGoogleLogin()" class="w-full bg-black/60 border border-white/20 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-3 mb-5 text-xs hover:border-white/50">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4" alt="Google"> Login with Google
                     </button>
                     <div class="mb-4">
@@ -161,9 +134,9 @@
                         <label class="block text-white/80 text-xs font-bold mb-1.5">Password</label>
                         <input type="password" id="login-pass" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
                     </div>
-                    <button onclick="handleLogin()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">Login</button>
+                    <button onclick="handleLogin()" class="w-full btn-vip font-bold py-2.5 rounded-xl text-xs">Login</button>
                     <div class="mt-5 text-center text-xs text-gray-400">
-                        New user? <button onclick="toggleAuth('register')" class="text-white font-bold underline">Register Now</button>
+                        New user? <button onclick="toggleAuth('register')" class="text-cyan-400 font-bold underline">Register Now</button>
                     </div>
                 </div>
                 <div id="register-view" class="hidden">
@@ -186,9 +159,9 @@
                             <input type="password" id="reg-pass" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl text-xs">
                         </div>
                     </div>
-                    <button onclick="handleRegister()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">Register</button>
+                    <button onclick="handleRegister()" class="w-full btn-vip font-bold py-2.5 rounded-xl text-xs">Register</button>
                     <div class="mt-4 text-center text-xs text-gray-400">
-                        Already member? <button onclick="toggleAuth('login')" class="text-white font-bold underline">Login Now</button>
+                        Already member? <button onclick="toggleAuth('login')" class="text-cyan-400 font-bold underline">Login Now</button>
                     </div>
                 </div>
             </div>
@@ -202,15 +175,15 @@
                 <div id="slider-dots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
 
-            <!-- Tools Category Section -->
+            <!-- Special Tools Category Card -->
             <div class="mb-5 px-0.5">
                 <h3 class="font-bold text-white text-xs mb-2.5 px-1">Special Category</h3>
-                <div class="tools-category-card flex items-center justify-between p-3" onclick="openToolsModal()">
+                <div class="vip-card flex items-center justify-between p-3 cursor-pointer hover:border-cyan-400/50 transition" onclick="showSec('tools-module')">
                     <div class="flex items-center gap-3">
                         <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500" alt="Tools Icon" class="w-12 h-12 rounded-xl object-cover border border-cyan-400/40">
                         <div class="text-left">
                             <h4 class="font-bold text-cyan-400 text-xs">Tools</h4>
-                            <p class="text-[10px] text-gray-300">Free Fire JWT & GitHub Auto-Update</p>
+                            <p class="text-[10px] text-gray-300">Free Fire JWT Generator & GitHub Auto-Update</p>
                         </div>
                     </div>
                     <i class="fas fa-chevron-right text-cyan-400 text-xs"></i>
@@ -247,6 +220,74 @@
                 </div>
             </div>
         </section>
+        <!-- Dedicated Tools Page -->
+        <section id="tools-module-sec" class="hidden animate-fade-in pb-16">
+            <div class="vip-card p-4 rounded-2xl mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <button onclick="showSec('home')" class="text-white bg-black/50 w-7 h-7 rounded-full flex items-center justify-center border border-white/20"><i class="fas fa-arrow-left text-xs"></i></button>
+                    <h3 class="font-bold text-cyan-400 text-sm">Free Fire JWT Generator</h3>
+                </div>
+            </div>
+
+            <div class="vip-card p-5 rounded-2xl space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1.5">গেস্ট আইডির ইউআইডি (UID):</label>
+                    <input type="text" id="toolUid" placeholder="Enter Guest UID..." class="w-full p-2.5 rounded-xl text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 mb-1.5">গেস্ট আইডির পাসওয়ার্ড:</label>
+                    <input type="password" id="toolPassword" placeholder="Enter Guest Password..." class="w-full p-2.5 rounded-xl text-xs">
+                </div>
+
+                <!-- Generate Button -->
+                <button onclick="handleTokenGeneration()" class="w-full btn-vip py-3 rounded-xl font-bold text-xs mt-2">
+                    <i class="fas fa-key mr-1"></i> Generate Your Token
+                </button>
+
+                <hr class="border-white/10 my-4">
+
+                <!-- GitHub Auto Update Options -->
+                <div class="bg-black/40 p-3.5 rounded-xl border border-white/10 space-y-3">
+                    <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                        <i class="fab fa-github"></i> Auto Update GitHub (Optional)
+                    </h4>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">GitHub Personal Access Token:</label>
+                        <input type="text" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" class="w-full p-2 rounded-lg text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">GitHub Repository (username/repo):</label>
+                        <input type="text" id="ghRepo" placeholder="e.g. username/my-repo" class="w-full p-2 rounded-lg text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">File Path in Repository:</label>
+                        <input type="text" id="ghPath" placeholder="e.g. src/config.py" class="w-full p-2 rounded-lg text-xs">
+                    </div>
+                    <button onclick="handleGitHubUpdate()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-xl font-bold text-xs mt-1">
+                        <i class="fas fa-sync-alt mr-1"></i> Update to GitHub Directly
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Floating Result Modal -->
+        <div id="jwtResultModal" class="custom-modal-overlay">
+            <div class="custom-modal-box text-center">
+                <h3 class="text-sm font-bold text-cyan-400 mb-3"><i class="fas fa-check-circle mr-1"></i> Generated JWT Token</h3>
+                <p class="text-[11px] text-gray-400 mb-3">আপনার জেনারেট হওয়া আসল JWT টোকেন নিচে দেওয়া হলো:</p>
+                
+                <div id="modalJwtText" class="bg-black/80 p-3 rounded-xl border border-cyan-400/30 text-xs text-cyan-300 break-all max-h-32 overflow-y-auto font-mono mb-4 text-left"></div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="copyModalToken()" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2.5 rounded-xl text-xs">
+                        <i class="fas fa-copy mr-1"></i> Copy Token
+                    </button>
+                    <button onclick="closeResultModal()" class="bg-red-600/80 hover:bg-red-600 text-white font-bold py-2.5 rounded-xl text-xs">
+                        <i class="fas fa-times mr-1"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <section id="tutorial-sec" class="hidden animate-fade-in pb-16">
             <div class="vip-card rounded-2xl overflow-hidden">
@@ -261,15 +302,14 @@
                 <div id="history-list" class="px-3 py-2.5 space-y-2.5"></div>
             </div>
         </section>
-
         <section id="account-sec" class="hidden animate-fade-in pb-20">
             <div class="vip-card p-5 rounded-2xl text-center">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-gray-200 to-white p-0.5 mx-auto mb-2.5 shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 p-0.5 mx-auto mb-2.5 shadow-lg">
                     <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-white text-xl font-bold" id="profile-initial">U</div>
                 </div>
                 <h2 class="text-xs font-bold text-white mb-1">Hi, <span id="acc-profile-name">User</span></h2>
                 <p class="text-xs text-white font-bold mb-4">Balance: <span id="acc-profile-balance">0</span> Tk</p>
-                <button onclick="handleLogout()" class="w-full bg-black/90 border border-white/30 text-white p-2.5 rounded-xl text-xs font-bold hover:border-white/60">Log Out</button>
+                <button onclick="handleLogout()" class="w-full bg-black/90 border border-white/20 text-white p-2.5 rounded-xl text-xs font-bold hover:border-white/50">Log Out</button>
             </div>
         </section>
 
@@ -282,7 +322,7 @@
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold text-white">৳</span>
                         <input type="number" id="new-amount-input" value="100" class="w-full border-b-2 border-white py-1.5 pl-7 pr-2 text-center text-xl font-bold text-white bg-transparent">
                     </div>
-                    <button onclick="goToMethodStep()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">PROCEED TO PAYMENT</button>
+                    <button onclick="goToMethodStep()" class="w-full btn-vip font-bold py-2.5 rounded-xl text-xs">PROCEED TO PAYMENT</button>
                 </div>
             </div>
 
@@ -291,9 +331,9 @@
                     <button onclick="backToAmountStep()" class="text-white mb-3 float-left text-xs"><i class="fas fa-arrow-left"></i> Back</button>
                     <h2 class="text-white font-bold mb-5 text-xs">Select Auto Pay Method</h2>
                     <div class="grid grid-cols-3 gap-2.5">
-                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-black/90 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" alt="bKash" class="h-5 object-contain"></button>
-                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-black/90 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" alt="Nagad" class="h-4 object-contain"></button>
-                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-black/90 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" alt="Rocket" class="h-4 object-contain"></button>
+                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-black/80 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" alt="bKash" class="h-5 object-contain"></button>
+                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-black/80 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" alt="Nagad" class="h-4 object-contain"></button>
+                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-black/80 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" alt="Rocket" class="h-4 object-contain"></button>
                     </div>
                 </div>
             </div>
@@ -306,7 +346,7 @@
                     
                     <div class="space-y-2 mb-4">
                         <p class="text-xs text-white/80">• এই নম্বরে টাকা পাঠান:</p>
-                        <div class="flex items-center justify-between bg-black/90 p-2.5 rounded-xl border border-white/20">
+                        <div class="flex items-center justify-between bg-black/80 p-2.5 rounded-xl border border-white/20">
                             <span id="pay-admin-number" class="text-base font-bold text-white">01635068564</span>
                             <button onclick="copyPayNumber()" class="btn-vip px-3 py-1 rounded-lg text-xs text-white">COPY</button>
                         </div>
@@ -316,15 +356,15 @@
                         <label class="block text-xs text-white/80 mb-1.5 font-bold">Transaction ID (TrxID)</label>
                         <input type="text" id="pay-trx-input" class="w-full p-2.5 rounded-xl text-xs" placeholder="Enter TrxID here">
                     </div>
-                    <button onclick="handleNewVerify()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">VERIFY PAYMENT</button>
+                    <button onclick="handleNewVerify()" class="w-full btn-vip font-bold py-2.5 rounded-xl text-xs">VERIFY PAYMENT</button>
                 </div>
             </div>
         </section>
 
         <section id="topup-sec" class="hidden animate-fade-in pb-10">
             <div class="vip-card p-3 rounded-2xl flex items-center gap-3 mb-3 relative">
-                <button onclick="showSec('home')" class="text-white w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/90 border border-white/30"><i class="fas fa-times text-xs"></i></button>
-                <img id="topup-game-img" src="" alt="Game Image" class="w-12 h-12 rounded-lg object-cover border border-white/30">
+                <button onclick="showSec('home')" class="text-white w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/80 border border-white/20"><i class="fas fa-times text-xs"></i></button>
+                <img id="topup-game-img" src="" alt="Game Image" class="w-12 h-12 rounded-lg object-cover border border-white/20">
                 <div>
                     <h3 class="font-bold text-white text-xs" id="topup-game-title">Game Name</h3>
                     <p class="text-[10px] text-white/80 font-medium" id="topup-sub-title">Game / Topup</p>
@@ -333,7 +373,7 @@
 
             <div class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2.5">
-                    <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">1</span>
+                    <span class="bg-cyan-400 text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">1</span>
                     <h3 class="font-bold text-white text-xs">Select Package</h3>
                 </div>
                 <div id="product-loader" class="text-center py-6 hidden"><i class="fas fa-spinner fa-spin text-white"></i></div>
@@ -342,7 +382,7 @@
 
             <div id="player-id-section" class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">2</span>
+                    <span class="bg-cyan-400 text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">2</span>
                     <h3 class="font-bold text-white text-xs">Account Info & UID Checker</h3>
                 </div>
                 <div class="mb-2">
@@ -356,7 +396,7 @@
 
             <div class="vip-card p-3.5 rounded-2xl mb-3">
                 <div class="flex items-center gap-2 mb-2.5">
-                    <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">3</span>
+                    <span class="bg-cyan-400 text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">3</span>
                     <h3 class="font-bold text-white text-xs">Select Payment Method</h3>
                 </div>
                 <div class="grid grid-cols-2 gap-2.5 mb-2">
@@ -378,202 +418,19 @@
         </section>
 
         <!-- Floating UID Profile Modal -->
-        <div id="uid-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden animate-fade-in">
-            <div class="vip-card w-full max-w-sm rounded-2xl p-5 relative border border-white/30 shadow-2xl max-h-[85vh] overflow-y-auto">
-                <button onclick="closeUidModal()" class="absolute top-3 right-3 text-white bg-black/90 w-7 h-7 rounded-full flex items-center justify-center border border-white/30 hover:bg-white hover:text-black transition"><i class="fas fa-times text-xs"></i></button>
+        <div id="uid-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden animate-fade-in">
+            <div class="vip-card w-full max-w-sm rounded-2xl p-5 relative border border-white/20 shadow-2xl max-h-[85vh] overflow-y-auto">
+                <button onclick="closeUidModal()" class="absolute top-3 right-3 text-white bg-black/80 w-7 h-7 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:text-black transition"><i class="fas fa-times text-xs"></i></button>
                 <h3 class="text-xs font-bold text-white mb-3 text-center tracking-wide">Player Profile Details</h3>
                 <div id="uid-modal-body" class="space-y-3 text-xs">
                     <div class="text-center py-6 text-white"><i class="fas fa-spinner fa-spin text-lg"></i> Fetching Details...</div>
                 </div>
                 <button onclick="closeUidModal()" class="w-full mt-4 btn-vip text-white py-2 rounded-xl text-xs font-bold">Confirm & Close</button>
-            </div>
-        </div>
-
-        <!-- Floating Tools Modal -->
-        <div id="toolsModal" class="tools-modal-overlay">
-            <div class="tools-modal-content">
-                <button onclick="closeToolsModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-                <h3 class="text-sm font-bold text-cyan-400 mb-3 text-center">Free Fire JWT Generator & GitHub Auto-Update</h3>
-                
-                <div class="space-y-2 text-xs">
-                    <div>
-                        <label class="block text-gray-300 mb-1">गेस्ट আইডি (UID):</label>
-                        <input type="text" id="toolUid" placeholder="গেস্ট আইডির UID দিন..." class="w-full p-2 rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 mb-1">গেস্ট আইডি পাসওয়ার্ড:</label>
-                        <input type="password" id="toolPassword" placeholder="পাসওয়ার্ড দিন..." class="w-full p-2 rounded-lg texcat << 'EOF' >> index.html
-        <section id="addmoney-sec" class="hidden animate-fade-in pb-16">
-            <div id="am-step-1">
-                <div class="vip-card p-4 rounded-2xl mb-3"><h2 class="font-bold text-sm text-white">Add Money</h2></div>
-                <div class="vip-card rounded-2xl p-5 text-center mb-5">
-                    <label class="block text-white/80 text-xs font-bold mb-3">ENTER AMOUNT TO DEPOSIT</label>
-                    <div class="relative mb-5 max-w-[180px] mx-auto">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold text-white">৳</span>
-                        <input type="number" id="new-amount-input" value="100" class="w-full border-b-2 border-white py-1.5 pl-7 pr-2 text-center text-xl font-bold text-white bg-transparent">
-                    </div>
-                    <button onclick="goToMethodStep()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">PROCEED TO PAYMENT</button>
-                </div>
-            </div>
-
-            <div id="am-step-2" class="hidden min-h-[60vh] flex flex-col justify-center">
-                <div class="vip-card p-4 rounded-2xl text-center">
-                    <button onclick="backToAmountStep()" class="text-white mb-3 float-left text-xs"><i class="fas fa-arrow-left"></i> Back</button>
-                    <h2 class="text-white font-bold mb-5 text-xs">Select Auto Pay Method</h2>
-                    <div class="grid grid-cols-3 gap-2.5">
-                        <button onclick="goToPaymentPage('bKash', 'theme-bkash', 'https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png')" class="bg-black/90 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" alt="bKash" class="h-5 object-contain"></button>
-                        <button onclick="goToPaymentPage('Nagad', 'theme-nagad', 'https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png')" class="bg-black/90 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" alt="Nagad" class="h-4 object-contain"></button>
-                        <button onclick="goToPaymentPage('Rocket', 'theme-rocket', 'https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png')" class="bg-black/90 border border-white/20 rounded-xl p-2.5 flex items-center justify-center h-14 hover:border-white/50"><img src="https://i.ibb.co.com/wFZkNM48/rocket-color-logo-mobile-banking-icon-free-png.png" alt="Rocket" class="h-4 object-contain"></button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="am-step-3" class="hidden relative pb-16">
-                <div class="vip-card p-4 rounded-2xl mb-3">
-                    <button onclick="backToMethodStep()" class="text-white mb-2 text-xs"><i class="fas fa-arrow-left"></i> Back</button>
-                    <div class="text-center mb-3"><img id="pay-method-logo" src="" alt="Payment Logo" class="h-8 mx-auto object-contain"></div>
-                    <div class="text-center mb-3 text-white font-bold text-base">Amount: ৳<span id="pay-amount-display">100</span></div>
-                    
-                    <div class="space-y-2 mb-4">
-                        <p class="text-xs text-white/80">• এই নম্বরে টাকা পাঠান:</p>
-                        <div class="flex items-center justify-between bg-black/90 p-2.5 rounded-xl border border-white/20">
-                            <span id="pay-admin-number" class="text-base font-bold text-white">01635068564</span>
-                            <button onclick="copyPayNumber()" class="btn-vip px-3 py-1 rounded-lg text-xs text-white">COPY</button>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-xs text-white/80 mb-1.5 font-bold">Transaction ID (TrxID)</label>
-                        <input type="text" id="pay-trx-input" class="w-full p-2.5 rounded-xl text-xs" placeholder="Enter TrxID here">
-                    </div>
-                    <button onclick="handleNewVerify()" class="w-full btn-vip text-white font-bold py-2.5 rounded-xl text-xs">VERIFY PAYMENT</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="topup-sec" class="hidden animate-fade-in pb-10">
-            <div class="vip-card p-3 rounded-2xl flex items-center gap-3 mb-3 relative">
-                <button onclick="showSec('home')" class="text-white w-7 h-7 flex items-center justify-center rounded-full absolute top-2.5 right-2.5 bg-black/90 border border-white/30"><i class="fas fa-times text-xs"></i></button>
-                <img id="topup-game-img" src="" alt="Game Image" class="w-12 h-12 rounded-lg object-cover border border-white/30">
-                <div>
-                    <h3 class="font-bold text-white text-xs" id="topup-game-title">Game Name</h3>
-                    <p class="text-[10px] text-white/80 font-medium" id="topup-sub-title">Game / Topup</p>
-                </div>
-            </div>
-
-            <div class="vip-card p-3.5 rounded-2xl mb-3">
-                <div class="flex items-center gap-2 mb-2.5">
-                    <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">1</span>
-                    <h3 class="font-bold text-white text-xs">Select Package</h3>
-                </div>
-                <div id="product-loader" class="text-center py-6 hidden"><i class="fas fa-spinner fa-spin text-white"></i></div>
-                <div id="products-grid" class="grid grid-cols-2 gap-2"></div>
-            </div>
-
-            <div id="player-id-section" class="vip-card p-3.5 rounded-2xl mb-3">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">2</span>
-                    <h3 class="font-bold text-white text-xs">Account Info & UID Checker</h3>
-                </div>
-                <div class="mb-2">
-                    <label class="block text-[10px] font-bold text-white/80 mb-1">Enter Player ID (UID)</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="game-player-id" placeholder="Enter Free Fire UID" class="w-full p-2.5 rounded-xl text-xs">
-                        <button onclick="checkPlayerUID()" class="btn-vip px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-white">Check UID</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="vip-card p-3.5 rounded-2xl mb-3">
-                <div class="flex items-center gap-2 mb-2.5">
-                    <span class="bg-white text-black w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold">3</span>
-                    <h3 class="font-bold text-white text-xs">Select Payment Method</h3>
-                </div>
-                <div class="grid grid-cols-2 gap-2.5 mb-2">
-                    <div onclick="selectPaymentOption('wallet')" id="opt-wallet" class="pay-option-card vip-card selected p-2.5 text-center cursor-pointer rounded-xl">
-                        <i class="fas fa-wallet text-white text-lg mb-0.5"></i>
-                        <div class="text-[11px] font-bold text-white">ওয়ালেট (Wallet)</div>
-                    </div>
-                    <div onclick="selectPaymentOption('instant')" id="opt-instant" class="pay-option-card vip-card p-2.5 text-center cursor-pointer rounded-xl flex flex-col items-center justify-center">
-                        <div class="flex gap-1 mb-0.5"><img src="https://i.ibb.co.com/KpSbg6F7/IMG-9c09b2dc-81d7-44a0-bef6-e481cba186b3.png" alt="bKash" class="h-3.5"><img src="https://i.ibb.co.com/VcqJTvpn/Nagad-Logo-horizontally-og.png" alt="Nagad" class="h-3"></div>
-                        <div class="text-[11px] font-bold text-white">Instant Pay</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 mb-3 px-0.5 text-xs text-gray-300">
-                    <p>Balance: <span class="text-white font-bold">৳<span id="topup-balance-display">0.00</span></span></p>
-                </div>
-                <button onclick="processOrder()" class="w-full btn-vip text-white py-2.5 rounded-xl font-bold text-xs">Buy Now</button>
-            </div>
-            <span id="total-price" class="hidden">0</span>
-        </section>
-
-        <!-- Floating UID Profile Modal -->
-        <div id="uid-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden animate-fade-in">
-            <div class="vip-card w-full max-w-sm rounded-2xl p-5 relative border border-white/30 shadow-2xl max-h-[85vh] overflow-y-auto">
-                <button onclick="closeUidModal()" class="absolute top-3 right-3 text-white bg-black/90 w-7 h-7 rounded-full flex items-center justify-center border border-white/30 hover:bg-white hover:text-black transition"><i class="fas fa-times text-xs"></i></button>
-                <h3 class="text-xs font-bold text-white mb-3 text-center tracking-wide">Player Profile Details</h3>
-                <div id="uid-modal-body" class="space-y-3 text-xs">
-                    <div class="text-center py-6 text-white"><i class="fas fa-spinner fa-spin text-lg"></i> Fetching Details...</div>
-                </div>
-                <button onclick="closeUidModal()" class="w-full mt-4 btn-vip text-white py-2 rounded-xl text-xs font-bold">Confirm & Close</button>
-            </div>
-        </div>
-
-        <!-- Floating Tools Modal -->
-        <div id="toolsModal" class="tools-modal-overlay">
-            <div class="tools-modal-content">
-                <button onclick="closeToolsModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-                <h3 class="text-sm font-bold text-cyan-400 mb-3 text-center">Free Fire JWT Generator & GitHub Auto-Update</h3>
-                
-                <div class="space-y-2 text-xs">
-                    <div>
-                        <label class="block text-gray-300 mb-1">গেস্ট আইডি (UID):</label>
-                        <input type="text" id="toolUid" placeholder="গেস্ট আইডির UID দিন..." class="w-full p-2 rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 mb-1">গেস্ট আইডি পাসওয়ার্ড:</label>
-                        <input type="password" id="toolPassword" placeholder="পাসওয়ার্ড দিন..." class="w-full p-2 rounded-lg text-xs">
-                    </div>
-
-                    <hr class="border-gray-800 my-2">
-                    <h4 class="text-amber-400 font-bold text-[11px]">GitHub Auto-Update System (Optional)</h4>
-                    
-                    <div>
-                        <label class="block text-gray-300 mb-0.5">GitHub Token:</label>
-                        <input type="text" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" class="w-full p-2 rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 mb-0.5">Repo (username/repo):</label>
-                        <input type="text" id="ghRepo" placeholder="e.g. username/my-repo" class="w-full p-2 rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 mb-0.5">File Path:</label>
-                        <input type="text" id="ghPath" placeholder="e.g. src/config.py" class="w-full p-2 rounded-lg text-xs">
-                    </div>
-
-                    <div class="flex items-center gap-2 pt-1">
-                        <input type="checkbox" id="autoUpdateToggle" class="w-4 h-4 cursor-pointer">
-                        <label for="autoUpdateToggle" class="text-[11px] text-gray-300 cursor-pointer">প্রতি ১ ঘণ্টা পর পর গিটহাবে অটো আপডেট চালু রাখুন</label>
-                    </div>
-
-                    <button onclick="generateAndProcess()" class="w-full btn-vip text-white py-2.5 rounded-xl font-bold text-xs mt-3">Generate & Process</button>
-
-                    <div id="toolResultSection" class="hidden">
-                        <div class="result-box" id="jwtResultText"></div>
-                        <button onclick="copyJwtToken()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs mt-2">JWT টোকেন কপি করুন</button>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
 
-    <!-- Floating Telegram Support Button -->
-    <a href="https://t.me/mhxffv111" target="_blank" class="fixed bottom-20 right-4 z-50 bg-[#229ED9] text-white p-3.5 rounded-full shadow-[0_0_15px_rgba(34,158,217,0.6)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all border border-white/20">
-        <i class="fab fa-telegram-plane text-2xl"></i>
-    </a>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 w-full bg-black/90 backdrop-blur-2xl border-t border-white/15 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-2xl">
+    <nav class="fixed bottom-0 w-full bg-[#10121a]/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-5 z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl shadow-2xl">
         <div class="flex justify-between items-center">
             <button onclick="showSec('home')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400 active-tab" id="nav-home"><i class="fas fa-home text-base"></i><span class="text-[9px] font-semibold">Home</span></button>
             <button onclick="showSec('tutorial')" class="nav-item flex flex-col items-center gap-0.5 text-gray-400" id="nav-tutorial"><i class="fas fa-video text-base"></i><span class="text-[9px] font-semibold">Tutorial</span></button>
@@ -610,7 +467,6 @@
     let bannerInterval = null;
     let currentSlideIndex = 0;
     let totalSlides = 0;
-    let autoUpdateInterval = null;
 
     function loadGlobalSettings() {
         db.collection("settings").doc("general").onSnapshot((doc) => {
@@ -753,6 +609,7 @@
             })
             .catch((err) => Swal.fire('Login Failed', err.message, 'error'));
     }
+
     function handleGoogleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
@@ -779,7 +636,11 @@
             return; 
         }
         document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
-        const targetSec = document.getElementById(secId + '-sec');
+        
+        let targetId = secId + '-sec';
+        if(secId === 'tools-module') targetId = 'tools-module-sec';
+
+        const targetSec = document.getElementById(targetId);
         if(targetSec) targetSec.classList.remove('hidden');
         
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active-tab'));
@@ -789,7 +650,6 @@
         if(secId === 'history') loadHistory();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
     async function loadGamesAndCategories() {
         const listContainer = document.getElementById('services-list');
         if(!listContainer) return;
@@ -861,6 +721,7 @@
         document.querySelectorAll('.pay-option-card').forEach(el => el.classList.remove('selected'));
         document.getElementById('opt-' + option).classList.add('selected');
     }
+
     async function checkPlayerUID() {
         const uid = document.getElementById('game-player-id').value.trim();
         if(!uid) return Swal.fire('Error', 'Please Enter Player UID First!', 'warning');
@@ -884,7 +745,7 @@
                 const avatar = info.avatar || info.avatarUrl || info.profilePic || data.avatar || "https://placehold.co/100";
 
                 body.innerHTML = `
-                    <div class="bg-black/90 p-3.5 rounded-xl border border-white/20 space-y-3">
+                    <div class="bg-black/80 p-3.5 rounded-xl border border-white/20 space-y-3">
                         <div class="flex items-center gap-3 border-b border-white/10 pb-3">
                             <img src="${avatar}" alt="Avatar" class="w-14 h-14 rounded-xl object-cover border border-white/30 bg-white/10" onerror="this.src='https://placehold.co/100'">
                             <div>
@@ -914,7 +775,6 @@
     function closeUidModal() {
         document.getElementById('uid-modal').classList.add('hidden');
     }
-
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         let playerId = document.getElementById('game-player-id').value.trim();
@@ -1074,69 +934,87 @@
         .then(() => { Swal.fire('Success', 'Deposit Submitted!', 'success'); showSec('home'); });
     }
 
-    /* Tools Modal Functions */
-    function openToolsModal() {
-        document.getElementById('toolsModal').style.display = 'flex';
-    }
-    function closeToolsModal() {
-        document.getElementById('toolsModal').style.display = 'none';
-    }
-    function generateAndProcess() {
+    /* New JWT Generation & Floating Modal Logic */
+    function handleTokenGeneration() {
         const uid = document.getElementById('toolUid').value.trim();
         const password = document.getElementById('toolPassword').value.trim();
-        const ghToken = document.getElementById('ghToken').value.trim();
-        const repo = document.getElementById('ghRepo').value.trim();
-        const path = document.getElementById('ghPath').value.trim();
-        const isAutoChecked = document.getElementById('autoUpdateToggle').checked;
 
         if (!uid || !password) {
-            Swal.fire('Error', 'দয়া করে UID এবং Password প্রবেশ করান!', 'warning');
+            Swal.fire('Error', 'দয়া করে গেস্ট আইডির UID এবং Password দিন!', 'warning');
             return;
         }
 
-        const apiBaseUrl = "https://mhxffv111.pythonanywhere.com";
-        let targetUrl = `${apiBaseUrl}/generate-token?uid=${uid}&password=${encodeURIComponent(password)}`;
-        
-        if (ghToken && repo && path) {
-            targetUrl = `${apiBaseUrl}/update-github?gh_token=${ghToken}&repo=${repo}&path=${encodeURIComponent(path)}&uid=${uid}&password=${encodeURIComponent(password)}`;
-        }
-
         Swal.showLoading();
-        fetch(targetUrl)
-            .then(response => response.json())
+        const apiBaseUrl = "https://mhxffv111.pythonanywhere.com";
+        const url = `${apiBaseUrl}/generate-token?uid=${uid}&password=${encodeURIComponent(password)}`;
+
+        fetch(url)
+            .then(res => res.json())
             .then(data => {
-                if (data.success) {
-                    const token = data.jwt_token || data.updated_token;
-                    document.getElementById('jwtResultText').innerText = token;
-                    document.getElementById('toolResultSection').classList.remove('hidden');
-                    Swal.fire('Success', ghToken ? 'টোকেন তৈরি এবং গিটহাবে সফলভাবে আপডেট করা হয়েছে!' : 'JWT টোকেন তৈরি হয়েছে!', 'success');
+                if (data.success && data.jwt_token) {
+                    Swal.close();
+                    document.getElementById('modalJwtText').innerText = data.jwt_token;
+                    document.getElementById('jwtResultModal').style.display = 'flex';
                 } else {
-                    Swal.fire('Error', data.error || 'অজানা সমস্যা', 'error');
+                    Swal.fire('Error', data.error || 'টোকেন জেনারেট করতে সমস্যা হয়েছে!', 'error');
                 }
             })
             .catch(err => {
                 console.error(err);
                 Swal.fire('Error', 'সার্ভার কানেকশনে সমস্যা হয়েছে!', 'error');
             });
-
-        if (isAutoChecked && ghToken && repo && path) {
-            if (autoUpdateInterval) clearInterval(autoUpdateInterval);
-            autoUpdateInterval = setInterval(() => {
-                fetch(targetUrl)
-                    .then(res => res.json())
-                    .then(d => console.log("GitHub Auto-Updated:", d))
-                    .catch(e => console.error("Auto-Update Error:", e));
-            }, 3600000);
-            Swal.fire('Auto-Update Enabled', 'প্রতি ১ ঘণ্টা পর পর গিটহাবে অটো আপডেট হবে!', 'info');
-        }
     }
-    function copyJwtToken() {
-        const textToCopy = document.getElementById('jwtResultText').innerText;
+
+    function handleGitHubUpdate() {
+        const uid = document.getElementById('toolUid').value.trim();
+        const password = document.getElementById('toolPassword').value.trim();
+        const ghToken = document.getElementById('ghToken').value.trim();
+        const repo = document.getElementById('ghRepo').value.trim();
+        const path = document.getElementById('ghPath').value.trim();
+
+        if (!uid || !password) {
+            Swal.fire('Error', 'দয়া করে গেস্ট আইডির UID এবং Password প্রদান করুন!', 'warning');
+            return;
+        }
+
+        if (!ghToken || !repo || !path) {
+            Swal.fire('Error', 'গিটহাব অটো আপডেটের জন্য GitHub Token, Repo এবং File Path দিন!', 'warning');
+            return;
+        }
+
+        Swal.showLoading();
+        const apiBaseUrl = "https://mhxffv111.pythonanywhere.com";
+        const url = `${apiBaseUrl}/update-github?gh_token=${ghToken}&repo=${repo}&path=${encodeURIComponent(path)}&uid=${uid}&password=${encodeURIComponent(password)}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.updated_token) {
+                    Swal.close();
+                    document.getElementById('modalJwtText').innerText = data.updated_token;
+                    document.getElementById('jwtResultModal').style.display = 'flex';
+                    Swal.fire('Success', 'গিটহাবে টোকেন সফলভাবে আপডেট করা হয়েছে!', 'success');
+                } else {
+                    Swal.fire('Error', data.error || 'গিটহাবে আপডেট করতে সমস্যা হয়েছে!', 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire('Error', 'সার্ভার কানেকশনে সমস্যা হয়েছে!', 'error');
+            });
+    }
+
+    function copyModalToken() {
+        const textToCopy = document.getElementById('modalJwtText').innerText;
         navigator.clipboard.writeText(textToCopy).then(() => {
             Swal.fire({ toast: true, icon: 'success', title: 'JWT টোকেন কপি করা হয়েছে!', position: 'top', showConfirmButton: false, timer: 1500 });
         }).catch(() => {
             Swal.fire('Error', 'কপি করতে সমস্যা হয়েছে!', 'error');
         });
+    }
+
+    function closeResultModal() {
+        document.getElementById('jwtResultModal').style.display = 'none';
     }
 </script>
 </body>
