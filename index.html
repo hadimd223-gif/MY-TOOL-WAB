@@ -1097,10 +1097,10 @@
         </h3>
     </div>
     
-    <!-- শীর্ষ ৩ জনের স্পেশাল পোডিয়াম ডিজাইন -->
+    <!-- শীর্ষ ৩ জনের পোডিয়াম ডিজাইন -->
     <div id="podium-top3" class="grid grid-cols-3 gap-2 mb-3"></div>
 
-    <!-- বাকি ৪ থেকে ১০ জনের লিস্ট -->
+    <!-- ৪ থেকে ১০ জনের লিস্ট -->
     <div id="ranking-list" class="space-y-2">
         <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs">
             <div class="text-center text-gray-400 text-xs py-2 w-full">Loading Leaderboard...</div>
@@ -1119,7 +1119,7 @@
             listContainer.innerHTML = "";
             
             if (snapshot.empty) {
-                listContainer.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো ডাটা পাওয়া যায়নি</div>";
+                listContainer.innerHTML = "<div class=\"text-center text-gray-400 text-xs py-2\">কোনো ইউজার ডাটা পাওয়া যায়নি</div>";
                 return;
             }
             
@@ -1131,7 +1131,8 @@
                     name = name.split("@")[0];
                 }
                 
-                const totalDeposit = Number(data.totalDeposit || data.balance || data.deposit || 0);
+                // সরাসরি 'balance' ফিল্ডকে প্রাধান্য দেওয়া হয়েছে (যা আপনার ডাটাবেজে রয়েছে)
+                const totalDeposit = Number(data.balance || data.totalDeposit || data.deposit || data.amount || 0);
                 
                 usersList.push({
                     name: name,
@@ -1139,7 +1140,7 @@
                 });
             });
             
-            // সবচেয়ে বেশি ডিপোজিটকারীকে উপরে সাজানো
+            // বেশি ব্যালেন্স বা ডিপোজিটকারীকে উপরে সাজানো
             usersList.sort((a, b) => b.totalDeposit - a.totalDeposit);
             const top10 = usersList.slice(0, 10);
             
@@ -1148,10 +1149,9 @@
             
             top10.forEach((user, index) => {
                 let rank = index + 1;
-                let firstLetter = user.name.charAt(0).toUpperCase();
+                let firstLetter = user.name ? user.name.charAt(0).toUpperCase() : "U";
 
                 if (rank <= 3) {
-                    // শীর্ষ ৩ জনের জন্য স্পেশাল কার্ড ডিজাইন
                     let crownColor = rank === 1 ? "text-yellow-400" : (rank === 2 ? "text-gray-300" : "text-amber-500");
                     let borderColor = rank === 1 ? "border-yellow-500/50 bg-yellow-500/10" : (rank === 2 ? "border-gray-400/40 bg-gray-400/10" : "border-amber-600/40 bg-amber-600/10");
                     
@@ -1168,7 +1168,6 @@
                         </div>
                     `;
                 } else {
-                    // ৪ থেকে ১০ নম্বর পর্যন্ত লিস্ট ডিজাইন
                     restHTML += `
                         <div class="vip-card p-2.5 rounded-xl flex items-center justify-between text-xs border border-white/10">
                             <div class="flex items-center gap-2.5">
@@ -1188,8 +1187,8 @@
                 }
             });
 
-            podiumContainer.innerHTML = top3HTML;
-            listContainer.innerHTML = restHTML || '<div class="text-center text-gray-400 text-xs py-2">অন্যান্য র‍্যাংক খালি আছে</div>';
+            podiumContainer.innerHTML = top3HTML || '<div class="col-span-3 text-center text-gray-400 text-xs">টপ ৩ খালি আছে</div>';
+            listContainer.innerHTML = restHTML || '';
         });
     }
     loadRanking();
