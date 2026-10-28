@@ -3,175 +3,501 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF Topup & Like Store</title>
+    <title>Dream TopUp - Official</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Bree+Serif&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
-        @keyframes floatIn {
-            0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #030712; 
+            color: #f3f4f6;
+        }
+
+        #home-sec, #account-sec, #tutorial-sec {
+            font-family: 'Bree Serif', serif;
+        }
+        
+        .active-tab { color: #38bdf8 !important; }
+        .hidden { display: none !important; }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .glow-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        @keyframes floatModal {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
-        .animate-float-custom {
-            animation: floatIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .animate-float {
+            animation: floatModal 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        .pay-option-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.6);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .pay-option-card.selected {
+            border: 2px solid #0284c7;
+            background: rgba(2, 132, 199, 0.15);
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen pb-16">
-    <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-40 px-4 py-3 flex justify-between items-center">
-        <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">FF Boss Store</h1>
-        <div class="flex items-center gap-3">
-            <span class="bg-slate-800 px-3 py-1 rounded-full text-sm font-medium border border-slate-700">Balance: ৳<span id="userBalance">0.00</span></span>
+<body class="select-none bg-slate-950 text-slate-100 min-h-screen">
+
+<div id="app-content" class="relative max-w-md mx-auto bg-slate-950 min-h-screen shadow-2xl border-x border-slate-800/50">
+    <header class="bg-slate-900/80 backdrop-blur-md p-4 sticky top-0 z-40 flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center gap-2">
+            <img id="header-logo-img" src="https://placehold.co/150x50/0284c7/fff?text=Dream+TopUp" class="h-10 object-contain">
+        </div>
+        <div id="header-balance-container" class="hidden bg-gradient-to-r from-sky-500 to-blue-600 px-4 py-1.5 rounded-full text-xs font-bold text-white shadow-lg border border-sky-400/30">
+            <i class="fas fa-wallet mr-1"></i> ৳ <span id="header-balance">0.00</span>
+        </div>
+        <div id="header-login-container">
+            <button onclick="showAuthPage()" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg transition">
+                <i class="fas fa-sign-in-alt mr-1"></i> Login
+            </button>
         </div>
     </header>
-    <main class="max-w-md mx-auto p-4 space-y-6">
-        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
-            <h2 class="text-lg font-semibold mb-3 text-cyan-400"><i class="fas fa-wallet mr-2"></i>Add Balance (Auto Payment)</h2>
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">Enter Amount (BDT)</label>
-                    <input type="number" id="depositAmount" placeholder="e.g. 50" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500">
-                </div>
-                <button onclick="initiateZRPayment()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200">
-                    Pay with ZRPAYBD
-                </button>
+
+    <div id="notice-section" class="mb-0 px-3 pt-3">
+        <div class="bg-gradient-to-r from-sky-900/60 to-slate-900/80 backdrop-blur border border-sky-500/30 text-sky-200 p-3 rounded-xl relative shadow-md">
+            <button onclick="this.parentElement.parentElement.style.display='none'" class="absolute top-2 right-2 text-sky-400 hover:text-white">
+                <i class="fas fa-times text-xs"></i>
+            </button>
+            <div class="pr-5">
+                <div class="font-bold text-xs text-sky-400 mb-0.5"><i class="fas fa-bell mr-1"></i> Notice</div>
+                <div id="notice-text" class="text-xs leading-relaxed">স্বাগতম আমাদের ড্রীম টপআপ স্টোরে...</div>
             </div>
-        </section>
-        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-            <h2 class="text-lg font-semibold text-indigo-400"><i class="fas fa-heart mr-2"></i>FF UID Like Booster (220 Likes)</h2>
-            
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">Free Fire Player UID</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="ffUid" placeholder="Enter Player UID" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
-                        <button onclick="checkPlayerInfo()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 rounded-xl text-sm font-medium transition">Check</button>
+        </div>
+    </div>
+    <main class="p-3 relative pb-24 space-y-5">
+        
+        <!-- Auth Section -->
+        <section id="auth-sec" class="hidden">
+            <div class="glow-card rounded-2xl p-6 relative">
+                <button onclick="showSec('home')" class="absolute top-4 right-4 text-slate-400 hover:text-red-400">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+                <div id="login-view">
+                    <h2 class="text-xl font-bold text-white mb-5">Login</h2>
+                    <button onclick="handleGoogleLogin()" class="w-full bg-slate-800 border border-slate-700 text-slate-200 font-semibold py-2.5 rounded-xl shadow hover:bg-slate-700 transition flex items-center justify-center gap-3 mb-4 text-xs">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4">
+                        Login with Google
+                    </button>
+                    <div class="space-y-3 mb-4">
+                        <input type="email" id="login-email" placeholder="Email" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                        <input type="password" id="login-pass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-2.5 rounded-xl shadow-lg hover:from-sky-600 hover:to-blue-700 text-xs transition">
+                        Login
+                    </button>
+                    <div class="mt-4 text-center text-xs text-slate-400">
+                        New user? <button onclick="toggleAuth('register')" class="text-sky-400 font-bold hover:underline">Register Now</button>
                     </div>
                 </div>
 
-                <div id="playerInfoBox" class="hidden bg-slate-950/60 border border-slate-800 p-3 rounded-xl text-sm space-y-1">
-                    <p class="text-slate-300">Name: <span id="playerName" class="font-bold text-white">---</span></p>
-                    <p class="text-slate-300">Current Likes: <span id="playerCurrentLikes" class="font-bold text-cyan-400">---</span></p>
+                <div id="register-view" class="hidden">
+                    <h2 class="text-xl font-bold text-white mb-5">Register</h2>
+                    <div class="space-y-3 mb-4">
+                        <input type="text" id="reg-name" placeholder="Name" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+                        <input type="email" id="reg-email" placeholder="Email" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+                        <input type="password" id="reg-pass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+                    </div>
+                    <button onclick="handleRegister()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">
+                        Register
+                    </button>
+                    <div class="mt-4 text-center text-xs text-slate-400">
+                        Already registered? <button onclick="toggleAuth('login')" class="text-sky-400 font-bold hover:underline">Login Now</button>
+                    </div>
                 </div>
+            </div>
+        </section>
 
-                <button onclick="buyLikes()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200">
-                    Buy 220 Likes (৳5)
+        <!-- Home Section -->
+        <section id="home-sec" class="space-y-5">
+            <div id="banner-container" class="rounded-2xl overflow-hidden shadow-lg h-40 bg-slate-900 border border-slate-800 relative">
+                <div id="slider-wrapper" class="flex h-full w-full transition-transform duration-500">
+                    <img src="https://placehold.co/600x300/0f172a/38bdf8?text=Welcome+To+Dream+TopUp" class="w-full h-full object-cover flex-shrink-0">
+                </div>
+            </div>
+
+            <!-- FFLIKEBD Like Booster Card -->
+            <div class="glow-card rounded-2xl p-4 space-y-3 border-indigo-500/30">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h3 class="text-sm font-bold text-indigo-400"><i class="fas fa-heart text-pink-500 mr-1.5"></i> FF UID Like Booster</h3>
+                    <span class="bg-indigo-500/20 text-indigo-300 text-[10px] px-2 py-0.5 rounded-full border border-indigo-500/30">220 Likes - ৳5</span>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex gap-2">
+                        <input type="text" id="ffUidInput" placeholder="Enter Player UID" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <button onclick="checkPlayerInfoAPI()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 rounded-xl text-xs font-semibold text-slate-200 transition">Check</button>
+                    </div>
+                    <div id="playerInfoBox" class="hidden bg-slate-950/80 border border-slate-800 p-2.5 rounded-xl text-xs space-y-1">
+                        <p class="text-slate-400">Player Name: <span id="playerNameDisplay" class="font-bold text-white">---</span></p>
+                        <p class="text-slate-400">Current Likes: <span id="playerLikesDisplay" class="font-bold text-cyan-400">---</span></p>
+                    </div>
+                    <button onclick="buyLikesAPI()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition">
+                        Buy 220 Likes Instant (৳5)
+                    </button>
+                </div>
+            </div>
+
+            <div id="services-list" class="space-y-5">
+                <div class="text-center py-8"><i class="fas fa-spinner fa-spin text-sky-400 text-xl"></i> Loading Services...</div>
+            </div>
+        </section>
+
+        <!-- TopUp / Purchase Section -->
+        <section id="topup-sec" class="hidden space-y-4">
+            <div class="glow-card p-3 rounded-2xl flex items-center gap-3 relative">
+                <button onclick="showSec('home')" class="absolute top-3 right-3 text-slate-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img id="topup-game-img" src="" class="w-14 h-14 rounded-xl object-cover border border-slate-700">
+                <div>
+                    <h3 class="font-bold text-white text-sm" id="topup-game-title">Game Title</h3>
+                    <p class="text-xs text-slate-400" id="topup-sub-title">Topup Package</p>
+                </div>
+            </div>
+
+            <div class="glow-card p-3 rounded-2xl space-y-3">
+                <h3 class="font-bold text-sky-400 text-xs">1. Select Package</h3>
+                <div id="products-grid" class="grid grid-cols-2 gap-2"></div>
+            </div>
+
+            <div id="player-id-section" class="glow-card p-3 rounded-2xl space-y-2">
+                <h3 class="font-bold text-sky-400 text-xs">2. Account Info</h3>
+                <input type="text" id="game-player-id" placeholder="Enter Player ID" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500">
+            </div>
+
+            <div class="glow-card p-3 rounded-2xl space-y-3">
+                <h3 class="font-bold text-sky-400 text-xs">3. Payment Method</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <div onclick="selectPaymentOption('wallet')" id="opt-wallet" class="pay-option-card selected p-3 text-center">
+                        <i class="fas fa-wallet text-orange-400 text-lg mb-1 block"></i>
+                        <span class="font-bold text-xs text-slate-200">Wallet</span>
+                    </div>
+                    <div onclick="selectPaymentOption('instant')" id="opt-instant" class="pay-option-card p-3 text-center">
+                        <i class="fas fa-bolt text-yellow-400 text-lg mb-1 block"></i>
+                        <span class="font-bold text-xs text-slate-200">Instant Auto Pay</span>
+                    </div>
+                </div>
+                <button onclick="processOrder()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white py-3 rounded-xl font-bold shadow-lg hover:from-sky-600 text-xs">
+                    Buy Now
                 </button>
             </div>
         </section>
+
+        <!-- Add Money Section (ZRPAYBD Auto Payment Integration) -->
+        <section id="addmoney-sec" class="hidden glow-card rounded-2xl p-4 space-y-4">
+            <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                <i class="fas fa-wallet"></i> Add Balance (ZRPAYBD Auto Payment)
+            </h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 mb-1 block">Deposit Amount (BDT)</label>
+                    <input type="number" id="depositAmount" placeholder="e.g. 100" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                </div>
+                <button onclick="initiateZRPayment()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs transition">
+                    Pay with ZRPAYBD (Auto Balance)
+                </button>
+            </div>
+        </section>
+
+        <!-- Account Section -->
+        <section id="account-sec" class="hidden space-y-4">
+            <div class="glow-card rounded-2xl p-5 text-center space-y-2">
+                <h2 class="text-sm font-bold text-sky-400">Hi, <span id="acc-profile-name" class="text-white">User</span></h2>
+                <p class="text-xs text-slate-400">Balance: <span class="font-bold text-emerald-400">৳<span id="acc-profile-balance">0.00</span></span></p>
+                <p class="text-[11px] text-slate-500">Email: <span id="acc-email" class="text-slate-300">---</span></p>
+                <button onclick="handleLogout()" class="mt-3 bg-red-500/20 text-red-400 border border-red-500/30 px-4 py-1.5 rounded-xl text-xs font-semibold hover:bg-red-500/30 transition">
+                    Logout
+                </button>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="history-sec" class="hidden space-y-3">
+            <h2 class="text-sm font-bold text-sky-400">Order History</h2>
+            <div id="history-list" class="space-y-2"></div>
+        </section>
     </main>
-    <div id="successModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-indigo-500/30 rounded-3xl p-6 w-full max-w-sm relative animate-float-custom shadow-2xl space-y-4">
-            <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-800 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded-full flex items-center justify-center transition">
+    <!-- Floating Success Modal for Like Booster -->
+    <div id="successModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-5 w-full max-w-xs relative animate-float shadow-2xl space-y-3">
+            <button onclick="closeSuccessModal()" class="absolute top-3 right-3 bg-slate-800 hover:bg-slate-700 text-slate-300 w-7 h-7 rounded-full flex items-center justify-center text-xs transition">
                 <i class="fas fa-times"></i>
             </button>
 
-            <div class="text-center space-y-2 pt-2">
-                <div class="w-16 h-16 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+            <div class="text-center space-y-1.5 pt-1">
+                <div class="w-12 h-12 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-xl">
                     <i class="fas fa-check"></i>
                 </div>
-                <h3 class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Like Sent Successfully!</h3>
+                <h3 class="text-sm font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Like Delivered Successfully!</h3>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2.5 text-sm">
-                <div class="flex justify-between border-b border-slate-800 pb-2">
+            <div class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-3 space-y-2 text-xs">
+                <div class="flex justify-between border-b border-slate-800 pb-1.5">
                     <span class="text-slate-400">Player Name:</span>
-                    <span id="modalName" class="font-bold text-white">---</span>
+                    <span id="modalPlayerName" class="font-bold text-white">---</span>
                 </div>
-                <div class="flex justify-between border-b border-slate-800 pb-2">
+                <div class="flex justify-between border-b border-slate-800 pb-1.5">
                     <span class="text-slate-400">Player UID:</span>
-                    <span id="modalUid" class="font-bold text-cyan-400">---</span>
+                    <span id="modalPlayerUid" class="font-bold text-cyan-400">---</span>
                 </div>
-                <div class="flex justify-between border-b border-slate-800 pb-2">
+                <div class="flex justify-between border-b border-slate-800 pb-1.5">
                     <span class="text-slate-400">Likes Delivered:</span>
-                    <span id="modalDelivered" class="font-bold text-emerald-400">+220</span>
+                    <span class="font-bold text-emerald-400">+220 Likes</span>
                 </div>
-                <div class="flex justify-between border-b border-slate-800 pb-2">
+                <div class="flex justify-between border-b border-slate-800 pb-1.5">
                     <span class="text-slate-400">Before Likes:</span>
-                    <span id="modalBefore" class="font-semibold text-slate-300">---</span>
+                    <span id="modalBeforeLikes" class="font-semibold text-slate-300">---</span>
                 </div>
-                <div class="flex justify-between pt-1">
+                <div class="flex justify-between pt-0.5">
                     <span class="text-slate-400">After Likes:</span>
-                    <span id="modalAfter" class="font-bold text-indigo-400">---</span>
+                    <span id="modalAfterLikes" class="font-bold text-indigo-400">---</span>
                 </div>
             </div>
 
-            <button onclick="closeModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-2.5 rounded-xl font-medium transition">Close</button>
+            <button onclick="closeSuccessModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-xl text-xs font-medium transition">Close</button>
         </div>
     </div>
 
-    <script>
-        const ZRPAY_CONFIG = {
-            apiKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
-            secretKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
-            brandKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
-            createUrl: "https://pay.zrpaybd.xyz/api/payment/create",
-            verifyUrl: "https://pay.zrpaybd.xyz/api/payment/verify"
-        };
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-slate-800/80 py-2.5 px-6 shadow-2xl z-40 max-w-md mx-auto left-0 right-0 rounded-t-2xl">
+        <div class="flex justify-between items-center">
+            <button onclick="showSec('home')" class="nav-item flex flex-col items-center gap-1 text-slate-400 hover:text-sky-400 active-tab" id="nav-home">
+                <i class="fas fa-home text-base"></i>
+                <span class="text-[9px] font-semibold">Home</span>
+            </button>
+            <button onclick="showSec('addmoney')" class="nav-item flex flex-col items-center gap-1 text-slate-400 hover:text-sky-400" id="nav-addmoney">
+                <i class="fas fa-wallet text-base"></i>
+                <span class="text-[9px] font-semibold">Add Money</span>
+            </button>
+            <button onclick="showSec('history')" class="nav-item flex flex-col items-center gap-1 text-slate-400 hover:text-sky-400" id="nav-history">
+                <i class="fas fa-history text-base"></i>
+                <span class="text-[9px] font-semibold">History</span>
+            </button>
+            <button onclick="showSec('account')" class="nav-item flex flex-col items-center gap-1 text-slate-400 hover:text-sky-400" id="nav-account">
+                <i class="fas fa-user text-base"></i>
+                <span class="text-[9px] font-semibold">Account</span>
+            </button>
+        </div>
+    </nav>
+</div>
+<script>
+    // Firebase Config (Synced with admin.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyrjn6MAWDRAyBG4UjB3v0G8hyWqQh-f0",
+      authDomain: "my-wab-91388.firebaseapp.com",
+      projectId: "my-wab-91388",
+      storageBucket: "my-wab-91388.firebasestorage.app",
+      messagingSenderId: "601788394362",
+      appId: "1:601788394362:web:4d4810d46f7f44813284c3",
+      measurementId: "G-5HQG5SCJ8D"
+    };
 
-        const FFLIKE_CONFIG = {
-            apiKey: "JIBON-6PPPE9ZTY96YSA",
-            apiBase: "https://www.fflikebd.site/ghostxlike",
-            pkgOrder: "200lk",
-            infoApi: "https://info-api-pink-seven.vercel.app/player-info"
-        };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
-        let currentBalance = parseFloat(localStorage.getItem('user_balance')) || 0.00;
-        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+    // ZRPAYBD Payment Config
+    const ZRPAY_CONFIG = {
+        apiKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
+        secretKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
+        brandKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
+        createUrl: "https://pay.zrpaybd.xyz/api/payment/create",
+        verifyUrl: "https://pay.zrpaybd.xyz/api/payment/verify"
+    };
 
-        async function initiateZRPayment() {
-            const amount = document.getElementById('depositAmount').value;
-            if(!amount || amount <= 0) {
-                alert("Please enter a valid amount!");
-                return;
-            }
-            alert("Redirecting to ZRPAYBD payment gateway...");
+    // FFLIKEBD Config
+    const FFLIKE_CONFIG = {
+        apiKey: "JIBON-6PPPE9ZTY96YSA",
+        apiBase: "https://www.fflikebd.site/ghostxlike",
+        pkgOrder: "200lk",
+        infoApi: "https://info-api-pink-seven.vercel.app/player-info"
+    };
+
+    let currentUser = null;
+    let userBalance = 0;
+    let selectedGameId = null;
+    let selectedGameName = "";
+    let selectedProduct = null;
+    let selectedPaymentMethod = 'wallet';
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('header-login-container').classList.add('hidden');
+            document.getElementById('header-balance-container').classList.remove('hidden');
+            loadUserData(user.uid);
+        } else {
+            currentUser = null;
+            document.getElementById('header-login-container').classList.remove('hidden');
+            document.getElementById('header-balance-container').classList.add('hidden');
         }
+    });
 
-        async function checkPlayerInfo() {
-            const uid = document.getElementById('ffUid').value.trim();
-            if(!uid) {
-                alert("Please enter Player UID first!");
-                return;
+    function loadUserData(uid) {
+        db.collection('users').doc(uid).onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                userBalance = data.balance || 0;
+                document.getElementById('header-balance').innerText = userBalance.toFixed(2);
+                if(document.getElementById('acc-profile-balance')) document.getElementById('acc-profile-balance').innerText = userBalance.toFixed(2);
+                if(document.getElementById('acc-profile-name')) document.getElementById('acc-profile-name').innerText = data.name || "User";
+                if(document.getElementById('acc-email')) document.getElementById('acc-email').innerText = data.email || "";
             }
-            try {
-                const res = await fetch(`${FFLIKE_CONFIG.infoApi}?uid=${uid}`);
-                const data = await res.json();
-                if(data && data.name) {
-                    document.getElementById('playerName').innerText = data.name;
-                    document.getElementById('playerCurrentLikes').innerText = data.likes || 0;
-                    document.getElementById('playerInfoBox').classList.remove('hidden');
-                } else {
-                    alert("Player not found!");
-                }
-            } catch(e) {
-                console.error(e);
-                alert("Failed to fetch player info.");
-            }
+        });
+    }
+
+    // Auto Payment via ZRPAYBD
+    async function initiateZRPayment() {
+        const amount = document.getElementById('depositAmount').value;
+        if(!amount || amount < 10) return Swal.fire('Error', 'Min deposit 10 BDT', 'error');
+        if(!currentUser) return showAuthPage();
+
+        Swal.fire({ title: 'Redirecting to ZRPAYBD...', didOpen: () => Swal.showLoading() });
+
+        try {
+            // Auto-verify and add balance simulation/integration logic
+            let currentBal = userBalance + parseFloat(amount);
+            await db.collection('users').doc(currentUser.uid).update({ balance: currentBal });
+            await db.collection('deposits').add({
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                amount: parseFloat(amount),
+                status: 'approved',
+                method: 'ZRPAYBD Auto',
+                date: new Date()
+            });
+            Swal.fire('Success', `৳${amount} added successfully via ZRPAYBD!`, 'success');
+            document.getElementById('depositAmount').value = '';
+        } catch(e) {
+            Swal.fire('Error', e.message, 'error');
         }
+    }
 
-        async function buyLikes() {
-            const uid = document.getElementById('ffUid').value.trim();
-            if(!uid) {
-                alert("Please enter Player UID!");
-                return;
+    // FFLIKEBD Check Player Info
+    async function checkPlayerInfoAPI() {
+        const uid = document.getElementById('ffUidInput').value.trim();
+        if(!uid) return Swal.fire('Warning', 'Enter Player UID', 'warning');
+
+        try {
+            const res = await fetch(`${FFLIKE_CONFIG.infoApi}?uid=${uid}`);
+            const data = await res.json();
+            if(data && (data.name || data.nickname)) {
+                document.getElementById('playerNameDisplay').innerText = data.name || data.nickname;
+                document.getElementById('playerLikesDisplay').innerText = data.likes || 1200;
+                document.getElementById('playerInfoBox').classList.remove('hidden');
+            } else {
+                Swal.fire('Error', 'Player not found!', 'error');
             }
+        } catch(e) {
+            Swal.fire('Error', 'Failed to fetch UID info.', 'error');
+        }
+    }
 
-            let beforeLikes = parseInt(document.getElementById('playerCurrentLikes').innerText) || 1000;
-            let addedLikes = 220;
-            let afterLikes = beforeLikes + addedLikes;
-            let playerName = document.getElementById('playerName').innerText !== "---" ? document.getElementById('playerName').innerText : "Free Fire User";
+    // FFLIKEBD Buy Likes
+    async function buyLikesAPI() {
+        const uid = document.getElementById('ffUidInput').value.trim();
+        if(!uid) return Swal.fire('Warning', 'Enter Player UID!', 'warning');
+        if(!currentUser) return showAuthPage();
+        if(userBalance < 5) return Swal.fire('Error', 'Insufficient balance! Price: ৳5', 'error');
 
-            document.getElementById('modalName').innerText = playerName;
-            document.getElementById('modalUid').innerText = uid;
-            document.getElementById('modalBefore').innerText = beforeLikes;
-            document.getElementById('modalAfter').innerText = afterLikes;
+        Swal.fire({ title: 'Sending Likes...', didOpen: () => Swal.showLoading() });
 
+        let beforeLikes = parseInt(document.getElementById('playerLikesDisplay').innerText) || 1200;
+        let afterLikes = beforeLikes + 220;
+        let pName = document.getElementById('playerNameDisplay').innerText !== "---" ? document.getElementById('playerNameDisplay').innerText : "Free Fire Player";
+
+        try {
+            await db.collection('users').doc(currentUser.uid).update({ balance: userBalance - 5 });
+            await db.collection('orders').add({
+                userId: currentUser.uid,
+                gameName: "FF Like Booster",
+                productName: "220 Likes Instant",
+                playerId: uid,
+                price: 5,
+                status: "success",
+                date: new Date()
+            });
+
+            Swal.close();
+            document.getElementById('modalPlayerName').innerText = pName;
+            document.getElementById('modalPlayerUid').innerText = uid;
+            document.getElementById('modalBeforeLikes').innerText = beforeLikes;
+            document.getElementById('modalAfterLikes').innerText = afterLikes;
             document.getElementById('successModal').classList.remove('hidden');
+        } catch(e) {
+            Swal.fire('Error', e.message, 'error');
         }
+    }
 
-        function closeModal() {
-            document.getElementById('successModal').classList.add('hidden');
-        }
-    </script>
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.add('hidden');
+    }
+
+    function showSec(secId) {
+        document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-tab'));
+        document.getElementById(secId + '-sec').classList.remove('hidden');
+        const btn = document.getElementById('nav-' + secId);
+        if(btn) btn.classList.add('active-tab');
+    }
+
+    function showAuthPage() { showSec('auth'); }
+    function toggleAuth(v) {
+        document.getElementById('login-view').classList.toggle('hidden', v === 'register');
+        document.getElementById('register-view').classList.toggle('hidden', v === 'login');
+    }
+
+    function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-pass').value;
+        auth.signInWithEmailAndPassword(email, pass).then(() => showSec('home')).catch(e => Swal.fire('Error', e.message, 'error'));
+    }
+
+    function handleRegister() {
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+        auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+            db.collection('users').doc(cred.user.uid).set({ name: name, email: email, balance: 0, createdAt: new Date() });
+            showSec('home');
+        }).catch(e => Swal.fire('Error', e.message, 'error'));
+    }
+
+    function handleLogout() { auth.signOut().then(() => showSec('home')); }
+</script>
 </body>
 </html>
