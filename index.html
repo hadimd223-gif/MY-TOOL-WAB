@@ -231,20 +231,9 @@
             background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
             padding: 8px;
-            overflow: hidden;
+            overflow: visible; /* অ্যাড যেন হাইড না হয়ে পুরোপুরি দৃশ্যমান থাকে */
             border: 1px dashed rgba(56, 189, 248, 0.3);
-            cursor: pointer;
             position: relative;
-        }
-
-        .ad-overlay-btn {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            background: rgba(0,0,0,0.01);
         }
     </style>
 </head>
@@ -279,11 +268,10 @@
             <div id="status-1" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
             <div class="ad-box" onclick="handleAdClick(1, 'https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1')">
-                <div class="ad-overlay-btn"></div>
                 <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
             </div>
 
-            <button id="btn-1" class="btn" disabled onclick="goToStep(2)">পরবর্তী ধাপ</button>
+            <button id="btn-1" class="btn" disabled onclick="handleNextStep(1, 'https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1', 2)">পরবর্তী ধাপ</button>
         </div>
 
         <!-- ধাপ ২ -->
@@ -294,11 +282,10 @@
             <div id="status-2" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
             <div class="ad-box" onclick="handleAdClick(2, 'https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4')">
-                <div class="ad-overlay-btn"></div>
                 <script data-cfasync="false" src="https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"></script>
             </div>
 
-            <button id="btn-2" class="btn" disabled onclick="goToStep(3)">পরবর্তী ধাপ</button>
+            <button id="btn-2" class="btn" disabled onclick="handleNextStep(2, 'https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4', 3)">পরবর্তী ধাপ</button>
         </div>
 
         <!-- ধাপ ৩ -->
@@ -309,14 +296,13 @@
             <div id="status-3" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
             <div class="ad-box" onclick="handleAdClick(3, 'https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff')">
-                <div class="ad-overlay-btn"></div>
                 <script>
                   atOptions = { 'key' : '63ac62d066a92ce1f81d38a4af96be52', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                 </script>
                 <script src="https://bicea.org/22/63ac62d066a92ce1f81d38a4af96be52"></script>
             </div>
 
-            <button id="btn-3" class="btn" disabled onclick="goToStep(4)">পরবর্তী ধাপ</button>
+            <button id="btn-3" class="btn" disabled onclick="handleNextStep(3, 'https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff', 4)">পরবর্তী ধাপ</button>
         </div>
 
         <!-- ধাপ ৪ (শেষ ধাপ) -->
@@ -327,14 +313,13 @@
             <div id="status-4" class="status-msg">👉 শেষ টাস্ক সম্পন্ন করতে নিচে ক্লিক করুন</div>
             
             <div class="ad-box" onclick="handleAdClick(4, 'https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff')">
-                <div class="ad-overlay-btn"></div>
                 <script>
                   atOptions = { 'key' : 'ebb2e9173fe5c917e6551af25108a0cf', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
                 </script>
                 <script src="https://bicea.org/22/ebbe29173fe5c917e6551af25108a0cf"></script>
             </div>
 
-            <button id="btn-4" class="btn" disabled onclick="finishTask()">বটে ফিরে যান</button>
+            <button id="btn-4" class="btn" disabled onclick="handleFinishTask('https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff')">বটে ফিরে যান</button>
         </div>
     </div>
 
@@ -347,7 +332,6 @@
         }
 
         function handleAdClick(step, targetAdUrl) {
-            // ইউজার অ্যাডে ক্লিক করার সাথে সাথে নতুন ট্যাবে লিংক ওপেন হবে
             window.open(targetAdUrl, '_blank');
 
             const floatBox = document.getElementById('floating-timer-box');
@@ -360,7 +344,7 @@
             statusMsg.textContent = "⏳ কাউন্টডাউন চলছে...";
             statusMsg.style.color = "#ffb703";
 
-            let secondsLeft = 15; // ১৫ সেকেন্ডের টাইমার
+            let secondsLeft = 15;
 
             if(timerInterval) clearInterval(timerInterval);
 
@@ -368,7 +352,6 @@
                 secondsLeft--;
                 timerDisplay.textContent = secondsLeft;
 
-                // প্রতি ৩ সেকেন্ড পর পর নির্দেশনা আপডেট করার লজিক
                 if (secondsLeft === 12 || secondsLeft === 9 || secondsLeft === 6 || secondsLeft === 3) {
                     floatText.innerHTML = `🔔 <b>বিজ্ঞাপন পরিবর্তন করুন! নতুন অ্যাডে চাপ দিয়ে ৩ সেকেন্ড অপেক্ষা করুন। (অবশিষ্ট: ${secondsLeft} সে.)</b>`;
                 } else {
@@ -379,23 +362,36 @@
                     clearInterval(timerInterval);
                     
                     timerDisplay.textContent = "সম্পন্ন!";
-                    floatText.innerHTML = "✅ সময় শেষ! মেইন পেজে ফিরে এসে কন্টিনিউ করুন।";
+                    floatText.innerHTML = "✅ সময় শেষ! এখন কন্টিনিউ বাটনে চাপ দিন।";
                     floatText.style.color = "#22c55e";
 
-                    statusMsg.textContent = "✅ সফল হয়েছে! এখন পরবর্তী ধাপে যান।";
+                    statusMsg.textContent = "✅ সফল হয়েছে! এখন কন্টিনিউ করুন।";
                     statusMsg.style.color = "#22c55e";
 
                     buttonElement.disabled = false;
                     buttonElement.textContent = (step === 4) ? "বটে ফিরে যান" : "পরবর্তী ধাপ";
 
-                    // টাইম শেষ হওয়ার সময় অটোমেটিক রিডাইরেক্ট করার লজিক (প্রয়োজনে)
-                    if(step === 4) {
-                        setTimeout(() => {
-                            window.open(targetAdUrl, '_blank');
-                        }, 1000);
-                    }
+                    setTimeout(() => {
+                        floatBox.style.display = 'none';
+                    }, 4000);
                 }
             }, 1000);
+        }
+
+        // কন্টিনিউ বাটনে চাপ দেওয়ার সময় অটোমেটিক অ্যাডের ভেতর নিয়ে যাবে এবং পরবর্তী ধাপে যাবে
+        function handleNextStep(currentStep, adUrl, nextStepNumber) {
+            window.open(adUrl, '_blank'); // অটো অ্যাড ওপেন
+            setTimeout(() => {
+                goToStep(nextStepNumber);
+            }, 500);
+        }
+
+        // শেষ ধাপে কন্টিনিউ চাপলে অটো অ্যাড ওপেন করে বটে নিয়ে যাবে
+        function handleFinishTask(adUrl) {
+            window.open(adUrl, '_blank'); // অটো অ্যাড ওপেন
+            setTimeout(() => {
+                window.location.href = telegramBotUrl;
+            }, 800);
         }
 
         function goToStep(stepNumber) {
@@ -403,11 +399,6 @@
             document.getElementById('step-' + stepNumber).classList.add('active');
             updateProgress(stepNumber);
             document.getElementById('floating-timer-box').style.display = 'none';
-        }
-
-        function finishTask() {
-            // সমস্ত ধাপ শেষ হলে টেলিগ্রাম বটে রিডাইরেক্ট করবে
-            window.location.href = telegramBotUrl;
         }
 
         window.onload = function() {
