@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাড ভেরিফিকেশন সিস্টেম</title>
+    <title>অ্যাড ভেরিফিকেশন সিস্টেম - AdMob</title>
     
     <!-- Google AdMob / AdSense Script Integration -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9467019896900554~2608224645" crossorigin="anonymous"></script>
@@ -58,6 +58,10 @@
         .btn:hover {
             background-color: #0369a1;
         }
+        .btn:disabled {
+            background-color: #475569;
+            cursor: not-allowed;
+        }
         .code-box {
             background: #0f172a;
             border: 2px dashed #38bdf8;
@@ -73,24 +77,30 @@
         .hidden {
             display: none;
         }
+        #status-msg {
+            color: #f87171;
+            font-size: 13px;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
 
     <div class="card" id="main-card">
         <h2>অ্যাড ভেরিফিকেশন</h2>
-        <p>বটে ফিরে যাওয়ার আগে ৫টি অ্যাড দেখা সম্পূর্ণ করুন।</p>
+        <p>এগিয়ে যাওয়ার জন্য আপনাকে অবশ্যই অ্যাড দেখতে হবে। অ্যাড না দেখলে পরবর্তী ধাপে যাওয়া যাবে না।</p>
         
         <div class="progress-box" id="progress-text">অ্যাড দেখা হয়েছে: ০/৫</div>
 
         <!-- অ্যাড দেখার বাটন -->
-        <button class="btn" id="next-ad-btn" onclick="watchNextAd()">পরবর্তী অ্যাড দেখুন</button>
+        <button class="btn" id="next-ad-btn" onclick="watchAdMobAd()">অ্যাড দেখে এগিয়ে যান</button>
+        <p id="status-msg"></p>
     </div>
 
     <!-- কোড পাওয়ার পর দেখানোর বক্স -->
     <div class="card hidden" id="success-card">
         <h2>অভিনন্দন! 🎉</h2>
-        <p>আপনার ৫টি অ্যাড দেখা সম্পন্ন হয়েছে। নিচের কোডটি কপি করে টেলিগ্রাম বটে দিন:</p>
+        <p>আপনার ৫টি অ্যাড দেখা সম্পূর্ণ হয়েছে। নিচের কোডটি কপি করে টেলিগ্রাম বটে দিন:</p>
         
         <div class="code-box" id="verification-code">LOAD1234</div>
         
@@ -98,8 +108,8 @@
         <p id="copy-msg" style="color: #4ade80; margin-top: 10px; display: none;">কোডটি সফলভাবে কপি হয়েছে! এবার বটে গিয়ে পেস্ট করুন।</p>
     </div>
 
-    <!-- আপনার অ্যাড ইউনিট আইডিগুলোর রেফারেন্স লিস্ট (জাভাস্ক্রিপ্ট অ্যারে হিসেবে রাখা হলো প্রয়োজন অনুযায়ী ব্যবহারের জন্য) -->
     <script>
+        // আপনার দেওয়া AdMob অ্যাড ইউনিট আইডিগুলোর তালিকা
         const admobUnits = [
             "ca-app-pub-9467019896900554/3758663944",
             "ca-app-pub-9467019896900554/6576398978",
@@ -126,16 +136,36 @@
             }
         }
 
-        function watchNextAd() {
-            adCount++;
-            localStorage.setItem('user_ad_count', adCount);
+        function watchAdMobAd() {
+            const btn = document.getElementById('next-ad-btn');
+            const statusMsg = document.getElementById('status-msg');
             
-            // এখানে আপনি চাইলে নির্দিষ্ট কোনো অ্যাড ইউনিট আইডি কল করতে পারেন বা রিডাইরেক্ট করতে পারেন।
-            // উদাহরণস্বরূপ প্রতি ধাপে আলাদা অ্যাড ইউনিট ব্যবহার করার জন্য:
-            let currentAdUnit = admobUnits[(adCount - 1) % admobUnits.length];
-            console.log("Loading Ad Unit: " + currentAdUnit);
+            btn.disabled = true;
+            btn.innerText = "অ্যাড লোড হচ্ছে...";
+            statusMsg.innerText = "দয়া করে সম্পূর্ণ অ্যাডটি দেখুন...";
 
-            updateUI();
+            // বর্তমান ধাপ অনুযায়ী AdMob ইউনিট সিলেক্ট করা
+            let currentAdUnit = admobUnits[adCount % admobUnits.length];
+            console.log("Loading AdMob Unit: " + currentAdUnit);
+
+            // এখানে AdMob লোড হওয়ার সিমুলেশন বা আসল রিমোট অ্যাড কল হবে। 
+            // ইউজার অ্যাড সম্পূর্ণ দেখার পর এই ফাংশনটি ট্রিগার হবে (যেমন: AdMob Rewarded/Interstitial Close ইভেন্ট)
+            setTimeout(() => {
+                // ধরে নিচ্ছি ইউজার সফলভাবে অ্যাড দেখে শেষ করেছে
+                let adWatchedSuccessfully = true; // এটি আসল অ্যাপে AdMob এর callback থেকে আসবে
+
+                if (adWatchedSuccessfully) {
+                    adCount++;
+                    localStorage.setItem('user_ad_count', adCount);
+                    statusMsg.innerText = "";
+                    updateUI();
+                } else {
+                    statusMsg.innerText = "অ্যাড সম্পূর্ণ দেখা হয়নি! দয়া করে সম্পূর্ণ অ্যাড দেখুন।";
+                }
+
+                btn.disabled = false;
+                btn.innerText = "অ্যাড দেখে এগিয়ে যান";
+            }, 3000); // ৩ সেকেন্ডের একটি অ্যাড দেখার সিমুলেশন সময় (আপনার প্রয়োজনমতো পরিবর্তন করতে পারেন)
         }
 
         window.onload = function() {
