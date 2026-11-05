@@ -35,22 +35,13 @@
             <div id="ad-content" class="w-full h-full flex justify-center items-center">
                 
                 <!-- ============================================================ -->
-                <!-- 🔽 আপনার অ্যাড নেটওয়ার্কের (Adsterra / Monetag) কোড নিচে বসান 🔽 -->
+                <!-- 🔽 আপনার Adsterra থেকে পাওয়া জাভাস্ক্রিপ্ট অ্যাড কোডটি এখানে পেস্ট করবেন 🔽 -->
                 <!-- ============================================================ -->
                 
                 <script type="text/javascript">
-                    /* Adsterra বা Monetag থেকে দেওয়া Javascript/Ad Script কোডটি এখানে পেস্ট করবেন */
+                    // আপনার অ্যাড কোডটি এখানে বসবে
                 </script>
                 
-                <!-- অ্যাড লোড না হওয়া পর্যন্ত সাময়িক মেসেজ -->
-                <div id="fallback-ad-msg" class="text-center py-4">
-                    <svg class="w-10 h-10 text-emerald-500 mx-auto animate-pulse mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <p class="text-sm text-gray-300 font-semibold">বিজ্ঞাপনটি লোড হচ্ছে...</p>
-                </div>
-
                 <!-- ============================================================ -->
 
             </div>
@@ -77,57 +68,55 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // Telegram Web App Initialize
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        let timeLeft = 15; // ১৫ সেকেন্ড টাইমার
+        let timeLeft = 15;
         const countdownElement = document.getElementById('countdown');
         const nextBtn = document.getElementById('next-btn');
         const progressBar = document.getElementById('progress-bar');
-        const fallbackMsg = document.getElementById('fallback-ad-msg');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentStep = urlParams.get('step') || '1';
 
         let totalTime = timeLeft;
         let timer = setInterval(function() {
             timeLeft--;
             countdownElement.innerText = timeLeft;
             
-            // Progress bar update
             let progressPercentage = (timeLeft / totalTime) * 100;
             progressBar.style.width = progressPercentage + '%';
 
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 
-                // সফলভাবে দেখার মেসেজ
-                if (fallbackMsg) {
-                    fallbackMsg.innerHTML = `
-                        <svg class="w-10 h-10 text-emerald-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <p class="text-sm font-bold text-emerald-400">অ্যাড সফলভাবে দেখা হয়েছে!</p>
-                    `;
-                }
-                
-                // Enable Button
                 nextBtn.disabled = false;
                 nextBtn.classList.remove('bg-gray-600', 'text-gray-400', 'cursor-not-allowed');
                 nextBtn.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-600', 'cursor-pointer');
-                nextBtn.innerText = "বটে ফিরে যান ➔ (অটোমেটিক রিলোড হবে)";
+                nextBtn.innerText = "বটে ফিরে যান ➔";
 
-                // অটোমেটিক ২-৩ সেকেন্ডের মধ্যে মিনি অ্যাপ বন্ধ করে বটে ফেরত পাঠানোর লজিক
                 setTimeout(function() {
-                    tg.close();
+                    redirectToBot(currentStep);
                 }, 2000);
             }
         }, 1000);
 
-        // ম্যানুয়াল ক্লিকেও বটে ফেরত যাবে
         nextBtn.addEventListener('click', function() {
             if (!nextBtn.disabled) {
-                tg.close();
+                redirectToBot(currentStep);
             }
         });
+
+        function redirectToBot(step) {
+            let botUsername = "MHXLIKE_BOT";
+            let targetUrl = `https://t.me/${botUsername}?start=free_s${step}`;
+            
+            if (tg && tg.openTelegramLink) {
+                tg.openTelegramLink(targetUrl);
+            } else {
+                window.location.href = targetUrl;
+            }
+        }
     </script>
 </body>
 </html>
