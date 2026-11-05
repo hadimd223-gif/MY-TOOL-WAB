@@ -173,6 +173,51 @@
             text-decoration: none;
             text-align: center;
         }
+
+        .ads-zone {
+            width: 100%;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .ads-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .ad-slot {
+            overflow: hidden;
+            margin: 10px auto;
+            max-width: 100%;
+        }
+
+        .ad-slot.auto-size {
+            width: 100%;
+        }
+
+        .ad-inner {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .top-ad {
+            margin-top: 0;
+        }
+
+        .hint-msg {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        body.invalid .ads-zone,
+        body.invalid .top-ad {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -199,53 +244,154 @@
 
         <!-- কাজের ধাপ (বট যে ধাপ পাঠায় শুধু সেই ধাপই দেখাবে) -->
         <div id="task-view" class="hidden">
+            <!-- উপরের ছোট ব্যানার অ্যাড -->
+            <div class="ad-slot top-ad" data-w="320" data-h="50">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : '68b093c5d8e6f3092a413655f53ed66e',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/68b093c5d8e6f3092a413655f53ed66e"></script>
+                </div>
+            </div>
+
             <div id="step-title" class="step-title"></div>
             <p id="step-desc">নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:</p>
             <div id="timer" class="timer-display"></div>
-            <div id="status" class="status-msg">👉 টাইমার চালু করতে নিচের বক্সে ক্লিক করুন</div>
+            <div id="status" class="status-msg">👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন</div>
 
             <div id="ad-box" class="ad-action-box" role="button" tabindex="0">
                 <span class="ad-action-text">🚀 অ্যাড দেখতে এখানে ক্লিক করুন</span>
             </div>
+            <div class="hint-msg">ℹ️ এই বাক্স অথবা নিচের যেকোনো অ্যাডে ক্লিক করলেই টাইমার চালু হবে।</div>
 
             <button id="continue-btn" class="btn" disabled>বটে ফিরে যান</button>
+        </div>
+
+        <!-- ================= অ্যাড জোন (সব অ্যাড কোড এখানে) ================= -->
+        <div class="ads-zone">
+            <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
+
+            <!-- 300x250 -->
+            <div class="ad-slot" data-w="300" data-h="250">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : '63ac62d066a92ce1f81d38a4af96be52',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/63ac62d066a92ce1f81d38a4af96be52"></script>
+                </div>
+            </div>
+
+            <!-- 468x60 -->
+            <div class="ad-slot" data-w="468" data-h="60">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : 'ef07756fa88fa5c7ccf880d7ae64368a',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/ef07756fa88fa5c7ccf880d7ae64368a"></script>
+                </div>
+            </div>
+
+            <!-- 160x600 এবং 160x300 পাশাপাশি -->
+            <div class="ad-slot" data-w="330" data-h="600">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : '781bbce74f0544354cda8cc4a3a46017',
+    'format' : 'iframe',
+    'height' : 600,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/781bbce74f0544354cda8cc4a3a46017"></script>
+<script>
+  atOptions = {
+    'key' : 'bff99088ee93546537bab36c72f4d087',
+    'format' : 'iframe',
+    'height' : 300,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/bff99088ee93546537bab36c72f4d087"></script>
+                </div>
+            </div>
+
+            <!-- 728x90 -->
+            <div class="ad-slot" data-w="728" data-h="90">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : 'ebbe29173fe5c917e6551af25108a0cf',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/ebbe29173fe5c917e6551af25108a0cf"></script>
+                </div>
+            </div>
+
+            <!-- নেটিভ ব্যানার -->
+            <div class="ad-slot auto-size">
+<script async="async" data-cfasync="false" src="https://bicea.org/21/d7970b67695b3ce6f76ccd03c80ac3ec"></script>
+<div id="container-d7970b67695b3ce6f76ccd03c80ac3ec"></div>
+            </div>
         </div>
     </div>
 
     <script>
         // ================= সেটিংস (এখানেই বদলান) =================
         const BOT_USERNAME = "MHXLIKE_BOT";   // বটের ইউজারনেম (@ ছাড়া) — শুধু ফলব্যাক রিটার্ন লিংকের জন্য
-        const WAIT_SECONDS = 15;              // প্রতি ধাপে কত সেকেন্ড অপেক্ষা
-        // অ্যাড লিংকের তালিকা: ধাপ ১ → ১ম লিংক, ধাপ ২ → ২য় লিংক ... শেষ হলে আবার প্রথম থেকে ঘুরবে।
+        const WAIT_SECONDS = 15;              // টাইমার চালু হওয়ার পর কত সেকেন্ড অপেক্ষা
+        // অ্যাড লিংকের ৩টি পার্ট: ধাপ ১ → ১ম, ধাপ ২ → ২য়, ধাপ ৩ → ৩য়, ধাপ ৪ → আবার ১ম ...
         // তাই অ্যাডমিন প্যানেলে যত ধাপই সেট করুন, সাইট ঠিকমতো কাজ করবে।
         const AD_LINKS = [
             "https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1",
-            "https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"
+            "https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4",
+            "https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff"
         ];
         // =========================================================
 
         const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
         const bn = (n) => String(n).replace(/\d/g, (d) => bnDigits[d]);
-
         const $ = (id) => document.getElementById(id);
 
-        // URL থেকে বটের পাঠানো প্যারামিটার পড়া: ?step=&total=&token=&return=
+        // URL থেকে বটের পাঠানো প্যারামিটার: ?step=&total=&token=&return=
         const params = new URLSearchParams(window.location.search);
         const step = parseInt(params.get("step"), 10);
         let total = parseInt(params.get("total"), 10);
         const token = (params.get("token") || "").trim();
         const returnParam = (params.get("return") || "").trim();
 
-        // নিরাপত্তা: শুধু টেলিগ্রামের লিংকেই রিডাইরেক্ট হবে (অন্য সাইটে নয়)
+        // নিরাপত্তা: শুধু টেলিগ্রামের লিংকেই রিডাইরেক্ট হবে
         function safeReturnUrl() {
             if (returnParam) {
                 try {
                     const u = new URL(returnParam);
                     const hostOk = (u.hostname === "t.me" || u.hostname === "telegram.me");
                     if (u.protocol === "https:" && hostOk) return u.toString();
-                } catch (e) { /* নিচের ফলব্যাকে যাবে */ }
+                } catch (e) { /* ফলব্যাকে যাবে */ }
             }
-            // ফলব্যাক: বটের ফরম্যাট অনুযায়ী নিজেই রিটার্ন লিংক বানানো
             if (/^[A-Za-z0-9]{8,64}$/.test(token) && step >= 1) {
                 return "https://t.me/" + BOT_USERNAME + "?start=ads_s" + step + "_" + token;
             }
@@ -254,54 +400,38 @@
 
         const returnUrl = safeReturnUrl();
         const valid = Number.isInteger(step) && step >= 1 && step <= 100 &&
-                      /^[A-Za-z0-9]{8,64}$/.test(token) && returnUrl;
+                      /^[A-Za-z0-9]{8,64}$/.test(token) && !!returnUrl;
 
-        function showError() {
-            $("task-view").classList.add("hidden");
-            $("error-view").classList.remove("hidden");
-            $("open-bot-btn").href = "https://t.me/" + BOT_USERNAME;
-        }
-
-        function init() {
-            if (!valid) {
-                showError();
-                return;
-            }
-            if (!Number.isInteger(total) || total < step) total = step;
-            if (total > 100) total = 100;
-
-            $("task-view").classList.remove("hidden");
-            const isLast = step === total;
-
-            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
-            $("step-desc").textContent = isLast
-                ? "চূড়ান্ত ধাপ! নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:"
-                : "নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:";
-            $("timer").textContent = bn(WAIT_SECONDS);
-            $("progress-fill").style.width = (((step - 1) / total) * 100) + "%";
-            $("continue-btn").textContent = isLast ? "বটে ফিরে যান" : "বটে ফিরে যান (পরের ধাপের জন্য)";
-
-            const adUrl = AD_LINKS[(step - 1) % AD_LINKS.length];
-            const box = $("ad-box");
-            box.addEventListener("click", () => handleAdClick(adUrl));
-            box.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleAdClick(adUrl);
-                }
+        // ---------- অ্যাড স্লট ছোট স্ক্রিনে মাপমতো ছোট করা ----------
+        function fitSlots() {
+            document.querySelectorAll(".ad-slot[data-w]").forEach((slot) => {
+                const w = +slot.dataset.w, h = +slot.dataset.h;
+                const inner = slot.firstElementChild;
+                const holder = slot.parentElement;
+                const avail = holder ? holder.clientWidth : w;
+                if (!inner || !avail) return;
+                const k = Math.min(1, avail / w);
+                inner.style.width = w + "px";
+                inner.style.height = h + "px";
+                inner.style.transformOrigin = "top left";
+                inner.style.transform = "scale(" + k + ")";
+                slot.style.width = (w * k) + "px";
+                slot.style.height = (h * k) + "px";
             });
-            $("continue-btn").addEventListener("click", finishTask);
         }
+        window.addEventListener("resize", fitSlots);
+        window.addEventListener("load", fitSlots);
+        (function () {
+            let n = 0;
+            const iv = setInterval(() => { fitSlots(); if (++n > 40) clearInterval(iv); }, 500);
+        })();
 
+        // ---------- টাইমার ----------
         let started = false;
         let timerInterval = null;
 
-        function handleAdClick(adUrl) {
-            // নতুন ট্যাবে অ্যাড ওপেন হবে
-            window.open(adUrl, "_blank", "noopener");
-
-            // একই ধাপে আবার ক্লিক করলে টাইমার রিসেট হবে না
-            if (started) return;
+        function startTimer() {
+            if (!valid || started) return;
             started = true;
 
             const timerEl = $("timer");
@@ -327,12 +457,82 @@
             }, 250);
         }
 
-        function finishTask() {
-            if ($("continue-btn").disabled || !returnUrl) return;
-            window.location.href = returnUrl;
-        }
+        // ---------- যেকোনো অ্যাডে ক্লিক ধরা ----------
+        // ১) সাধারণ এলিমেন্টে ক্লিক (নেটিভ ব্যানার ইত্যাদি)
+        document.addEventListener("click", (e) => {
+            if (e.target && e.target.closest && e.target.closest(".ad-slot")) startTimer();
+        });
+        // ২) iframe অ্যাডে ক্লিক: ব্রাউজার ক্লিক ইভেন্ট দেয় না, তাই মাউস-হোভার + window blur দিয়ে ধরা হয়
+        let hoveredSlot = null;
+        document.addEventListener("mouseover", (e) => {
+            hoveredSlot = (e.target && e.target.closest) ? e.target.closest(".ad-slot") : null;
+        });
+        document.addEventListener("touchstart", (e) => {
+            hoveredSlot = (e.target && e.target.closest) ? e.target.closest(".ad-slot") : null;
+        }, { passive: true });
+        document.documentElement.addEventListener("mouseleave", () => { hoveredSlot = null; });
 
-        window.addEventListener("load", init);
+        function checkIframeClick() {
+            setTimeout(() => {
+                const ae = document.activeElement;
+                const inAdIframe = ae && ae.tagName === "IFRAME" && ae.closest(".ad-slot");
+                if (inAdIframe || hoveredSlot) startTimer();
+            }, 0);
+        }
+        window.addEventListener("blur", checkIframeClick);
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) checkIframeClick();
+        });
+
+        // ---------- পেজ চালু ----------
+        function init() {
+            if (!valid) {
+                document.body.classList.add("invalid");
+                $("task-view").classList.add("hidden");
+                $("error-view").classList.remove("hidden");
+                $("open-bot-btn").href = "https://t.me/" + BOT_USERNAME;
+                return;
+            }
+            if (!Number.isInteger(total) || total < step) total = step;
+            if (total > 100) total = 100;
+
+            $("task-view").classList.remove("hidden");
+            const isLast = step === total;
+
+            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
+            $("step-desc").textContent = isLast
+                ? "চূড়ান্ত ধাপ! নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:"
+                : "নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:";
+            $("timer").textContent = bn(WAIT_SECONDS);
+            $("progress-fill").style.width = (((step - 1) / total) * 100) + "%";
+            $("continue-btn").textContent = isLast ? "বটে ফিরে যান" : "বটে ফিরে যান (পরের ধাপের জন্য)";
+
+            const adUrl = AD_LINKS[(step - 1) % AD_LINKS.length];
+            const box = $("ad-box");
+            const openAd = () => {
+                window.open(adUrl, "_blank", "noopener");
+                startTimer();
+            };
+            box.addEventListener("click", (e) => { e.stopPropagation(); openAd(); });
+            box.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAd(); }
+            });
+            $("continue-btn").addEventListener("click", () => {
+                if ($("continue-btn").disabled || !returnUrl) return;
+                window.location.href = returnUrl;
+            });
+            fitSlots();
+        }
+        // স্ক্রিপ্ট এখানে চলে বলে নিচের অ্যাড কোড লোড হতে দেরি হলেও পেজ আটকে থাকবে না
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", init);
+        } else {
+            init();
+        }
     </script>
+
+    <!-- ===== পেজ-ওয়াইড অ্যাড স্ক্রিপ্ট (পপআন্ডার/ইন-পেজ) ===== -->
+    <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
+    <script data-cfasync="false" src="https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"></script>
 </body>
 </html>
