@@ -208,6 +208,23 @@
             margin-top: 0;
         }
 
+        .ad-notice {
+            margin: 15px 0 8px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(99, 102, 241, 0.1));
+            border: 2px dashed var(--accent-color);
+            border-radius: 15px;
+            color: var(--accent-color);
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .ad-link-card {
+            display: block;
+            text-decoration: none;
+        }
+
         .hint-msg {
             font-size: 12px;
             color: var(--text-muted);
@@ -261,14 +278,12 @@
             </div>
 
             <div id="step-title" class="step-title"></div>
-            <p id="step-desc">নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:</p>
+            <p id="step-desc">যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:</p>
             <div id="timer" class="timer-display"></div>
             <div id="status" class="status-msg">👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন</div>
 
-            <div id="ad-box" class="ad-action-box" role="button" tabindex="0">
-                <span class="ad-action-text">🚀 অ্যাড দেখতে এখানে ক্লিক করুন</span>
-            </div>
-            <div class="hint-msg">ℹ️ এই বাক্স অথবা নিচের যেকোনো অ্যাডে ক্লিক করলেই টাইমার চালু হবে।</div>
+            <div class="ad-notice">👆 যেকোনো অ্যাডে ক্লিক করুন</div>
+            <div class="hint-msg">ℹ️ নিচের যেকোনো একটি অ্যাডে ক্লিক করলেই ১৫ সেকেন্ডের টাইমার চালু হবে।</div>
 
             <button id="continue-btn" class="btn" disabled>বটে ফিরে যান</button>
         </div>
@@ -276,6 +291,13 @@
         <!-- ================= অ্যাড জোন (সব অ্যাড কোড এখানে) ================= -->
         <div class="ads-zone">
             <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
+
+            <!-- ডাইরেক্ট লিংক অ্যাড -->
+            <div class="ad-slot auto-size">
+                <a class="ad-action-box ad-link-card" href="https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff" target="_blank" rel="noopener">
+                    <span class="ad-action-text">📢 স্পনসরড অ্যাড</span>
+                </a>
+            </div>
 
             <!-- 300x250 -->
             <div class="ad-slot" data-w="300" data-h="250">
@@ -363,13 +385,6 @@
         // ================= সেটিংস (এখানেই বদলান) =================
         const BOT_USERNAME = "MHXLIKE_BOT";   // বটের ইউজারনেম (@ ছাড়া) — শুধু ফলব্যাক রিটার্ন লিংকের জন্য
         const WAIT_SECONDS = 15;              // টাইমার চালু হওয়ার পর কত সেকেন্ড অপেক্ষা
-        // অ্যাড লিংকের ৩টি পার্ট: ধাপ ১ → ১ম, ধাপ ২ → ২য়, ধাপ ৩ → ৩য়, ধাপ ৪ → আবার ১ম ...
-        // তাই অ্যাডমিন প্যানেলে যত ধাপই সেট করুন, সাইট ঠিকমতো কাজ করবে।
-        const AD_LINKS = [
-            "https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1",
-            "https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4",
-            "https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff"
-        ];
         // =========================================================
 
         const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
@@ -501,22 +516,12 @@
 
             $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
             $("step-desc").textContent = isLast
-                ? "চূড়ান্ত ধাপ! নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:"
-                : "নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:";
+                ? "চূড়ান্ত ধাপ! যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:"
+                : "যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:";
             $("timer").textContent = bn(WAIT_SECONDS);
             $("progress-fill").style.width = (((step - 1) / total) * 100) + "%";
             $("continue-btn").textContent = isLast ? "বটে ফিরে যান" : "বটে ফিরে যান (পরের ধাপের জন্য)";
 
-            const adUrl = AD_LINKS[(step - 1) % AD_LINKS.length];
-            const box = $("ad-box");
-            const openAd = () => {
-                window.open(adUrl, "_blank", "noopener");
-                startTimer();
-            };
-            box.addEventListener("click", (e) => { e.stopPropagation(); openAd(); });
-            box.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAd(); }
-            });
             $("continue-btn").addEventListener("click", () => {
                 if ($("continue-btn").disabled || !returnUrl) return;
                 window.location.href = returnUrl;
