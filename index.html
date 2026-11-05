@@ -144,6 +144,7 @@
             display: block;
         }
 
+        /* অ্যাড বক্স ও ওভারলে সিস্টেম */
         .ad-box {
             margin: 12px 0;
             padding: 8px;
@@ -155,7 +156,18 @@
             justify-content: center;
             align-items: center;
             overflow: auto;
+            position: relative;
+        }
+
+        .ad-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
             cursor: pointer;
+            background: transparent;
         }
     </style>
 </head>
@@ -181,7 +193,8 @@
             <div id="timer-1" class="timer-display">১৫</div>
             <div id="status-1" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
-            <div class="ad-box" onclick="handleAdClick(1)">
+            <div class="ad-box">
+                <div class="ad-overlay" onclick="handleAdClick(1, 'https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1')"></div>
                 <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
                 <div style="margin-top: 8px;">
                     <script>
@@ -201,7 +214,8 @@
             <div id="timer-2" class="timer-display">১৫</div>
             <div id="status-2" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
-            <div class="ad-box" onclick="handleAdClick(2)">
+            <div class="ad-box">
+                <div class="ad-overlay" onclick="handleAdClick(2, 'https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4')"></div>
                 <script data-cfasync="false" src="https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"></script>
                 <div style="margin-top: 8px;">
                     <script>
@@ -221,7 +235,8 @@
             <div id="timer-3" class="timer-display">১৫</div>
             <div id="status-3" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
-            <div class="ad-box" onclick="handleAdClick(3)">
+            <div class="ad-box">
+                <div class="ad-overlay" onclick="handleAdClick(3, 'https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1')"></div>
                 <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
                 <div style="margin-top: 8px;">
                     <script>
@@ -241,7 +256,8 @@
             <div id="timer-4" class="timer-display">১৫</div>
             <div id="status-4" class="status-msg">👉 টাইমার চালু করতে নিচে ক্লিক করুন</div>
             
-            <div class="ad-box" onclick="handleAdClick(4)">
+            <div class="ad-box">
+                <div class="ad-overlay" onclick="handleAdClick(4, 'https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4')"></div>
                 <script data-cfasync="false" src="https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"></script>
                 <div style="margin-top: 8px;">
                     <script>
@@ -258,15 +274,17 @@
     <script>
         const telegramBotUrl = "https://t.me/MHXLIKE_BOT?start=task_success"; 
         let timerInterval;
-        // প্রতিটি ধাপে ক্লিক একবারই ট্র্যাক করার জন্য ফ্ল্যাগ
         let clickedSteps = { 1: false, 2: false, 3: false, 4: false };
 
         function updateProgress(step) {
             document.getElementById('progress-fill').style.width = (step * 25) + '%';
         }
 
-        function handleAdClick(step) {
-            // যদি এই ধাপে একবার অলরেডি ক্লিক করা হয়ে থাকে, তবে টাইমার আর নতুন করে রিসেট হবে না
+        function handleAdClick(step, targetUrl) {
+            // নতুন ট্যাবে অ্যাড ওপেন হবে
+            window.open(targetUrl, '_blank');
+
+            // যদি একবার ক্লিক করা হয়ে থাকে, তবে টাইমার পুনরায় রিসেট হবে না
             if (clickedSteps[step]) return;
             clickedSteps[step] = true;
 
