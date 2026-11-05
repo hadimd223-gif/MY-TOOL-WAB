@@ -83,7 +83,7 @@
         .progress-bar {
             height: 100%;
             background: var(--accent-gradient);
-            width: 25%;
+            width: 0%;
             transition: width 0.4s ease;
         }
 
@@ -136,15 +136,6 @@
             box-shadow: none;
         }
 
-        .step-content {
-            display: none;
-        }
-
-        .step-content.active {
-            display: block;
-        }
-
-        /* সুন্দর ভিজিট বাটন ডিজাইন যাতে কোনো কোড শো না করে */
         .ad-action-box {
             margin: 15px 0;
             padding: 20px;
@@ -168,6 +159,20 @@
             text-decoration: none;
             display: block;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-box .step-title {
+            color: var(--danger-color);
+        }
+
+        .btn-link {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -175,130 +180,159 @@
     <div class="container">
         <!-- হেডার লোগো এবং নাম -->
         <div class="header-brand">
-            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo">
+            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
             <div class="site-title">M H X ADS WEBSITE</div>
-            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo">
+            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
         </div>
-        
+
         <!-- প্রোগ্রেস বার -->
         <div class="progress-bar-container">
-            <div id="progress-fill" class="progress-bar" style="width: 25%;"></div>
+            <div id="progress-fill" class="progress-bar"></div>
         </div>
 
-        <!-- ধাপ ১ -->
-        <div id="step-1" class="step-content active">
-            <div class="step-title">ধাপ ১ / ৪</div>
-            <p>নিচের বাটনে ক্লিক করে অ্যাড ভিজিট করুন:</p>
-            <div id="timer-1" class="timer-display">১৫</div>
-            <div id="status-1" class="status-msg">👉 টাইমার চালু করতে নিচের বক্সে ক্লিক করুন</div>
-            
-            <div class="ad-action-box" onclick="handleAdClick(1, 'https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1')">
+        <!-- বটের লিংক ছাড়া সরাসরি ওয়েবসাইটে এলে / লিংক ভুল হলে -->
+        <div id="error-view" class="error-box hidden">
+            <div class="step-title">❌ লিংকটি সঠিক নয়</div>
+            <p>এই ওয়েবসাইটটি সরাসরি খোলা যাবে না। টেলিগ্রাম বটে গিয়ে <b>📺 ADS</b> বাটনে ক্লিক করে নতুন লিংক নিন।</p>
+            <a id="open-bot-btn" class="btn btn-link" href="#">🤖 বটে ফিরে যান</a>
+        </div>
+
+        <!-- কাজের ধাপ (বট যে ধাপ পাঠায় শুধু সেই ধাপই দেখাবে) -->
+        <div id="task-view" class="hidden">
+            <div id="step-title" class="step-title"></div>
+            <p id="step-desc">নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:</p>
+            <div id="timer" class="timer-display"></div>
+            <div id="status" class="status-msg">👉 টাইমার চালু করতে নিচের বক্সে ক্লিক করুন</div>
+
+            <div id="ad-box" class="ad-action-box" role="button" tabindex="0">
                 <span class="ad-action-text">🚀 অ্যাড দেখতে এখানে ক্লিক করুন</span>
             </div>
 
-            <button id="btn-1" class="btn" disabled onclick="goToStep(2)">পরবর্তী ধাপ</button>
-        </div>
-
-        <!-- ধাপ ২ -->
-        <div id="step-2" class="step-content">
-            <div class="step-title">ধাপ ২ / ৪</div>
-            <p>নিচের বাটনে ক্লিক করে অ্যাড ভিজিট করুন:</p>
-            <div id="timer-2" class="timer-display">১৫</div>
-            <div id="status-2" class="status-msg">👉 টাইমার চালু করতে নিচের বক্সে ক্লিক করুন</div>
-            
-            <div class="ad-action-box" onclick="handleAdClick(2, 'https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4')">
-                <span class="ad-action-text">🚀 অ্যাড দেখতে এখানে ক্লিক করুন</span>
-            </div>
-
-            <button id="btn-2" class="btn" disabled onclick="goToStep(3)">পরবর্তী ধাপ</button>
-        </div>
-
-        <!-- ধাপ ৩ -->
-        <div id="step-3" class="step-content">
-            <div class="step-title">ধাপ ৩ / ৪</div>
-            <p>নিচের বাটনে ক্লিক করে অ্যাড ভিজিট করুন:</p>
-            <div id="timer-3" class="timer-display">১৫</div>
-            <div id="status-3" class="status-msg">👉 টাইমার চালু করতে নিচের বক্সে ক্লিক করুন</div>
-            
-            <div class="ad-action-box" onclick="handleAdClick(3, 'https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1')">
-                <span class="ad-action-text">🚀 অ্যাড দেখতে এখানে ক্লিক করুন</span>
-            </div>
-
-            <button id="btn-3" class="btn" disabled onclick="goToStep(4)">পরবর্তী ধাপ</button>
-        </div>
-
-        <!-- ধাপ ৪ (শেষ ধাপ) -->
-        <div id="step-4" class="step-content">
-            <div class="step-title">ধাপ ৪ / ৪</div>
-            <p>চূড়ান্ত ধাপ! নিচের বাটনে ক্লিক করে অ্যাড ভিজিট করুন:</p>
-            <div id="timer-4" class="timer-display">১৫</div>
-            <div id="status-4" class="status-msg">👉 টাইমার চালু করতে নিচে ক্লিক করুন</div>
-            
-            <div class="ad-action-box" onclick="handleAdClick(4, 'https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4')">
-                <span class="ad-action-text">🚀 শেষ অ্যাড দেখতে এখানে ক্লিক করুন</span>
-            </div>
-
-            <button id="btn-4" class="btn" disabled onclick="finishTask()">বটে ফিরে যান</button>
+            <button id="continue-btn" class="btn" disabled>বটে ফিরে যান</button>
         </div>
     </div>
 
     <script>
-        const telegramBotUrl = "https://t.me/MHXLIKE_BOT?start=task_success"; 
-        let timerInterval;
-        let clickedSteps = { 1: false, 2: false, 3: false, 4: false };
+        // ================= সেটিংস (এখানেই বদলান) =================
+        const BOT_USERNAME = "MHXLIKE_BOT";   // বটের ইউজারনেম (@ ছাড়া) — শুধু ফলব্যাক রিটার্ন লিংকের জন্য
+        const WAIT_SECONDS = 15;              // প্রতি ধাপে কত সেকেন্ড অপেক্ষা
+        // অ্যাড লিংকের তালিকা: ধাপ ১ → ১ম লিংক, ধাপ ২ → ২য় লিংক ... শেষ হলে আবার প্রথম থেকে ঘুরবে।
+        // তাই অ্যাডমিন প্যানেলে যত ধাপই সেট করুন, সাইট ঠিকমতো কাজ করবে।
+        const AD_LINKS = [
+            "https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1",
+            "https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"
+        ];
+        // =========================================================
 
-        function updateProgress(step) {
-            document.getElementById('progress-fill').style.width = (step * 25) + '%';
+        const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+        const bn = (n) => String(n).replace(/\d/g, (d) => bnDigits[d]);
+
+        const $ = (id) => document.getElementById(id);
+
+        // URL থেকে বটের পাঠানো প্যারামিটার পড়া: ?step=&total=&token=&return=
+        const params = new URLSearchParams(window.location.search);
+        const step = parseInt(params.get("step"), 10);
+        let total = parseInt(params.get("total"), 10);
+        const token = (params.get("token") || "").trim();
+        const returnParam = (params.get("return") || "").trim();
+
+        // নিরাপত্তা: শুধু টেলিগ্রামের লিংকেই রিডাইরেক্ট হবে (অন্য সাইটে নয়)
+        function safeReturnUrl() {
+            if (returnParam) {
+                try {
+                    const u = new URL(returnParam);
+                    const hostOk = (u.hostname === "t.me" || u.hostname === "telegram.me");
+                    if (u.protocol === "https:" && hostOk) return u.toString();
+                } catch (e) { /* নিচের ফলব্যাকে যাবে */ }
+            }
+            // ফলব্যাক: বটের ফরম্যাট অনুযায়ী নিজেই রিটার্ন লিংক বানানো
+            if (/^[A-Za-z0-9]{8,64}$/.test(token) && step >= 1) {
+                return "https://t.me/" + BOT_USERNAME + "?start=ads_s" + step + "_" + token;
+            }
+            return null;
         }
 
-        function handleAdClick(step, targetUrl) {
-            // নতুন ট্যাবে অ্যাড ওপেন হবে
-            window.open(targetUrl, '_blank');
+        const returnUrl = safeReturnUrl();
+        const valid = Number.isInteger(step) && step >= 1 && step <= 100 &&
+                      /^[A-Za-z0-9]{8,64}$/.test(token) && returnUrl;
 
-            // যদি এই ধাপে একবার অলরেডি ক্লিক করা হয়ে থাকে, তবে টাইমার পুনরায় রিসেট হবে না
-            if (clickedSteps[step]) return;
-            clickedSteps[step] = true;
+        function showError() {
+            $("task-view").classList.add("hidden");
+            $("error-view").classList.remove("hidden");
+            $("open-bot-btn").href = "https://t.me/" + BOT_USERNAME;
+        }
 
-            const timerDisplay = document.getElementById('timer-' + step);
-            const statusMsg = document.getElementById('status-' + step);
-            const buttonElement = document.getElementById('btn-' + step);
+        function init() {
+            if (!valid) {
+                showError();
+                return;
+            }
+            if (!Number.isInteger(total) || total < step) total = step;
+            if (total > 100) total = 100;
 
-            statusMsg.textContent = "⏳ কাউন্টডাউন চলছে, অপেক্ষা করুন...";
-            statusMsg.style.color = "#ffb703";
+            $("task-view").classList.remove("hidden");
+            const isLast = step === total;
 
-            let secondsLeft = 15;
+            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
+            $("step-desc").textContent = isLast
+                ? "চূড়ান্ত ধাপ! নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:"
+                : "নিচের বাক্সে ক্লিক করে অ্যাড ভিজিট করুন:";
+            $("timer").textContent = bn(WAIT_SECONDS);
+            $("progress-fill").style.width = (((step - 1) / total) * 100) + "%";
+            $("continue-btn").textContent = isLast ? "বটে ফিরে যান" : "বটে ফিরে যান (পরের ধাপের জন্য)";
 
-            if(timerInterval) clearInterval(timerInterval);
-
-            timerInterval = setInterval(() => {
-                secondsLeft--;
-                timerDisplay.textContent = secondsLeft;
-
-                if (secondsLeft <= 0) {
-                    clearInterval(timerInterval);
-                    timerDisplay.textContent = "সম্পন্ন!";
-                    statusMsg.textContent = "✅ সফল হয়েছে! এখন কন্টিনিউ করুন।";
-                    statusMsg.style.color = "#22c55e";
-
-                    buttonElement.disabled = false;
-                    buttonElement.textContent = (step === 4) ? "বটে ফিরে যান" : "পরবর্তী ধাপ";
+            const adUrl = AD_LINKS[(step - 1) % AD_LINKS.length];
+            const box = $("ad-box");
+            box.addEventListener("click", () => handleAdClick(adUrl));
+            box.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleAdClick(adUrl);
                 }
-            }, 1000);
+            });
+            $("continue-btn").addEventListener("click", finishTask);
         }
 
-        function goToStep(stepNumber) {
-            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-            document.getElementById('step-' + stepNumber).classList.add('active');
-            updateProgress(stepNumber);
+        let started = false;
+        let timerInterval = null;
+
+        function handleAdClick(adUrl) {
+            // নতুন ট্যাবে অ্যাড ওপেন হবে
+            window.open(adUrl, "_blank", "noopener");
+
+            // একই ধাপে আবার ক্লিক করলে টাইমার রিসেট হবে না
+            if (started) return;
+            started = true;
+
+            const timerEl = $("timer");
+            const statusEl = $("status");
+            const btn = $("continue-btn");
+
+            statusEl.textContent = "⏳ কাউন্টডাউন চলছে, অপেক্ষা করুন...";
+            statusEl.style.color = "#ffb703";
+
+            // সিস্টেম টাইম ধরে গণনা, যাতে ব্যাকগ্রাউন্ডে ট্যাব থাকলেও সঠিক সময় যায়
+            const endAt = Date.now() + WAIT_SECONDS * 1000;
+            timerInterval = setInterval(() => {
+                const left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+                timerEl.textContent = bn(left);
+                if (left <= 0) {
+                    clearInterval(timerInterval);
+                    timerEl.textContent = "সম্পন্ন!";
+                    statusEl.textContent = "✅ সফল হয়েছে! এখন বটে ফিরে যান।";
+                    statusEl.style.color = "#22c55e";
+                    btn.disabled = false;
+                    $("progress-fill").style.width = ((step / total) * 100) + "%";
+                }
+            }, 250);
         }
 
         function finishTask() {
-            window.location.href = telegramBotUrl;
+            if ($("continue-btn").disabled || !returnUrl) return;
+            window.location.href = returnUrl;
         }
 
-        window.onload = function() {
-            goToStep(1);
-        };
+        window.addEventListener("load", init);
     </script>
 </body>
 </html>
