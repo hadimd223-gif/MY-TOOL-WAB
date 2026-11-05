@@ -3,80 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Maintenance - M H X TOPUP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>MHX Reward & Ad System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
         body {
-            background-color: #000000;
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #0f172a;
             color: #ffffff;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        @keyframes glowPulse {
-            0% { text-shadow: 0 0 10px rgba(56, 189, 248, 0.5), 0 0 20px rgba(56, 189, 248, 0.3); transform: scale(1); }
-            50% { text-shadow: 0 0 25px rgba(236, 72, 153, 0.8), 0 0 40px rgba(56, 189, 248, 0.6); transform: scale(1.03); }
-            100% { text-shadow: 0 0 10px rgba(56, 189, 248, 0.5), 0 0 20px rgba(56, 189, 248, 0.3); transform: scale(1); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .maintenance-title {
-            animation: glowPulse 3s infinite ease-in-out, fadeInUp 1s ease-out forwards;
-            background: linear-gradient(135deg, #38bdf8 0%, #ec4899 50%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .animate-card {
-            animation: fadeInUp 0.8s ease-out forwards;
         }
     </style>
 </head>
-<body class="bg-black text-white p-4">
-    <div class="max-w-md w-full mx-auto text-center p-6 bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-2xl animate-card space-y-6">
-        
-        <!-- Animated Icon -->
-        <div class="w-20 h-20 bg-gradient-to-tr from-sky-500/20 to-pink-500/20 border border-sky-500/30 rounded-full flex items-center justify-center mx-auto shadow-lg animate-pulse">
-            <i class="fas fa-tools text-3xl text-sky-400"></i>
-        </div>
+<body class="min-h-screen flex flex-col justify-between items-center p-4">
 
-        <!-- Big Colorful Maintenance Heading -->
-        <div class="space-y-2">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-wider uppercase maintenance-title">
-                Maintenance
-            </h1>
-            <p class="text-xs text-slate-400 tracking-widest uppercase font-semibold">System Update in Progress</p>
-        </div>
-
-        <!-- Bengali Description -->
-        <div class="bg-slate-950/80 border border-slate-800/80 p-4 rounded-2xl text-xs md:text-sm text-slate-300 leading-relaxed space-y-2 shadow-inner">
-            <p class="font-medium text-slate-200">আমাদের ওয়েবসাইটটিতে বর্তমানে গুরুত্বপূর্ণ আপডেট ও কাজ চলতেছে।</p>
-            <p class="text-slate-400">আপাতత আপনারা আমাদের টেলিগ্রাম বট বা চ্যানেলের মাধ্যমে আমাদের সাথে যুক্ত থাকুন।</p>
-        </div>
-
-        <!-- Join Telegram Button with Redirect -->
-        <div class="pt-2">
-            <a href="https://t.me/MHXLIKE_BOT" target="_blank" class="w-full bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 text-sm uppercase tracking-wide border border-sky-400/30">
-                <i class="fab fa-telegram-plane text-xl"></i>
-                Join Telegram
-            </a>
-        </div>
-
-        <div class="text-[10px] text-slate-500 pt-2">
-            &copy; 2026 M H X TOPUP. All Rights Reserved.
-        </div>
+    <!-- Header Section -->
+    <div class="w-full max-w-md text-center mt-6">
+        <h1 class="text-2xl font-bold text-emerald-400">MHX Task & Reward System</h1>
+        <p class="text-gray-400 text-sm mt-1">পরবর্তী ধাপে যেতে নিচের বিজ্ঞাপনটি সম্পূর্ণ দেখুন</p>
     </div>
 
+    <!-- Main Ad & Timer Container -->
+    <div class="w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl text-center my-auto">
+        
+        <!-- Ad Banner Box -->
+        <div id="ad-container" class="w-full min-h-52 bg-slate-900 rounded-xl flex flex-col justify-center items-center relative overflow-hidden border border-slate-700 p-2">
+            <div class="absolute top-2 right-2 bg-red-600 text-xs px-2 py-1 rounded font-bold uppercase tracking-wider z-20">Sponsored Ad</div>
+            
+            <div id="ad-content" class="w-full h-full flex justify-center items-center">
+                
+                <!-- ============================================================ -->
+                <!-- 🔽 আপনার অ্যাড নেটওয়ার্কের (Adsterra / Monetag) কোড নিচে বসান 🔽 -->
+                <!-- ============================================================ -->
+                
+                <script type="text/javascript">
+                    /* Adsterra বা Monetag থেকে দেওয়া Javascript/Ad Script কোডটি এখানে পেস্ট করবেন */
+                </script>
+                
+                <!-- অ্যাড লোড না হওয়া পর্যন্ত সাময়িক মেসেজ -->
+                <div id="fallback-ad-msg" class="text-center py-4">
+                    <svg class="w-10 h-10 text-emerald-500 mx-auto animate-pulse mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-300 font-semibold">বিজ্ঞাপনটি লোড হচ্ছে...</p>
+                </div>
+
+                <!-- ============================================================ -->
+
+            </div>
+        </div>
+
+        <!-- Timer & Status Text -->
+        <div class="mt-6">
+            <p id="timer-text" class="text-sm text-gray-300">অ্যাড শেষ হতে বাকি: <span id="countdown" class="font-bold text-yellow-400 text-lg">15</span> সেকেন্ড</p>
+            <div class="w-full bg-slate-700 h-2 rounded-full mt-3 overflow-hidden">
+                <div id="progress-bar" class="bg-emerald-500 h-full w-full transition-all duration-1000"></div>
+            </div>
+        </div>
+
+        <!-- Continue / Back Button -->
+        <button id="next-btn" disabled class="w-full mt-6 py-3 px-4 bg-gray-600 text-gray-400 font-bold rounded-xl cursor-not-allowed transition-all shadow-lg">
+            অ্যাড দেখা শেষ (অপেক্ষা করুন...)
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="w-full max-w-md text-center text-xs text-gray-500 mb-2">
+        Powered by Telegram Mini App & MHX System
+    </div>
+
+    <!-- JavaScript Logic -->
     <script>
-        // Optional: Auto redirect after 6 seconds directly to Telegram bot if needed, 
-        // or let users click the button manually. (Currently set to manual click via button for safety).
+        // Telegram Web App Initialize
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let timeLeft = 15; // ১৫ সেকেন্ড টাইমার
+        const countdownElement = document.getElementById('countdown');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const fallbackMsg = document.getElementById('fallback-ad-msg');
+
+        let totalTime = timeLeft;
+        let timer = setInterval(function() {
+            timeLeft--;
+            countdownElement.innerText = timeLeft;
+            
+            // Progress bar update
+            let progressPercentage = (timeLeft / totalTime) * 100;
+            progressBar.style.width = progressPercentage + '%';
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                
+                // সফলভাবে দেখার মেসেজ
+                if (fallbackMsg) {
+                    fallbackMsg.innerHTML = `
+                        <svg class="w-10 h-10 text-emerald-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <p class="text-sm font-bold text-emerald-400">অ্যাড সফলভাবে দেখা হয়েছে!</p>
+                    `;
+                }
+                
+                // Enable Button
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-gray-600', 'text-gray-400', 'cursor-not-allowed');
+                nextBtn.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-600', 'cursor-pointer');
+                nextBtn.innerText = "বটে ফিরে যান ➔ (অটোমেটিক রিলোড হবে)";
+
+                // অটোমেটিক ২-৩ সেকেন্ডের মধ্যে মিনি অ্যাপ বন্ধ করে বটে ফেরত পাঠানোর লজিক
+                setTimeout(function() {
+                    tg.close();
+                }, 2000);
+            }
+        }, 1000);
+
+        // ম্যানুয়াল ক্লিকেও বটে ফেরত যাবে
+        nextBtn.addEventListener('click', function() {
+            if (!nextBtn.disabled) {
+                tg.close();
+            }
+        });
     </script>
 </body>
 </html>
