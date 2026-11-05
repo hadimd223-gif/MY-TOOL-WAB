@@ -9,91 +9,214 @@
     <script data-cfasync="false" src="https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"></script>
 
     <style>
-        body {
+        :root {
+            --bg-color: #030712;
+            --card-bg: #111827;
+            --border-color: #1f2937;
+            --accent-color: #38bdf8;
+            --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --success-color: #22c55e;
+            --warning-color: #facc15;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px 0;
-            box-sizing: border-box;
+            padding: 20px;
+            overflow-x: hidden;
         }
+
+        /* ব্যাকগ্রাউন্ড গ্লো ইফেক্ট */
+        .bg-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(14, 165, 233, 0.15);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulseGlow 6s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0.9; }
+        }
+
         .container {
-            background-color: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            width: 90%;
-            max-width: 400px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 440px;
             text-align: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-in-out;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .site-title {
-            color: #38bdf8;
-            font-size: 22px;
-            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 24px;
+            font-weight: 800;
             margin-bottom: 20px;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 10px;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
         }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            width: 25%;
+            transition: width 0.5s ease-in-out;
+        }
+
         .step-title {
-            color: #f1f5f9;
-            font-size: 18px;
+            color: var(--text-main);
+            font-size: 20px;
+            font-weight: 700;
             margin-bottom: 10px;
         }
+
         p {
             font-size: 15px;
-            color: #cbd5e1;
-            margin: 10px 0;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
+
         .timer-display {
-            font-size: 32px;
-            font-weight: bold;
-            color: #facc15;
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--warning-color);
             margin: 15px 0;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
+            animation: pulseTimer 1s infinite alternate;
         }
+
+        @keyframes pulseTimer {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
         .btn {
-            background-color: #2563eb;
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 20px;
             font-size: 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
             margin-top: 15px;
             font-weight: bold;
-            transition: background 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            transition: all 0.3s ease;
         }
+
         .btn:disabled {
-            background-color: #475569;
+            background: var(--border-color);
+            color: var(--text-muted);
             cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
         }
+
         .btn:hover:not(:disabled) {
-            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
         }
+
         .step-content {
             display: none;
         }
+
         .step-content.active {
             display: block;
+            animation: slideUp 0.5s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* অ্যাডস ব্যানার রাখার স্টাইল */
+        .ad-box {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            padding: 5px;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
 
+    <div class="bg-glow"></div>
+
     <div class="container">
-        <!-- ওয়েবসাইটের নাম -->
         <div class="site-title">M H X ADS WEBSITE</div>
+        
+        <!-- প্রোগ্রেস বার -->
+        <div class="progress-bar-container">
+            <div id="progress-fill" class="progress-bar" style="width: 25%;"></div>
+        </div>
 
         <!-- ধাপ ১ -->
         <div id="step-1" class="step-content active">
             <div class="step-title">ধাপ ১ / ৪</div>
-            <p>পরবর্তী ধাপে যাওয়ার জন্য অপেক্ষা করুন:</p>
+            <p>পরবর্তী ধাপে যাওয়ার জন্য নিচে অপেক্ষা করুন:</p>
             <div id="timer-1" class="timer-display">৩০</div>
+            
+            <!-- অ্যাড ১ (160x600 বা রেস্পন্সিভ ব্যানার) -->
+            <div class="ad-box">
+                <script>
+                  atOptions = {
+                    'key' : '781bbce74f0544354cda8cc4a3a46017',
+                    'format' : 'iframe',
+                    'height' : 600,
+                    'width' : 160,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bicea.org/22/781bbce74f0544354cda8cc4a3a46017"></script>
+            </div>
+
             <button id="btn-1" class="btn" disabled>অপেক্ষা করুন...</button>
         </div>
 
@@ -102,6 +225,21 @@
             <div class="step-title">ধাপ ২ / ৪</div>
             <p>দয়া করে ১৫ সেকেন্ড অপেক্ষা করুন:</p>
             <div id="timer-2" class="timer-display">১৫</div>
+            
+            <!-- অ্যাড ২ (320x50 ব্যানার) -->
+            <div class="ad-box">
+                <script>
+                  atOptions = {
+                    'key' : '68b093c5d8e6f3092a413655f53ed66e',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bicea.org/22/68b093c5d8e6f3092a413655f53ed66e"></script>
+            </div>
+
             <button id="btn-2" class="btn" disabled>অপেক্ষা করুন...</button>
         </div>
 
@@ -110,14 +248,35 @@
             <div class="step-title">ধাপ ৩ / ৪</div>
             <p>আর একটু অপেক্ষা করুন (১৫ সেকেন্ড):</p>
             <div id="timer-3" class="timer-display">১৫</div>
+            
+            <!-- অ্যাড ৩ (300x250 ব্যানার) -->
+            <div class="ad-box">
+                <script>
+                  atOptions = {
+                    'key' : '63ac62d066a92ce1f81d38a4af96be52',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bicea.org/22/63ac62d066a92ce1f81d38a4af96be52"></script>
+            </div>
+
             <button id="btn-3" class="btn" disabled>অপেক্ষা করুন...</button>
         </div>
 
         <!-- ধাপ ৪ -->
         <div id="step-4" class="step-content">
             <div class="step-title">ধাপ ৪ / ৪</div>
-            <p>শেষ ধাপ! ৩০ সেকেন্ড অপেক্ষা করুন:</p>
+            <p>শেষ ধাপ! ৩০ সেকেন্ড অপেক্ষা করুন এবং নিচে কন্টিনিউ চাপুন:</p>
             <div id="timer-4" class="timer-display">৩০</div>
+            
+            <!-- অতিরিক্ত ট্রাফিকের জন্য এক্সট্রা লিংক/অ্যাড ট্রিগার -->
+            <div style="margin: 15px 0;">
+                <a href="https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff" target="_blank" style="color: #38bdf8; font-size: 14px; text-decoration: underline;">বোনাস অফার দেখতে এখানে ক্লিক করুন</a>
+            </div>
+
             <button id="btn-4" class="btn" disabled>অপেক্ষা করুন...</button>
         </div>
     </div>
@@ -126,8 +285,13 @@
     <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
 
     <script>
-        // এখানে আপনার টেলিগ্রাম বটের লিংকটি বসিয়ে দিন
-        const telegramBotUrl = "https://t.me/YourBotUsername";
+        // আপনার টেলিগ্রাম বটের লিংক বা রিডাইরেক্ট লিংক এখানে সেট করা আছে
+        const telegramBotUrl = "https://t.me/YourBotUsername"; // আপনার বটের ইউজারনেম দিয়ে দিন
+
+        function updateProgress(step) {
+            const progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = (step * 25) + '%';
+        }
 
         function startTimer(duration, timerElementId, buttonElementId, onComplete) {
             let timer = duration;
@@ -150,6 +314,7 @@
         function goToStep(stepNumber) {
             document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
             document.getElementById('step-' + stepNumber).classList.add('active');
+            updateProgress(stepNumber);
 
             if (stepNumber === 1) {
                 startTimer(30, 'timer-1', 'btn-1', () => {
@@ -166,6 +331,7 @@
             } else if (stepNumber === 4) {
                 startTimer(30, 'timer-4', 'btn-4', () => {
                     document.getElementById('btn-4').onclick = () => {
+                        // চতুর্থ ধাপ শেষে ইউজার সরাসরি বটে বা আপনার লিংকে রিডাইরেক্ট হবে
                         window.location.href = telegramBotUrl;
                     };
                 });
