@@ -225,6 +225,13 @@
             text-decoration: none;
         }
 
+        .part-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+        }
+
         .hint-msg {
             font-size: 12px;
             color: var(--text-muted);
@@ -278,14 +285,15 @@
             </div>
 
             <div id="step-title" class="step-title"></div>
+            <div id="part-label" class="part-label"></div>
             <p id="step-desc">যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:</p>
             <div id="timer" class="timer-display"></div>
             <div id="status" class="status-msg">👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন</div>
 
             <div class="ad-notice">👆 যেকোনো অ্যাডে ক্লিক করুন</div>
-            <div class="hint-msg">ℹ️ নিচের যেকোনো একটি অ্যাডে ক্লিক করলেই ১৫ সেকেন্ডের টাইমার চালু হবে।</div>
+            <div class="hint-msg">ℹ️ প্রতিটি পর্বে নিচের যেকোনো একটি অ্যাডে ক্লিক করলেই ১৫ সেকেন্ডের টাইমার চালু হবে।</div>
 
-            <button id="continue-btn" class="btn" disabled>বটে ফিরে যান</button>
+            <button id="continue-btn" class="btn" disabled>▶ কন্টিনিউ</button>
         </div>
 
         <!-- ================= অ্যাড জোন (সব অ্যাড কোড এখানে) ================= -->
@@ -384,6 +392,7 @@
     <script>
         // ================= সেটিংস (এখানেই বদলান) =================
         const BOT_USERNAME = "MHXLIKE_BOT";   // বটের ইউজারনেম (@ ছাড়া) — শুধু ফলব্যাক রিটার্ন লিংকের জন্য
+        const PAGES_PER_STEP = 3;             // প্রতিটি বট-ধাপে ওয়েবসাইটে কয়টি পেজ (পর্ব) থাকবে
         const WAIT_SECONDS = 15;              // টাইমার চালু হওয়ার পর কত সেকেন্ড অপেক্ষা
         // =========================================================
 
@@ -441,35 +450,85 @@
             const iv = setInterval(() => { fitSlots(); if (++n > 40) clearInterval(iv); }, 500);
         })();
 
-        // ---------- টাইমার ----------
+        // ---------- টাইমার (প্রতিটি পেজে আলাদা) ----------
+        let page = 1;                 // বর্তমান পেজ (১ .. PAGES_PER_STEP)
         let started = false;
         let timerInterval = null;
+        let pageLoadedAt = Date.now();
+
+        function overallProgress(donePages) {
+            // বট-ধাপ + ওয়েবসাইট-পেজ মিলিয়ে মোট অগ্রগতি
+            const unit = (step - 1) + (donePages / PAGES_PER_STEP);
+            return Math.min(100, (unit / total) * 100);
+        }
 
         function startTimer() {
             if (!valid || started) return;
+            // পেজ বদলের ঠিক পরপর ভুল ক্লিক ধরা এড়াতে
+            if (Date.now() - pageLoadedAt < 600) return;
             started = true;
 
             const timerEl = $("timer");
             const statusEl = $("status");
             const btn = $("continue-btn");
+            const isLastPage = page === PAGES_PER_STEP;
 
             statusEl.textContent = "⏳ কাউন্টডাউন চলছে, অপেক্ষা করুন...";
             statusEl.style.color = "#ffb703";
 
             // সিস্টেম টাইম ধরে গণনা, যাতে ব্যাকগ্রাউন্ডে ট্যাব থাকলেও সঠিক সময় যায়
             const endAt = Date.now() + WAIT_SECONDS * 1000;
+            clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 const left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
                 timerEl.textContent = bn(left);
                 if (left <= 0) {
                     clearInterval(timerInterval);
                     timerEl.textContent = "সম্পন্ন!";
-                    statusEl.textContent = "✅ সফল হয়েছে! এখন বটে ফিরে যান।";
+                    statusEl.textContent = isLastPage
+                        ? "✅ সফল হয়েছে! এখন বটে ফিরে যান।"
+                        : "✅ সফল হয়েছে! এখন কন্টিনিউ করুন।";
                     statusEl.style.color = "#22c55e";
                     btn.disabled = false;
-                    $("progress-fill").style.width = ((step / total) * 100) + "%";
+                    $("progress-fill").style.width = overallProgress(page) + "%";
                 }
             }, 250);
+        }
+
+        // বর্তমান পেজ স্ক্রিনে সাজানো (প্রতিটি পেজে টাইমার নতুন করে শুরু, অ্যাডে ক্লিকের অপেক্ষায়)
+        function renderPage() {
+            const isLastPage = page === PAGES_PER_STEP;
+            started = false;
+            clearInterval(timerInterval);
+            hoveredSlot = null;
+            pageLoadedAt = Date.now();
+
+            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
+            $("part-label").textContent = "পর্ব " + bn(page) + " / " + bn(PAGES_PER_STEP);
+            $("step-desc").textContent = (step === total && isLastPage)
+                ? "চূড়ান্ত পর্ব! যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:"
+                : "যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:";
+            $("timer").textContent = bn(WAIT_SECONDS);
+            $("status").textContent = "👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন";
+            $("status").style.color = "";
+            $("progress-fill").style.width = overallProgress(page - 1) + "%";
+
+            const btn = $("continue-btn");
+            btn.disabled = true;
+            // শেষ পেজে শুধু "বটে ফিরে যান", আগের পেজগুলোতে শুধু "কন্টিনিউ"
+            btn.textContent = isLastPage ? "🤖 বটে ফিরে যান" : "▶ কন্টিনিউ";
+            window.scrollTo(0, 0);
+        }
+
+        function onMainButton() {
+            const btn = $("continue-btn");
+            if (btn.disabled) return;
+            if (page < PAGES_PER_STEP) {
+                page += 1;
+                renderPage();
+            } else {
+                if (returnUrl) window.location.href = returnUrl;
+            }
         }
 
         // ---------- যেকোনো অ্যাডে ক্লিক ধরা ----------
@@ -512,20 +571,8 @@
             if (total > 100) total = 100;
 
             $("task-view").classList.remove("hidden");
-            const isLast = step === total;
-
-            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
-            $("step-desc").textContent = isLast
-                ? "চূড়ান্ত ধাপ! যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:"
-                : "যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:";
-            $("timer").textContent = bn(WAIT_SECONDS);
-            $("progress-fill").style.width = (((step - 1) / total) * 100) + "%";
-            $("continue-btn").textContent = isLast ? "বটে ফিরে যান" : "বটে ফিরে যান (পরের ধাপের জন্য)";
-
-            $("continue-btn").addEventListener("click", () => {
-                if ($("continue-btn").disabled || !returnUrl) return;
-                window.location.href = returnUrl;
-            });
+            $("continue-btn").addEventListener("click", onMainButton);
+            renderPage();
             fitSlots();
         }
         // স্ক্রিপ্ট এখানে চলে বলে নিচের অ্যাড কোড লোড হতে দেরি হলেও পেজ আটকে থাকবে না
