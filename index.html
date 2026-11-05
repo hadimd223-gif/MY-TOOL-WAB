@@ -177,7 +177,7 @@
         <!-- ধাপ ১ -->
         <div id="step-1" class="step-content active">
             <div class="step-title">ধাপ ১ / ৪</div>
-            <p>নিচের অ্যাডে ক্লিক করে কয়েক সেকেন্ড দেখে ব্যাক দিন:</p>
+            <p>নিচের অ্যাডে একবার ক্লিক করলেই টাইমার চালু হয়ে যাবে:</p>
             <div id="timer-1" class="timer-display">১৫</div>
             <div id="status-1" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
@@ -197,7 +197,7 @@
         <!-- ধাপ ২ -->
         <div id="step-2" class="step-content">
             <div class="step-title">ধাপ ২ / ৪</div>
-            <p>নিচের অ্যাডে ক্লিক করে কয়েক সেকেন্ড দেখে ব্যাক দিন:</p>
+            <p>নিচের অ্যাডে একবার ক্লিক করলেই টাইমার চালু হয়ে যাবে:</p>
             <div id="timer-2" class="timer-display">১৫</div>
             <div id="status-2" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
@@ -217,7 +217,7 @@
         <!-- ধাপ ৩ -->
         <div id="step-3" class="step-content">
             <div class="step-title">ধাপ ৩ / ৪</div>
-            <p>নিচের অ্যাডে ক্লিক করে কয়েক সেকেন্ড দেখে ব্যাক দিন:</p>
+            <p>নিচের অ্যাডে একবার ক্লিক করলেই টাইমার চালু হয়ে যাবে:</p>
             <div id="timer-3" class="timer-display">১৫</div>
             <div id="status-3" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
@@ -237,7 +237,7 @@
         <!-- ধাপ ৪ (শেষ ধাপ) -->
         <div id="step-4" class="step-content">
             <div class="step-title">ধাপ ৪ / ৪</div>
-            <p>চূড়ান্ত ধাপ! নিচের অ্যাডে ক্লিক করে কয়েক সেকেন্ড দেখে ব্যাক দিন:</p>
+            <p>চূড়ান্ত ধাপ! নিচের অ্যাডে একবার ক্লিক করলেই টাইমার চালু হয়ে যাবে:</p>
             <div id="timer-4" class="timer-display">১৫</div>
             <div id="status-4" class="status-msg">👉 টাইমার চালু করতে নিচে ক্লিক করুন</div>
             
@@ -258,12 +258,18 @@
     <script>
         const telegramBotUrl = "https://t.me/MHXLIKE_BOT?start=task_success"; 
         let timerInterval;
+        // প্রতিটি ধাপে ক্লিক একবারই ট্র্যাক করার জন্য ফ্ল্যাগ
+        let clickedSteps = { 1: false, 2: false, 3: false, 4: false };
 
         function updateProgress(step) {
             document.getElementById('progress-fill').style.width = (step * 25) + '%';
         }
 
         function handleAdClick(step) {
+            // যদি এই ধাপে একবার অলরেডি ক্লিক করা হয়ে থাকে, তবে টাইমার আর নতুন করে রিসেট হবে না
+            if (clickedSteps[step]) return;
+            clickedSteps[step] = true;
+
             const timerDisplay = document.getElementById('timer-' + step);
             const statusMsg = document.getElementById('status-' + step);
             const buttonElement = document.getElementById('btn-' + step);
