@@ -8,8 +8,8 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #09090b 100%);
-            --card-bg: rgba(17, 24, 39, 0.85);
-            --border-color: rgba(56, 189, 248, 0.2);
+            --card-bg: rgba(17, 24, 39, 0.95);
+            --border-color: rgba(56, 189, 248, 0.3);
             --accent-color: #38bdf8;
             --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
             --text-main: #f8fafc;
@@ -34,115 +34,74 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-            position: relative;
+            padding: 15px;
         }
 
-        /* ব্যাকগ্রাউন্ড অ্যানিমেশন গ্লো */
-        .bg-glow-1, .bg-glow-2 {
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            border-radius: 50%;
-            filter: blur(120px);
-            z-index: -1;
-            animation: floatGlow 8s infinite alternate ease-in-out;
-        }
-        .bg-glow-1 { top: -10%; left: -10%; background: rgba(14, 165, 233, 0.2); }
-        .bg-glow-2 { bottom: -10%; right: -10%; background: rgba(99, 102, 241, 0.2); animation-delay: 4s; }
-
-        @keyframes floatGlow {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.25); }
-        }
-
-        /* ফ্লোটিং ইন্টারফেস (উপরে সবসময় দৃশ্যমান থাকবে) */
+        /* ফ্লোটিং নোটিফিকেশন বার */
         #floating-timer-box {
             display: none;
             position: fixed;
-            top: 15px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(15, 23, 42, 0.98);
             border: 2px solid var(--accent-color);
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
-            padding: 10px 22px;
-            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+            padding: 8px 18px;
+            border-radius: 25px;
             z-index: 9999;
             text-align: center;
-            backdrop-filter: blur(10px);
-            animation: slideDown 0.4s ease;
-            width: 90%;
-            max-width: 420px;
-        }
-
-        @keyframes slideDown {
-            from { transform: translate(-50%, -40px); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
+            width: 92%;
+            max-width: 400px;
         }
 
         #floating-timer-text {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             color: var(--warning-color);
-            line-height: 1.4;
         }
 
         .container {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             width: 100%;
-            max-width: 480px;
+            max-width: 450px;
             text-align: center;
-            backdrop-filter: blur(16px);
-            position: relative;
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
-        /* হেডার ডিজাইন */
         .header-brand {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .brand-logo {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent-color);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
-            animation: pulseLogo 3s infinite ease-in-out;
-        }
-
-        @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
-            50% { transform: scale(1.06); box-shadow: 0 0 18px rgba(56, 189, 248, 0.8); }
         }
 
         .site-title {
             color: var(--accent-color);
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
-            letter-spacing: 1.2px;
             text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
-            margin: 0;
         }
 
         .progress-bar-container {
             width: 100%;
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.05);
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
 
@@ -150,63 +109,55 @@
             height: 100%;
             background: var(--accent-gradient);
             width: 25%;
-            transition: width 0.5s ease-in-out;
+            transition: width 0.4s ease;
         }
 
         .step-title {
             color: var(--text-main);
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         p {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 15px;
-            line-height: 1.5;
+            margin-bottom: 10px;
         }
 
         .timer-display {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 900;
             color: var(--warning-color);
-            margin: 10px 0;
-            text-shadow: 0 0 15px rgba(255, 183, 3, 0.3);
+            margin: 5px 0;
         }
 
         .status-msg {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             color: var(--danger-color);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .btn {
             background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 13px 20px;
-            font-size: 16px;
-            border-radius: 14px;
+            padding: 12px;
+            font-size: 15px;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 12px;
             font-weight: bold;
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
         }
 
         .btn:disabled {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             color: var(--text-muted);
             cursor: not-allowed;
             box-shadow: none;
-        }
-
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
         }
 
         .step-content {
@@ -215,47 +166,37 @@
 
         .step-content.active {
             display: block;
-            animation: fadeIn 0.4s ease-in-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* অ্যাড বক্স যেন কোনোভাবেই হাইড না হয় এবং ক্লিয়ার দেখায় */
         .ad-box {
-            margin: 12px 0;
+            margin: 10px 0;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            padding: 8px;
-            overflow: visible; /* অ্যাড যেন হাইড না হয়ে পুরোপুরি দৃশ্যমান থাকে */
-            border: 1px dashed rgba(56, 189, 248, 0.3);
-            position: relative;
+            min-height: 60px;
+            overflow: auto;
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow-1"></div>
-    <div class="bg-glow-2"></div>
-
-    <!-- ফ্লোটিং ইন্টারফেস (নির্দেশনা ও টাইমার) -->
+    <!-- ফ্লোটিং নোটিফিকেশন বার -->
     <div id="floating-timer-box">
-        <div id="floating-timer-text">⚠️ প্রতি ৩ সেকেন্ড পর পর যেকোনো অ্যাডে চাপ দিন এবং ৩ সেকেন্ড অপেক্ষা করুন!</div>
+        <div id="floating-timer-text">⚠️ অ্যাডে চাপ দিয়ে ৩ সেকেন্ড অপেক্ষা করুন!</div>
     </div>
 
     <div class="container">
-        <!-- হেডার লোগো এবং নাম -->
         <div class="header-brand">
             <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo">
             <div class="site-title">M H X ADS WEBSITE</div>
             <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo">
         </div>
         
-        <!-- প্রোগ্রেস বার -->
         <div class="progress-bar-container">
             <div id="progress-fill" class="progress-bar" style="width: 25%;"></div>
         </div>
@@ -263,7 +204,7 @@
         <!-- ধাপ ১ -->
         <div id="step-1" class="step-content active">
             <div class="step-title">ধাপ ১ / ৪</div>
-            <p>নিচের অ্যাডে ক্লিক করে ১৫ সেকেন্ড অপেক্ষা করুন:</p>
+            <p>নিচের অ্যাডে ক্লিক করে ১৫ সেকেন্ড থাকুন:</p>
             <div id="timer-1" class="timer-display">১৫</div>
             <div id="status-1" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
@@ -277,7 +218,7 @@
         <!-- ধাপ ২ -->
         <div id="step-2" class="step-content">
             <div class="step-title">ধাপ ২ / ৪</div>
-            <p>নিচের ব্যানার অ্যাডের ওপর ক্লিক করুন:</p>
+            <p>নিচের অ্যাডে ক্লিক করে ১৫ সেকেন্ড থাকুন:</p>
             <div id="timer-2" class="timer-display">১৫</div>
             <div id="status-2" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
@@ -291,7 +232,7 @@
         <!-- ধাপ ৩ -->
         <div id="step-3" class="step-content">
             <div class="step-title">ধাপ ৩ / ৪</div>
-            <p>নিচের অ্যাডের ওপর ক্লিক করে নিয়ম মেনে চলুন:</p>
+            <p>নিচের অ্যাডে ক্লিক করে ১৫ সেকেন্ড থাকুন:</p>
             <div id="timer-3" class="timer-display">১৫</div>
             <div id="status-3" class="status-msg">👉 টাইমার চালু করতে নিচের অ্যাডে ক্লিক করুন</div>
             
@@ -305,7 +246,7 @@
             <button id="btn-3" class="btn" disabled onclick="handleNextStep(3, 'https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff', 4)">পরবর্তী ধাপ</button>
         </div>
 
-        <!-- ধাপ ৪ (শেষ ধাপ) -->
+        <!-- ধাপ ৪ -->
         <div id="step-4" class="step-content">
             <div class="step-title">ধাপ ৪ / ৪</div>
             <p>চূড়ান্ত ধাপ! নিচের অ্যাডে ক্লিক করে ১৫ সেকেন্ড থাকুন:</p>
@@ -314,7 +255,7 @@
             
             <div class="ad-box" onclick="handleAdClick(4, 'https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff')">
                 <script>
-                  atOptions = { 'key' : 'ebb2e9173fe5c917e6551af25108a0cf', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                  atOptions = { 'key' : 'ebbe29173fe5c917e6551af25108a0cf', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
                 </script>
                 <script src="https://bicea.org/22/ebbe29173fe5c917e6551af25108a0cf"></script>
             </div>
@@ -353,45 +294,32 @@
                 timerDisplay.textContent = secondsLeft;
 
                 if (secondsLeft === 12 || secondsLeft === 9 || secondsLeft === 6 || secondsLeft === 3) {
-                    floatText.innerHTML = `🔔 <b>বিজ্ঞাপন পরিবর্তন করুন! নতুন অ্যাডে চাপ দিয়ে ৩ সেকেন্ড অপেক্ষা করুন। (অবশিষ্ট: ${secondsLeft} সে.)</b>`;
+                    floatText.innerHTML = `🔔 <b>নতুন অ্যাডে চাপ দিন! (বাকি: ${secondsLeft} সে.)</b>`;
                 } else {
-                    floatText.innerHTML = `⏳ অ্যাডের ভেতরে থাকুন এবং অপেক্ষা করুন: ${secondsLeft} সেকেন্ড`;
+                    floatText.innerHTML = `⏳ অ্যাডের ভেতরে থাকুন: ${secondsLeft} সেকেন্ড`;
                 }
 
                 if (secondsLeft <= 0) {
                     clearInterval(timerInterval);
-                    
                     timerDisplay.textContent = "সম্পন্ন!";
-                    floatText.innerHTML = "✅ সময় শেষ! এখন কন্টিনিউ বাটনে চাপ দিন।";
-                    floatText.style.color = "#22c55e";
-
-                    statusMsg.textContent = "✅ সফল হয়েছে! এখন কন্টিনিউ করুন।";
-                    statusMsg.style.color = "#22c55e";
-
+                    floatText.innerHTML = "✅ সময় শেষ! কন্টিনিউ বাটনে চাপ দিন।";
+                    statusMsg.textContent = "✅ সফল হয়েছে!";
                     buttonElement.disabled = false;
                     buttonElement.textContent = (step === 4) ? "বটে ফিরে যান" : "পরবর্তী ধাপ";
 
-                    setTimeout(() => {
-                        floatBox.style.display = 'none';
-                    }, 4000);
+                    setTimeout(() => { floatBox.style.display = 'none'; }, 3000);
                 }
             }, 1000);
         }
 
-        // কন্টিনিউ বাটনে চাপ দেওয়ার সময় অটোমেটিক অ্যাডের ভেতর নিয়ে যাবে এবং পরবর্তী ধাপে যাবে
         function handleNextStep(currentStep, adUrl, nextStepNumber) {
-            window.open(adUrl, '_blank'); // অটো অ্যাড ওপেন
-            setTimeout(() => {
-                goToStep(nextStepNumber);
-            }, 500);
+            window.open(adUrl, '_blank');
+            setTimeout(() => { goToStep(nextStepNumber); }, 400);
         }
 
-        // শেষ ধাপে কন্টিনিউ চাপলে অটো অ্যাড ওপেন করে বটে নিয়ে যাবে
         function handleFinishTask(adUrl) {
-            window.open(adUrl, '_blank'); // অটো অ্যাড ওপেন
-            setTimeout(() => {
-                window.location.href = telegramBotUrl;
-            }, 800);
+            window.open(adUrl, '_blank');
+            setTimeout(() => { window.location.href = telegramBotUrl; }, 600);
         }
 
         function goToStep(stepNumber) {
