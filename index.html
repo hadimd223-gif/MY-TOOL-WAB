@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M H X ADS WEBSITE</title>
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9467019896900554"
-         crossorigin="anonymous"></script>
 
     <style>
         :root {
@@ -235,6 +232,44 @@
             margin-bottom: 6px;
         }
 
+
+        .part-box {
+            margin: 18px 0;
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: opacity 0.3s ease, border-color 0.3s ease;
+        }
+
+        .part-box.active {
+            border-color: var(--accent-color);
+        }
+
+        .part-box.locked {
+            opacity: 0.45;
+        }
+
+        .part-box.done {
+            border-color: var(--success-color);
+            opacity: 0.8;
+        }
+
+        .part-label {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #error-view { display: none; }
+        html.invalid #error-view { display: block; }
+        html.invalid #task-view { display: none; }
+
         .hint-msg {
             font-size: 12px;
             color: var(--text-muted);
@@ -246,157 +281,12 @@
             display: none;
         }
     </style>
-</head>
-<body>
-
-    <div class="container">
-        <!-- হেডার লোগো এবং নাম -->
-        <div class="header-brand">
-            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
-            <div class="site-title">M H X ADS WEBSITE</div>
-            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
-        </div>
-
-        <!-- প্রোগ্রেস বার -->
-        <div class="progress-bar-container">
-            <div id="progress-fill" class="progress-bar"></div>
-        </div>
-
-        <!-- বটের লিংক ছাড়া সরাসরি ওয়েবসাইটে এলে / লিংক ভুল হলে -->
-        <div id="error-view" class="error-box hidden">
-            <div class="step-title">❌ লিংকটি সঠিক নয়</div>
-            <p>এই ওয়েবসাইটটি সরাসরি খোলা যাবে না। টেলিগ্রাম বটে গিয়ে <b>📺 ADS</b> বাটনে ক্লিক করে নতুন লিংক নিন।</p>
-            <a id="open-bot-btn" class="btn btn-link" href="#">🤖 বটে ফিরে যান</a>
-        </div>
-
-        <!-- কাজের ধাপ (বট যে ধাপ পাঠায় শুধু সেই ধাপই দেখাবে) -->
-        <div id="task-view" class="hidden">
-            <!-- উপরের ছোট ব্যানার অ্যাড -->
-            <div class="ad-slot top-ad" data-w="320" data-h="50">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : '68b093c5d8e6f3092a413655f53ed66e',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/68b093c5d8e6f3092a413655f53ed66e"></script>
-                </div>
-            </div>
-
-            <div id="step-title" class="step-title"></div>
-            <div id="part-label" class="part-label"></div>
-            <p id="step-desc">যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:</p>
-            <div id="timer" class="timer-display"></div>
-            <div id="status" class="status-msg">👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন</div>
-
-            <div class="ad-notice">👆 যেকোনো অ্যাডে ক্লিক করুন</div>
-            <div class="hint-msg">ℹ️ প্রতিটি পর্বে নিচের যেকোনো একটি অ্যাডে ক্লিক করলেই ১৫ সেকেন্ডের টাইমার চালু হবে।</div>
-
-            <button id="continue-btn" class="btn" disabled>▶ কন্টিনিউ</button>
-        </div>
-
-        <!-- ================= অ্যাড জোন (সব অ্যাড কোড এখানে) ================= -->
-        <div class="ads-zone">
-            <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
-
-            <!-- ডাইরেক্ট লিংক অ্যাড -->
-            <div class="ad-slot auto-size">
-                <a class="ad-action-box ad-link-card" href="https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff" target="_blank" rel="noopener">
-                    <span class="ad-action-text">📢 স্পনসরড অ্যাড</span>
-                </a>
-            </div>
-
-            <!-- 300x250 -->
-            <div class="ad-slot" data-w="300" data-h="250">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : '63ac62d066a92ce1f81d38a4af96be52',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/63ac62d066a92ce1f81d38a4af96be52"></script>
-                </div>
-            </div>
-
-            <!-- 468x60 -->
-            <div class="ad-slot" data-w="468" data-h="60">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : 'ef07756fa88fa5c7ccf880d7ae64368a',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/ef07756fa88fa5c7ccf880d7ae64368a"></script>
-                </div>
-            </div>
-
-            <!-- 160x600 এবং 160x300 পাশাপাশি -->
-            <div class="ad-slot" data-w="330" data-h="600">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : '781bbce74f0544354cda8cc4a3a46017',
-    'format' : 'iframe',
-    'height' : 600,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/781bbce74f0544354cda8cc4a3a46017"></script>
-<script>
-  atOptions = {
-    'key' : 'bff99088ee93546537bab36c72f4d087',
-    'format' : 'iframe',
-    'height' : 300,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/bff99088ee93546537bab36c72f4d087"></script>
-                </div>
-            </div>
-
-            <!-- 728x90 -->
-            <div class="ad-slot" data-w="728" data-h="90">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : 'ebbe29173fe5c917e6551af25108a0cf',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/ebbe29173fe5c917e6551af25108a0cf"></script>
-                </div>
-            </div>
-
-            <!-- নেটিভ ব্যানার -->
-            <div class="ad-slot auto-size">
-<script async="async" data-cfasync="false" src="https://bicea.org/21/d7970b67695b3ce6f76ccd03c80ac3ec"></script>
-<div id="container-d7970b67695b3ce6f76ccd03c80ac3ec"></div>
-            </div>
-        </div>
-    </div>
 
     <script>
         // ================= সেটিংস (এখানেই বদলান) =================
         const BOT_USERNAME = "MHXLIKE_BOT";   // বটের ইউজারনেম (@ ছাড়া) — শুধু ফলব্যাক রিটার্ন লিংকের জন্য
-        const PAGES_PER_STEP = 3;             // প্রতিটি বট-ধাপে ওয়েবসাইটে কয়টি পেজ (পর্ব) থাকবে
-        const WAIT_SECONDS = 15;              // টাইমার চালু হওয়ার পর কত সেকেন্ড অপেক্ষা
+        const PARTS = 3;                      // প্রতিটি ধাপে কয়টি টাইমার-পর্ব (উপরে / মাঝে / নিচে)
+        const WAIT_SECONDS = 5;               // প্রতিটি পর্বে অ্যাডে ক্লিকের পর কত সেকেন্ডের টাইমার
         // =========================================================
 
         const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
@@ -429,6 +319,13 @@
         const valid = Number.isInteger(step) && step >= 1 && step <= 100 &&
                       /^[A-Za-z0-9]{8,64}$/.test(token) && !!returnUrl;
 
+        if (!valid) {
+            document.documentElement.classList.add("invalid");
+        } else {
+            if (!Number.isInteger(total) || total < step) total = step;
+            if (total > 100) total = 100;
+        }
+
         // ---------- অ্যাড স্লট ছোট স্ক্রিনে মাপমতো ছোট করা ----------
         function fitSlots() {
             document.querySelectorAll(".ad-slot[data-w]").forEach((slot) => {
@@ -453,32 +350,77 @@
             const iv = setInterval(() => { fitSlots(); if (++n > 40) clearInterval(iv); }, 500);
         })();
 
-        // ---------- টাইমার (প্রতিটি পেজে আলাদা) ----------
-        let page = 1;                 // বর্তমান পেজ (১ .. PAGES_PER_STEP)
-        let started = false;
+        // ---------- অবস্থা ----------
+        let activePart = 1;        // এখন কোন পর্ব চালু (১ .. PARTS)
+        let doneParts = 0;         // কয়টি পর্ব শেষ
+        let started = false;       // বর্তমান পর্বের টাইমার চালু হয়েছে কিনা
         let timerInterval = null;
-        let pageLoadedAt = Date.now();
+        let activeSince = Date.now();
+        let hoveredSlot = null;
 
-        function overallProgress(donePages) {
-            // বট-ধাপ + ওয়েবসাইট-পেজ মিলিয়ে মোট অগ্রগতি
-            const unit = (step - 1) + (donePages / PAGES_PER_STEP);
-            return Math.min(100, (unit / total) * 100);
+        const MSG_READY = "👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন";
+        const MSG_LOCKED = "🔒 আগের পর্ব শেষ করে Continue চাপুন";
+        const MSG_RUNNING = "⏳ কাউন্টডাউন চলছে, অপেক্ষা করুন...";
+
+        function setStatus(n, text, color) {
+            const el = $("status-" + n);
+            if (!el) return;
+            el.textContent = text;
+            el.style.color = color || "";
         }
 
+        function setProgress() {
+            const el = $("progress-fill");
+            if (!el || !valid) return;
+            const unit = (step - 1) + (doneParts / PARTS);
+            el.style.width = Math.min(100, (unit / total) * 100) + "%";
+        }
+
+        // কোন পর্ব তালাবদ্ধ / চালু তা স্ক্রিনে দেখানো
+        function refreshSection(n) {
+            const box = $("sec-" + n);
+            if (!box) return;
+            box.classList.toggle("locked", n > activePart);
+            box.classList.toggle("active", n === activePart);
+            box.classList.toggle("done", n < activePart);
+            if (n > activePart) setStatus(n, MSG_LOCKED, "");
+            else if (n === activePart && !started) setStatus(n, MSG_READY, "");
+        }
+
+        // ---------- প্রতিটি অংশ পার্স হওয়ার সাথে সাথেই চালু হয় (নিচের অ্যাড লোডের অপেক্ষায় আটকায় না) ----------
+        function setupHeader() {
+            if (!valid) return;
+            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
+            setProgress();
+        }
+
+        function setupError() {
+            const a = $("open-bot-btn");
+            if (a) a.href = "https://t.me/" + BOT_USERNAME;
+        }
+
+        function setupSection(n) {
+            if (!valid) return;
+            $("part-" + n).textContent = "পর্ব " + bn(n) + " / " + bn(PARTS);
+            $("timer-" + n).textContent = bn(WAIT_SECONDS);
+            const btn = $("btn-" + n);
+            btn.textContent = (n === PARTS) ? "Next" : "Continue";
+            btn.classList.add("hidden");          // টাইমার শেষ হলে তবেই দেখা যাবে
+            btn.addEventListener("click", () => onPartButton(n));
+            refreshSection(n);
+            fitSlots();
+        }
+
+        // ---------- টাইমার (যেকোনো অ্যাডে ক্লিকের পর) ----------
         function startTimer() {
-            if (!valid || started) return;
-            // পেজ বদলের ঠিক পরপর ভুল ক্লিক ধরা এড়াতে
-            if (Date.now() - pageLoadedAt < 600) return;
+            if (!valid || started || activePart > PARTS) return;
+            if (Date.now() - activeSince < 600) return;   // পর্ব বদলের ঠিক পরপর ভুল ক্লিক এড়াতে
+            const n = activePart;
+            if (!$("sec-" + n)) return;
             started = true;
 
-            const timerEl = $("timer");
-            const statusEl = $("status");
-            const btn = $("continue-btn");
-            const isLastPage = page === PAGES_PER_STEP;
-
-            statusEl.textContent = "⏳ কাউন্টডাউন চলছে, অপেক্ষা করুন...";
-            statusEl.style.color = "#ffb703";
-
+            setStatus(n, MSG_RUNNING, "#ffb703");
+            const timerEl = $("timer-" + n);
             // সিস্টেম টাইম ধরে গণনা, যাতে ব্যাকগ্রাউন্ডে ট্যাব থাকলেও সঠিক সময় যায়
             const endAt = Date.now() + WAIT_SECONDS * 1000;
             clearInterval(timerInterval);
@@ -488,59 +430,46 @@
                 if (left <= 0) {
                     clearInterval(timerInterval);
                     timerEl.textContent = "সম্পন্ন!";
-                    statusEl.textContent = isLastPage
-                        ? "✅ সফল হয়েছে! এখন বটে ফিরে যান।"
-                        : "✅ সফল হয়েছে! এখন কন্টিনিউ করুন।";
-                    statusEl.style.color = "#22c55e";
-                    btn.disabled = false;
-                    $("progress-fill").style.width = overallProgress(page) + "%";
+                    if (n === PARTS) {
+                        setStatus(n, "✅ সফল হয়েছে! এখন Next চাপুন — বটে ফিরে পরের ধাপ পাবেন।", "#22c55e");
+                    } else {
+                        setStatus(n, "✅ সফল হয়েছে! এখন Continue চাপুন।", "#22c55e");
+                    }
+                    $("btn-" + n).classList.remove("hidden");
                 }
             }, 250);
         }
 
-        // বর্তমান পেজ স্ক্রিনে সাজানো (প্রতিটি পেজে টাইমার নতুন করে শুরু, অ্যাডে ক্লিকের অপেক্ষায়)
-        function renderPage() {
-            const isLastPage = page === PAGES_PER_STEP;
-            started = false;
-            clearInterval(timerInterval);
-            hoveredSlot = null;
-            pageLoadedAt = Date.now();
-
-            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
-            $("part-label").textContent = "পর্ব " + bn(page) + " / " + bn(PAGES_PER_STEP);
-            $("step-desc").textContent = (step === total && isLastPage)
-                ? "চূড়ান্ত পর্ব! যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:"
-                : "যেকোনো একটি অ্যাডে ক্লিক করে ভিজিট করুন:";
-            $("timer").textContent = bn(WAIT_SECONDS);
-            $("status").textContent = "👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন";
-            $("status").style.color = "";
-            $("progress-fill").style.width = overallProgress(page - 1) + "%";
-
-            const btn = $("continue-btn");
-            btn.disabled = true;
-            // শেষ পেজে শুধু "বটে ফিরে যান", আগের পেজগুলোতে শুধু "কন্টিনিউ"
-            btn.textContent = isLastPage ? "🤖 বটে ফিরে যান" : "▶ কন্টিনিউ";
-            window.scrollTo(0, 0);
-        }
-
-        function onMainButton() {
-            const btn = $("continue-btn");
-            if (btn.disabled) return;
-            if (page < PAGES_PER_STEP) {
-                page += 1;
-                renderPage();
+        // ---------- Continue / Next বাটন ----------
+        function onPartButton(n) {
+            if (n !== activePart) return;
+            if (n < PARTS) {
+                doneParts = n;
+                $("btn-" + n).classList.add("hidden");
+                setStatus(n, "✔ এই পর্ব সম্পন্ন", "#22c55e");
+                activePart = n + 1;
+                started = false;
+                clearInterval(timerInterval);
+                hoveredSlot = null;
+                activeSince = Date.now();
+                setProgress();
+                for (let i = 1; i <= PARTS; i++) refreshSection(i);
+                const next = $("sec-" + activePart);
+                if (next && next.scrollIntoView) next.scrollIntoView({ behavior: "smooth", block: "center" });
             } else {
+                // শেষ পর্বের Next: বটে ফিরে যাবে, বট পরের ধাপ চালু করবে
+                doneParts = PARTS;
+                setProgress();
                 if (returnUrl) window.location.href = returnUrl;
             }
         }
 
         // ---------- যেকোনো অ্যাডে ক্লিক ধরা ----------
-        // ১) সাধারণ এলিমেন্টে ক্লিক (নেটিভ ব্যানার ইত্যাদি)
+        // ১) সাধারণ এলিমেন্টে ক্লিক (নেটিভ ব্যানার, ডাইরেক্ট লিংক ইত্যাদি)
         document.addEventListener("click", (e) => {
             if (e.target && e.target.closest && e.target.closest(".ad-slot")) startTimer();
         });
         // ২) iframe অ্যাডে ক্লিক: ব্রাউজার ক্লিক ইভেন্ট দেয় না, তাই মাউস-হোভার + window blur দিয়ে ধরা হয়
-        let hoveredSlot = null;
         document.addEventListener("mouseover", (e) => {
             hoveredSlot = (e.target && e.target.closest) ? e.target.closest(".ad-slot") : null;
         });
@@ -552,7 +481,7 @@
         function checkIframeClick() {
             setTimeout(() => {
                 const ae = document.activeElement;
-                const inAdIframe = ae && ae.tagName === "IFRAME" && ae.closest(".ad-slot");
+                const inAdIframe = ae && ae.tagName === "IFRAME" && ae.closest && ae.closest(".ad-slot");
                 if (inAdIframe || hoveredSlot) startTimer();
             }, 0);
         }
@@ -560,31 +489,179 @@
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) checkIframeClick();
         });
-
-        // ---------- পেজ চালু ----------
-        function init() {
-            if (!valid) {
-                document.body.classList.add("invalid");
-                $("task-view").classList.add("hidden");
-                $("error-view").classList.remove("hidden");
-                $("open-bot-btn").href = "https://t.me/" + BOT_USERNAME;
-                return;
-            }
-            if (!Number.isInteger(total) || total < step) total = step;
-            if (total > 100) total = 100;
-
-            $("task-view").classList.remove("hidden");
-            $("continue-btn").addEventListener("click", onMainButton);
-            renderPage();
-            fitSlots();
-        }
-        // স্ক্রিপ্ট এখানে চলে বলে নিচের অ্যাড কোড লোড হতে দেরি হলেও পেজ আটকে থাকবে না
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", init);
-        } else {
-            init();
-        }
     </script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- হেডার লোগো এবং নাম -->
+        <div class="header-brand">
+            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+            <div class="site-title">M H X ADS WEBSITE</div>
+            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+        </div>
+
+        <!-- প্রোগ্রেস বার -->
+        <div class="progress-bar-container">
+            <div id="progress-fill" class="progress-bar"></div>
+        </div>
+
+        <!-- প্রোগ্রেস বার -->
+        <div class="progress-bar-container">
+            <div id="progress-fill" class="progress-bar"></div>
+        </div>
+
+        <!-- বটের লিংক ছাড়া সরাসরি ওয়েবসাইটে এলে / লিংক ভুল হলে -->
+        <div id="error-view" class="error-box">
+            <div class="step-title">❌ লিংকটি সঠিক নয়</div>
+            <p>এই ওয়েবসাইটটি সরাসরি খোলা যাবে না। টেলিগ্রাম বটে গিয়ে <b>📺 ADS</b> বাটনে ক্লিক করে নতুন লিংক নিন।</p>
+            <a id="open-bot-btn" class="btn btn-link" href="#">🤖 বটে ফিরে যান</a>
+        </div>
+
+        <script>setupError();</script>
+
+        <!-- কাজের ধাপ: উপরে / মাঝে / নিচে — মোট ৩টি টাইমার-পর্ব -->
+        <div id="task-view">
+            <!-- উপরের ছোট ব্যানার অ্যাড -->
+            <div class="ad-slot top-ad" data-w="320" data-h="50">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : '68b093c5d8e6f3092a413655f53ed66e',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/68b093c5d8e6f3092a413655f53ed66e"></script>
+                </div>
+            </div>
+
+            <div id="step-title" class="step-title"></div>
+            <script>setupHeader();</script>
+            <p id="step-desc">প্রতিটি পর্বে যেকোনো একটি অ্যাডে ক্লিক করলে টাইমার চালু হবে। টাইমার শেষ হলে Continue / Next বাটন আসবে।</p>
+
+            <!-- ========== পর্ব 1 ========== -->
+            <div id="sec-1" class="part-box locked">
+                <div id="part-1" class="part-label"></div>
+                <div id="timer-1" class="timer-display"></div>
+                <div id="status-1" class="status-msg"></div>
+                <button id="btn-1" class="btn hidden" type="button">Continue</button>
+            </div>
+            <script>setupSection(1);</script>
+
+            <!-- ================= অ্যাড জোন ১ ================= -->
+            <div class="ads-zone">
+                <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
+            <!-- ডাইরেক্ট লিংক অ্যাড -->
+            <div class="ad-slot auto-size">
+                <a class="ad-action-box ad-link-card" href="https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff" target="_blank" rel="noopener">
+                    <span class="ad-action-text">📢 স্পনসরড অ্যাড</span>
+                </a>
+            </div>
+            <!-- 300x250 -->
+            <div class="ad-slot" data-w="300" data-h="250">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : '63ac62d066a92ce1f81d38a4af96be52',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/63ac62d066a92ce1f81d38a4af96be52"></script>
+                </div>
+            </div>
+            <!-- 468x60 -->
+            <div class="ad-slot" data-w="468" data-h="60">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : 'ef07756fa88fa5c7ccf880d7ae64368a',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/ef07756fa88fa5c7ccf880d7ae64368a"></script>
+                </div>
+            </div>
+            <!-- 728x90 -->
+            <div class="ad-slot" data-w="728" data-h="90">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : 'ebbe29173fe5c917e6551af25108a0cf',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/ebbe29173fe5c917e6551af25108a0cf"></script>
+                </div>
+            </div>
+            </div>
+
+            <!-- ========== পর্ব 2 ========== -->
+            <div id="sec-2" class="part-box locked">
+                <div id="part-2" class="part-label"></div>
+                <div id="timer-2" class="timer-display"></div>
+                <div id="status-2" class="status-msg"></div>
+                <button id="btn-2" class="btn hidden" type="button">Continue</button>
+            </div>
+            <script>setupSection(2);</script>
+
+            <!-- ================= অ্যাড জোন ২ ================= -->
+            <div class="ads-zone">
+                <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
+            <!-- 160x600 এবং 160x300 পাশাপাশি -->
+            <div class="ad-slot" data-w="330" data-h="600">
+                <div class="ad-inner">
+<script>
+  atOptions = {
+    'key' : '781bbce74f0544354cda8cc4a3a46017',
+    'format' : 'iframe',
+    'height' : 600,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/781bbce74f0544354cda8cc4a3a46017"></script>
+<script>
+  atOptions = {
+    'key' : 'bff99088ee93546537bab36c72f4d087',
+    'format' : 'iframe',
+    'height' : 300,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://bicea.org/22/bff99088ee93546537bab36c72f4d087"></script>
+                </div>
+            </div>
+            <!-- নেটিভ ব্যানার -->
+            <div class="ad-slot auto-size">
+<script async="async" data-cfasync="false" src="https://bicea.org/21/d7970b67695b3ce6f76ccd03c80ac3ec"></script>
+<div id="container-d7970b67695b3ce6f76ccd03c80ac3ec"></div>
+            </div>
+            </div>
+
+            <!-- ========== পর্ব 3 ========== -->
+            <div id="sec-3" class="part-box locked">
+                <div id="part-3" class="part-label"></div>
+                <div id="timer-3" class="timer-display"></div>
+                <div id="status-3" class="status-msg"></div>
+                <button id="btn-3" class="btn hidden" type="button">Next</button>
+            </div>
+            <script>setupSection(3);</script>
+
+        </div>
+    </div>
 
     <!-- ===== পেজ-ওয়াইড অ্যাড স্ক্রিপ্ট (পপআন্ডার/ইন-পেজ) ===== -->
     <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
