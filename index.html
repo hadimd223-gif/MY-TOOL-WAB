@@ -3,668 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M H X ADS WEBSITE</title>
+    <title>অ্যাড ভেরিফিকেশন সিস্টেম</title>
+    
+    <!-- Google AdMob / AdSense Script Integration -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9467019896900554~2608224645" crossorigin="anonymous"></script>
 
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #09090b 100%);
-            --card-bg: rgba(17, 24, 39, 0.95);
-            --border-color: rgba(56, 189, 248, 0.3);
-            --accent-color: #38bdf8;
-            --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --warning-color: #ffb703;
-            --danger-color: #ef4444;
-            --success-color: #22c55e;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background: var(--bg-gradient);
-            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 15px;
+            height: 100vh;
+            margin: 0;
         }
-
-        .container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 22px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-            width: 100%;
-            max-width: 480px;
+        .card {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             text-align: center;
+            width: 90%;
+            max-width: 400px;
         }
-
-        .header-brand {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .brand-logo {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-color);
-        }
-
-        .site-title {
-            color: var(--accent-color);
-            font-size: 16px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--accent-gradient);
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        .step-title {
-            color: var(--text-main);
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        p {
-            font-size: 13px;
-            color: var(--text-muted);
+        h2 {
             margin-bottom: 10px;
+            color: #38bdf8;
         }
-
-        .timer-display {
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--warning-color);
-            margin: 5px 0;
+        p {
+            color: #94a3b8;
+            font-size: 14px;
         }
-
-        .status-msg {
-            font-size: 13px;
+        .progress-box {
+            font-size: 18px;
+            margin: 20px 0;
             font-weight: bold;
-            color: var(--danger-color);
-            margin-bottom: 12px;
+            color: #fbbf24;
         }
-
         .btn {
-            background: var(--accent-gradient);
+            background-color: #0284c7;
             color: white;
             border: none;
-            padding: 13px;
-            font-size: 15px;
-            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            margin-top: 12px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #0369a1;
+        }
+        .code-box {
+            background: #0f172a;
+            border: 2px dashed #38bdf8;
+            padding: 15px;
+            font-size: 20px;
+            letter-spacing: 2px;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .btn:disabled {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .ad-action-box {
+            color: #4ade80;
             margin: 15px 0;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(99, 102, 241, 0.1));
-            border: 2px dashed var(--accent-color);
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 6px;
+            word-break: break-all;
         }
-
-        .ad-action-box:hover {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2));
-            transform: translateY(-2px);
-        }
-
-        .ad-action-text {
-            color: var(--accent-color);
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-        }
-
         .hidden {
-            display: none;
-        }
-
-        .error-box .step-title {
-            color: var(--danger-color);
-        }
-
-        .btn-link {
-            display: block;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .ads-zone {
-            width: 100%;
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .ads-title {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .ad-slot {
-            overflow: hidden;
-            margin: 10px auto;
-            max-width: 100%;
-        }
-
-        .ad-slot.auto-size {
-            width: 100%;
-        }
-
-        .ad-inner {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            justify-content: center;
-        }
-
-        .top-ad {
-            margin-top: 0;
-        }
-
-        .ad-notice {
-            margin: 15px 0 8px;
-            padding: 16px;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(99, 102, 241, 0.1));
-            border: 2px dashed var(--accent-color);
-            border-radius: 15px;
-            color: var(--accent-color);
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .ad-link-card {
-            display: block;
-            text-decoration: none;
-        }
-
-        .part-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 6px;
-        }
-
-
-        .part-box {
-            margin: 18px 0;
-            padding: 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            transition: opacity 0.3s ease, border-color 0.3s ease;
-        }
-
-        .part-box.active {
-            border-color: var(--accent-color);
-        }
-
-        .part-box.locked {
-            opacity: 0.45;
-        }
-
-        .part-box.done {
-            border-color: var(--success-color);
-            opacity: 0.8;
-        }
-
-        .part-label {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--accent-color);
-            margin-bottom: 4px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        #error-view { display: none; }
-        html.invalid #error-view { display: block; }
-        html.invalid #task-view { display: none; }
-
-        .hint-msg {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        body.invalid .ads-zone,
-        body.invalid .top-ad {
             display: none;
         }
     </style>
-
-    <script>
-        // ================= সেটিংস (এখানেই বদলান) =================
-        const BOT_USERNAME = "MHXLIKE_BOT";   // বটের ইউজারনেম (@ ছাড়া) — শুধু ফলব্যাক রিটার্ন লিংকের জন্য
-        const PARTS = 3;                      // প্রতিটি ধাপে কয়টি টাইমার-পর্ব (উপরে / মাঝে / নিচে)
-        const WAIT_SECONDS = 5;               // প্রতিটি পর্বে অ্যাডে ক্লিকের পর কত সেকেন্ডের টাইমার
-        // =========================================================
-
-        const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-        const bn = (n) => String(n).replace(/\d/g, (d) => bnDigits[d]);
-        const $ = (id) => document.getElementById(id);
-
-        // URL থেকে বটের পাঠানো প্যারামিটার: ?step=&total=&token=&return=
-        const params = new URLSearchParams(window.location.search);
-        const step = parseInt(params.get("step"), 10);
-        let total = parseInt(params.get("total"), 10);
-        const token = (params.get("token") || "").trim();
-        const returnParam = (params.get("return") || "").trim();
-
-        // নিরাপত্তা: শুধু টেলিগ্রামের লিংকেই রিডাইরেক্ট হবে
-        function safeReturnUrl() {
-            if (returnParam) {
-                try {
-                    const u = new URL(returnParam);
-                    const hostOk = (u.hostname === "t.me" || u.hostname === "telegram.me");
-                    if (u.protocol === "https:" && hostOk) return u.toString();
-                } catch (e) { /* ফলব্যাকে যাবে */ }
-            }
-            if (/^[A-Za-z0-9]{8,64}$/.test(token) && step >= 1) {
-                return "https://t.me/" + BOT_USERNAME + "?start=ads_s" + step + "_" + token;
-            }
-            return null;
-        }
-
-        const returnUrl = safeReturnUrl();
-        const valid = Number.isInteger(step) && step >= 1 && step <= 100 &&
-                      /^[A-Za-z0-9]{8,64}$/.test(token) && !!returnUrl;
-
-        if (!valid) {
-            document.documentElement.classList.add("invalid");
-        } else {
-            if (!Number.isInteger(total) || total < step) total = step;
-            if (total > 100) total = 100;
-        }
-
-        // ---------- অ্যাড স্লট ছোট স্ক্রিনে মাপমতো ছোট করা ----------
-        function fitSlots() {
-            document.querySelectorAll(".ad-slot[data-w]").forEach((slot) => {
-                const w = +slot.dataset.w, h = +slot.dataset.h;
-                const inner = slot.firstElementChild;
-                const holder = slot.parentElement;
-                const avail = holder ? holder.clientWidth : w;
-                if (!inner || !avail) return;
-                const k = Math.min(1, avail / w);
-                inner.style.width = w + "px";
-                inner.style.height = h + "px";
-                inner.style.transformOrigin = "top left";
-                inner.style.transform = "scale(" + k + ")";
-                slot.style.width = (w * k) + "px";
-                slot.style.height = (h * k) + "px";
-            });
-        }
-        window.addEventListener("resize", fitSlots);
-        window.addEventListener("load", fitSlots);
-        (function () {
-            let n = 0;
-            const iv = setInterval(() => { fitSlots(); if (++n > 40) clearInterval(iv); }, 500);
-        })();
-
-        // ---------- অবস্থা ----------
-        let activePart = 1;        // এখন কোন পর্ব চালু (১ .. PARTS)
-        let doneParts = 0;         // কয়টি পর্ব শেষ
-        let started = false;       // বর্তমান পর্বের টাইমার চালু হয়েছে কিনা
-        let timerInterval = null;
-        let activeSince = Date.now();
-        let hoveredSlot = null;
-
-        const MSG_READY = "👉 টাইমার চালু করতে যেকোনো একটি অ্যাডে ক্লিক করুন";
-        const MSG_LOCKED = "🔒 আগের পর্ব শেষ করে Continue চাপুন";
-        const MSG_RUNNING = "⏳ কাউন্টডাউন চলছে, অপেক্ষা করুন...";
-
-        function setStatus(n, text, color) {
-            const el = $("status-" + n);
-            if (!el) return;
-            el.textContent = text;
-            el.style.color = color || "";
-        }
-
-        function setProgress() {
-            const el = $("progress-fill");
-            if (!el || !valid) return;
-            const unit = (step - 1) + (doneParts / PARTS);
-            el.style.width = Math.min(100, (unit / total) * 100) + "%";
-        }
-
-        // কোন পর্ব তালাবদ্ধ / চালু তা স্ক্রিনে দেখানো
-        function refreshSection(n) {
-            const box = $("sec-" + n);
-            if (!box) return;
-            box.classList.toggle("locked", n > activePart);
-            box.classList.toggle("active", n === activePart);
-            box.classList.toggle("done", n < activePart);
-            if (n > activePart) setStatus(n, MSG_LOCKED, "");
-            else if (n === activePart && !started) setStatus(n, MSG_READY, "");
-        }
-
-        // ---------- প্রতিটি অংশ পার্স হওয়ার সাথে সাথেই চালু হয় (নিচের অ্যাড লোডের অপেক্ষায় আটকায় না) ----------
-        function setupHeader() {
-            if (!valid) return;
-            $("step-title").textContent = "ধাপ " + bn(step) + " / " + bn(total);
-            setProgress();
-        }
-
-        function setupError() {
-            const a = $("open-bot-btn");
-            if (a) a.href = "https://t.me/" + BOT_USERNAME;
-        }
-
-        function setupSection(n) {
-            if (!valid) return;
-            $("part-" + n).textContent = "পর্ব " + bn(n) + " / " + bn(PARTS);
-            $("timer-" + n).textContent = bn(WAIT_SECONDS);
-            const btn = $("btn-" + n);
-            btn.textContent = (n === PARTS) ? "Next" : "Continue";
-            btn.classList.add("hidden");          // টাইমার শেষ হলে তবেই দেখা যাবে
-            btn.addEventListener("click", () => onPartButton(n));
-            refreshSection(n);
-            fitSlots();
-        }
-
-        // ---------- টাইমার (যেকোনো অ্যাডে ক্লিকের পর) ----------
-        function startTimer() {
-            if (!valid || started || activePart > PARTS) return;
-            if (Date.now() - activeSince < 600) return;   // পর্ব বদলের ঠিক পরপর ভুল ক্লিক এড়াতে
-            const n = activePart;
-            if (!$("sec-" + n)) return;
-            started = true;
-
-            setStatus(n, MSG_RUNNING, "#ffb703");
-            const timerEl = $("timer-" + n);
-            // সিস্টেম টাইম ধরে গণনা, যাতে ব্যাকগ্রাউন্ডে ট্যাব থাকলেও সঠিক সময় যায়
-            const endAt = Date.now() + WAIT_SECONDS * 1000;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
-                timerEl.textContent = bn(left);
-                if (left <= 0) {
-                    clearInterval(timerInterval);
-                    timerEl.textContent = "সম্পন্ন!";
-                    if (n === PARTS) {
-                        setStatus(n, "✅ সফল হয়েছে! এখন Next চাপুন — বটে ফিরে পরের ধাপ পাবেন।", "#22c55e");
-                    } else {
-                        setStatus(n, "✅ সফল হয়েছে! এখন Continue চাপুন।", "#22c55e");
-                    }
-                    $("btn-" + n).classList.remove("hidden");
-                }
-            }, 250);
-        }
-
-        // ---------- Continue / Next বাটন ----------
-        function onPartButton(n) {
-            if (n !== activePart) return;
-            if (n < PARTS) {
-                doneParts = n;
-                $("btn-" + n).classList.add("hidden");
-                setStatus(n, "✔ এই পর্ব সম্পন্ন", "#22c55e");
-                activePart = n + 1;
-                started = false;
-                clearInterval(timerInterval);
-                hoveredSlot = null;
-                activeSince = Date.now();
-                setProgress();
-                for (let i = 1; i <= PARTS; i++) refreshSection(i);
-                const next = $("sec-" + activePart);
-                if (next && next.scrollIntoView) next.scrollIntoView({ behavior: "smooth", block: "center" });
-            } else {
-                // শেষ পর্বের Next: বটে ফিরে যাবে, বট পরের ধাপ চালু করবে
-                doneParts = PARTS;
-                setProgress();
-                if (returnUrl) window.location.href = returnUrl;
-            }
-        }
-
-        // ---------- যেকোনো অ্যাডে ক্লিক ধরা ----------
-        // ১) সাধারণ এলিমেন্টে ক্লিক (নেটিভ ব্যানার, ডাইরেক্ট লিংক ইত্যাদি)
-        document.addEventListener("click", (e) => {
-            if (e.target && e.target.closest && e.target.closest(".ad-slot")) startTimer();
-        });
-        // ২) iframe অ্যাডে ক্লিক: ব্রাউজার ক্লিক ইভেন্ট দেয় না, তাই মাউস-হোভার + window blur দিয়ে ধরা হয়
-        document.addEventListener("mouseover", (e) => {
-            hoveredSlot = (e.target && e.target.closest) ? e.target.closest(".ad-slot") : null;
-        });
-        document.addEventListener("touchstart", (e) => {
-            hoveredSlot = (e.target && e.target.closest) ? e.target.closest(".ad-slot") : null;
-        }, { passive: true });
-        document.documentElement.addEventListener("mouseleave", () => { hoveredSlot = null; });
-
-        function checkIframeClick() {
-            setTimeout(() => {
-                const ae = document.activeElement;
-                const inAdIframe = ae && ae.tagName === "IFRAME" && ae.closest && ae.closest(".ad-slot");
-                if (inAdIframe || hoveredSlot) startTimer();
-            }, 0);
-        }
-        window.addEventListener("blur", checkIframeClick);
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) checkIframeClick();
-        });
-    </script>
 </head>
 <body>
 
-    <div class="container">
-        <!-- হেডার লোগো এবং নাম -->
-        <div class="header-brand">
-            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
-            <div class="site-title">M H X ADS WEBSITE</div>
-            <img src="https://i.ibb.co.com/YTJLH8zW/1792669720028.jpg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
-        </div>
+    <div class="card" id="main-card">
+        <h2>অ্যাড ভেরিফিকেশন</h2>
+        <p>বটে ফিরে যাওয়ার আগে ৫টি অ্যাড দেখা সম্পূর্ণ করুন।</p>
+        
+        <div class="progress-box" id="progress-text">অ্যাড দেখা হয়েছে: ০/৫</div>
 
-        <!-- প্রোগ্রেস বার -->
-        <div class="progress-bar-container">
-            <div id="progress-fill" class="progress-bar"></div>
-        </div>
-
-        <!-- প্রোগ্রেস বার -->
-        <div class="progress-bar-container">
-            <div id="progress-fill" class="progress-bar"></div>
-        </div>
-
-        <!-- বটের লিংক ছাড়া সরাসরি ওয়েবসাইটে এলে / লিংক ভুল হলে -->
-        <div id="error-view" class="error-box">
-            <div class="step-title">❌ লিংকটি সঠিক নয়</div>
-            <p>এই ওয়েবসাইটটি সরাসরি খোলা যাবে না। টেলিগ্রাম বটে গিয়ে <b>📺 ADS</b> বাটনে ক্লিক করে নতুন লিংক নিন।</p>
-            <a id="open-bot-btn" class="btn btn-link" href="#">🤖 বটে ফিরে যান</a>
-        </div>
-
-        <script>setupError();</script>
-
-        <!-- কাজের ধাপ: উপরে / মাঝে / নিচে — মোট ৩টি টাইমার-পর্ব -->
-        <div id="task-view">
-            <!-- উপরের ছোট ব্যানার অ্যাড -->
-            <div class="ad-slot top-ad" data-w="320" data-h="50">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : '68b093c5d8e6f3092a413655f53ed66e',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/68b093c5d8e6f3092a413655f53ed66e"></script>
-                </div>
-            </div>
-
-            <div id="step-title" class="step-title"></div>
-            <script>setupHeader();</script>
-            <p id="step-desc">প্রতিটি পর্বে যেকোনো একটি অ্যাডে ক্লিক করলে টাইমার চালু হবে। টাইমার শেষ হলে Continue / Next বাটন আসবে।</p>
-
-            <!-- ========== পর্ব 1 ========== -->
-            <div id="sec-1" class="part-box locked">
-                <div id="part-1" class="part-label"></div>
-                <div id="timer-1" class="timer-display"></div>
-                <div id="status-1" class="status-msg"></div>
-                <button id="btn-1" class="btn hidden" type="button">Continue</button>
-            </div>
-            <script>setupSection(1);</script>
-
-            <!-- ================= অ্যাড জোন ১ ================= -->
-            <div class="ads-zone">
-                <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
-            <!-- ডাইরেক্ট লিংক অ্যাড -->
-            <div class="ad-slot auto-size">
-                <a class="ad-action-box ad-link-card" href="https://arwf.org/4/cec4ff542298af5fb7b92c06629850ff" target="_blank" rel="noopener">
-                    <span class="ad-action-text">📢 স্পনসরড অ্যাড</span>
-                </a>
-            </div>
-            <!-- 300x250 -->
-            <div class="ad-slot" data-w="300" data-h="250">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : '63ac62d066a92ce1f81d38a4af96be52',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/63ac62d066a92ce1f81d38a4af96be52"></script>
-                </div>
-            </div>
-            <!-- 468x60 -->
-            <div class="ad-slot" data-w="468" data-h="60">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : 'ef07756fa88fa5c7ccf880d7ae64368a',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/ef07756fa88fa5c7ccf880d7ae64368a"></script>
-                </div>
-            </div>
-            <!-- 728x90 -->
-            <div class="ad-slot" data-w="728" data-h="90">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : 'ebbe29173fe5c917e6551af25108a0cf',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/ebbe29173fe5c917e6551af25108a0cf"></script>
-                </div>
-            </div>
-            </div>
-
-            <!-- ========== পর্ব 2 ========== -->
-            <div id="sec-2" class="part-box locked">
-                <div id="part-2" class="part-label"></div>
-                <div id="timer-2" class="timer-display"></div>
-                <div id="status-2" class="status-msg"></div>
-                <button id="btn-2" class="btn hidden" type="button">Continue</button>
-            </div>
-            <script>setupSection(2);</script>
-
-            <!-- ================= অ্যাড জোন ২ ================= -->
-            <div class="ads-zone">
-                <div class="ads-title">📢 স্পনসরড অ্যাড — যেকোনো একটিতে ক্লিক করুন</div>
-            <!-- 160x600 এবং 160x300 পাশাপাশি -->
-            <div class="ad-slot" data-w="330" data-h="600">
-                <div class="ad-inner">
-<script>
-  atOptions = {
-    'key' : '781bbce74f0544354cda8cc4a3a46017',
-    'format' : 'iframe',
-    'height' : 600,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/781bbce74f0544354cda8cc4a3a46017"></script>
-<script>
-  atOptions = {
-    'key' : 'bff99088ee93546537bab36c72f4d087',
-    'format' : 'iframe',
-    'height' : 300,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-<script src="https://bicea.org/22/bff99088ee93546537bab36c72f4d087"></script>
-                </div>
-            </div>
-            <!-- নেটিভ ব্যানার -->
-            <div class="ad-slot auto-size">
-<script async="async" data-cfasync="false" src="https://bicea.org/21/d7970b67695b3ce6f76ccd03c80ac3ec"></script>
-<div id="container-d7970b67695b3ce6f76ccd03c80ac3ec"></div>
-            </div>
-            </div>
-
-            <!-- ========== পর্ব 3 ========== -->
-            <div id="sec-3" class="part-box locked">
-                <div id="part-3" class="part-label"></div>
-                <div id="timer-3" class="timer-display"></div>
-                <div id="status-3" class="status-msg"></div>
-                <button id="btn-3" class="btn hidden" type="button">Next</button>
-            </div>
-            <script>setupSection(3);</script>
-
-        </div>
+        <!-- অ্যাড দেখার বাটন -->
+        <button class="btn" id="next-ad-btn" onclick="watchNextAd()">পরবর্তী অ্যাড দেখুন</button>
     </div>
 
-    <!-- ===== পেজ-ওয়াইড অ্যাড স্ক্রিপ্ট (পপআন্ডার/ইন-পেজ) ===== -->
-    <script data-cfasync="false" src="https://afders.org/1/3c6e8faddb03e4ac21a51666d2ceb3b1"></script>
-    <script data-cfasync="false" src="https://bicea.org/14/7af884e8bf0804773feecf2b6f43c7b4"></script>
+    <!-- কোড পাওয়ার পর দেখানোর বক্স -->
+    <div class="card hidden" id="success-card">
+        <h2>অভিনন্দন! 🎉</h2>
+        <p>আপনার ৫টি অ্যাড দেখা সম্পন্ন হয়েছে। নিচের কোডটি কপি করে টেলিগ্রাম বটে দিন:</p>
+        
+        <div class="code-box" id="verification-code">LOAD1234</div>
+        
+        <button class="btn" onclick="copyCode()" id="copy-btn">কোড কপি করুন</button>
+        <p id="copy-msg" style="color: #4ade80; margin-top: 10px; display: none;">কোডটি সফলভাবে কপি হয়েছে! এবার বটে গিয়ে পেস্ট করুন।</p>
+    </div>
+
+    <!-- আপনার অ্যাড ইউনিট আইডিগুলোর রেফারেন্স লিস্ট (জাভাস্ক্রিপ্ট অ্যারে হিসেবে রাখা হলো প্রয়োজন অনুযায়ী ব্যবহারের জন্য) -->
+    <script>
+        const admobUnits = [
+            "ca-app-pub-9467019896900554/3758663944",
+            "ca-app-pub-9467019896900554/6576398978",
+            "ca-app-pub-9467019896900554/3355551299",
+            "ca-app-pub-9467019896900554/3733604059",
+            "ca-app-pub-9467019896900554/6355897969",
+            "ca-app-pub-9467019896900554/3083876525"
+        ];
+
+        let adCount = parseInt(localStorage.getItem('user_ad_count')) || 0;
+        const totalAds = 5;
+
+        function updateUI() {
+            if (adCount >= totalAds) {
+                document.getElementById('main-card').classList.add('hidden');
+                document.getElementById('success-card').classList.remove('hidden');
+                
+                let uniqueCode = "VERIFY-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+                document.getElementById('verification-code').innerText = uniqueCode;
+                
+                localStorage.removeItem('user_ad_count');
+            } else {
+                document.getElementById('progress-text').innerText = `অ্যাড দেখা হয়েছে: ${adCount}/${totalAds}`;
+            }
+        }
+
+        function watchNextAd() {
+            adCount++;
+            localStorage.setItem('user_ad_count', adCount);
+            
+            // এখানে আপনি চাইলে নির্দিষ্ট কোনো অ্যাড ইউনিট আইডি কল করতে পারেন বা রিডাইরেক্ট করতে পারেন।
+            // উদাহরণস্বরূপ প্রতি ধাপে আলাদা অ্যাড ইউনিট ব্যবহার করার জন্য:
+            let currentAdUnit = admobUnits[(adCount - 1) % admobUnits.length];
+            console.log("Loading Ad Unit: " + currentAdUnit);
+
+            updateUI();
+        }
+
+        window.onload = function() {
+            updateUI();
+        };
+
+        function copyCode() {
+            const codeText = document.getElementById('verification-code').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const msg = document.getElementById('copy-msg');
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
+
 </body>
 </html>
