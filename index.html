@@ -152,6 +152,7 @@
                         <div><label class="block text-slate-700 text-xs font-bold mb-1">আপনার নাম</label><input type="text" id="reg-name" placeholder="নাম লিখুন" class="zp-input"></div>
                         <div><label class="block text-slate-700 text-xs font-bold mb-1">ইমেইল</label><input type="email" id="reg-email" placeholder="example@gmail.com" class="zp-input"></div>
                         <div><label class="block text-slate-700 text-xs font-bold mb-1">পাসওয়ার্ড</label><input type="password" id="reg-pass" placeholder="কমপক্ষে ৬ ডিজিট" class="zp-input"></div>
+                        <div><label class="block text-slate-700 text-xs font-bold mb-1">রেফার কোড <span class="text-slate-400 font-normal">(ঐচ্ছিক)</span></label><input type="text" id="reg-ref" placeholder="বন্ধুর রেফার কোড" class="zp-input uppercase" style="letter-spacing:.1em" oninput="this.value=this.value.toUpperCase()"></div>
                     </div>
                     <button onclick="handleRegister()" class="zp-btn w-full">রেজিস্ট্রেশন</button>
                     <div class="mt-6 text-center text-sm text-slate-600">
@@ -261,9 +262,27 @@
                 <div class="mb-2">
                     <input type="text" id="game-player-id" placeholder="Player ID এখানে লিখুন" class="zp-input text-sm py-2.5">
                 </div>
+                <div class="mb-3"><div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>গেম সার্ভার সিলেক্ট করুন <span class="text-rose-500">*</span></div><div id="ff-servers" class="flex flex-wrap gap-1.5"></div></div>
                 <div id="uidCheckBtn" onclick="uidCheck()" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white text-center py-2.5 rounded-2xl font-bold text-xs shadow-md shadow-indigo-500/20 cursor-pointer">
                     প্লেয়ার নেম যাচাই করুন
                 </div>
+            </div>
+
+            <div class="vip-card p-4 mb-4" id="ref-card">
+                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-user-plus text-indigo-600 mr-1.5"></i>রেফার করে ইনকাম করুন</div>
+                <div class="rounded-2xl p-3.5 text-white text-center" style="background:linear-gradient(135deg,#312e81,#4f46e5 55%,#7c3aed)">
+                    <div class="text-[10px] opacity-80 mb-1">আপনার রেফার কোড</div>
+                    <div id="ref-code" class="text-2xl font-extrabold tracking-[.25em]">------</div>
+                    <div class="flex gap-2 mt-3">
+                        <button onclick="copyRef('code')" class="flex-1 py-2 rounded-xl bg-white/20 text-[11px] font-bold border border-white/30"><i class="fas fa-copy mr-1"></i>কোড কপি</button>
+                        <button onclick="copyRef('link')" class="flex-1 py-2 rounded-xl bg-white text-indigo-700 text-[11px] font-bold"><i class="fas fa-share-nodes mr-1"></i>লিংক শেয়ার</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <div class="rounded-2xl bg-indigo-50 py-2.5 text-center"><b id="ref-count" class="text-lg text-indigo-700">0</b><div class="text-[10px] text-slate-500 font-semibold">মোট রেফার</div></div>
+                    <div class="rounded-2xl bg-emerald-50 py-2.5 text-center"><b class="text-lg text-emerald-700">৳<span id="ref-earned">0</span></b><div class="text-[10px] text-slate-500 font-semibold">মোট ইনকাম</div></div>
+                </div>
+                <p class="zp-sub mt-2" id="ref-info">বন্ধুকে আপনার কোড দিন। সে নতুন অ্যাকাউন্ট খুললে আপনি পাবেন ৳১, আর তার প্রতিটি ডিপোজিটে পাবেন ১০% কমিশন।</p>
             </div>
 
             <div class="vip-card p-4 mb-4">
@@ -470,7 +489,8 @@
             .then((cred) => db.collection('users').doc(cred.user.uid).set({
                 name: name, email: email, balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date()
             }))
-            .then(() => { Swal.fire('সফল!', 'একাউন্ট সফলভাবে তৈরি হয়েছে!', 'success'); showSec('home'); })
+            .then(() => applyPendingRef())
+            .then((rmsg) => { Swal.fire({icon:'success', title:'সফল!', html:'একাউন্ট সফলভাবে তৈরি হয়েছে!' + (rmsg ? '<br><small>' + esc(rmsg) + '</small>' : '')}); showSec('home'); })
             .catch((err) => Swal.fire('ত্রুটি', err.message, 'error'));
     }
 
@@ -492,7 +512,7 @@
                 if (!docSnapshot.exists) {
                     db.collection('users').doc(user.uid).set({
                         name: user.displayName, email: user.email, balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date(), photoURL: user.photoURL
-                    });
+                    }).then(() => applyPendingRef());
                 }
             });
             showSec('home');
@@ -667,7 +687,7 @@
         if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
         Swal.fire({title:'অর্ডার প্রসেস হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
         try {
-            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, promoCode: document.getElementById('order-promo').value.trim() });
+            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
             document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
             Swal.fire({icon:'success', title:'অভিনন্দন!', html:'আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!' + (r.discount?`<br><b>ডিসকাউন্ট ৳${r.discount} — পরিশোধ ৳${r.price}</b>`:'')});
             showSec('home');
@@ -676,14 +696,66 @@
 
     const FF_INFO_API = "https://info-api-pink-seven.vercel.app/player-info";
 
+    // ---------- game server chips ----------
+    const FF_SERVERS = [['bd','Bangladesh'],['ind','India'],['pk','Pakistan'],['sg','Singapore'],['id','Indonesia'],['th','Thailand'],['vn','Vietnam'],['br','Brazil'],['me','Middle East'],['sac','S. America'],['us','N. America'],['eu','Europe'],['tw','Taiwan'],['ru','Russia']];
+    let ffServer = ''; try { ffServer = localStorage.getItem('ffServer') || ''; } catch (e) {}
+    (function () {
+        const st = document.createElement('style');
+        st.textContent = `.ffs-chip{padding:6px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1.5px solid #c7d2fe;background:#fff;color:#4338ca;cursor:pointer;transition:all .25s cubic-bezier(.2,1.3,.4,1);user-select:none}
+        .ffs-chip:active{transform:scale(.92)}.ffs-chip.on{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(79,70,229,.35);transform:scale(1.06)}
+        @keyframes ffsShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}.ffs-shake{animation:ffsShake .5s}
+        .ffs-bad .ffs-chip{border-color:#fb7185}`;
+        document.head.appendChild(st);
+    })();
+    function ffRenderServers() {
+        const box = document.getElementById('ff-servers'); if (!box) return;
+        box.innerHTML = FF_SERVERS.map(s => `<span class="ffs-chip ${ffServer === s[0] ? 'on' : ''}" onclick="ffPickServer('${s[0]}')">${ffServer === s[0] ? '✓ ' : ''}${s[1]}</span>`).join('');
+    }
+    function ffPickServer(v) { ffServer = v; try { localStorage.setItem('ffServer', v); } catch (e) {} ffRenderServers(); const b = document.getElementById('ff-servers'); if (b) b.classList.remove('ffs-bad'); }
+    function ffShake() { const b = document.getElementById('ff-servers'); if (!b) return; b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); }
+    ffRenderServers();
+
+    // ---------- referral ----------
+    try { const rp = new URLSearchParams(location.search).get('ref'); if (rp) { localStorage.setItem('pendingRef', rp.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12)); } } catch (e) {}
+    try { const pr = localStorage.getItem('pendingRef'), el = document.getElementById('reg-ref'); if (pr && el) el.value = pr; } catch (e) {}
+    let myRef = null;
+    async function applyPendingRef() {
+        let code = ''; try { code = (document.getElementById('reg-ref').value || localStorage.getItem('pendingRef') || ''); } catch (e) {}
+        code = code.trim().toUpperCase(); if (!code) return '';
+        try {
+            currentUser = auth.currentUser || currentUser;
+            await api('/applyReferral', { code: code });
+            return 'রেফার সফল হয়েছে 🎉';
+        } catch (e) { return 'রেফার কোড: ' + e.message; }
+        finally { try { localStorage.removeItem('pendingRef'); } catch (e) {} }
+    }
+    async function loadReferral() {
+        if (!currentUser) return;
+        try {
+            const r = await api('/getReferral', {}); myRef = r;
+            document.getElementById('ref-code').innerText = r.code;
+            document.getElementById('ref-count').innerText = r.count;
+            document.getElementById('ref-earned').innerText = r.earned;
+            document.getElementById('ref-info').innerText = `বন্ধুকে আপনার কোড দিন। সে নতুন অ্যাকাউন্ট খুললে আপনি পাবেন ৳${r.bonus}, আর তার প্রতিটি ডিপোজিটে পাবেন ${r.percent}% কমিশন।`;
+        } catch (e) { document.getElementById('ref-code').innerText = '------'; }
+    }
+    async function copyRef(kind) {
+        if (!myRef) return Swal.fire('অপেক্ষা করুন', 'রেফার কোড লোড হচ্ছে...', 'info');
+        const link = location.origin + '/?ref=' + myRef.code, text = kind === 'code' ? myRef.code : link;
+        if (kind === 'link' && navigator.share) { try { await navigator.share({ title: 'M H X TopUp', text: 'আমার রেফার লিংক দিয়ে জয়েন করুন', url: link }); return; } catch (e) {} }
+        try { await navigator.clipboard.writeText(text); } catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+        Swal.fire({ icon: 'success', title: 'কপি হয়েছে!', text: text, timer: 1400, showConfirmButton: false });
+    }
+
     function uidCheck() {
         const uid = document.getElementById("game-player-id").value.trim();
         if (!uid) { Swal.fire('সতর্কতা', 'আগে প্লেয়ার আইডি (UID) লিখুন!', 'warning'); return; }
         if (!/^\d{5,15}$/.test(uid)) { Swal.fire('সতর্কতা', 'ইউআইডি শুধু সংখ্যা হতে হবে', 'warning'); return; }
+        if (!ffServer) { ffShake(); Swal.fire('সার্ভার সিলেক্ট করুন', 'ইউআইডি চেক করতে আগে নিচ থেকে আপনার গেমের সার্ভার সিলেক্ট করুন', 'warning'); return; }
         ffOpenModal(`<div class="ffm-load"><div class="ffm-spin"></div><p>অ্যাকাউন্ট ডিটেলস আনা হচ্ছে...</p></div>`, true);
         const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
         const getJ = async (url, strict) => { const res = await fetch(url, { signal: ctl.signal }); let j = null; try { j = await res.json(); } catch (e) {} if (!j || (strict && !res.ok)) throw new Error('bad'); return j; };
-        const q = encodeURIComponent(uid);
+        const q = encodeURIComponent(uid) + '&region=' + encodeURIComponent(ffServer) + '&server=' + encodeURIComponent(ffServer);
         getJ(`${BACKEND_URL}/playerInfo?uid=${q}`, true).catch(e => { if (e.name === 'AbortError') throw e; return getJ(`${FF_INFO_API}?uid=${q}`, false); })
             .then(data => { clearTimeout(tm); ffRender(uid, data); })
             .catch(e => { clearTimeout(tm); ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-triangle-exclamation"></i></div><p>${e.name === 'AbortError' ? 'সার্ভার সাড়া দিচ্ছে না, আবার চেষ্টা করুন' : 'যাচাই করতে সমস্যা হয়েছে, একটু পরে আবার চেষ্টা করুন'}</p></div>`); });
@@ -816,6 +888,7 @@
         if(navBtn) navBtn.classList.add('active-tab');
         
         if(secId === 'history') loadHistory();
+        if(secId === 'account') loadReferral();
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
