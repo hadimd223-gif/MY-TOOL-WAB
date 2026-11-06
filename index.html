@@ -24,9 +24,6 @@ padding:20px;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
 .glass:nth-child(2){animation-delay:.1s}.glass:nth-child(3){animation-delay:.2s}.glass:nth-child(4){animation-delay:.3s}
 @keyframes rise{from{opacity:0;transform:translateY(24px) scale(.97)}}
 header{display:flex;align-items:center;gap:16px}
-.logo{width:68px;height:68px;border-radius:50%;object-fit:cover;flex:none;padding:3px;
-background:conic-gradient(var(--gold),var(--pink),var(--vio),var(--cy),var(--gold));animation:spin 8s linear infinite;
-box-shadow:0 0 30px rgba(255,200,61,.45)}
 .logo-w{position:relative;width:68px;height:68px;flex:none}
 .logo-w img{position:absolute;inset:4px;width:60px;height:60px;border-radius:50%;object-fit:cover}
 .logo-w i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--gold),var(--pink),var(--vio),var(--cy),var(--gold));
@@ -62,7 +59,6 @@ button:active{transform:scale(.95)}
 .wall h3{font:700 17px Sora,sans-serif;margin-bottom:12px}
 .frame{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#fff}
 iframe{display:block;width:100%;height:78vh;min-height:520px;border:0}
-.err{color:#ff9aa8;text-align:center;padding:30px}
 footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7}
 </style>
 </head>
@@ -83,7 +79,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7}
         <linearGradient id="g"><stop offset="0" stop-color="#ffc83d"/><stop offset="1" stop-color="#ff4fa3"/></linearGradient></defs>
         <circle class="t" cx="55" cy="55" r="48"/><circle class="v" id="arc" cx="55" cy="55" r="48"/></svg>
         <b><span><span id="n">0</span><small> / 5</small></span></b></div>
-      <div style="flex:1"><div class="hint"><em>যেকোনো ৫টি</em> অফার/টাস্ক সম্পূর্ণ করলে এখানে স্বয়ংক্রিয়ভাবে ইউনিক কোড তৈরি হবে।</div>
+      <div style="flex:1"><div class="hint"><em>যেকোনো ৫টি</em> অফার বা টাস্ক সম্পূর্ণ করলে এখানে স্বয়ংক্রিয়ভাবে ইউনিক কোড তৈরি হবে।</div>
         <div class="dots" id="dots"><span></span><span></span><span></span><span></span><span></span></div>
         <div class="hint" id="rw"></div></div>
     </div>
@@ -95,7 +91,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7}
     <p class="hint">কোডটি কপি করে টেলিগ্রাম বটে পাঠান। <em>একটি কোড একবারই ব্যবহার করা যাবে</em> — ভুল বা দ্বিতীয়বার দিলে ৫ মিনিট ব্যান।</p>
   </section>
 
-  <section class="glass wall"><h3>🎯 অফারওয়াল</h3>
+  <section class="glass wall"><h3>🎯 CPX Research অফারওয়াল</h3>
     <div class="frame">
       <iframe src="https://offers.cpx-research.com/index.php?app_id=37937&ext_user_id={{UID}}&secure_hash={{HASH}}&username={{UNAME_Q}}&email=&subid_1=&subid_2" title="CPX Offerwall"></iframe>
     </div>
@@ -106,8 +102,8 @@ footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7}
 const UID="{{UID}}",SIG="{{SIG}}",$=id=>document.getElementById(id);
 let shown="",banEnd=0;
 function render(d){
-  const n=Math.min(d.count,d.need);$('n').textContent=n;
-  $('arc').style.strokeDashoffset=302-302*n/d.need;
+  const n=Math.min(d.count,d.need||5);$('n').textContent=n;
+  $('arc').style.strokeDashoffset=302-302*n/5;
   [...$('dots').children].forEach((x,i)=>x.classList.toggle('on',i<n));
   $('rw').innerHTML=d.amount>0?'🎁 প্রতিটি কোডে রিওয়ার্ড: <em>৳'+d.amount+'</em>':'';
   const key=d.codes.join(',');
@@ -118,15 +114,28 @@ function render(d){
   }else{shown="";$('code').classList.remove('show');}
   banEnd=d.ban_left>0?Date.now()+d.ban_left*1000:0;tick();
 }
-function cp(c,b){(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).catch(()=>{
-  const t=document.createElement('textarea');t.value=c;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();});
-  b.textContent='✅ কপি হয়েছে';setTimeout(()=>b.textContent='📋 কপি করুন',1800);}
-function tick(){const l=Math.max(0,Math.ceil((banEnd-Date.now())/1000));
+function cp(c,b){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(c).then(()=>{
+      b.textContent='✅ কপি হয়েছে';setTimeout(()=>b.textContent='📋 কপি করুন',1800);
+    }).catch(()=>{fallbackCopy(c,b);});
+  }else{fallbackCopy(c,b);}
+}
+function fallbackCopy(c,b){
+  const t=document.createElement('textarea');t.value=c;document.body.appendChild(t);t.select();
+  try{document.execCommand('copy');b.textContent='✅ কপি হয়েছে';}catch(e){b.textContent='❌ ব্যর্থ';}
+  t.remove();setTimeout(()=>b.textContent='📋 কপি করুন',1800);
+}
+function tick(){
+  const l=Math.max(0,Math.ceil((banEnd-Date.now())/1000));
   $('ban').classList.toggle('show',l>0);
-  $('banT').textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0');}
+  $('banT').textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0');
+}
 async function poll(){
-  try{const r=await fetch('/mhx/status?uid='+UID+'&sig='+SIG,{cache:'no-store'});
-    if(r.ok)render(await r.json());}catch(e){}
+  try{
+    const r=await fetch('/mhx/status?uid='+UID+'&sig='+SIG,{cache:'no-store'});
+    if(r.ok)render(await r.json());
+  }catch(e){}
 }
 poll();setInterval(poll,6000);setInterval(tick,1000);
 </script>
