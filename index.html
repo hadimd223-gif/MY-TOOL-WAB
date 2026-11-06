@@ -65,6 +65,11 @@
         .pay-option-card{border:1.5px solid #e2e8f0;border-radius:18px;overflow:hidden;background:rgba(255,255,255,0.8);cursor:pointer;position:relative;transition:.2s}
         .pay-option-card.selected{border:2px solid #4f46e5;box-shadow:0 8px 20px rgba(99,102,241,0.18)!important;background:#eef2ff}
         .role-badge{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;display:inline-block;}
+        .zp-bell{position:relative;width:36px;height:36px;border-radius:14px;background:#eef2ff;border:1px solid #e0e7ff;color:#4f46e5;display:flex;align-items:center;justify-content:center}
+        .zp-dot{position:absolute;top:5px;right:6px;width:9px;height:9px;border-radius:99px;background:#ef4444;border:2px solid #fff}
+        #top-ticker{margin:10px 12px 0;border-radius:16px;background:linear-gradient(90deg,#4f46e5,#7c3aed);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;padding:8px 10px;box-shadow:0 8px 20px rgba(79,70,229,.25);overflow:hidden}
+        #top-ticker .tk-text{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+        .zp-sub{font-size:11px;color:#64748b}
     </style>
 </head>
 <body class="select-none bg-[#f8fafc]">
@@ -76,6 +81,8 @@
             <img id="header-logo-img" src="https://placehold.co/80x80?text=Logo" class="w-10 h-10 rounded-2xl object-cover bg-indigo-50 border border-indigo-100 flex-shrink-0 shadow-sm">
             <b id="header-site-name" class="text-[17px] font-extrabold tracking-tight truncate text-slate-900">M H X TopUp</b>
         </div>
+        <div class="flex items-center gap-2">
+        <button onclick="openNotices()" class="zp-bell" aria-label="Notifications"><i class="fa-solid fa-bell"></i><span id="bell-dot" class="zp-dot hidden"></span></button>
         <div id="header-balance-container" class="hidden">
             <div class="flex items-center gap-2">
                 <div class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-indigo-50/80 border border-indigo-100 text-indigo-600 font-extrabold text-sm shadow-sm">
@@ -89,7 +96,11 @@
                 <i class="fas fa-sign-in-alt mr-1"></i> লগইন
             </button>
         </div>
+        </div>
     </header>
+
+    <!-- Top notification bar (broadcast from admin) -->
+    <div id="top-ticker" class="hidden"><i class="fa-solid fa-bullhorn"></i><span class="tk-text" id="tk-text" onclick="openNotices()"></span><button onclick="closeTicker()" class="opacity-70"><i class="fa-solid fa-xmark"></i></button></div>
 
     <!-- Notice -->
     <div id="notice-section" class="px-3">
@@ -236,7 +247,7 @@
             <div class="vip-card p-4 mb-3">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">১</span>
-                    <h3 class="font-bold text-slate-800 text-xs">প্যাকেজ বা ডায়মন্ড সিলেক্ট করুন</h3>
+                    <h3 class="font-bold text-slate-800 text-xs">প্যাকেজ সিলেক্ট করুন</h3>
                 </div>
                 <div id="product-loader" class="text-center py-8 hidden"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i></div>
                 <div id="products-grid" class="grid grid-cols-2 gap-2.5"></div>
@@ -270,6 +281,9 @@
                         <div class="font-bold text-xs">ইনস্ট্যান্ট পেমেন্ট</div>
                     </div>
                 </div>
+                <div class="mb-3"><label class="zp-sub font-bold block mb-1"><i class="fa-solid fa-ticket text-indigo-600 mr-1"></i>প্রোমো কোড (ঐচ্ছিক)</label>
+                    <div class="flex gap-2"><input id="order-promo" placeholder="PROMO CODE" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="applyOrderPromo()" class="px-4 rounded-2xl bg-indigo-600 text-white text-xs font-bold">Apply</button></div>
+                    <p id="order-promo-msg" class="zp-sub mt-1"></p></div>
                 <p class="text-[11px] text-slate-500 mb-3">আপনার বর্তমান ব্যালেন্স: <span class="text-indigo-600 font-bold">৳<span id="topup-balance-display">0.00</span></span></p>
                 <button onclick="processOrder()" class="zp-btn w-full text-sm">অর্ডার কনফার্ম করুন</button>
             </div>
@@ -285,6 +299,9 @@
                     </div>
                     <label class="text-xs font-bold text-slate-700 mb-1.5 block">টাকার পরিমাণ (৳)</label>
                     <input id="new-amount-input" type="number" min="10" placeholder="সর্বনিম্ন ১০ টাকা" class="zp-input mb-5">
+                    <label class="text-xs font-bold text-slate-700 mb-1.5 block"><i class="fa-solid fa-gift text-indigo-600 mr-1"></i>বোনাস প্রোমো কোড (ঐচ্ছিক)</label>
+                    <input id="dep-promo" placeholder="PROMO CODE" class="zp-input mb-2 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()">
+                    <p id="dep-promo-msg" class="zp-sub mb-4"></p>
                     <button onclick="startGateway()" class="zp-btn w-full"><i class="fas fa-shield-alt mr-2"></i>সিকিউর পেমেন্ট করুন</button>
                 </div>
             </div>
@@ -324,6 +341,12 @@
                     <span>ওয়ালেট ব্যালেন্স:</span>
                     <span class="font-bold text-indigo-600">৳<span id="acc-profile-balance">0</span></span>
                 </div>
+            </div>
+
+            <div class="vip-card p-4 mb-4">
+                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-ticket text-indigo-600 mr-1.5"></i>প্রোমো কোড</div>
+                <div class="flex gap-2"><input id="profile-promo" placeholder="কোড লিখুন" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="redeemPromo()" class="px-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 text-white text-xs font-bold">Redeem</button></div>
+                <p class="zp-sub mt-2">টাকার কোড এখানে রিডিম করুন। ডিসকাউন্ট কোড অর্ডারের সময় এবং বোনাস কোড ওয়ালেটে টাকা অ্যাড করার সময় ব্যবহার করুন।</p>
             </div>
 
             <div class="px-1">
@@ -398,7 +421,7 @@
                         });
                         const data = await res.json();
                         if (data.ok) {
-                            Swal.fire('সফল!', `আপনার পেমেন্ট সফল হয়েছে এবং ৳${data.amount} যোগ হয়েছে!`, 'success');
+                            Swal.fire({icon:'success',title:'সফল!',html:`আপনার পেমেন্ট সফল হয়েছে এবং ৳${data.amount} যোগ হয়েছে!` + (data.bonus?`<br><b>🎁 বোনাস ৳${data.bonus}</b>`:'') + (data.promoted?'<br><b>🎉 আপনি এখন রিসেলার!</b>':'')});
                         } else {
                             Swal.fire('স্ট্যাটাস', 'পেমেন্ট এখনো প্রসেসিং বা পেন্ডিং আছে।', 'info');
                         }
@@ -500,6 +523,7 @@
         db.collection('users').doc(uid).onSnapshot((doc) => {
             if (doc.exists) {
                 userData = doc.data();
+                if (userData.banned) { Swal.fire({icon:"error",title:"অ্যাকাউন্ট ব্যান",text:"আপনার অ্যাকাউন্টটি ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।",allowOutsideClick:false}).then(()=>auth.signOut()); return; }
                 userBalance = userData.balance || 0;
                 const userName = userData.name || "User";
                 const totalDep = userData.totalDeposit || 0;
@@ -638,23 +662,16 @@
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         const playerId = document.getElementById('game-player-id').value.trim();
-        if(!playerId && selectedGameType !== 'code') return Swal.fire('সতর্কতা', 'দয়া করে প্লেয়ার আইডি (UID) দিন!', 'warning');
-        if(!selectedProduct) return Swal.fire('সতর্কতা', 'দয়া করে একটি প্যাকেজ সিলেক্ট করুন!', 'warning');
-        if(userBalance < selectedProduct.price) return Swal.fire('ব্যালেন্স কম', 'আপনার পর্যাপ্ত ব্যালেন্স নেই। দয়া করে ওয়ালেটে টাকা অ্যাড করুন।', 'error');
-
-        Swal.showLoading();
+        if(!playerId && selectedGameType !== 'code') return Swal.fire('সতর্কতা', 'দয়া করে প্লেয়ার আইডি (UID) দিন!', 'warning');
+        if(!selectedProduct) return Swal.fire('সতর্কতা', 'দয়া করে একটি প্যাকেজ সিলেক্ট করুন!', 'warning');
+        if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
+        Swal.fire({title:'অর্ডার প্রসেস হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
         try {
-            const newBalance = userBalance - selectedProduct.price;
-            await db.collection('users').doc(currentUser.uid).update({ balance: newBalance });
-            await db.collection('orders').add({
-                userId: currentUser.uid, userName: currentUser.name || currentUser.email, userEmail: currentUser.email, gameName: selectedGameName, gameId: selectedGameId,
-                playerId: playerId, productName: selectedProduct.name, price: selectedProduct.price, type: selectedGameType, status: 'pending', date: new Date()
-            });
-            Swal.fire('অভিনন্দন!', 'আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!', 'success');
+            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, promoCode: document.getElementById('order-promo').value.trim() });
+            document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
+            Swal.fire({icon:'success', title:'অভিনন্দন!', html:'আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!' + (r.discount?`<br><b>ডিসকাউন্ট ৳${r.discount} — পরিশোধ ৳${r.price}</b>`:'')});
             showSec('home');
-        } catch(err) {
-            Swal.fire('ত্রুটি', err.message, 'error');
-        }
+        } catch(err) { Swal.fire('ত্রুটি', err.message, 'error'); }
     }
 
     const FF_INFO_API = "https://info-api-pink-seven.vercel.app/player-info";
@@ -718,18 +735,17 @@
 
     function loadRecentOrdersGlobal() {
         const container = document.getElementById('latest-orders-list');
-        db.collection('orders').orderBy('date', 'desc').limit(5).onSnapshot((snapshot) => {
+        db.collection('recentOrders').orderBy('date', 'desc').limit(5).onSnapshot((snapshot) => {
             if (snapshot.empty) { container.innerHTML = '<div class="text-center text-slate-400 text-xs py-2">কোনো সাম্প্রতিক অর্ডার নেই</div>'; return; }
             container.innerHTML = "";
             snapshot.forEach(doc => {
                 const data = doc.data();
-                let displayName = data.userName ? data.userName.split('@')[0] : "গ্রাহক";
                 container.innerHTML += `<div class="vip-card p-3 flex items-center justify-between">
-                    <span class="text-slate-700 font-bold text-xs">${displayName} - ${data.productName}</span>
+                    <span class="text-slate-700 font-bold text-xs">${esc(data.name || 'গ্রাহক')} - ${esc(data.productName)}</span>
                     <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-lg text-[10px] font-bold">৳${data.price}</span>
                 </div>`;
             });
-        });
+        }, () => { container.innerHTML = ''; });
     }
 
     function loadBanners() {
@@ -741,36 +757,105 @@
         });
     }
 
-    async function startGateway() {
-        if(!currentUser) { showSec('auth'); return; }
-        const amount = parseInt(document.getElementById('new-amount-input').value);
-        if(!amount || amount < 10) { Swal.fire('সতর্কতা', 'সর্বনিম্ন ১০ টাকা ডিপোজিট করতে হবে', 'warning'); return; }
-        
-        Swal.showLoading();
+    // ================= helpers =================
+    function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    async function api(path, body) {
+        if (!currentUser) throw new Error('আগে লগইন করুন');
+        const token = await currentUser.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 40000);
         try {
-            const token = await currentUser.getIdToken();
-            const res = await fetch(`${BACKEND_URL}/createPayment`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({
-                    amount: amount,
-                    origin: window.location.origin
-                })
-            });
-            const data = await res.json();
-            if(!res.ok) throw new Error(data.error || 'পেমেন্ট তৈরি করতে সমস্যা হয়েছে');
-            if(data.paymentUrl) {
-                window.location.href = data.paymentUrl;
-            } else {
-                throw new Error('পেমেন্ট লিংক পাওয়া যায়নি');
-            }
-        } catch(err) {
-            Swal.fire('ত্রুটি', err.message, 'error');
-        }
+            const r = await fetch(BACKEND_URL + path, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(body || {}) });
+            let j = {}; try { j = await r.json(); } catch (e) {}
+            if (!r.ok) throw new Error(j.error || ('সার্ভার এরর ' + r.status));
+            return j;
+        } catch (e) {
+            if (e.name === 'AbortError') throw new Error('সার্ভার সাড়া দিচ্ছে না, একটু পরে চেষ্টা করুন');
+            if (/Failed to fetch|NetworkError|Load failed/i.test(e.message)) throw new Error('সার্ভারের সাথে কানেক্ট করা যাচ্ছে না');
+            throw e;
+        } finally { clearTimeout(t); }
     }
+
+    // ================= payments =================
+    async function startGateway(forced) {
+        if(!currentUser) { showSec('auth'); return; }
+        const amount = forced ? parseInt(forced) : parseInt(document.getElementById('new-amount-input').value);
+        if(!amount || amount < 10) { Swal.fire('সতর্কতা', 'সর্বনিম্ন ১০ টাকা ডিপোজিট করতে হবে', 'warning'); return; }
+        const promoEl = document.getElementById('dep-promo');
+        Swal.fire({title:'পেমেন্ট পেজ খোলা হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        try {
+            const data = await api('/createPayment', { amount: amount, origin: window.location.origin, promoCode: promoEl ? promoEl.value.trim() : '' });
+            if(!data.paymentUrl) throw new Error('পেমেন্ট লিংক পাওয়া যায়নি');
+            window.location.href = data.paymentUrl;
+        } catch(err) { Swal.fire('ত্রুটি', err.message, 'error'); }
+    }
+
+    // ================= promo codes =================
+    async function applyOrderPromo() {
+        const code = document.getElementById('order-promo').value.trim(), msg = document.getElementById('order-promo-msg');
+        if (!currentUser) return showSec('auth');
+        if (!selectedProduct) { msg.style.color = '#dc2626'; msg.innerText = 'আগে একটি প্যাকেজ সিলেক্ট করুন'; return; }
+        if (!code) { msg.innerText = ''; return; }
+        try {
+            const r = await api('/checkPromo', { code: code, context: 'order', amount: selectedProduct.price });
+            msg.style.color = '#059669'; msg.innerText = `✅ ডিসকাউন্ট ৳${r.discount} — আপনি দিবেন ৳${selectedProduct.price - r.discount}`;
+        } catch (e) { msg.style.color = '#dc2626'; msg.innerText = e.message; }
+    }
+    async function redeemPromo() {
+        const code = document.getElementById('profile-promo').value.trim();
+        if (!currentUser) return showSec('auth');
+        if (!code) return Swal.fire('সতর্কতা', 'প্রোমো কোড লিখুন', 'warning');
+        Swal.fire({title:'যাচাই হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        try {
+            const r = await api('/redeemPromo', { code: code });
+            document.getElementById('profile-promo').value = '';
+            Swal.fire({icon:'success', title:'অভিনন্দন!', text:`আপনার ওয়ালেটে ৳${r.amount} যোগ হয়েছে`});
+        } catch (e) { Swal.fire('ত্রুটি', e.message, 'error'); }
+    }
+    document.addEventListener('input', (ev) => {
+        if (ev.target.id !== 'dep-promo') return;
+        const msg = document.getElementById('dep-promo-msg'), code = ev.target.value.trim(), amt = parseInt(document.getElementById('new-amount-input').value) || 0;
+        clearTimeout(window._depT); if (!code || !currentUser) { msg.innerText = ''; return; }
+        window._depT = setTimeout(async () => {
+            try { const r = await api('/checkPromo', { code: code, context: 'deposit', amount: amt });
+                msg.style.color = '#059669'; msg.innerText = `✅ ${r.value}% বোনাস` + (r.bonus ? ` (এই অ্যামাউন্টে ৳${r.bonus})` : ''); }
+            catch (e) { msg.style.color = '#dc2626'; msg.innerText = e.message; }
+        }, 600);
+    });
+
+    // ================= notifications (admin broadcast) =================
+    let noticesCache = [], noticesFirstLoad = true;
+    const NT = { info:['#4f46e5','fa-circle-info'], success:['#059669','fa-circle-check'], warning:['#d97706','fa-triangle-exclamation'], promo:['#db2777','fa-gift'] };
+    const ntTime = n => (n.createdAt && n.createdAt.toMillis) ? n.createdAt.toMillis() : Date.now();
+    function liveNotices() { const now = Date.now(); return noticesCache.filter(n => n.active !== false && (!n.expiresAtMs || n.expiresAtMs > now)); }
+    function renderTicker() {
+        const list = liveNotices(), el = document.getElementById('top-ticker');
+        if (!list.length || sessionStorage.getItem('tkClosed') === list[0].id) { el.classList.add('hidden'); return; }
+        document.getElementById('tk-text').innerText = (list[0].title ? list[0].title + ' — ' : '') + (list[0].message || '');
+        el.classList.remove('hidden');
+    }
+    function closeTicker() { const l = liveNotices(); if (l[0]) sessionStorage.setItem('tkClosed', l[0].id); document.getElementById('top-ticker').classList.add('hidden'); }
+    function updateBell() {
+        const l = liveNotices(), seen = parseInt(localStorage.getItem('noticeSeen') || '0');
+        document.getElementById('bell-dot').classList.toggle('hidden', !(l.length && ntTime(l[0]) > seen));
+    }
+    function openNotices() {
+        const l = liveNotices();
+        const html = l.length ? l.map(n => { const t = NT[n.type] || NT.info, d = new Date(ntTime(n));
+            return `<div style="text-align:left;border:1px solid #e2e8f0;border-left:4px solid ${t[0]};border-radius:14px;padding:10px 12px;margin-bottom:8px">
+              <div style="font-weight:800;font-size:13px;color:${t[0]}"><i class="fa-solid ${t[1]}"></i> ${esc(n.title || 'নোটিশ')}</div>
+              <div style="font-size:12px;color:#334155;margin-top:3px;white-space:pre-wrap">${esc(n.message)}</div>
+              ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" style="font-size:11px;color:#4f46e5;font-weight:700">লিংক খুলুন →</a>` : ''}
+              <div style="font-size:10px;color:#94a3b8;margin-top:4px">${d.toLocaleString('bn-BD')}</div></div>`; }).join('')
+            : '<p style="color:#94a3b8;font-size:13px">কোনো নোটিফিকেশন নেই</p>';
+        Swal.fire({ title: '🔔 নোটিফিকেশন', html: '<div style="max-height:55vh;overflow:auto">' + html + '</div>', confirmButtonText: 'ঠিক আছে' });
+        if (l.length) localStorage.setItem('noticeSeen', String(ntTime(l[0]))); updateBell();
+    }
+    db.collection('notices').orderBy('createdAt', 'desc').limit(30).onSnapshot(snap => {
+        noticesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (!noticesFirstLoad) snap.docChanges().forEach(c => { if (c.type === 'added' && !c.doc.metadata.hasPendingWrites) {
+            const n = c.doc.data(); if (n.active === false) return;
+            Swal.fire({ toast: true, position: 'top', timer: 5000, showConfirmButton: false, icon: 'info', title: n.title || 'নতুন নোটিফিকেশন', text: n.message }); } });
+        noticesFirstLoad = false; renderTicker(); updateBell();
+    }, () => {});
 </script>
 </body>
 </html>

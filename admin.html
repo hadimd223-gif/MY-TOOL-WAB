@@ -182,6 +182,11 @@
             <a href="#" onclick="switchView('banners')" id="nav-banners" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-image w-8 text-center"></i> Banners
             </a>
+            <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
+            <a href="#" onclick="switchView('promos')" id="nav-promos" class="nav-link flex items-center px-4 py-3"><i class="fas fa-ticket-alt w-8 text-center"></i> Promo Codes</a>
+            <a href="#" onclick="openPayments();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-receipt w-8 text-center"></i> Payments Log</a>
+            <a href="#" onclick="openPaySettings();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-percent w-8 text-center"></i> Reseller &amp; Pay Settings</a>
+            <a href="#" onclick="openExtras();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-toolbox w-8 text-center"></i> Extras</a>
         </nav>
         <div class="p-6 border-t border-dark-border">
             <button onclick="logoutAdmin()" class="flat-btn w-full bg-dark-bg border border-dark-border hover:border-orange-500 text-gray-300 hover:text-orange-500 flex items-center justify-center">
@@ -429,14 +434,61 @@
                 </div>
             </div>
 
+            <div id="view-notices" class="view-section hidden">
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4">Send Broadcast Notification</h3>
+                    <p class="text-xs text-gray-400 mb-4">Every user sees this instantly in the top bar and the 🔔 bell of the main website.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input id="n-title" class="flat-input" placeholder="Title (optional)">
+                        <select id="n-type" class="flat-input"><option value="info">Info (blue)</option><option value="success">Success (green)</option><option value="warning">Warning (orange)</option><option value="promo">Offer / Promo (pink)</option></select>
+                        <textarea id="n-msg" class="flat-input md:col-span-2 h-24" placeholder="Message *"></textarea>
+                        <input id="n-link" class="flat-input" placeholder="Link (optional, https://...)">
+                        <div><label class="block text-xs text-gray-400 mb-1">Auto-hide after (optional)</label><input id="n-exp" type="datetime-local" class="flat-input"></div>
+                    </div>
+                    <button onclick="sendNotice()" class="flat-btn mt-5 w-full md:w-auto"><i class="fas fa-paper-plane mr-2"></i>Send to all users</button>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-orange-500 mb-4">Sent notifications</h3>
+                    <div class="flat-table-container"><table class="flat-table text-sm"><thead><tr><th>Time</th><th>Message</th><th>Type</th><th>Expires</th><th>Status</th></tr></thead><tbody id="notice-list"></tbody></table></div></div>
+            </div>
+
+            <div id="view-promos" class="view-section hidden">
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4">Create Promo Code</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="flex gap-2"><input id="p-code" class="flat-input uppercase" placeholder="CODE (e.g. EID20)"><button onclick="genPromo()" class="flat-btn px-4" title="Generate"><i class="fas fa-dice"></i></button></div>
+                        <select id="p-type" class="flat-input"><option value="cash">Cash — user gets ৳ in wallet</option><option value="discount_percent">Order discount — percent (%)</option><option value="discount_flat">Order discount — fixed ৳</option><option value="bonus_percent">Add-money bonus — percent (%)</option></select>
+                        <input id="p-value" type="number" step="any" class="flat-input" placeholder="Value (৳ or %)">
+                        <input id="p-max" type="number" class="flat-input" placeholder="Max users (0 = unlimited)">
+                        <div><label class="block text-xs text-gray-400 mb-1">Expiry date &amp; time (optional)</label><input id="p-exp" type="datetime-local" class="flat-input"></div>
+                        <input id="p-note" class="flat-input" placeholder="Note (only you see this)">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">Each user can use a code only once. Cash codes are redeemed from the Profile page, discount codes at order time, bonus codes when adding money.</p>
+                    <button onclick="savePromo()" class="flat-btn mt-5 w-full md:w-auto"><i class="fas fa-plus mr-2"></i>Save Promo Code</button>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-orange-500 mb-4">All promo codes</h3>
+                    <div class="flat-table-container"><table class="flat-table text-sm"><thead><tr><th>Code</th><th>Reward</th><th>Used</th><th>Expiry</th><th>Status</th><th></th></tr></thead><tbody id="promo-list"></tbody></table></div></div>
+            </div>
+
             <div id="view-users" class="view-section hidden">
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-1">Quick Control by Support PIN</h3>
+                    <p class="text-xs text-gray-400 mb-4">User gives you the PIN shown in their Profile. Add/deduct money, ban, make reseller or admin.</p>
+                    <div class="flex gap-2 mb-4"><input id="qc-pin" class="flat-input uppercase" placeholder="Support PIN or email" onkeydown="if(event.key==='Enter')qcFind()"><button onclick="qcFind()" class="flat-btn px-6"><i class="fas fa-search"></i></button></div>
+                    <div id="qc-box"></div>
+                </div>
                 <div class="card">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                         <h3 class="text-xl font-bold text-orange-500">User Management</h3>
                         <div class="relative w-full md:w-80">
-                            <input type="text" id="user-search" placeholder="Search by Email..." class="flat-input pl-10" onkeyup="searchUsers()">
+                            <input type="text" id="user-search" placeholder="Search name, email or PIN..." class="flat-input pl-10" onkeyup="searchUsers()">
                             <i class="fas fa-search absolute left-3 top-4 text-gray-400"></i>
                         </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button class="uf-chip px-4 py-2 rounded-full text-xs font-bold" data-f="all" style="background:#f97316;color:#fff" onclick="setUserFilter('all')">All</button>
+                        <button class="uf-chip px-4 py-2 rounded-full text-xs font-bold" data-f="reseller" style="background:#1f2430;color:#9ca3af" onclick="setUserFilter('reseller')">Resellers</button>
+                        <button class="uf-chip px-4 py-2 rounded-full text-xs font-bold" data-f="admin" style="background:#1f2430;color:#9ca3af" onclick="setUserFilter('admin')">Admins</button>
+                        <button class="uf-chip px-4 py-2 rounded-full text-xs font-bold" data-f="banned" style="background:#1f2430;color:#9ca3af" onclick="setUserFilter('banned')">Banned</button>
                     </div>
                     <div class="flat-table-container">
                         <table class="flat-table text-sm">
@@ -535,9 +587,13 @@
             backdrop.classList.toggle('hidden');
         }
 
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             hideLoading();
             if (user) {
+                try {
+                    const me = (await db.collection('users').doc(user.uid).get()).data() || {};
+                    if (me.role !== 'admin') { await auth.signOut(); Swal.fire('Access denied', 'This account is not an admin. In Firebase Console > Firestore > users > your document, set role = admin.', 'error'); return; }
+                } catch (e) { await auth.signOut(); Swal.fire('Error', e.message, 'error'); return; }
                 document.getElementById('login-modal').style.display = 'none';
                 document.getElementById('sidebar').classList.remove('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
@@ -594,7 +650,9 @@
                 users: "User Management",
                 unpin: "Unpin Code Management",
                 tutorials: "Video Tutorials",
-                banners: "Slider Banners"
+                banners: "Slider Banners",
+                notices: "Broadcast Notifications",
+                promos: "Promo Codes"
             };
             
             const pageTitleEl = document.getElementById('page-title');
@@ -625,6 +683,8 @@
             if(viewId === 'unpin') loadUnpinCodes();
             if(viewId === 'tutorials') loadTutorials();
             if(viewId === 'banners') loadBanners();
+            if(viewId === 'notices') loadNotices();
+            if(viewId === 'promos') loadPromos();
         }
 
         async function loadDashboardData() {
@@ -789,7 +849,7 @@
             const catId = document.getElementById('srv-category').value;
             const type = document.getElementById('srv-type').value;
             const rules = document.getElementById('srv-rules').value;
-            if(!name || !catId) return Swal.fire('Error', 'Name and Category required', 'error');
+            if(!name || !catId) return Swal.fire('Error', 'নাম দিন এবং একটি Category সিলেক্ট করুন (Category না থাকলে আগে Categories মেনু থেকে বানান)', 'error');
             showLoading();
             db.collection('services').add({name, image, categoryId: catId, type, rules}).then(() => {
                 hideLoading();
@@ -999,7 +1059,7 @@
         }
 
         function loadUsers() {
-            db.collection('users').orderBy('createdAt', 'desc').limit(1000).onSnapshot(snap => {
+            db.collection('users').orderBy('createdAt', 'desc').limit(5000).onSnapshot(snap => {
                 allUsers = [];
                 snap.forEach(doc => allUsers.push({id: doc.id, ...doc.data()}));
                 renderUsers(allUsers);
@@ -1144,7 +1204,7 @@
         }
     
     // ===== EXTRAS: Like API, guild, reseller discount, user roles, auto Like processor =====
-    function extraBtn(t,fn,b){const x=document.createElement('button');x.textContent=t;x.onclick=fn;x.style.cssText='position:fixed;right:16px;bottom:'+b+'px;z-index:60;padding:10px 16px;border-radius:14px;border:0;background:#6366f1;color:#fff;font-weight:700;box-shadow:0 6px 20px #6366f155';document.body.appendChild(x)}
+    function extraBtn(){}
     extraBtn('Extras',openExtras,16);extraBtn('Users',openUserEditor,64);
     async function openExtras(){
         const d=(await db.collection('settings').doc('general').get()).data()||{},k=(await db.collection('secrets').doc('api').get()).data()||{};
@@ -1230,6 +1290,126 @@
     auth.onAuthStateChanged(async u=>{if(!u)return;try{const d=(await db.collection('users').doc(u.uid).get()).data()||{};if(d.role==='admin'&&d.perms){
       const map={users:'nav-users',deposits:'nav-deposits',orders:'nav-orders',products:'nav-services',settings:'nav-settings'};
       Object.entries(map).forEach(([k,id])=>{if(!d.perms[k]){const e=document.getElementById(id);if(e)e.style.display='none'}})}}catch(e){}});
+
+    // ================= PRO ADMIN v3 =================
+    const SA = (t, x, i) => Swal.fire(t, x || '', i || 'info');
+    async function logAdmin(target, change) { try { await db.collection('adminLogs').add({ at: FV.serverTimestamp(), by: (auth.currentUser || {}).email || '', target: target, change: change }); } catch (e) {} }
+    async function applyUser(uid, upd, change) {
+        try { showLoading(); await db.collection('users').doc(uid).update(upd); await logAdmin(uid, change); hideLoading();
+            Swal.fire({ icon: 'success', title: 'Done', timer: 1000, showConfirmButton: false }); setTimeout(() => qcShow(uid), 700);
+        } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+    }
+
+    // ---- users list with filters ----
+    let userFilter = 'all';
+    function setUserFilter(f) { userFilter = f; document.querySelectorAll('.uf-chip').forEach(b => { const on = b.dataset.f === f; b.style.background = on ? '#f97316' : '#1f2430'; b.style.color = on ? '#fff' : '#9ca3af'; }); searchUsers(); }
+    function userMatch(u) { return userFilter === 'all' || (userFilter === 'reseller' && u.role === 'reseller') || (userFilter === 'admin' && u.role === 'admin') || (userFilter === 'banned' && u.banned); }
+    function renderUsers(users) {
+        const l = document.getElementById('user-list'); if (!l) return;
+        users = users.filter(userMatch);
+        l.innerHTML = users.length ? users.map(u => {
+            const d = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate().toLocaleDateString() : 'N/A';
+            const r = u.role === 'admin' ? '<span class="zp-b" style="background:#e11d48">Admin</span>' : u.role === 'reseller' ? '<span class="zp-b" style="background:#f59e0b">Reseller</span>' : '<span class="zp-b" style="background:#475569">User</span>';
+            return `<tr><td class="text-gray-400 text-sm">${d}</td><td><span class="font-medium text-white">${esc(u.name || 'N/A')}</span> ${r}${u.banned ? ' <span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}<br><span class="text-xs text-gray-400">PIN: <b class="text-orange-400">${pinOf(u)}</b> • ${Math.floor(u.points || u.totalDeposit || 0)} pts</span></td>
+            <td class="break-all">${esc(u.email || '')}</td><td class="font-bold text-orange-500">৳${u.balance || 0}</td>
+            <td class="text-center"><button onclick="qcShow('${u.id}');window.scrollTo({top:0,behavior:'smooth'});document.querySelector('#main-content > div').scrollTo({top:0,behavior:'smooth'})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-sliders-h md:mr-1"></i><span class="hidden md:inline">Control</span></button></td></tr>`;
+        }).join('') : '<tr><td colspan="5" class="text-center text-gray-500 py-6">No users</td></tr>';
+    }
+    function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+    function searchUsers() {
+        const t = ((document.getElementById('user-search') || {}).value || '').toLowerCase().trim();
+        renderUsers(allUsers.filter(u => !t || (u.email || '').toLowerCase().includes(t) || (u.name || '').toLowerCase().includes(t) || pinOf(u).toLowerCase() === t || u.id.toLowerCase() === t));
+    }
+
+    // ---- quick control by Support PIN ----
+    function qcFind() {
+        const q = (document.getElementById('qc-pin').value || '').trim().toLowerCase(), box = document.getElementById('qc-box');
+        if (!q) return;
+        if (!allUsers.length) { box.innerHTML = '<p class="text-gray-400 text-sm">Users are loading... try again in a moment.</p>'; loadUsers(); return; }
+        const u = allUsers.find(x => pinOf(x).toLowerCase() === q) || allUsers.find(x => (x.email || '').toLowerCase() === q);
+        if (!u) { box.innerHTML = '<p class="text-red-400 text-sm font-semibold">No user found with this Support PIN / email.</p>'; return; }
+        qcShow(u.id);
+    }
+    function qcShow(uid) {
+        const u = allUsers.find(x => x.id === uid), box = document.getElementById('qc-box'); if (!u || !box) return;
+        const b = (act, label, color, icon) => `<button onclick="userAction('${uid}','${act}')" class="flat-btn text-xs py-2.5 px-3" style="background:${color}"><i class="fas ${icon} mr-1"></i>${label}</button>`;
+        box.innerHTML = `<div style="background:#161a23;border:1px solid #2a3040;border-radius:18px;padding:16px">
+          <div class="flex flex-wrap justify-between gap-2 mb-3"><div><div class="text-white font-bold text-lg">${esc(u.name || 'N/A')} ${u.banned ? '<span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}</div><div class="text-gray-400 text-sm break-all">${esc(u.email || '')}</div></div>
+            <div class="text-right"><div class="text-2xl font-extrabold text-orange-500">৳${u.balance || 0}</div><div class="text-xs text-gray-400">PIN <b>${pinOf(u)}</b> • ${esc(u.role || 'user')} • ${Math.floor(u.points || u.totalDeposit || 0)} pts</div></div></div>
+          <div class="flex flex-wrap gap-2">
+            ${b('add', 'Add Money', '#16a34a', 'fa-plus')}${b('deduct', 'Deduct Money', '#dc2626', 'fa-minus')}
+            ${u.banned ? b('unban', 'Unban', '#0ea5e9', 'fa-unlock') : b('ban', 'Ban', '#7f1d1d', 'fa-ban')}
+            ${u.role === 'reseller' ? b('unreseller', 'Remove Reseller', '#6b7280', 'fa-user-minus') : b('reseller', 'Make Reseller', '#f59e0b', 'fa-crown')}
+            ${u.role === 'admin' ? b('unadmin', 'Remove Admin', '#6b7280', 'fa-user-shield') : b('admin', 'Make Admin', '#e11d48', 'fa-user-shield')}
+            ${b('points', 'Set Points', '#6366f1', 'fa-star')}${b('manage', 'Full Manage', '#374151', 'fa-user-cog')}
+          </div></div>`;
+    }
+    async function userAction(uid, act) {
+        const u = allUsers.find(x => x.id === uid); if (!u) return;
+        if (act === 'manage') return manageUser(uid);
+        if (act === 'add' || act === 'deduct') {
+            const r = await Swal.fire({ title: act === 'add' ? 'Add money' : 'Deduct money', input: 'number', inputLabel: 'Amount (৳)', inputAttributes: { min: 1 }, showCancelButton: true });
+            const v = parseInt(r.value); if (!r.isConfirmed || !(v > 0)) return;
+            return applyUser(uid, { balance: FV.increment(act === 'add' ? v : -v) }, { balanceDelta: act === 'add' ? v : -v });
+        }
+        if (act === 'points') { const r = await Swal.fire({ title: 'Set points', input: 'number', inputValue: Math.floor(u.points || 0), showCancelButton: true }); if (!r.isConfirmed) return; return applyUser(uid, { points: parseInt(r.value) || 0 }, { points: r.value }); }
+        const map = { ban: [{ banned: true }, 'Ban this user?'], unban: [{ banned: false }, 'Unban this user?'], reseller: [{ role: 'reseller' }, 'Make this user a Reseller?'],
+            unreseller: [{ role: 'user' }, 'Remove reseller status?'], admin: [{ role: 'admin' }, 'Give FULL admin access to this user?'], unadmin: [{ role: 'user', perms: FV.delete() }, 'Remove admin access?'] };
+        const m = map[act]; if (!m) return;
+        const r = await Swal.fire({ title: 'Confirm', text: m[1], icon: 'question', showCancelButton: true }); if (!r.isConfirmed) return;
+        applyUser(uid, m[0], { action: act });
+    }
+
+    // ---- broadcast notifications ----
+    let _unN = null;
+    function loadNotices() {
+        if (_unN) _unN();
+        _unN = db.collection('notices').orderBy('createdAt', 'desc').limit(50).onSnapshot(snap => {
+            document.getElementById('notice-list').innerHTML = snap.empty ? '<tr><td colspan="5" class="text-center text-gray-500 py-6">No notifications yet</td></tr>' : snap.docs.map(d => { const n = d.data(), t = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate().toLocaleString() : '...';
+                const ex = n.expiresAtMs ? new Date(n.expiresAtMs).toLocaleString() : '—';
+                return `<tr><td class="text-xs text-gray-400">${t}</td><td><b class="text-white">${esc(n.title || '')}</b><br><span class="text-gray-300 text-xs">${esc(n.message)}</span></td><td class="text-xs">${esc(n.type)}</td><td class="text-xs">${ex}</td>
+                <td class="whitespace-nowrap"><button onclick="toggleNotice('${d.id}',${n.active === false})" class="flat-btn text-xs py-2 px-3 mr-1" style="background:${n.active === false ? '#6b7280' : '#16a34a'}">${n.active === false ? 'Off' : 'Live'}</button><button onclick="delNotice('${d.id}')" class="flat-btn text-xs py-2 px-3" style="background:#dc2626"><i class="fas fa-trash"></i></button></td></tr>`; }).join('');
+        }, e => SA('Error', e.message, 'error'));
+    }
+    async function sendNotice() {
+        const title = document.getElementById('n-title').value.trim(), message = document.getElementById('n-msg').value.trim();
+        if (!message) return SA('Message required', 'Write the notification message', 'warning');
+        const exp = document.getElementById('n-exp').value, link = document.getElementById('n-link').value.trim();
+        try { showLoading(); await db.collection('notices').add({ title: title, message: message, type: document.getElementById('n-type').value, link: link, active: true, expiresAtMs: exp ? new Date(exp).getTime() : 0, createdAt: FV.serverTimestamp() });
+            hideLoading(); ['n-title', 'n-msg', 'n-link', 'n-exp'].forEach(i => document.getElementById(i).value = ''); Swal.fire({ icon: 'success', title: 'Broadcast sent to all users', timer: 1400, showConfirmButton: false });
+        } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+    }
+    const toggleNotice = (id, on) => db.collection('notices').doc(id).update({ active: on });
+    async function delNotice(id) { const r = await Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true }); if (r.isConfirmed) db.collection('notices').doc(id).delete(); }
+
+    // ---- promo codes ----
+    const PTYPES = { cash: 'Cash (user gets ৳)', discount_percent: 'Order Discount %', discount_flat: 'Order Discount ৳', bonus_percent: 'Add-Money Bonus %' };
+    let _unP = null;
+    function genPromo() { document.getElementById('p-code').value = Math.random().toString(36).slice(2, 8).toUpperCase(); }
+    function loadPromos() {
+        if (_unP) _unP();
+        _unP = db.collection('promos').onSnapshot(snap => {
+            document.getElementById('promo-list').innerHTML = snap.empty ? '<tr><td colspan="6" class="text-center text-gray-500 py-6">No promo codes yet</td></tr>' : snap.docs.map(d => { const p = d.data(), unit = (p.type || '').includes('percent') ? '%' : '৳';
+                const ex = p.expiresAtMs ? new Date(p.expiresAtMs).toLocaleString() : 'No expiry', expired = p.expiresAtMs && p.expiresAtMs < Date.now(), full = p.maxUses && (p.used || 0) >= p.maxUses;
+                return `<tr><td><b class="text-orange-400 tracking-widest">${esc(d.id)}</b><br><span class="text-xs text-gray-500">${esc(p.note || '')}</span></td><td class="text-xs">${esc(PTYPES[p.type] || p.type)}<br><b class="text-white">${p.value}${unit}</b></td>
+                <td>${p.used || 0} / ${p.maxUses ? p.maxUses : '∞'}</td><td class="text-xs ${expired ? 'text-red-400' : ''}">${ex}</td>
+                <td><button onclick="togglePromo('${d.id}',${p.active === false})" class="flat-btn text-xs py-2 px-3" style="background:${p.active === false || expired || full ? '#6b7280' : '#16a34a'}">${p.active === false ? 'Off' : expired ? 'Expired' : full ? 'Full' : 'Active'}</button></td>
+                <td><button onclick="delPromo('${d.id}')" class="flat-btn text-xs py-2 px-3" style="background:#dc2626"><i class="fas fa-trash"></i></button></td></tr>`; }).join('');
+        }, e => SA('Error', e.message, 'error'));
+    }
+    async function savePromo() {
+        const code = document.getElementById('p-code').value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, ''), type = document.getElementById('p-type').value, value = parseFloat(document.getElementById('p-value').value);
+        if (!code || !(value > 0)) return SA('Missing data', 'Enter a code and a value greater than 0', 'warning');
+        if (type.includes('percent') && value > 100) return SA('Invalid', 'Percent cannot be above 100', 'warning');
+        const exp = document.getElementById('p-exp').value, ref = db.collection('promos').doc(code), old = await ref.get();
+        if (old.exists) { const r = await Swal.fire({ title: 'Code exists', text: 'Overwrite settings? (used count is kept)', icon: 'question', showCancelButton: true }); if (!r.isConfirmed) return; }
+        try { showLoading(); await ref.set({ code: code, type: type, value: value, maxUses: parseInt(document.getElementById('p-max').value) || 0, expiresAtMs: exp ? new Date(exp).getTime() : 0,
+                note: document.getElementById('p-note').value.trim(), active: true, used: old.exists ? (old.data().used || 0) : 0, createdAt: FV.serverTimestamp() }, { merge: true });
+            hideLoading(); ['p-code', 'p-value', 'p-max', 'p-exp', 'p-note'].forEach(i => document.getElementById(i).value = ''); Swal.fire({ icon: 'success', title: 'Promo saved', timer: 1200, showConfirmButton: false });
+        } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+    }
+    const togglePromo = (id, on) => db.collection('promos').doc(id).update({ active: on });
+    async function delPromo(id) { const r = await Swal.fire({ title: 'Delete ' + id + '?', icon: 'warning', showCancelButton: true }); if (r.isConfirmed) db.collection('promos').doc(id).delete(); }
 </script>
 </body>
 </html>
