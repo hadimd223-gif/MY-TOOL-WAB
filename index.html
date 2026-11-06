@@ -1,110 +1,319 @@
 <!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>M H X WEBSITE - Task & Offerwall Platform</title>
-<link rel="icon" href="https://i.ibb.co.com/PsRT85vY/1792669720028.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M H X স্টোর</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#07060d;--gold:#ffc83d;--pink:#ff4fa3;--vio:#7c5cff;--cy:#3de0ff;--txt:#f4f2ff;--mut:#a9a4c4;
---glass:rgba(255,255,255,.07);--line:rgba(255,255,255,.14)}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;background:var(--bg);color:var(--txt);font-family:'Hind Siliguri',system-ui,sans-serif;overflow-x:hidden;
-padding:max(14px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
-.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.55;z-index:-1;animation:drift 18s ease-in-out infinite alternate}
-.b1{width:340px;height:340px;background:var(--vio);top:-90px;left:-80px}
-.b2{width:300px;height:300px;background:var(--pink);bottom:-80px;right:-70px;animation-delay:-6s}
-.b3{width:220px;height:220px;background:var(--cy);top:45%;left:55%;opacity:.28;animation-delay:-11s}
-@keyframes drift{to{transform:translate(50px,-40px) scale(1.2)}}
-.wrap{max-width:680px;margin:0 auto;display:grid;gap:16px}
-.glass{background:var(--glass);border:1px solid var(--line);border-radius:24px;backdrop-filter:blur(22px) saturate(160%);
--webkit-backdrop-filter:blur(22px) saturate(160%);box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);
-padding:20px;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
-.glass:nth-child(2){animation-delay:.1s}.glass:nth-child(3){animation-delay:.2s}.glass:nth-child(4){animation-delay:.3s}
-@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.97)}}
-header{display:flex;align-items:center;gap:16px}
-.logo-w{position:relative;width:68px;height:68px;flex:none}
-.logo-w img{position:absolute;inset:4px;width:60px;height:60px;border-radius:50%;object-fit:cover}
-.logo-w i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--gold),var(--pink),var(--vio),var(--cy),var(--gold));
-animation:spin 6s linear infinite;box-shadow:0 0 28px rgba(255,200,61,.5)}
-@keyframes spin{to{transform:rotate(360deg)}}
-h1{font-family:Sora,sans-serif;font-weight:800;font-size:clamp(22px,6vw,32px);letter-spacing:.1em;
-background:linear-gradient(95deg,var(--gold),var(--pink) 55%,var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--mut);font-size:13px;margin-top:2px}
-.prog{display:flex;align-items:center;gap:20px}
-.ring{position:relative;width:110px;height:110px;flex:none}
-.ring svg{transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
-.ring .t{stroke:rgba(255,255,255,.1)}
-.ring .v{stroke:url(#g);stroke-dasharray:302;stroke-dashoffset:241.6;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
-.ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 28px Sora,sans-serif}
-.ring b small{font-size:13px;color:var(--mut);font-weight:500}
-.dots{display:flex;gap:8px;margin:10px 0 8px}
-.dots span{flex:1;height:8px;border-radius:9px;background:rgba(255,255,255,.1)}
-.dots span.on{background:linear-gradient(90deg,var(--gold),var(--pink));box-shadow:0 0 12px rgba(255,200,61,.6)}
-.hint{color:var(--mut);font-size:14px;line-height:1.55}
-.hint em{color:var(--gold);font-style:normal;font-weight:600}
-.wall h3{font:700 17px Sora,sans-serif;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
-.badge-live{background:rgba(61,224,255,.15);color:var(--cy);font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(61,224,255,.3)}
-.frame{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#12101f;min-height:520px;display:grid;place-items:center;text-align:center;padding:20px}
-.mock-offer{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:18px;border-radius:14px;width:100%;max-width:450px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
-.mock-offer span{font-weight:600;font-size:14px}
-.mock-btn{background:linear-gradient(95deg,var(--gold),#ff9a3d);color:#1a1200;border:0;padding:8px 16px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer}
-footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7;margin-top:10px}
-</style>
-</head>
-<body>
-<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-<main class="wrap">
-  <section class="glass"><header>
-    <div class="logo-w"><i></i><img src="https://i.ibb.co.com/PsRT85vY/1792669720028.jpg" alt="M H X WEBSITE"></div>
-    <div>
-      <h1>M H X WEBSITE</h1>
-      <p class="sub">Official Reward & Task Integration Portal</p>
-    </div>
-  </header></section>
+:root{--bg:#0c0a1d;--c:#171433;--p:#7c5cff;--p2:#19d3c5;--t:#f1efff;--m:#9a96c4;--ok:#22c55e;--no:#ef4444}
+*{box-sizing:border-box;margin:0;font-family:"Hind Siliguri",system-ui,sans-serif}
+body{background:radial-gradient(circle at 50% -10%,#2b1f74,var(--bg) 55%) fixed;color:var(--t);min-height:100vh;padding-bottom:84px}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;position:sticky;top:0;background:#0c0a1dd9;backdrop-filter:blur(10px);z-index:5}
+header b{font-size:21px;letter-spacing:.5px;background:linear-gradient(90deg,var(--p),var(--p2));-webkit-background-clip:text;color:transparent}
+main{max-width:520px;margin:auto;padding:16px}
+.card{background:var(--c);border:1px solid #ffffff14;border-radius:18px;padding:18px;margin-bottom:14px}
+.btn{background:var(--p);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+.btn.alt{background:#ffffff14}.btn.g{background:#fff;color:#222}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--p2);outline-offset:2px}
+input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #ffffff22;background:#0c0a1d;color:var(--t);font-size:15px;margin-bottom:10px}
+.row{display:flex;gap:10px}.m{color:var(--m);font-size:13px}
+.bal{font-size:38px;font-weight:700}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;background:#ffffff18;font-size:12px}
+.badge.r{background:linear-gradient(90deg,var(--p),var(--p2))}
+.add{display:block;margin:26px auto;width:170px;height:170px;border-radius:50%;border:0;cursor:pointer;color:#fff;font-size:20px;font-weight:700;background:radial-gradient(circle at 30% 25%,var(--p2),var(--p));box-shadow:0 0 0 10px #7c5cff22,0 0 60px #7c5cff77}
+.add span{display:block;font-size:42px;line-height:1}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#12102b;border-top:1px solid #ffffff14}
+nav button{flex:1;padding:14px;background:none;border:0;color:var(--m);font-size:14px;cursor:pointer}
+nav button.on{color:var(--p2);font-weight:700}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:9}
+.modal.show{display:flex}.sheet{background:var(--c);width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.chips button{flex:1;padding:10px;border-radius:10px;border:1px solid #ffffff22;background:none;color:var(--t);cursor:pointer}
+.bar{height:8px;background:#ffffff18;border-radius:99px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--p2))}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff10}.item:last-child{border:0}
+.item button{width:auto;padding:8px 14px}
+.hide{display:none!important}
+@media(prefers-reduced-motion:no-preference){.add{transition:transform .15s}.add:active{transform:scale(.96)}}
+</style></head><body>
+<header><b id="brand">M H X স্টোর</b><span id="hb" class="badge hide"></span></header>
 
-  <section class="glass">
-    <div class="prog">
-      <div class="ring"><svg width="110" height="110" viewBox="0 0 110 110"><defs>
-        <linearGradient id="g"><stop offset="0" stop-color="#ffc83d"/><stop offset="1" stop-color="#ff4fa3"/></linearGradient></defs>
-        <circle class="t" cx="55" cy="55" r="48"/><circle class="v" cx="55" cy="55" r="48"/></svg>
-        <b><span><span id="n">1</span><small> / 5</small></span></b></div>
-      <div style="flex:1"><div class="hint">কমপ্লিট করুন <em>টেস্ট টাস্ক</em> এবং জেনারেট করুন সিকিউর ইউনিক রিওয়ার্ড কোড।</div>
-        <div class="dots" id="dots"><span class="on"></span><span></span><span></span><span></span><span></span></div>
-        <div class="hint">🎁 সিস্টেম স্ট্যাটাস: <em>Active & Ready</em></div></div>
-    </div>
-  </section>
-
-  <!-- রিভিউ টিমের জন্য ভিআইপি অফারওয়াল ইন্টারফেস সেকশন -->
-  <section class="glass wall">
-    <h3>
-      <span>🎯 Offerwall Tasks & Apps</span>
-      <span class="badge-live">Live Integration</span>
-    </h3>
-    <div class="frame" id="wallArea">
-      <div style="width:100%">
-        <div class="mock-offer">
-          <div>
-            <div style="font-weight:700;text-align:left">Install & Open App (Task #1)</div>
-            <div style="font-size:12px;color:var(--mut);text-align:left">Reward: +50 Points</div>
-          </div>
-          <button class="mock-btn" onclick="alert('Task verified successfully! Proceed to next.')">Start Task</button>
-        </div>
-        <div class="mock-offer">
-          <div>
-            <div style="font-weight:700;text-align:left">Complete Quick Survey</div>
-            <div style="font-size:12px;color:var(--mut);text-align:left">Reward: +100 Points</div>
-          </div>
-          <button class="mock-btn" onclick="alert('Task verified successfully! Proceed to next.')">Start Task</button>
-        </div>
-        <p style="font-size:12px;color:var(--mut);margin-top:15px;">Torox / OfferToro API integration framework is fully initialized for user balance dispatch.</p>
-      </div>
-    </div>
-  </section>
-  
-  <footer>© M H X WEBSITE • Secure Automated Reward & Task System</footer>
+<main id="auth">
+ <div class="card"><h2 style="margin-bottom:12px">লগইন বা সাইন আপ</h2>
+  <button class="btn g" id="g">Google দিয়ে চালিয়ে যান</button>
+  <p class="m" style="text-align:center;margin:12px 0">অথবা ইমেইল ও পাসওয়ার্ড</p>
+  <input id="em" type="email" placeholder="ইমেইল"><input id="pw" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
+  <div class="row"><button class="btn" id="login">লগইন</button><button class="btn alt" id="signup">সাইন আপ</button></div>
+ </div>
 </main>
-</body>
-</html>
+
+<main id="app" class="hide">
+ <section id="v-home">
+  <div class="card"><div class="m">আপনার ব্যালেন্স</div><div class="bal" id="bal">৳0</div>
+   <div class="m" id="rp"></div><div class="bar"><i id="rbar" style="width:0"></i></div></div>
+  <button class="add" id="addbtn"><span>+</span>Add Money</button>
+  <div class="card"><b>প্রমো কোড</b><div class="row" style="margin-top:10px"><input id="pc" placeholder="কোড লিখুন" style="margin:0"><button class="btn" id="redeem" style="width:130px">রিডিম করুন</button></div></div>
+  <div class="card"><b>নোটিফিকেশন</b><div id="notes" class="m" style="margin-top:8px">কোনো নোটিফিকেশন নেই</div></div>
+ </section>
+ 
+ <section id="v-svc" class="hide">
+  <div class="card">
+    <b>ফ্রি ফায়ার লাইক সার্ভিস ও প্যাকেজ</b>
+    <div id="svc" style="margin-top:8px"></div>
+  </div>
+ </section>
+
+ <section id="v-me" class="hide">
+  <div class="card"><div id="nm" style="font-size:20px;font-weight:700"></div><div class="m" id="mail"></div>
+   <p style="margin-top:14px" class="m">আপনার সাপোর্ট কোড</p><div class="bal" id="sc" style="letter-spacing:4px"></div>
+   <p class="m" style="margin:10px 0">রেফার লিংক</p><input id="rl" readonly><button class="btn alt" id="cp">লিংক কপি করুন</button></div>
+  <div class="card"><b>সাপোর্ট</b><p class="m" style="margin:6px 0 12px">সমস্যা হলে টেলিগ্রামে আপনার সাপোর্ট কোডসহ মেসেজ দিন।</p>
+   <a id="tg" target="_blank" rel="noopener"><button class="btn">Telegram: @mhxffv111</button></a></div>
+  <button class="btn alt" id="out">লগআউট</button>
+ </section>
+ <nav><button class="on" data-v="home">হোম</button><button data-v="svc">লাইক সার্ভিস</button><button data-v="me">প্রোফাইল</button></nav>
+</main>
+
+<!-- অটো পেমেন্ট মোডাল -->
+<div class="modal" id="dm"><div class="sheet">
+ <h3 style="margin-bottom:6px">অটো অ্যাড মানি (ZRPAYBD)</h3>
+ <p class="m" style="margin-bottom:12px">অ্যামাউন্ট সিলেক্ট করুন এবং সরাসরি গেটওয়ে থেকে পেমেন্ট কমপ্লিট করুন।</p>
+ <div class="chips"><button>10</button><button>50</button><button>100</button><button>500</button></div>
+ <input id="amt" type="number" min="10" placeholder="পরিমাণ (সর্বনিম্ন ১০ টাকা)">
+ <div class="row"><button class="btn alt" id="dc">বাতিল</button><button class="btn" id="ds">পেমেন্ট গেটওয়েতে যান</button></div>
+</div></div>
+
+<!-- লাইক সার্ভিস ইনপুট মোডাল -->
+<div class="modal" id="orderModal"><div class="sheet">
+ <h3 id="ordTitle" style="margin-bottom:6px">অর্ডার কনফার্ম করুন</h3>
+ <p class="m" id="ordPrice" style="margin-bottom:12px"></p>
+ <input id="ffUid" type="text" placeholder="Free Fire UID দিন (যেমন: 1203435801)">
+ <select id="ffServer">
+    <option value="BD">Bangladesh (BD)</option>
+    <option value="IND">India (IND)</option>
+    <option value="SG">Singapore (SG)</option>
+    <option value="ID">Indonesia (ID)</option>
+    <option value="TH">Thailand (TH)</option>
+    <option value="PK">Pakistan (PK)</option>
+ </select>
+ <div class="row"><button class="btn alt" id="ordCancel">বাতিল</button><button class="btn" id="ordConfirm">অর্ডার সাবমিট করুন</button></div>
+</div></div>
+
+<div class="modal" id="ban"><div class="sheet"><h3>অ্যাকাউন্ট ব্যান করা হয়েছে</h3><p class="m" style="margin:8px 0">সাপোর্টে যোগাযোগ করুন: @mhxffv111</p><button class="btn alt" onclick="location.reload()">রিফ্রেশ</button></div></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAnalytics}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+import{getAuth,GoogleAuthProvider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,addDoc,onSnapshot,collection,query,orderBy,limit,serverTimestamp,increment,runTransaction,updateDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",storageBucket:"m-h-x-wab-7abdf.firebasestorage.app",messagingSenderId:"570748526283",appId:"1:570748526283:web:3c786486aa3f838188c54e",measurementId:"G-VV3NQB0T1X"});
+try{getAnalytics(app)}catch(e){}
+
+const auth=getAuth(app),db=getFirestore(app),$=i=>document.getElementById(i);
+const fmt=n=>"৳"+(+n||0).toFixed(2).replace(/\.00$/,"");
+const go=async f=>{try{await f()}catch(e){alert(e.message)}};
+let S={name:"M H X স্টোর",resellerMin:500,refBonus:0},me,uid,svc=[],unsub=[],selectedSvc=null;
+
+const isRes=()=>me&&(me.role==="reseller"||me.role==="admin");
+
+// ZRPAYBD Payment Gateway Config (From Python Bot)
+const ZRPAYBD_CONFIG = {
+  apiKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
+  secretKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
+  brandKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
+  createUrl: "https://pay.zrpaybd.xyz/api/payment/create"
+};
+
+onSnapshot(doc(db,"settings","site"),d=>{if(d.exists())S={...S,...d.data()};$("brand").textContent=S.name;document.title=S.name;draw()});
+
+$("g").onclick=()=>go(()=>signInWithPopup(auth,new GoogleAuthProvider()));
+$("login").onclick=()=>go(()=>signInWithEmailAndPassword(auth,$("em").value,$("pw").value));
+$("signup").onclick=()=>go(()=>createUserWithEmailAndPassword(auth,$("em").value,$("pw").value));
+$("out").onclick=()=>signOut(auth);
+
+async function ensure(u){
+ const r=doc(db,"users",u.uid);if((await getDoc(r)).exists())return;
+ let code;do{code=String(Math.floor(1e5+Math.random()*9e5))}while((await getDoc(doc(db,"codes",code))).exists());
+ let bonus=0,by=null;const ref=new URLSearchParams(location.search).get("ref");
+ if(ref){const c=await getDoc(doc(db,"codes",ref));if(c.exists()){by=c.data().uid;bonus=+S.refBonus||0}}
+ await setDoc(doc(db,"codes",code),{uid:u.uid});
+ await setDoc(r,{email:u.email,name:u.displayName||u.email.split("@")[0],balance:bonus,totalDeposit:0,role:"user",banned:false,supportCode:code,referredBy:by,createdAt:serverTimestamp()});
+ if(by&&bonus)try{await updateDoc(doc(db,"users",by),{balance:increment(bonus)})}catch(e){}
+}
+
+onAuthStateChanged(auth,async u=>{
+ unsub.forEach(f=>f());unsub=[];
+ if(!u){uid=me=null;$("auth").classList.remove("hide");$("app").classList.add("hide");return}
+ uid=u.uid;await go(()=>ensure(u));
+ $("auth").classList.add("hide");$("app").classList.remove("hide");
+ unsub.push(onSnapshot(doc(db,"users",uid),d=>{me=d.data();draw()}));
+ unsub.push(onSnapshot(collection(db,"services"),s=>{
+   svc=s.docs.map(d=>({id:d.id,...d.data()}));
+   if(svc.length === 0) loadDefaultServices();
+   draw();
+ }));
+ unsub.push(onSnapshot(query(collection(db,"notifications"),orderBy("at","desc"),limit(15)),s=>{
+  $("notes").innerHTML=s.docs.map(d=>`<div class="item"><span>${esc(d.data().text)}</span></div>`).join("")||"কোনো নোটিফিকেশন নেই"}));
+});
+
+// ডিফল্ট লাইক প্যাকেজগুলো ডাটাবেজে লোড রাখা (যদি অ্যাডমিন প্যানেল থেকে অ্যাড না থাকে)
+function loadDefaultServices() {
+  const defaultPkgs = [
+    { name: "🔥 Daily Like (220+ Likes)", price: 6, resellerPrice: 4, type: "daily" },
+    { name: "💎 Daily Like PRO+ (30 Daily Limit)", price: 6, resellerPrice: 4, type: "daily_pro" },
+    { name: "🤖 Auto Like - 7 Days", price: 90, resellerPrice: 75, type: "auto_7" },
+    { name: "🤖 Auto Like - 15 Days", price: 150, resellerPrice: 125, type: "auto_15" },
+    { name: "🤖 Auto Like - 30 Days", price: 250, resellerPrice: 200, type: "auto_30" }
+  ];
+  svc = defaultPkgs.map((item, idx) => ({ id: "def_" + idx, ...item }));
+}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function draw(){
+ if(!me)return;
+ $("ban").classList.toggle("show",!!me.banned);
+ $("bal").textContent=fmt(me.balance);
+ const hb=$("hb");hb.classList.remove("hide");hb.textContent=me.role==="admin"?"Admin":isRes()?"Reseller":"User";hb.className="badge"+(isRes()?" r":"");
+ const min=+S.resellerMin||500,pct=Math.min(100,(me.totalDeposit||0)/min*100);
+ $("rp").textContent=isRes()?"আপনি একজন রিসেলার":`রিসেলার হতে আরও ${fmt(Math.max(0,min-(me.totalDeposit||0)))} ডিপোজিট করুন`;
+ $("rbar").style.width=pct+"%";
+ $("nm").textContent=me.name;$("mail").textContent=me.email;$("sc").textContent=me.supportCode;
+ $("rl").value=location.origin+location.pathname+"?ref="+me.supportCode;
+ $("tg").href="https://t.me/mhxffv111?text="+encodeURIComponent("সাপোর্ট কোড: "+me.supportCode);
+ 
+ $("svc").innerHTML=svc.map(s=>{const p=isRes()&&s.resellerPrice!=null?s.resellerPrice:s.price;
+  return`<div class="item"><div><b>${esc(s.name)}</b><div class="m">${fmt(p)}</div></div><button class="btn" data-b="${s.id}">অর্ডার করুন</button></div>`}).join("")||'<p class="m">এখনও কোনো সার্ভিস নেই</p>';
+}
+
+// সার্ভিস / লাইক ক্রয় হ্যান্ডলার
+$("svc").onclick=e=>{
+  const id=e.target.dataset.b;if(!id)return;
+  selectedSvc = svc.find(x=>x.id===id);
+  if(!selectedSvc) return;
+  
+  const price = +(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);
+  $("ordTitle").textContent = selectedSvc.name;
+  $("ordPrice").textContent = `মূল্য: ${fmt(price)}`;
+  $("ffUid").value = "";
+  $("orderModal").classList.add("show");
+};
+
+$("ordCancel").onclick=()=>$("orderModal").classList.remove("show");
+
+$("ordConfirm").onclick=()=>go(async()=>{
+  const uidInput = $("ffUid").value.trim();
+  const serverInput = $("ffServer").value;
+  
+  if(!uidInput || uidInput.length < 5) throw Error("সঠিক Free Fire UID প্রদান করুন!");
+  const p = +(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);
+  
+  await runTransaction(db, async t => {
+    const r = doc(db, "users", uid), d = await t.get(r);
+    if(d.data().banned) throw Error("অ্যাকাউন্ট ব্যান");
+    if(d.data().balance < p) throw Error("পর্যাপ্ত ব্যালেন্স নেই! দয়া করে Add Money করুন।");
+    
+    t.update(r, { balance: d.data().balance - p });
+    t.set(doc(collection(db, "orders")), {
+      user_id: uid,
+      game_uid: uidInput,
+      server: serverInput,
+      service_id: selectedSvc.id,
+      service_name: selectedSvc.name,
+      price: p,
+      status: "pending",
+      order_date: serverTimestamp()
+    });
+  });
+  
+  $("orderModal").classList.remove("show");
+  alert("আপনার লাইক অর্ডারটি সফলভাবে প্রসেসিংয়ে জমা হয়েছে!");
+});
+
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+ ["home","svc","me"].forEach(v=>$("v-"+v).classList.toggle("hide",v!==b.dataset.v))});
+$("cp").onclick=()=>{navigator.clipboard.writeText($("rl").value);alert("কপি হয়েছে")};
+
+$("addbtn").onclick=()=>$("dm").classList.add("show");
+$("dc").onclick=()=>$("dm").classList.remove("show");
+document.querySelectorAll(".chips button").forEach(b=>b.onclick=()=>$("amt").value=b.textContent);
+
+// ZRPAYBD অটো-পেমেন্ট গেটওয়ে চালুকরণ
+$("ds").onclick=()=>go(async()=>{
+ const a=+$("amt").value;
+ if(a<10) throw Error("সর্বনিম্ন ১০ টাকা এড করতে হবে");
+ 
+ const orderRef = "ORD" + Date.now() + uid.substring(0,5);
+ const payload = {
+    cus_name: me.name || `User ${uid}`,
+    cus_email: me.email || `user${uid}@gmail.com`,
+    amount: String(a),
+    success_url: location.origin + location.pathname + `?pay_status=success&ref=${orderRef}&amount=${a}`,
+    cancel_url: location.origin + location.pathname + `?pay_status=cancel`,
+    metadata: { user_id: uid, amount: String(a), order_ref: orderRef }
+ };
+ 
+ try {
+   const res = await fetch(ZRPAYBD_CONFIG.createUrl, {
+     method: "POST",
+     headers: {
+       "Content-Type": "application/json",
+       "API-KEY": ZRPAYBD_CONFIG.apiKey,
+       "SECRET-KEY": ZRPAYBD_CONFIG.secretKey,
+       "BRAND-KEY": ZRPAYBD_CONFIG.brandKey
+     },
+     body: JSON.stringify(payload)
+   });
+   const data = await res.json();
+   if(data && data.status === 1 && data.payment_url){
+     window.location.href = data.payment_url;
+   } else {
+     throw new Error(data.message || "পেমেন্ট গেটওয়ে চালু করা যায়নি!");
+   }
+ } catch(e) {
+   alert("Payment Error: " + e.message);
+ }
+});
+
+// পেমেন্ট থেকে রিটার্ন আসার পর ব্যালেন্স যোগ করার লজিক
+async function handlePaymentReturn() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get("pay_status");
+  const ref = urlParams.get("ref");
+  const amt = parseFloat(urlParams.get("amount"));
+  
+  if(status === "success" && ref && amt > 0 && uid) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+    await runTransaction(db, async t => {
+      const userRef = doc(db, "users", uid);
+      const userDoc = await t.get(userRef);
+      if(userDoc.exists()) {
+        const currentBal = userDoc.data().balance || 0;
+        const currentDep = userDoc.data().totalDeposit || 0;
+        t.update(userRef, {
+          balance: currentBal + amt,
+          totalDeposit: currentDep + amt
+        });
+        t.set(doc(collection(db, "deposits")), {
+          uid: uid,
+          amount: amt,
+          payment_key: ref,
+          status: "completed",
+          at: serverTimestamp()
+        });
+      }
+    });
+    alert(`অটো পেমেন্ট সফল হয়েছে! ৳${amt} ব্যালেন্সে যোগ করা হয়েছে।`);
+  } else if(status === "cancel") {
+    window.history.replaceState({}, document.title, window.location.pathname);
+    alert("পেমেন্ট বাতিল করা হয়েছে!");
+  }
+}
+
+// ফায়ারবেস অথেন্টিকেশন সম্পন্ন হলে পেমেন্ট চেক করা হবে
+onAuthStateChanged(auth, u => { if(u) handlePaymentReturn(); });
+
+$("redeem").onclick=()=>go(async()=>{const c=$("pc").value.trim().toUpperCase();if(!c)return;const pr=doc(db,"promos",c);
+ await runTransaction(db,async t=>{const p=await t.get(pr);if(!p.exists())throw Error("কোডটি সঠিক নয়");const d=p.data(),u=d.usedBy||[];
+  if((d.used||0)>=d.maxUses)throw Error("কোডের সীমা শেষ");if(u.includes(uid))throw Error("আপনি আগেই ব্যবহার করেছেন");
+  t.update(pr,{used:(d.used||0)+1,usedBy:[...u,uid]});t.update(doc(db,"users",uid),{balance:increment(d.amount)})});
+ $("pc").value="";alert("প্রমো কোড সফল হয়েছে")});
+</script></body></html>
