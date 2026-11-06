@@ -1746,7 +1746,7 @@ body{background:linear-gradient(160deg,#fff7ed 0%,#f8fafc 45%,#eef2ff 100%)!impo
 
     // ===== ZRPay payment (keys live ONLY in Cloud Functions, never in this file) =====
     const fns=()=>firebase.app().functions('us-central1');
-    const PAY_API="https://YOUR-SERVER-URL"; // <-- put your payment-server public URL here (no trailing slash)
+    const PAY_API=location.origin+"/api"; // payment API runs on the same Vercel site
     async function payApi(path,body){
       if(!PAY_API||PAY_API.includes('YOUR-SERVER-URL'))throw new Error('Payment server link is not set (PAY_API in index.html).');
       if(!auth.currentUser)throw new Error('Please login first.');
@@ -1767,7 +1767,7 @@ body{background:linear-gradient(160deg,#fff7ed 0%,#f8fafc 45%,#eef2ff 100%)!impo
       if(!(a>=10))return Swal.fire('Invalid amount','Minimum deposit is ৳10','warning');
       Swal.fire({title:'Opening secure payment...',allowOutsideClick:false,showConfirmButton:false,didOpen:()=>Swal.showLoading()});
       try{const r={data:await payApi('/createPayment',{amount:a,origin:location.origin+location.pathname.replace(/[^/]*$/,'')})};location.href=r.data.paymentUrl}
-      catch(e){Swal.fire('Error',e.message||'Payment failed','error')}}
+      catch(e){Swal.hideLoading();Swal.fire('Error',e.message||'Payment failed','error')}}
     async function checkPayReturn(){
       const ref=new URLSearchParams(location.search).get('payok');if(!ref)return;history.replaceState(null,'',location.pathname);
       Swal.fire({title:'Verifying payment...',allowOutsideClick:false,showConfirmButton:false,didOpen:()=>Swal.showLoading()});
