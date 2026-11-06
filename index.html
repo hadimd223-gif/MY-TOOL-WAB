@@ -201,6 +201,18 @@
                 </a>
             </div>
             
+            <div onclick="showSec('dailylike')" class="mb-5 cursor-pointer rounded-3xl p-4 text-white relative overflow-hidden shadow-lg shadow-rose-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#f97316,#ef4444 55%,#be185d)">
+                <div class="absolute -right-4 -top-4 text-white/10 text-8xl"><i class="fa-solid fa-fire"></i></div>
+                <div class="flex items-center gap-3 relative">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-fire"></i></div>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-extrabold text-base leading-tight">ডেইলি লাইক</div>
+                        <div class="text-[11px] opacity-90 mt-0.5">প্রতিদিন <b id="dl-home-likes">220</b>+ লাইক • মাত্র ৳<b id="dl-home-price">6</b></div>
+                    </div>
+                    <div class="bg-white text-rose-600 text-[11px] font-extrabold px-3 py-1.5 rounded-xl flex-shrink-0">লাইক নিন <i class="fa-solid fa-arrow-right ml-0.5"></i></div>
+                </div>
+            </div>
+
             <h3 class="font-bold text-slate-800 text-sm mb-3 px-1"><i class="fas fa-gamepad text-indigo-600 mr-2"></i>সকল গেম ও সার্ভিস</h3>
             <div id="services-list" class="space-y-6 mb-8 px-1">
                 <div class="text-center py-10 text-slate-400"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i> গেম লোড হচ্ছে...</div>
@@ -230,6 +242,38 @@
         <section id="history-sec" class="hidden animate-fade-in pb-24">
             <div class="vip-card px-4 py-3.5 mb-3"><h2 class="text-base font-bold text-slate-800"><i class="fas fa-box text-indigo-600 mr-2"></i>আমার অর্ডার হিস্ট্রি</h2></div>
             <div id="history-list"></div>
+        </section>
+
+        <!-- Daily Like Section -->
+        <section id="dailylike-sec" class="hidden animate-fade-in pb-10">
+            <div class="vip-card p-3.5 flex items-center gap-3 mb-3 relative">
+                <button onclick="showSec('home')" class="text-slate-500 hover:text-indigo-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 absolute top-3.5 right-3.5"><i class="fas fa-times"></i></button>
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md" style="background:linear-gradient(135deg,#f97316,#ef4444 55%,#be185d)"><i class="fa-solid fa-fire"></i></div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">ডেইলি লাইক</h3>
+                    <p class="text-[11px] text-indigo-600 font-semibold">UID দিন, ইনস্ট্যান্ট প্রোফাইল লাইক পান</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mb-3">
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">আপনার ব্যালেন্স</div><div class="text-base font-extrabold text-indigo-600">৳<span id="dl-balance">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">প্রাইস</div><div class="text-base font-extrabold text-rose-600">৳<span id="dl-price">6</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">লাইক পাবেন</div><div class="text-base font-extrabold text-emerald-600"><span id="dl-likes">220</span>+</div></div>
+            </div>
+
+            <div class="vip-card p-4 mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">১</span>
+                    <h3 class="font-bold text-slate-800 text-xs">গেম UID দিন</h3>
+                </div>
+                <input type="tel" inputmode="numeric" id="dl-uid" maxlength="15" placeholder="যেমন: 1234567890" class="zp-input text-sm py-2.5 mb-3" oninput="this.value=this.value.replace(/\D/g,'')">
+                <div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>রিজিয়ন (সার্ভার) সিলেক্ট করুন <span class="text-rose-500">*</span></div>
+                <div id="dl-servers" class="flex flex-wrap gap-1.5 mb-4"></div>
+                <button id="dl-btn" onclick="dlSend()" class="zp-btn w-full text-sm"><i class="fa-solid fa-fire mr-1.5"></i>লাইক পাঠান</button>
+                <p class="zp-sub mt-2.5 leading-relaxed"><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i>একই UID-তে দিনে একবারই লাইক যায়। লাইক না গেলে (যেমন আজ আগেই নেওয়া থাকলে) আপনার কোনো টাকা কাটা হবে না।</p>
+            </div>
+
+            <div id="dl-result"></div>
         </section>
 
         <!-- TopUp / Order Page -->
@@ -878,7 +922,7 @@
     }
 
     function showSec(secId) {
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -890,6 +934,7 @@
         
         if(secId === 'history') loadHistory();
         if(secId === 'account') loadReferral();
+        if(secId === 'dailylike') dlOpen();
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
@@ -1037,6 +1082,143 @@
             Swal.fire({ toast: true, position: 'top', timer: 5000, showConfirmButton: false, icon: 'info', title: n.title || 'নতুন নোটিফিকেশন', text: n.message }); } });
         noticesFirstLoad = false; renderTicker(); updateBell();
     }, () => {});
+</script>
+<script>
+// ================= DAILY LIKE (same system as the Telegram bot) =================
+(function () {
+    const st = document.createElement('style');
+    st.textContent = `.dl-card{border-radius:24px;padding:16px;margin-bottom:12px;animation:fadeInUp .35s ease-out}
+    .dl-ok{background:linear-gradient(160deg,#ecfdf5,#fff 60%);border:1.5px solid #a7f3d0}
+    .dl-warn{background:linear-gradient(160deg,#fffbeb,#fff 60%);border:1.5px solid #fde68a}
+    .dl-bad{background:linear-gradient(160deg,#fff1f2,#fff 60%);border:1.5px solid #fecdd3}
+    .dl-load{background:linear-gradient(160deg,#eef2ff,#fff 60%);border:1.5px solid #c7d2fe;text-align:center}
+    .dl-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed #e2e8f0;font-size:12px}
+    .dl-row:last-child{border-bottom:0}.dl-row span:first-child{color:#64748b;font-weight:600}.dl-row span:last-child{color:#0f172a;font-weight:800;text-align:right;word-break:break-all}
+    .dl-stat{flex:1;border-radius:18px;padding:10px 4px;text-align:center;background:#fff;border:1px solid #e2e8f0}
+    .dl-stat b{display:block;font-size:20px;font-weight:800;line-height:1.2}.dl-stat small{font-size:10px;color:#64748b;font-weight:700}
+    @keyframes dlSpin{to{transform:rotate(360deg)}}.dl-spin{width:42px;height:42px;border-radius:50%;border:4px solid #e0e7ff;border-top-color:#4f46e5;animation:dlSpin .8s linear infinite;margin:4px auto 10px}`;
+    document.head.appendChild(st);
+})();
+
+const DL_REGIONS = ['BD','IND','SG','ID','TH','PK','MEB','BR','SAC','NA','EU','VN','TW','RU'];
+let dlRegion = ''; try { dlRegion = (localStorage.getItem('dlRegion') || '').toUpperCase(); } catch (e) {}
+if (!DL_REGIONS.includes(dlRegion)) dlRegion = '';
+let dlCfg = { price: 6, resellerPrice: null, likes: 220, enabled: true, offMsg: '' };
+let dlBusy = false, dlReqId = null, dlReqKey = '';
+
+function dlMyPrice() {
+    const reseller = userData && (userData.role === 'reseller' || userData.role === 'admin');
+    if (reseller) {
+        if (dlCfg.resellerPrice !== null && dlCfg.resellerPrice !== undefined) return dlCfg.resellerPrice;
+        if (generalSettings && generalSettings.resellerDiscount) return Math.round(dlCfg.price * (1 - generalSettings.resellerDiscount / 100));
+    }
+    return dlCfg.price;
+}
+function dlUpdateInfo() {
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.innerText = v; };
+    set('dl-balance', Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
+    set('dl-price', dlMyPrice()); set('dl-likes', dlCfg.likes);
+    set('dl-home-price', dlMyPrice()); set('dl-home-likes', dlCfg.likes);
+}
+async function dlLoadCfg() {
+    try {
+        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json();
+        if (r.ok && j) dlCfg = { price: j.price, resellerPrice: j.resellerPrice, likes: j.likes, enabled: j.enabled !== false, offMsg: j.offMsg || '' };
+    } catch (e) {}
+    dlUpdateInfo();
+}
+function dlRenderServers() {
+    const box = document.getElementById('dl-servers'); if (!box) return;
+    box.innerHTML = DL_REGIONS.map(s => `<span class="ffs-chip ${dlRegion === s ? 'on' : ''}" onclick="dlPick('${s}')">${dlRegion === s ? '✓ ' : ''}${s}</span>`).join('');
+}
+function dlPick(v) { dlRegion = v; try { localStorage.setItem('dlRegion', v); } catch (e) {} dlRenderServers(); const bx = document.getElementById('dl-servers'); if (bx) bx.classList.remove('ffs-bad'); }
+function dlOpen() { dlRenderServers(); dlUpdateInfo(); dlLoadCfg(); }
+setInterval(() => { const s = document.getElementById('dailylike-sec'); if (s && !s.classList.contains('hidden')) dlUpdateInfo(); }, 1500);
+window.addEventListener('load', dlLoadCfg);
+
+function dlCountUp(el, to, ms) {
+    if (!el || typeof to !== 'number') return;
+    const t0 = performance.now();
+    (function step(t) { const p = Math.min(1, (t - t0) / ms); el.innerText = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString('en-US'); if (p < 1) requestAnimationFrame(step); })(t0);
+}
+function dlRow(k, v) { return `<div class="dl-row"><span>${k}</span><span>${v}</span></div>`; }
+function dlShow(html) { const box = document.getElementById('dl-result'); box.innerHTML = html; box.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function dlCopy(t) { try { navigator.clipboard.writeText(t); Swal.fire({ toast: true, position: 'top', timer: 1400, showConfirmButton: false, icon: 'success', title: 'কপি হয়েছে' }); } catch (e) {} }
+
+function dlRenderResult(r) {
+    const n = v => (v === null || v === undefined || v === '') ? 'N/A' : Number(v).toLocaleString('en-US');
+    if (r.status === 'success') {
+        dlShow(`<div class="dl-card dl-ok">
+            <div class="text-center mb-3"><div class="text-4xl mb-1">✅</div><h3 class="font-extrabold text-emerald-700 text-base">লাইক সফলভাবে পাঠানো হয়েছে!</h3></div>
+            <div class="flex gap-2 mb-3">
+                <div class="dl-stat"><small>আগে ছিল</small><b class="text-slate-700" id="dl-s-before">${typeof r.before === 'number' ? '0' : 'N/A'}</b></div>
+                <div class="dl-stat" style="border-color:#6ee7b7;background:#ecfdf5"><small>পাঠানো হয়েছে</small><b class="text-emerald-600">+<span id="dl-s-given">0</span></b></div>
+                <div class="dl-stat"><small>এখন হয়েছে</small><b class="text-indigo-600" id="dl-s-after">${typeof r.after === 'number' ? '0' : 'N/A'}</b></div>
+            </div>
+            <div class="bg-white/80 rounded-2xl px-3 py-1">
+                ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 প্লেয়ার', esc(r.player))}${dlRow('🌍 সার্ভার', esc(r.region))}
+                ${dlRow('📦 প্যাকেজ', esc(r.package))}${dlRow('🔑 অর্ডার নং', `${esc(r.orderNo)} <i class="fa-regular fa-copy text-indigo-500 cursor-pointer ml-1" onclick="dlCopy('${esc(r.orderNo)}')"></i>`)}
+                ${dlRow('💰 খরচ', '৳' + esc(r.price))}${dlRow('🕐 সময়', esc(r.time) + ' (BDT)')}
+            </div>
+            <button onclick="document.getElementById('dl-result').innerHTML='';window.scrollTo({top:0,behavior:'smooth'})" class="zp-btn w-full text-xs mt-3 py-3">আরেকটি UID-তে লাইক পাঠান</button>
+        </div>`);
+        if (typeof r.before === 'number') dlCountUp(document.getElementById('dl-s-before'), r.before, 900);
+        dlCountUp(document.getElementById('dl-s-given'), Number(r.given) || 0, 900);
+        if (typeof r.after === 'number') dlCountUp(document.getElementById('dl-s-after'), r.after, 1100);
+    } else if (r.status === 'already') {
+        dlShow(`<div class="dl-card dl-warn">
+            <div class="text-center mb-3"><div class="text-4xl mb-1">⚠️</div><h3 class="font-extrabold text-amber-700 text-base">আজকের লাইক আগেই নেওয়া হয়েছে!</h3></div>
+            <div class="bg-white/80 rounded-2xl px-3 py-1">
+                ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 প্লেয়ার', esc(r.player))}${dlRow('🌍 সার্ভার', esc(r.region))}
+                ${dlRow('ℹ️ মেসেজ', esc(r.message))}${dlRow('💰 চার্জ', '৳0')}${dlRow('🔄 ফেরত', '৳' + esc(r.refunded))}
+            </div>
+            <p class="text-center text-[12px] font-bold text-amber-700 mt-3">🌟 আপনার কোনো টাকা কাটা হয়নি।</p>
+        </div>`);
+    } else {
+        dlShow(`<div class="dl-card dl-bad">
+            <div class="text-center mb-2"><div class="text-4xl mb-1">❌</div><h3 class="font-extrabold text-rose-700 text-base">লাইক পাঠানো ব্যর্থ হয়েছে!</h3></div>
+            <div class="bg-white/80 rounded-2xl px-3 py-2 text-[12px] font-bold text-slate-700 text-center">⚠️ ${esc(r.message || 'আবার চেষ্টা করুন')}</div>
+            <p class="text-center text-[12px] font-bold text-rose-600 mt-3">💰 কোনো টাকা কাটা হয়নি। একটু পরে আবার চেষ্টা করুন।</p>
+        </div>`);
+    }
+}
+
+async function dlSend() {
+    if (dlBusy) return;
+    if (!currentUser) { showSec('auth'); return; }
+    const uid = document.getElementById('dl-uid').value.trim();
+    if (!/^\d{5,15}$/.test(uid)) { Swal.fire('সতর্কতা', 'সঠিক UID দিন (শুধু সংখ্যা, ৫-১৫ ডিজিট)', 'warning'); return; }
+    if (!dlRegion) { const b = document.getElementById('dl-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('রিজিয়ন সিলেক্ট করুন', 'আগে আপনার গেমের রিজিয়ন (যেমন BD, IND, PK) সিলেক্ট করুন', 'warning'); return; }
+    if (!dlCfg.enabled) { Swal.fire('সার্ভিস বন্ধ', dlCfg.offMsg || '🔥 ডেইলি লাইক সার্ভিস সাময়িকভাবে বন্ধ আছে। পরে আবার চেষ্টা করুন।', 'info'); return; }
+    const price = dlMyPrice();
+    if ((userBalance || 0) < price) {
+        const x = await Swal.fire({ icon: 'error', title: 'ব্যালেন্স কম!', html: `আপনার ব্যালেন্স: <b>৳${userBalance || 0}</b><br>প্রয়োজন: <b>৳${price}</b>`, showCancelButton: true, confirmButtonText: 'টাকা অ্যাড করুন', cancelButtonText: 'বাতিল' });
+        if (x.isConfirmed) showSec('addmoney'); return;
+    }
+    const c = await Swal.fire({ title: 'কনফার্ম করুন', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>লাইক: <b>${dlCfg.likes}+</b><br>মূল্য: <b>৳${price}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'লাইক পাঠান', cancelButtonText: 'বাতিল' });
+    if (!c.isConfirmed) return;
+
+    const key = uid + '|' + dlRegion;
+    if (!dlReqId || dlReqKey !== key) { dlReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32); dlReqKey = key; }
+    dlBusy = true;
+    const btn = document.getElementById('dl-btn'); btn.disabled = true; btn.style.opacity = '.6'; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>পাঠানো হচ্ছে...';
+    dlShow(`<div class="dl-card dl-load"><div class="dl-spin"></div><b class="text-indigo-700 text-sm">লাইক পাঠানো হচ্ছে...</b><p class="zp-sub mt-1">অনুগ্রহ করে অপেক্ষা করুন, এতে ১ মিনিটের মতো সময় লাগতে পারে। পেজ বন্ধ করবেন না।</p></div>`);
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 120000);
+    try {
+        const token = await currentUser.getIdToken();
+        const res = await fetch(BACKEND_URL + '/dailyLike', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ uid, region: dlRegion, reqId: dlReqId }) });
+        let j = {}; try { j = await res.json(); } catch (e) {}
+        if (!res.ok) {
+            if (res.status !== 409) dlReqId = null;
+            dlRenderResult({ status: 'failed', message: j.error || ('সার্ভার এরর ' + res.status) });
+        } else { dlReqId = null; dlRenderResult(j); if (j.status === 'success') Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: 'success', title: `+${j.given} লাইক পাঠানো হয়েছে!` }); }
+    } catch (e) {
+        // unknown outcome: keep the same request id so a retry can never charge twice
+        dlRenderResult({ status: 'failed', message: e.name === 'AbortError' ? 'সার্ভার সাড়া দিচ্ছে না। আপনার ব্যালেন্স/অর্ডার হিস্ট্রি চেক করুন, তারপর আবার চেষ্টা করুন।' : 'সার্ভারের সাথে কানেক্ট করা যাচ্ছে না, আবার চেষ্টা করুন।' });
+    } finally {
+        clearTimeout(tm); dlBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-fire mr-1.5"></i>লাইক পাঠান'; dlUpdateInfo();
+    }
+}
 </script>
 </body>
 </html>
