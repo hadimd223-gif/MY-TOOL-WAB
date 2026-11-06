@@ -20,11 +20,20 @@ CREATE_URL = os.getenv("ZRPAYBD_CREATE_URL", "https://pay.zrpaybd.xyz/api/paymen
 VERIFY_URL = os.getenv("ZRPAYBD_VERIFY_URL", "https://pay.zrpaybd.xyz/api/payment/verify")
 
 SCOPES = ["https://www.googleapis.com/auth/datastore"]
-if os.getenv("FIREBASE_KEY_JSON"):   # for Vercel: paste the whole JSON into this variable
-    creds = service_account.Credentials.from_service_account_info(json.loads(os.environ["FIREBASE_KEY_JSON"]), scopes=SCOPES)
-else:
-    creds = service_account.Credentials.from_service_account_file(KEYFILE, scopes=SCOPES)
-sess = AuthorizedSession(creds)
+_sess = None
+def S():
+    """Firestore session, created on first use so setup mistakes show a clear message instead of a crash."""
+    global _sess
+    if _sess is None:
+        try:
+            if os.getenv("FIREBASE_KEY_JSON"):
+                c = service_account.Credentials.from_service_account_info(json.loads(os.environ["FIREBASE_KEY_JSON"].strip()), scopes=SCOPES)
+            else:
+                c = service_account.Credentials.from_service_account_file(KEYFILE, scopes=SCOPES)
+            _sess = AuthorizedSession(c)
+        except Exception as e:
+            raise Err("Setup error: FIREBASE_KEY_JSON is missing or not the full JSON (" + type(e).__name__ + ")", 500)
+    return _sess
 DB = f"projects/{PROJECT}/databases/(default)/documents"
 ROOT = "https://firestore.googleapis.com/v1/"
 app = Flask(__name__); CORS(app)
@@ -33,6 +42,10 @@ class Err(Exception):
     def __init__(s, m, c=400): s.m, s.c = m, c
 @app.errorhandler(Err)
 def _e(e): return jsonify(error=e.m), e.c
+@app.errorhandler(Exception)
+def _ex(e):
+    print("UNHANDLED", type(e).__name__, e)
+    return jsonify(error="Server error: " + type(e).__name__ + ": " + str(e)[:200]), 500
 
 # ---- tiny Firestore REST helpers ----
 def dec(v):
@@ -50,12 +63,12 @@ def enc(v):
     if v is None: return {"nullValue": None}
     return {"stringValue": str(v)}
 def fget(path):
-    r = sess.get(ROOT + DB + "/" + path)
+    r = S().get(ROOT + DB + "/" + path)
     if r.status_code == 404: return None, None
     r.raise_for_status(); d = r.json()
     return {k: dec(v) for k, v in d.get("fields", {}).items()}, d["updateTime"]
 def commit(writes):
-    r = sess.post(ROOT + DB + ":commit", json={"writes": writes})
+    r = S().post(ROOT + DB + ":commit", json={"writes": writes})
     if not r.ok: raise Err("Database error: " + r.text[:200], 500)
 def w_set(path, data, mask=None, pre=None, inc=None, now=None):
     w = {"update": {"name": f"{DB}/{path}", "fields": {k: enc(v) for k, v in data.items()}},
@@ -94,7 +107,9 @@ def pick(o, keys):
 
 @app.get("/health")
 @app.get("/api/health")
-def health(): return jsonify(ok=True)
+def health():
+    return jsonify(ok=True, firebase_json=bool(os.getenv("FIREBASE_KEY_JSON") or os.path.exists(KEYFILE)),
+                   api_key=bool(API_KEY), secret_key=bool(SECRET_KEY), brand_key=bool(BRAND_KEY), project=PROJECT)
 
 @app.post("/createPayment")
 @app.post("/api/createPayment")
