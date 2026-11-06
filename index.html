@@ -699,10 +699,13 @@
                 snapshot.forEach(doc => {
                     const prod = doc.data();
                     let finalPrice = prod.price;
-                    if(isReseller && prod.resellerPrice) {
+                    const dpct = Math.max(0, Math.min(100, Number(generalSettings.resellerDiscount) || 0));
+                    if(isReseller && generalSettings.resellerDiscountAll && dpct) {
+                        finalPrice = Math.round(prod.price * (1 - dpct / 100));
+                    } else if(isReseller && prod.resellerPrice) {
                         finalPrice = prod.resellerPrice;
-                    } else if(isReseller && generalSettings.resellerDiscount) {
-                        finalPrice = Math.round(prod.price * (1 - generalSettings.resellerDiscount / 100));
+                    } else if(isReseller && dpct) {
+                        finalPrice = Math.round(prod.price * (1 - dpct / 100));
                     }
                     
                     const card = document.createElement('div');

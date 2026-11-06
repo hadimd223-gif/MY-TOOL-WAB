@@ -125,6 +125,11 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+        /* --- scroll fix: allow flex children to shrink + use real mobile viewport height --- */
+        html, body { height: 100%; }
+        body { height: 100vh; height: 100dvh; }
+        #main-content, #main-content > div, aside nav { min-height: 0; }
+        #main-content > div { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: 6rem !important; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -261,6 +266,22 @@
             </div>
 
             <div id="view-settings" class="view-section hidden">
+                <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
+                    <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
+                    <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-4" onclick="document.getElementById('rd-pct').value=0">0%</button>
+                        <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-4" onclick="document.getElementById('rd-pct').value=5">5%</button>
+                        <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-4" onclick="document.getElementById('rd-pct').value=10">10%</button>
+                        <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-4" onclick="document.getElementById('rd-pct').value=20">20%</button>
+                        <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-4" onclick="document.getElementById('rd-pct').value=30">30%</button>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-3 md:items-center">
+                        <div class="relative md:w-48"><input type="number" id="rd-pct" min="0" max="100" step="0.5" class="flat-input pr-8" placeholder="যেমন 10"><span class="absolute right-3 top-3.5 text-gray-400 font-bold">%</span></div>
+                        <button onclick="saveResellerDisc()" class="flat-btn"><i class="fas fa-save mr-2"></i>Save Discount</button>
+                    </div>
+                    <label class="flex items-start gap-2 mt-4 text-xs text-gray-300 cursor-pointer"><input type="checkbox" id="rd-all" class="mt-0.5"> <span>প্রতিটি প্রোডাক্টে এই % ব্যবহার হবে (টিক না দিলে, যে প্রোডাক্টে আলাদা Reseller Price সেট করা আছে সেখানে সেই প্রাইসই থাকবে, বাকিগুলোতে এই %)</span></label>
+                </div>
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
                     <div class="card">
                         <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border">General Info</h3>
@@ -492,7 +513,7 @@
                     </div>
                     <div class="flat-table-container">
                         <table class="flat-table text-sm">
-                            <thead><tr><th>Joined</th><th>Name</th><th>Email</th><th>Balance</th><th class="w-24 text-center">Actions</th></tr></thead>
+                            <thead><tr><th>Joined</th><th>Name</th><th>Email</th><th>Balance</th><th class="w-36 text-center">Actions</th></tr></thead>
                             <tbody id="user-list"></tbody>
                         </table>
                     </div>
@@ -1312,13 +1333,42 @@
             const r = u.role === 'admin' ? '<span class="zp-b" style="background:#e11d48">Admin</span>' : u.role === 'reseller' ? '<span class="zp-b" style="background:#f59e0b">Reseller</span>' : '<span class="zp-b" style="background:#475569">User</span>';
             return `<tr><td class="text-gray-400 text-sm">${d}</td><td><span class="font-medium text-white">${esc(u.name || 'N/A')}</span> ${r}${u.banned ? ' <span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}<br><span class="text-xs text-gray-400">PIN: <b class="text-orange-400">${pinOf(u)}</b> • ${Math.floor(u.points || u.totalDeposit || 0)} pts</span></td>
             <td class="break-all">${esc(u.email || '')}</td><td class="font-bold text-orange-500">৳${u.balance || 0}</td>
-            <td class="text-center"><button onclick="qcShow('${u.id}');window.scrollTo({top:0,behavior:'smooth'});document.querySelector('#main-content > div').scrollTo({top:0,behavior:'smooth'})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-sliders-h md:mr-1"></i><span class="hidden md:inline">Control</span></button></td></tr>`;
+            <td class="text-center"><button onclick="qcShow('${u.id}');window.scrollTo({top:0,behavior:'smooth'});document.querySelector('#main-content > div').scrollTo({top:0,behavior:'smooth'})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-sliders-h md:mr-1"></i><span class="hidden md:inline">Control</span></button> <button onclick="sendResetMail('${esc(u.email || '')}')" title="Send password reset email" class="flat-btn flat-btn-outline text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-key"></i></button></td></tr>`;
         }).join('') : '<tr><td colspan="5" class="text-center text-gray-500 py-6">No users</td></tr>';
     }
     function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
     function searchUsers() {
         const t = ((document.getElementById('user-search') || {}).value || '').toLowerCase().trim();
         renderUsers(allUsers.filter(u => !t || (u.email || '').toLowerCase().includes(t) || (u.name || '').toLowerCase().includes(t) || pinOf(u).toLowerCase() === t || u.id.toLowerCase() === t));
+    }
+
+
+    // ---- Reseller discount (all products) ----
+    async function loadResellerDisc() {
+        try {
+            const d = (await db.collection('settings').doc('general').get()).data() || {};
+            const i = document.getElementById('rd-pct'), c = document.getElementById('rd-all');
+            if (i) i.value = d.resellerDiscount || 0; if (c) c.checked = !!d.resellerDiscountAll;
+        } catch (e) {}
+    }
+    async function saveResellerDisc() {
+        let v = parseFloat(document.getElementById('rd-pct').value); if (isNaN(v)) v = 0; v = Math.max(0, Math.min(100, v));
+        try {
+            showLoading();
+            await db.collection('settings').doc('general').set({ resellerDiscount: v, resellerDiscountAll: document.getElementById('rd-all').checked }, { merge: true });
+            hideLoading();
+            Swal.fire('Saved', v > 0 ? `Resellers now get ${v}% discount` : 'Reseller discount is OFF', 'success');
+        } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+    }
+    (function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'settings') loadResellerDisc(); return r; }; })();
+
+    // ---- send password reset email to a user ----
+    async function sendResetMail(email) {
+        if (!email) return Swal.fire('No email', 'This user has no email saved', 'warning');
+        const c = await Swal.fire({ title: 'Password reset email', html: `Send a reset link to<br><b>${esc(email)}</b>?`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send' });
+        if (!c.isConfirmed) return;
+        try { await auth.sendPasswordResetEmail(email); Swal.fire('Sent', 'User will get an email to set a new password.', 'success'); }
+        catch (e) { Swal.fire('Error', e.message, 'error'); }
     }
 
     // ---- quick control by Support PIN ----
