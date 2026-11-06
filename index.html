@@ -312,22 +312,6 @@
                 </div>
             </div>
 
-            <div class="vip-card p-4 mb-4" id="ref-card">
-                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-user-plus text-indigo-600 mr-1.5"></i>রেফার করে ইনকাম করুন</div>
-                <div class="rounded-2xl p-3.5 text-white text-center" style="background:linear-gradient(135deg,#312e81,#4f46e5 55%,#7c3aed)">
-                    <div class="text-[10px] opacity-80 mb-1">আপনার রেফার কোড</div>
-                    <div id="ref-code" class="text-2xl font-extrabold tracking-[.25em]">------</div>
-                    <div class="flex gap-2 mt-3">
-                        <button onclick="copyRef('code')" class="flex-1 py-2 rounded-xl bg-white/20 text-[11px] font-bold border border-white/30"><i class="fas fa-copy mr-1"></i>কোড কপি</button>
-                        <button onclick="copyRef('link')" class="flex-1 py-2 rounded-xl bg-white text-indigo-700 text-[11px] font-bold"><i class="fas fa-share-nodes mr-1"></i>লিংক শেয়ার</button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2 mt-3">
-                    <div class="rounded-2xl bg-indigo-50 py-2.5 text-center"><b id="ref-count" class="text-lg text-indigo-700">0</b><div class="text-[10px] text-slate-500 font-semibold">মোট রেফার</div></div>
-                    <div class="rounded-2xl bg-emerald-50 py-2.5 text-center"><b class="text-lg text-emerald-700">৳<span id="ref-earned">0</span></b><div class="text-[10px] text-slate-500 font-semibold">মোট ইনকাম</div></div>
-                </div>
-                <p class="zp-sub mt-2" id="ref-info">বন্ধুকে আপনার কোড দিন। সে নতুন অ্যাকাউন্ট খুললে আপনি পাবেন ৳১, আর তার প্রতিটি ডিপোজিটে পাবেন ১০% কমিশন।</p>
-            </div>
 
             <div class="vip-card p-4 mb-4">
                 <div class="flex items-center gap-2 mb-3">
@@ -410,6 +394,23 @@
                 <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-ticket text-indigo-600 mr-1.5"></i>প্রোমো কোড</div>
                 <div class="flex gap-2"><input id="profile-promo" placeholder="কোড লিখুন" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="redeemPromo()" class="px-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 text-white text-xs font-bold">Redeem</button></div>
                 <p class="zp-sub mt-2">টাকার কোড এখানে রিডিম করুন। ডিসকাউন্ট কোড অর্ডারের সময় এবং বোনাস কোড ওয়ালেটে টাকা অ্যাড করার সময় ব্যবহার করুন।</p>
+            </div>
+
+            <div class="vip-card p-4 mb-4" id="ref-card">
+                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-user-plus text-indigo-600 mr-1.5"></i>রেফার করে ইনকাম করুন</div>
+                <div class="rounded-2xl p-3.5 text-white text-center" style="background:linear-gradient(135deg,#312e81,#4f46e5 55%,#7c3aed)">
+                    <div class="text-[10px] opacity-80 mb-1">আপনার রেফার কোড</div>
+                    <div id="ref-code" class="text-2xl font-extrabold tracking-[.25em]">------</div>
+                    <div class="flex gap-2 mt-3">
+                        <button onclick="copyRef('code')" class="flex-1 py-2 rounded-xl bg-white/20 text-[11px] font-bold border border-white/30"><i class="fas fa-copy mr-1"></i>কোড কপি</button>
+                        <button onclick="copyRef('link')" class="flex-1 py-2 rounded-xl bg-white text-indigo-700 text-[11px] font-bold"><i class="fas fa-share-nodes mr-1"></i>লিংক শেয়ার</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <div class="rounded-2xl bg-indigo-50 py-2.5 text-center"><b id="ref-count" class="text-lg text-indigo-700">0</b><div class="text-[10px] text-slate-500 font-semibold">মোট রেফার</div></div>
+                    <div class="rounded-2xl bg-emerald-50 py-2.5 text-center"><b class="text-lg text-emerald-700">৳<span id="ref-earned">0</span></b><div class="text-[10px] text-slate-500 font-semibold">মোট ইনকাম</div></div>
+                </div>
+                <p class="zp-sub mt-2" id="ref-info">বন্ধুকে আপনার কোড দিন। সে নতুন অ্যাকাউন্ট খুললে আপনি পাবেন ৳১, আর তার প্রতিটি ডিপোজিটে পাবেন ১০% কমিশন।</p>
             </div>
 
             <div class="px-1">
