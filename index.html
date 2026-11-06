@@ -1,7 +1,13 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>M H X Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Firebase App (compat) and Auth/Firestore SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 :root{--bg:#0c0a1d;--c:#171433;--p:#7c5cff;--p2:#19d3c5;--t:#f1efff;--m:#9a96c4;--ok:#22c55e;--no:#ef4444}
 *{box-sizing:border-box;margin:0;font-family:"Hind Siliguri",system-ui,sans-serif}
@@ -39,21 +45,49 @@ nav button.on{color:var(--p2);font-weight:700}
    <img id="brandLogo" class="brand-logo hide" alt="Logo">
    <b id="brand">M H X Store</b>
  </div>
- <span id="hb" class="badge hide"></span>
+ <div>
+    <span id="hb" class="badge hide"></span>
+    <span id="header-balance-container" class="hidden bg-sky-500 px-3 py-1 rounded-full text-xs font-bold text-white ml-2">৳ <span id="bal">0</span></span>
+    <span id="header-login-container" class="ml-2">
+        <button onclick="showAuthPage()" class="btn" style="padding:6px 12px;font-size:13px;width:auto">Login</button>
+    </span>
+ </div>
 </header>
 
-<main id="auth">
- <div class="card"><h2 style="margin-bottom:12px">Login or Sign Up</h2>
-  <button class="btn g" id="g">Continue with Google</button>
-  <p class="m" style="text-align:center;margin:12px 0">Or Email & Password</p>
-  <input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password (Min 6 characters)">
-  <div class="row"><button class="btn" id="login">Login</button><button class="btn alt" id="signup">Sign Up</button></div>
+<!-- Auth Section (Login / Register) -->
+<main id="auth" class="hide animate-fade-in">
+ <div class="card relative">
+  <button onclick="showSec('home')" style="position:absolute;top:15px;right:15px;background:none;border:0;color:var(--m);font-size:18px;cursor:pointer"><i class="fas fa-times">×</i></button>
+  
+  <!-- Login View -->
+  <div id="login-view">
+    <h2 style="margin-bottom:12px">Login</h2>
+    <button class="btn g" id="g" onclick="handleGoogleLogin()" style="margin-bottom:12px">Continue with Google</button>
+    <p class="m" style="text-align:center;margin:12px 0">Or Email & Password</p>
+    <input id="em" type="email" placeholder="Email">
+    <input id="pw" type="password" placeholder="Password (Min 6 characters)">
+    <button class="btn" id="login" onclick="handleLogin()" style="margin-top:4px">Login</button>
+    <p class="m" style="text-align:center;margin-top:14px">Don't have an account? <button onclick="toggleAuth('register')" style="background:none;border:0;color:var(--p2);cursor:pointer;font-weight:700">Register Now</button></p>
+  </div>
+
+  <!-- Register View -->
+  <div id="register-view" class="hidden">
+    <h2 style="margin-bottom:12px">Register</h2>
+    <button class="btn g" onclick="handleGoogleLogin()" style="margin-bottom:12px">Sign up with Google</button>
+    <p class="m" style="text-align:center;margin:12px 0">Or Credentials</p>
+    <input id="reg-name" type="text" placeholder="Full Name">
+    <input id="reg-email" type="email" placeholder="Email">
+    <input id="reg-pass" type="password" placeholder="Password (Min 6 characters)">
+    <button class="btn" onclick="handleRegister()" style="margin-top:4px">Register</button>
+    <p class="m" style="text-align:center;margin-top:14px">Already a member? <button onclick="toggleAuth('login')" style="background:none;border:0;color:var(--p2);cursor:pointer;font-weight:700">Login Now</button></p>
+  </div>
+
  </div>
 </main>
 
-<main id="app" class="hide">
+<main id="app">
  <section id="v-home">
-  <div class="card"><div class="m">Your Balance</div><div class="bal" id="bal">৳0</div>
+  <div class="card"><div class="m">Your Balance</div><div class="bal" id="bal-card">৳0</div>
    <div class="m" id="rp"></div><div class="bar"><i id="rbar" style="width:0"></i></div></div>
   <button class="add" id="addbtn"><span>+</span>Add Money</button>
   <div class="card"><b>Promo Code</b><div class="row" style="margin-top:10px"><input id="pc" placeholder="Enter Code" style="margin:0"><button class="btn" id="redeem" style="width:130px">Redeem</button></div></div>
@@ -73,7 +107,7 @@ nav button.on{color:var(--p2);font-weight:700}
    <p class="m" style="margin:10px 0">Referral Link</p><input id="rl" readonly><button class="btn alt" id="cp">Copy Link</button></div>
   <div class="card"><b>Support</b><p class="m" style="margin:6px 0 12px">If you have any issue, message on Telegram with your Support Code.</p>
    <a id="tg" target="_blank" rel="noopener"><button class="btn">Telegram: @mhxffv111</button></a></div>
-  <button class="btn alt" id="out">Logout</button>
+  <button class="btn alt" id="out" onclick="handleLogout()">Logout</button>
  </section>
  <nav><button class="on" data-v="home">Home</button><button data-v="svc">Services</button><button data-v="me">Profile</button></nav>
 </main>
@@ -103,107 +137,237 @@ nav button.on{color:var(--p2);font-weight:700}
 
 <div class="modal" id="ban"><div class="sheet"><h3>Account Banned</h3><p class="m" style="margin:8px 0">Contact Support: @mhxffv111</p><button class="btn alt" onclick="location.reload()">Refresh</button></div></div>
 
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getAnalytics}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import{getFirestore,doc,getDoc,setDoc,addDoc,onSnapshot,collection,query,orderBy,limit,serverTimestamp,increment,runTransaction,updateDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script>
+    // --- FIREBASE CONFIGURATION ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",
+      authDomain: "m-h-x-wab-7abdf.firebaseapp.com",
+      projectId: "m-h-x-wab-7abdf",
+      storageBucket: "m-h-x-wab-7appdf.firebasestorage.app",
+      messagingSenderId: "570748526283",
+      appId: "1:570748526283:web:3c786486aa3f838188c54e",
+      measurementId: "G-VV3NQB0T1X"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
-const app=initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",storageBucket:"m-h-x-wab-7appdf.firebasestorage.app",messagingSenderId:"570748526283",appId:"1:570748526283:web:3c786486aa3f838188c54e",measurementId:"G-VV3NQB0T1X"});
-try{getAnalytics(app)}catch(e){}
+    const $=i=>document.getElementById(i);
+    const fmt=n=>"৳"+(+n||0).toFixed(2).replace(/\.00$/,"");
+    const go=async f=>{try{await f()}catch(e){alert(e.message)}};
+    let S={name:"M H X Store",resellerMin:500,refBonus:0,logoUrl:""},me,uid,svc=[],selectedSvc=null;
 
-const auth=getAuth(app),db=getFirestore(app),$=i=>document.getElementById(i);
-const fmt=n=>"৳"+(+n||0).toFixed(2).replace(/\.00$/,"");
-const go=async f=>{try{await f()}catch(e){alert(e.message)}};
-let S={name:"M H X Store",resellerMin:500,refBonus:0,logoUrl:""},me,uid,svc=[],unsub=[],selectedSvc=null;
-let isSigningUp = false;
+    const isRes=()=>me&&(me.role==="reseller"||me.role==="admin");
+    const ZRPAYBD_CONFIG = {apiKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",secretKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",brandKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",createUrl:"https://pay.zrpaybd.xyz/api/payment/create"};
 
-const isRes=()=>me&&(me.role==="reseller"||me.role==="admin");
-const ZRPAYBD_CONFIG = {apiKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",secretKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",brandKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",createUrl:"https://pay.zrpaybd.xyz/api/payment/create"};
-
-onSnapshot(doc(db,"settings","site"),d=>{
-  if(d.exists()){
-    S={...S,...d.data()};
-    $("brand").textContent=S.name || "M H X Store";
-    document.title=S.name || "M H X Store";
-    if(S.logoUrl){
-      $("brandLogo").src = S.logoUrl;
-      $("brandLogo").classList.remove("hide");
-      $("brand").classList.add("hide");
-    } else {
-      $("brandLogo").classList.add("hide");
-      $("brand").classList.remove("hide");
+    // --- AUTH VIEWS LOGIC ---
+    function showAuthPage() {
+        $("app").classList.add("hide");
+        $("auth").classList.remove("hide");
     }
-  }
-  draw();
-});
 
-$("g").onclick=()=>go(()=>signInWithPopup(auth,new GoogleAuthProvider()));
-$("login").onclick=()=>go(async()=>{isSigningUp=false;const em=$("em").value.trim(),pw=$("pw").value;if(!em||!pw)throw Error("Please enter email and password!");await signInWithEmailAndPassword(auth,em,pw)});
-$("signup").onclick=()=>go(async()=>{const em=$("em").value.trim(),pw=$("pw").value;if(!em||!pw)throw Error("Please enter email and password!");if(pw.length<6)throw Error("Password must be at least 6 characters!");isSigningUp=true;const cred=await createUserWithEmailAndPassword(auth,em,pw);await ensure(cred.user);await signOut(auth);isSigningUp=false;$("em").value=$("pw").value="";alert("Account created successfully! Please login with your email and password.")});
-$("out").onclick=()=>signOut(auth);
+    function toggleAuth(view) {
+        if(view === 'login') {
+            $("login-view").classList.remove('hidden');
+            $("register-view").classList.add('hidden');
+        } else {
+            $("login-view").classList.add('hidden');
+            $("register-view").classList.remove('hidden');
+        }
+    }
 
-async function ensure(u){
- const r=doc(db,"users",u.uid);if((await getDoc(r)).exists())return;
- let code;do{code=String(Math.floor(1e5+Math.random()*9e5))}while((await getDoc(doc(db,"codes",code))).exists());
- let bonus=0,by=null;const ref=new URLSearchParams(location.search).get("ref");
- if(ref){const c=await getDoc(doc(db,"codes",ref));if(c.exists()){by=c.data().uid;bonus=+S.refBonus||0}}
- await setDoc(doc(db,"codes",code),{uid:u.uid});
- await setDoc(r,{email:u.email,name:u.displayName||u.email.split("@")[0],balance:bonus,totalDeposit:0,role:"user",banned:false,supportCode:code,referredBy:by,createdAt:serverTimestamp()});
- if(by&&bonus)try{await updateDoc(doc(db,"users",by),{balance:increment(bonus)})}catch(e){}
-}
+    function handleRegister() {
+        const name = $("reg-name").value;
+        const email = $("reg-email").value;
+        const pass = $("reg-pass").value;
+        if(!name || !email || !pass) return Swal.fire('Error', 'Please fill all fields', 'error');
 
-onAuthStateChanged(auth,async u=>{
- unsub.forEach(f=>f());unsub=[];if(isSigningUp)return;
- if(!u){uid=me=null;$("auth").classList.remove("hide");$("app").classList.add("hide");return}
- uid=u.uid;await go(()=>ensure(u));
- $("auth").classList.add("hide");$("app").classList.remove("hide");
- unsub.push(onSnapshot(doc(db,"users",uid),d=>{me=d.data();draw()}));
- unsub.push(onSnapshot(collection(db,"services"),s=>{svc=s.docs.map(d=>({id:d.id,...d.data()}));if(svc.length===0)loadDefaultServices();draw()}));
- unsub.push(onSnapshot(query(collection(db,"notifications"),orderBy("at","desc"),limit(15)),s=>{$("notes").innerHTML=s.docs.map(d=>`<div class="item"><span>${esc(d.data().text)}</span></div>`).join("")||"No notifications"}));
-});
+        Swal.showLoading();
+        auth.createUserWithEmailAndPassword(email, pass)
+            .then((cred) => ensure(cred.user, name))
+            .then(() => {
+                Swal.fire('Success', 'Account Created Successfully!', 'success');
+                showSec('home');
+            })
+            .catch((err) => Swal.fire('Error', err.message, 'error'));
+    }
 
-function loadDefaultServices(){
- const defaultPkgs=[{name:"🔥 Daily Like (220+ Likes)",price:6,resellerPrice:4,type:"daily"},{name:"💎 Daily Like PRO+ (30 Daily Limit)",price:6,resellerPrice:4,type:"daily_pro"},{name:"🤖 Auto Like - 7 Days",price:90,resellerPrice:75,type:"auto_7"},{name:"🤖 Auto Like - 15 Days",price:150,resellerPrice:125,type:"auto_15"},{name:"🤖 Auto Like - 30 Days",price:250,resellerPrice:200,type:"auto_30"}];
- svc=defaultPkgs.map((item,idx)=>({id:"def_"+idx,...item}));
-}
+    function handleLogin() {
+        const email = $("em").value;
+        const pass = $("pw").value;
+        if(!email || !pass) return Swal.fire('Error', 'Please enter email and password', 'error');
+        Swal.showLoading();
+        auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+            showSec('home');
+            Swal.close();
+        })
+        .catch((err) => Swal.fire('Login Failed', err.message, 'error'));
+    }
 
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+    function handleGoogleLogin() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then((result) => {
+            const user = result.user;
+            ensure(user, user.displayName).then(() => {
+                showSec('home');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Logged in successfully',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }).catch((error) => {
+            Swal.fire('Error', error.message, 'error');
+        });
+    }
 
-function draw(){
- if(!me)return;
- $("ban").classList.toggle("show",!!me.banned);
- $("bal").textContent=fmt(me.balance);
- const hb=$("hb");hb.classList.remove("hide");hb.textContent=me.role==="admin"?"Admin":isRes()?"Reseller":"User";hb.className="badge"+(isRes()?" r":"");
- const min=+S.resellerMin||500,pct=Math.min(100,(me.totalDeposit||0)/min*100);
- $("rp").textContent=isRes()?"You are a Reseller":`Deposit ${fmt(Math.max(0,min-(me.totalDeposit||0)))} more to become Reseller`;
- $("rbar").style.width=pct+"%";
- $("nm").textContent=me.name;$("mail").textContent=me.email;$("sc").textContent=me.supportCode;
- $("rl").value=location.origin+location.pathname+"?ref="+me.supportCode;
- $("tg").href="https://t.me/mhxffv111?text="+encodeURIComponent("Support Code: "+me.supportCode);
- $("svc").innerHTML=svc.map(s=>{const p=isRes()&&s.resellerPrice!=null?s.resellerPrice:s.price;return`<div class="item"><div><b>${esc(s.name)}</b><div class="m">${fmt(p)}</div></div><button class="btn" data-b="${s.id}">Order Now</button></div>`}).join("")||'<p class="m">No services available</p>';
-}
+    function handleLogout() {
+        auth.signOut().then(() => {
+            showSec('home');
+        });
+    }
 
-$("svc").onclick=e=>{const id=e.target.dataset.b;if(!id)return;selectedSvc=svc.find(x=>x.id===id);if(!selectedSvc)return;const price=+(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);$("ordTitle").textContent=selectedSvc.name;$("ordPrice").textContent=`Price: ${fmt(price)}`;$("ffUid").value="";$("orderModal").classList.add("show")};
-$("ordCancel").onclick=()=>$("orderModal").classList.remove("show");
-$("ordConfirm").onclick=()=>go(async()=>{const uidInput=$("ffUid").value.trim(),serverInput=$("ffServer").value;if(!uidInput||uidInput.length<5)throw Error("Please enter a valid Free Fire UID!");const p=+(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);await runTransaction(db,async t=>{const r=doc(db,"users",uid),d=await t.get(r);if(d.data().banned)throw Error("Account is banned");if(d.data().balance<p)throw Error("Insufficient balance! Please Add Money.");t.update(r,{balance:d.data().balance-p});t.set(doc(collection(db,"orders")),{user_id:uid,game_uid:uidInput,server:serverInput,service_id:selectedSvc.id,service_name:selectedSvc.name,price:p,status:"pending",order_date:serverTimestamp()})});$("orderModal").classList.remove("show");alert("Your like order has been submitted successfully!")});
+    // --- FIREBASE DATA SYNC ---
+    onSnapshot(doc(db,"settings","site"),d=>{
+      if(d.exists()){
+        S={...S,...d.data()};
+        $("brand").textContent=S.name || "M H X Store";
+        document.title=S.name || "M H X Store";
+        if(S.logoUrl){
+          $("brandLogo").src = S.logoUrl;
+          $("brandLogo").classList.remove("hide");
+          $("brand").classList.add("hide");
+        } else {
+          $("brandLogo").classList.add("hide");
+          $("brand").classList.remove("hide");
+        }
+      }
+      draw();
+    });
 
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["home","svc","me"].forEach(v=>$("v-"+v).classList.toggle("hide",v!==b.dataset.v))});
-$("cp").onclick=()=>{navigator.clipboard.writeText($("rl").value);alert("Link copied")};
-$("addbtn").onclick=()=>$("dm").classList.add("show");$("dc").onclick=()=>$("dm").classList.remove("show");
-document.querySelectorAll(".chips button").forEach(b=>b.onclick=()=>$("amt").value=b.textContent);
+    async function ensure(u, customName){
+     const r=doc(db,"users",u.uid);
+     const docSnap = await getDoc(r);
+     if(docSnap.exists()) return;
 
-$("ds").onclick=()=>go(async()=>{
- const a=+$("amt").value;if(a<10)throw Error("Minimum deposit is 10 BDT");
- const orderRef="ORD"+Date.now()+uid.substring(0,5),payload={cus_name:me.name||`User ${uid}`,cus_email:me.email||`user${uid}@gmail.com`,amount:String(a),success_url:location.origin+location.pathname+`?pay_status=success&ref=${orderRef}&amount=${a}`,cancel_url:location.origin+location.pathname+`?pay_status=cancel`,metadata:{user_id:uid,amount:String(a),order_ref:orderRef}};
- try{const res=await fetch(ZRPAYBD_CONFIG.createUrl,{method:"POST",headers:{"Content-Type":"application/json","API-KEY":ZRPAYBD_CONFIG.apiKey,"SECRET-KEY":ZRPAYBD_CONFIG.secretKey,"BRAND-KEY":ZRPAYBD_CONFIG.brandKey},body:JSON.stringify(payload)});const data=await res.json();if(data&&data.status===1&&data.payment_url){window.location.href=data.payment_url}else{throw new Error(data.message||"Failed to initialize payment gateway!")}}catch(e){alert("Payment Error: "+e.message)}
-});
+     let code;do{code=String(Math.floor(1e5+Math.random()*9e5))}while((await getDoc(doc(db,"codes",code))).exists());
+     let bonus=0,by=null;const ref=new URLSearchParams(location.search).get("ref");
+     if(ref){const c=await getDoc(doc(db,"codes",ref));if(c.exists()){by=c.data().uid;bonus=+S.refBonus||0}}
+     await setDoc(doc(db,"codes",code),{uid:u.uid});
+     await setDoc(r,{
+         email:u.email,
+         name:customName || u.displayName || u.email.split("@")[0],
+         balance:bonus,
+         totalDeposit:0,
+         role:"user",
+         banned:false,
+         supportCode:code,
+         referredBy:by,
+         createdAt:firebase.firestore.FieldValue.serverTimestamp()
+     });
+     if(by&&bonus)try{await updateDoc(doc(db,"users",by),{balance:firebase.firestore.FieldValue.increment(bonus)})}catch(e){}
+    }
 
-async function handlePaymentReturn(){
- const urlParams=new URLSearchParams(window.location.search),status=urlParams.get("pay_status"),ref=urlParams.get("ref"),amt=parseFloat(urlParams.get("amount"));
- if(status==="success"&&ref&&amt>0&&uid){window.history.replaceState({},document.title,window.location.pathname);await runTransaction(db,async t=>{const userRef=doc(db,"users",uid),userDoc=await t.get(userRef);if(userDoc.exists()){const currentBal=userDoc.data().balance||0,currentDep=userDoc.data().totalDeposit||0;t.update(userRef,{balance:currentBal+amt,totalDeposit:currentDep+amt});t.set(doc(collection(db,"deposits")),{uid:uid,amount:amt,payment_key:ref,status:"completed",at:serverTimestamp()})}});alert(`Auto payment successful! ৳${amt} added to your balance.`)}else if(status==="cancel"){window.history.replaceState({},document.title,window.location.pathname);alert("Payment was cancelled!")}
-}
+    auth.onAuthStateChanged(async u=>{
+     if(!u){
+         uid=me=null;
+         $("header-login-container").classList.remove("hide");
+         $("header-balance-container").classList.add("hide");
+         return;
+     }
+     uid=u.uid;
+     await go(()=>ensure(u));
+     $("header-login-container").classList.add("hide");
+     $("header-balance-container").classList.remove("hide");
+     
+     db.collection("users").doc(uid).onSnapshot(d=>{me=d.data();draw()});
+     db.collection("services").onSnapshot(s=>{
+       svc=s.docs.map(d=>({id:d.id,...d.data()}));
+       if(svc.length===0) loadDefaultServices();
+       draw();
+     });
+     db.collection("notifications").orderBy("at","desc").limit(15).onSnapshot(s=>{
+       $("notes").innerHTML=s.docs.map(d=>`<div class="item"><span>${esc(d.data().text)}</span></div>`).join("")||"No notifications";
+     });
+    });
 
-onAuthStateChanged(auth,u=>{if(u&&!isSigningUp)handlePaymentReturn()});
-$("redeem").onclick=()=>go(async()=>{const c=$("pc").value.trim().toUpperCase();if(!c)return;const pr=doc(db,"promos",c);await runTransaction(db,async t=>{const p=await t.get(pr);if(!p.exists())throw Error("Invalid promo code");const d=p.data(),u=d.usedBy||[];if((d.used||0)>=d.maxUses)throw Error("Promo code limit reached");if(u.includes(uid))throw Error("You have already used this code");t.update(pr,{used:(d.used||0)+1,usedBy:[...u,uid]});t.update(doc(db,"users",uid),{balance:increment(d.amount)})});$("pc").value="";alert("Promo code redeemed successfully")});
+    function loadDefaultServices(){
+     const defaultPkgs=[{name:"🔥 Daily Like (220+ Likes)",price:6,resellerPrice:4},{name:"💎 Daily Like PRO+ (30 Daily Limit)",price:6,resellerPrice:4},{name:"🤖 Auto Like - 7 Days",price:90,resellerPrice:75},{name:"🤖 Auto Like - 15 Days",price:150,resellerPrice:125},{name:"🤖 Auto Like - 30 Days",price:250,resellerPrice:200}];
+     svc=defaultPkgs.map((item,idx)=>({id:"def_"+idx,...item}));
+    }
+
+    const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+    function draw(){
+     if(!me)return;
+     $("ban").classList.toggle("show",!!me.banned);
+     $("bal").textContent=me.balance||0;
+     $("bal-card").textContent=fmt(me.balance);
+     const hb=$("hb");hb.classList.remove("hide");hb.textContent=me.role==="admin"?"Admin":isRes()?"Reseller":"User";hb.className="badge"+(isRes()?" r":"");
+     const min=+S.resellerMin||500,pct=Math.min(100,(me.totalDeposit||0)/min*100);
+     $("rp").textContent=isRes()?"You are a Reseller":`Deposit ${fmt(Math.max(0,min-(me.totalDeposit||0)))} more to become Reseller`;
+     $("rbar").style.width=pct+"%";
+     $("nm").textContent=me.name;$("mail").textContent=me.email;$("sc").textContent=me.supportCode;
+     $("rl").value=location.origin+location.pathname+"?ref="+me.supportCode;
+     $("tg").href="https://t.me/mhxffv111?text="+encodeURIComponent("Support Code: "+me.supportCode);
+     $("svc").innerHTML=svc.map(s=>{const p=isRes()&&s.resellerPrice!=null?s.resellerPrice:s.price;return`<div class="item"><div><b>${esc(s.name)}</b><div class="m">${fmt(p)}</div></div><button class="btn" data-b="${s.id}">Order Now</button></div>`}).join("")||'<p class="m">No services available</p>';
+    }
+
+    $("svc").onclick=e=>{const id=e.target.dataset.b;if(!id)return;selectedSvc=svc.find(x=>x.id===id);if(!selectedSvc)return;const price=+(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);$("ordTitle").textContent=selectedSvc.name;$("ordPrice").textContent=`Price: ${fmt(price)}`;$("ffUid").value="";$("orderModal").classList.add("show")};
+    $("ordCancel").onclick=()=>$("orderModal").classList.remove("show");
+    
+    $("ordConfirm").onclick=()=>go(async()=>{
+        if(!currentUser) { showAuthPage(); return; }
+        const uidInput=$("ffUid").value.trim(),serverInput=$("ffServer").value;
+        if(!uidInput||uidInput.length<5)throw Error("Please enter a valid Free Fire UID!");
+        const p=+(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);
+        
+        await db.runTransaction(async t=>{
+            const r=db.collection("users").doc(uid),d=await t.get(r);
+            if(d.data().banned)throw Error("Account is banned");
+            if(d.data().balance<p)throw Error("Insufficient balance! Please Add Money.");
+            t.update(r,{balance:d.data().balance-p});
+            t.set(db.collection("orders").doc(),{user_id:uid,game_uid:uidInput,server:serverInput,service_id:selectedSvc.id,service_name:selectedSvc.name,price:p,status:"pending",order_date:firebase.firestore.FieldValue.serverTimestamp()});
+        });
+        $("orderModal").classList.remove("show");alert("Your like order has been submitted successfully!");
+    });
+
+    function showSec(v) {
+        $("auth").classList.add("hide");
+        $("app").classList.remove("hide");
+        ["home","svc","me"].forEach(x=>$("v-"+x).classList.add("hide"));
+        $("v-"+v).classList.remove("hide");
+        document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+    }
+
+    document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+        if(!auth.currentUser && b.dataset.v === 'me') { showAuthPage(); return; }
+        showSec(b.dataset.v);
+    });
+
+    $("cp").onclick=()=>{navigator.clipboard.writeText($("rl").value);alert("Link copied")};
+    $("addbtn").onclick=()=>{ if(!auth.currentUser){showAuthPage();return;} $("dm").classList.add("show"); };
+    $("dc").onclick=()=>$("dm").classList.remove("show");
+    document.querySelectorAll(".chips button").forEach(b=>b.onclick=()=>$("amt").value=b.textContent);
+
+    $("ds").onclick=()=>go(async()=>{
+     const a=+$("amt").value;if(a<10)throw Error("Minimum deposit is 10 BDT");
+     const orderRef="ORD"+Date.now()+uid.substring(0,5),payload={cus_name:me.name||`User ${uid}`,cus_email:me.email||`user${uid}@gmail.com`,amount:String(a),success_url:location.origin+location.pathname+`?pay_status=success&ref=${orderRef}&amount=${a}`,cancel_url:location.origin+location.pathname+`?pay_status=cancel`,metadata:{user_id:uid,amount:String(a),order_ref:orderRef}};
+     try{const res=await fetch(ZRPAYBD_CONFIG.createUrl,{method:"POST",headers:{"Content-Type":"application/json","API-KEY":ZRPAYBD_CONFIG.apiKey,"SECRET-KEY":ZRPAYBD_CONFIG.secretKey,"BRAND-KEY":ZRPAYBD_CONFIG.brandKey},body:JSON.stringify(payload)});const data=await res.json();if(data&&data.status===1&&data.payment_url){window.location.href=data.payment_url}else{throw new Error(data.message||"Failed to initialize payment gateway!")}}catch(e){alert("Payment Error: "+e.message)}
+    });
+
+    async function handlePaymentReturn(){
+     const urlParams=new URLSearchParams(window.location.search),status=urlParams.get("pay_status"),ref=urlParams.get("ref"),amt=parseFloat(urlParams.get("amount"));
+     if(status==="success"&&ref&&amt>0&&uid){window.history.replaceState({},document.title,window.location.pathname);await db.runTransaction(async t=>{const userRef=db.collection("users").doc(uid),userDoc=await t.get(userRef);if(userDoc.exists()){const currentBal=userDoc.data().balance||0,currentDep=userDoc.data().totalDeposit||0;t.update(userRef,{balance:currentBal+amt,totalDeposit:currentDep+amt});t.set(db.collection("deposits").doc(),{uid:uid,amount:amt,payment_key:ref,status:"completed",at:firebase.firestore.FieldValue.serverTimestamp()})}});alert(`Auto payment successful! ৳${amt} added to your balance.`)}else if(status==="cancel"){window.history.replaceState({},document.title,window.location.pathname);alert("Payment was cancelled!")}
+    }
+
+    auth.onAuthStateChanged(u=>{if(u)handlePaymentReturn()});
+
+    $("redeem").onclick=()=>go(async()=>{
+     const c=$("pc").value.trim().toUpperCase();if(!c)return;const pr=db.collection("promos").doc(c);
+     await db.runTransaction(async t=>{const p=await t.get(pr);if(!p.exists())throw Error("Invalid promo code");const d=p.data(),u=d.usedBy||[];if((d.used||0)>=d.maxUses)throw Error("Promo code limit reached");if(u.includes(uid))throw Error("You have already used this code");t.update(pr,{used:(d.used||0)+1,usedBy:[...u,uid]});t.update(db.collection("users").doc(uid),{balance:firebase.firestore.FieldValue.increment(d.amount)})});
+     $("pc").value="";alert("Promo code redeemed successfully")
+    });
 </script></body></html>
