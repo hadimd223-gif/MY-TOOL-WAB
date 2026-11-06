@@ -1747,9 +1747,19 @@ body{background:linear-gradient(160deg,#fff7ed 0%,#f8fafc 45%,#eef2ff 100%)!impo
     // ===== ZRPay payment (keys live ONLY in Cloud Functions, never in this file) =====
     const fns=()=>firebase.app().functions('us-central1');
     const PAY_API="https://YOUR-SERVER-URL"; // <-- put your payment-server public URL here (no trailing slash)
-    async function payApi(path,body){const t=await auth.currentUser.getIdToken();
-      const r=await fetch(PAY_API+path,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(body)});
-      let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||'Server error');return j}
+    async function payApi(path,body){
+      if(!PAY_API||PAY_API.includes('YOUR-SERVER-URL'))throw new Error('Payment server link is not set (PAY_API in index.html).');
+      if(!auth.currentUser)throw new Error('Please login first.');
+      const t=await auth.currentUser.getIdToken(),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),30000);
+      try{const r=await fetch(PAY_API.replace(/\/+$/,'')+path,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(body)});
+        let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||('Server error '+r.status));return j}
+      catch(e){if(e.name==='AbortError')throw new Error('Payment server timeout. Make sure the server is running.');
+        if(/Failed to fetch|NetworkError|Load failed/i.test(e.message))throw new Error('Cannot reach the payment server. Check the PAY_API link (must be https) and that the server is running.');throw e}
+      finally{clearTimeout(to)}}
+    // never leave the page frozen on an unexpected error
+    const _zpFail=m=>{try{if(Swal.isVisible()&&Swal.isLoading())Swal.fire('Error',String(m||'Something went wrong'),'error')}catch(x){}};
+    window.addEventListener('unhandledrejection',e=>_zpFail(e.reason&&e.reason.message));
+    window.addEventListener('error',e=>_zpFail(e.message));
     function zpQuick(v){document.getElementById('new-amount-input').value=v}
     async function startGateway(forced){
       const a=forced||parseInt(document.getElementById('new-amount-input').value);
