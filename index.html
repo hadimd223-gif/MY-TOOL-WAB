@@ -1746,18 +1746,22 @@ body{background:linear-gradient(160deg,#fff7ed 0%,#f8fafc 45%,#eef2ff 100%)!impo
 
     // ===== ZRPay payment (keys live ONLY in Cloud Functions, never in this file) =====
     const fns=()=>firebase.app().functions('us-central1');
+    const PAY_API="https://YOUR-SERVER-URL"; // <-- put your payment-server public URL here (no trailing slash)
+    async function payApi(path,body){const t=await auth.currentUser.getIdToken();
+      const r=await fetch(PAY_API+path,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(body)});
+      let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||'Server error');return j}
     function zpQuick(v){document.getElementById('new-amount-input').value=v}
     async function startGateway(forced){
       const a=forced||parseInt(document.getElementById('new-amount-input').value);
       if(!currentUser)return showSec('auth');
       if(!(a>=10))return Swal.fire('Invalid amount','Minimum deposit is ৳10','warning');
       Swal.fire({title:'Opening secure payment...',allowOutsideClick:false,showConfirmButton:false,didOpen:()=>Swal.showLoading()});
-      try{const r=await fns().httpsCallable('createPayment')({amount:a,origin:location.origin+location.pathname.replace(/[^/]*$/,'')});location.href=r.data.paymentUrl}
+      try{const r={data:await payApi('/createPayment',{amount:a,origin:location.origin+location.pathname.replace(/[^/]*$/,'')})};location.href=r.data.paymentUrl}
       catch(e){Swal.fire('Error',e.message||'Payment failed','error')}}
     async function checkPayReturn(){
       const ref=new URLSearchParams(location.search).get('payok');if(!ref)return;history.replaceState(null,'',location.pathname);
       Swal.fire({title:'Verifying payment...',allowOutsideClick:false,showConfirmButton:false,didOpen:()=>Swal.showLoading()});
-      for(let i=0;i<5;i++){try{const r=await fns().httpsCallable('verifyPayment')({ref:ref});
+      for(let i=0;i<5;i++){try{const r={data:await payApi('/verifyPayment',{ref:ref})};
         if(r.data.ok)return Swal.fire({icon:'success',title:'Payment Successful',html:'৳'+r.data.amount+' added to your wallet'+(r.data.promoted?'<br><b>🎉 You are now a Reseller!</b>':'')})}catch(e){}
         await new Promise(r=>setTimeout(r,3000))}
       Swal.fire('Not confirmed yet','If you already paid, wait a minute and reopen the site, or contact support.','info')}
