@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Bree+Serif&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{colors:{sky:{50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',800:'#9a3412',900:'#7c2d12'}}}}}</script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -180,22 +182,32 @@ body{background:linear-gradient(160deg,#f1f5f9,#e0e7ff 60%,#f8fafc)!important}
 nav.fixed{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(255,255,255,.75)!important}
 .product-card{border-radius:1rem!important;backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(99,102,241,.14)}
 #header-balance{text-shadow:0 0 14px rgba(99,102,241,.35)}
+</style><style>
+:root{--o:#f97316;--o2:#ea580c;--ink:#1f1b16;--bg:#fff8f1}
+body,#home-sec,#app-content,#account-sec,#addmoney-sec{font-family:'Outfit','Noto Serif Bengali',sans-serif!important}
+body,#app-content,.bg-slate-50,.bg-\[\#f8fafc\],.bg-\[\#f6f8fa\]{background:var(--bg)!important}
+body{color:var(--ink)}
+.mhx-card{background:#fff;border:1px solid #f3e6d8;border-radius:20px;box-shadow:0 6px 20px rgba(249,115,22,.07)}
+.product-card{border-radius:18px!important;backdrop-filter:none!important;border:1px solid #f3e6d8;box-shadow:0 6px 20px rgba(249,115,22,.08)!important}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;font-size:11px;font-weight:600;color:#8a7f74;background:none;border:0;padding:6px 0}
+.nav-item i{font-size:19px}.nav-item.active-tab{color:var(--o2)!important}
+.mhx-bolt{width:58px;height:58px;border-radius:50%;border:4px solid var(--bg);background:linear-gradient(135deg,#fb923c,#ea580c);color:#fff;font-size:22px;margin:-28px 6px 0;box-shadow:0 10px 22px rgba(234,88,12,.45);flex:none}
+#fab-support{position:fixed;right:max(16px,calc(50% - 208px));bottom:92px;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;background:linear-gradient(135deg,#fb923c,#ea580c);box-shadow:0 8px 22px rgba(234,88,12,.45);z-index:45}
 </style></head>
 <body class="select-none bg-slate-50">
 
 <div id="app-content" class="relative max-w-md mx-auto bg-slate-50 min-h-screen shadow-2xl">
-    <header class="bg-white/90 backdrop-blur-md p-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-2">
-            <img id="header-logo-img" src="https://placehold.co/150x50?text=Logo" class="h-16 object-contain">
+    <header class="sticky top-0 z-40 flex justify-between items-center px-3 py-2.5 bg-white/90 backdrop-blur-md border-b border-orange-100">
+        <div class="flex items-center gap-2.5 min-w-0">
+            <img id="header-logo-img" src="https://placehold.co/80x80?text=Logo" class="w-10 h-10 rounded-xl object-cover bg-orange-50 border border-orange-100 flex-shrink-0">
+            <b id="header-site-name" class="text-[17px] font-extrabold tracking-tight truncate text-[#1f1b16]"></b>
         </div>
-        <div id="header-balance-container" class="hidden bg-sky-500 px-4 py-2 rounded-full text-sm font-bold text-white border border-sky-600 shadow-md">
-            <i class="fas fa-wallet mr-1"></i> ৳ <span id="header-balance">0</span>
-        </div>
-        <div id="header-login-container">
-            <button onclick="showAuthPage()" class="bg-sky-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md hover:bg-sky-700 transition">
-                <i class="fas fa-sign-in-alt mr-1"></i> Login
-            </button>
-        </div>
+        <div id="header-balance-container" class="hidden"><div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 font-bold text-sm"><i class="fa-solid fa-wallet"></i>৳<span id="header-balance">0</span></div>
+            <button onclick="Swal.fire('Notice',document.getElementById('notice-text').innerText)" class="w-9 h-9 rounded-xl bg-white border border-orange-100 text-slate-600"><i class="fa-regular fa-bell"></i></button>
+            <button id="header-avatar" onclick="showSec('account')" class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold">A</button>
+        </div></div>
+        <div id="header-login-container"><button onclick="showAuthPage()" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md"><i class="fas fa-sign-in-alt mr-1"></i> Login</button></div>
     </header>
 
     <div id="notice-section" class="mb-0 px-3">
@@ -303,6 +315,16 @@ nav.fixed{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);backgrou
                     <img src="https://placehold.co/600x300/29b6f6/FFF?text=Loading..." class="w-full h-full object-cover flex-shrink-0">
                 </div>
                 <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-10"></div>
+            </div>
+
+            <div class="mx-3 mb-4 p-4 mhx-card">
+                <div class="text-sm text-slate-500">👋 Hi, <b id="hero-name" class="text-slate-800">Guest</b><span id="hero-badge"></span></div>
+                <div class="text-xs text-slate-400 mt-2">Available balance</div>
+                <div class="text-4xl font-extrabold text-orange-600 mb-3">৳<span id="hero-bal">0.00</span></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="document.getElementById('services-list').scrollIntoView({behavior:'smooth'})" class="py-3 rounded-xl text-white font-bold bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg"><i class="fa-solid fa-bolt mr-1"></i>Order now</button>
+                    <button onclick="showSec('addmoney')" class="py-3 rounded-xl font-bold border border-orange-200 bg-white text-slate-700"><i class="fa-solid fa-plus mr-1"></i>Add funds</button>
+                </div>
             </div>
 
             <div class="grid grid-cols-3 gap-3 mb-5 px-2">
@@ -836,35 +858,16 @@ nav.fixed{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);backgrou
         </div>
     </div>
 
-    <nav class="fixed bottom-0 w-full bg-white/95 backdrop-blur-sm border-t border-gray-100/50 py-3 px-6 shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-40 max-w-md mx-auto left-0 right-0 rounded-t-[20px]">
-        <div class="flex justify-between items-center">
-            <button onclick="showSec('home')" class="nav-item flex flex-col items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-sky-500 active-tab group" id="nav-home">
-                <img src="https://img.icons8.com/?size=100&id=OXVih02dFZ53&format=png&color=000000" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" alt="Home">
-                <span class="text-[10px] font-semibold tracking-wide">Home</span>
-            </button>
-            
-            <button onclick="showSec('tutorial')" class="nav-item flex flex-col items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-sky-500 group" id="nav-tutorial">
-                <img src="https://img.icons8.com/?size=100&id=15979&format=png&color=000000" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" alt="Tutorial">
-                <span class="text-[10px] font-semibold tracking-wide">Tutorial</span>
-            </button>
-            
-            <button onclick="showSec('addmoney')" class="nav-item flex flex-col items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-sky-500 group" id="nav-addmoney">
-                <img src="https://img.icons8.com/?size=100&id=95782&format=png&color=000000" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" alt="Add Money">
-                <span class="text-[10px] font-semibold tracking-wide">Add Money</span>
-            </button>
-            
-            <button onclick="showSec('history')" class="nav-item flex flex-col items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-sky-500 group" id="nav-history">
-                <img src="https://img.icons8.com/?size=100&id=41117&format=png&color=000000" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" alt="History">
-                <span class="text-[10px] font-semibold tracking-wide">History</span>
-            </button>
-            
-            <button onclick="openGuild()" class="nav-item flex flex-col items-center gap-1.5 text-gray-700"><i class="fa-solid fa-shield-halved text-xl"></i><span class="text-[10px] font-semibold tracking-wide">Guild</span></button>
-            <button onclick="showSec('account')" class="nav-item flex flex-col items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-sky-500 group" id="nav-account">
-                <img src="https://img.icons8.com/?size=100&id=7820&format=png&color=000000" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" alt="Account">
-                <span class="text-[10px] font-semibold tracking-wide">Account</span>
-            </button>
-        </div>
-    </nav>
+    <nav class="fixed bottom-0 left-0 right-0 z-50"><div class="max-w-md mx-auto flex items-end justify-between px-3 pt-2 pb-3 bg-white rounded-t-3xl border-t border-orange-100 shadow-[0_-8px_30px_rgba(249,115,22,.12)]">
+        <button id="nav-home" onclick="showSec('home')" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></button>
+        <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
+        <button onclick="openGuild()" class="nav-item"><i class="fa-solid fa-crown"></i><span>Guild</span></button>
+        <button class="mhx-bolt" onclick="showSec('home');setTimeout(()=>document.getElementById('services-list').scrollIntoView({behavior:'smooth'}),50)"><i class="fa-solid fa-bolt"></i></button>
+        <button id="nav-addmoney" onclick="showSec('addmoney')" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></button>
+        <button id="nav-tutorial" onclick="showSec('tutorial')" class="nav-item"><i class="fa-solid fa-circle-play"></i><span>Help</span></button>
+        <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+    </div></nav>
+    <a id="fab-support" href="https://t.me/mhxffv111" target="_blank" rel="noopener" aria-label="Support"><i class="fa-solid fa-headset"></i></a>
 </div>
 
 <script>
@@ -934,7 +937,7 @@ nav.fixed{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);backgrou
                 isAutoPayEnabled = data.autoPayEnabled === true;
                 
                 // document.getElementById('auth-logo-img').src = logoUrl; // Removed in new UI
-                document.getElementById('header-logo-img').src = logoUrl;
+                document.getElementById('header-logo-img').src = logoUrl; document.getElementById('header-site-name').innerText = siteName;
                 document.getElementById('about-logo-img').src = logoUrl;
                 document.getElementById('about-site-name').innerText = siteName;
 
@@ -1070,6 +1073,10 @@ nav.fixed{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);backgrou
                 const data = doc.data();
                 userBalance = data.balance || 0;
                 const userName = data.name || "User"; userRole = data.role || 'user';
+                {const av=document.getElementById('header-avatar');if(av)av.innerText=userName.charAt(0).toUpperCase();
+                 const hn=document.getElementById('hero-name');if(hn)hn.innerText=userName;
+                 const hb=document.getElementById('hero-bal');if(hb)hb.innerText=(data.balance||0).toFixed(2);
+                 const hg=document.getElementById('hero-badge');if(hg)hg.innerHTML=userRole==='user'?'':`<span class="ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-orange-600">${userRole==='admin'?'Admin':'Reseller'}</span>`}
                 const userEmail = data.email || "";
 
                 // Update Header

@@ -261,7 +261,7 @@
                         <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border">General Info</h3>
                         <div class="space-y-5">
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Site Name</label><input type="text" id="set-sitename" class="flat-input"></div>
-                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Logo URL</label><input type="text" id="set-logo" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Logo URL</label><input type="text" id="set-logo" class="flat-input"><input type="file" id="logo-file" accept="image/*" class="mt-2 text-sm text-gray-400"><img id="logo-prev" class="mt-2 w-16 h-16 rounded-xl object-cover hidden"></div>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Notice</label><textarea id="set-notice" class="flat-input h-24"></textarea></div>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">App Download Link</label><input type="text" id="set-applink" class="flat-input"></div>
                         </div>
@@ -1176,6 +1176,12 @@
                 await d.ref.update({status:'success',apiResponse:(await res.text()).slice(0,300)});
             }catch(err){await d.ref.update({status:'pending',apiError:String(err.message)})}}
     });
+
+    // Logo upload from device: resized to 256px and saved as the logo with the "Save" button
+    document.getElementById('logo-file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();
+      fr.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas'),r=Math.min(1,256/Math.max(img.width,img.height));c.width=img.width*r;c.height=img.height*r;
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);const u=c.toDataURL('image/png');document.getElementById('set-logo').value=u;
+        const p=document.getElementById('logo-prev');p.src=u;p.classList.remove('hidden');Swal.fire('Logo ready','Press Save to apply it on the website.','info')};img.src=fr.result};fr.readAsDataURL(f)});
 </script>
 </body>
 </html>
