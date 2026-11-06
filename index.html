@@ -93,51 +93,94 @@ footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7}
 
   <section class="glass wall"><h3>🎯 CPX Research অফারওয়াল</h3>
     <div class="frame">
-      <iframe src="https://offers.cpx-research.com/index.php?app_id=37937&ext_user_id={{UID}}&secure_hash={{HASH}}&username={{UNAME_Q}}&email=&subid_1=&subid_2" title="CPX Offerwall"></iframe>
+      <iframe id="cpxFrame" src="about:blank" title="CPX Offerwall"></iframe>
     </div>
   </section>
   <footer>© M H X ADS • Secure Reward System</footer>
 </main>
+
 <script>
-const UID="{{UID}}",SIG="{{SIG}}",$=id=>document.getElementById(id);
-let shown="",banEnd=0;
+const $=id=>document.getElementById(id);
+const urlParams = new URLSearchParams(window.location.search);
+
+// URL Parameter Parsing (Vercel-friendly)
+const UID = urlParams.get('uid') || 'guest_' + Math.floor(Math.random()*100000);
+const SIG = urlParams.get('sig') || '';
+const HASH = urlParams.get('hash') || '';
+const UNAME = urlParams.get('username') || 'User';
+
+// Set Dynamic CPX Offerwall Iframe Source
+const cpxUrl = `https://offers.cpx-research.com/index.php?app_id=37937&ext_user_id=${encodeURIComponent(UID)}&secure_hash=${encodeURIComponent(HASH)}&username=${encodeURIComponent(UNAME)}&email=&subid_1=&subid_2=`;
+$('cpxFrame').src = cpxUrl;
+
+let shown="", banEnd=0;
+
 function render(d){
-  const n=Math.min(d.count,d.need||5);$('n').textContent=n;
-  $('arc').style.strokeDashoffset=302-302*n/5;
-  [...$('dots').children].forEach((x,i)=>x.classList.toggle('on',i<n));
-  $('rw').innerHTML=d.amount>0?'🎁 প্রতিটি কোডে রিওয়ার্ড: <em>৳'+d.amount+'</em>':'';
-  const key=d.codes.join(',');
-  if(d.codes.length){
-    if(key!==shown){shown=key;$('codes').innerHTML=d.codes.map(c=>
-      '<div class="c">'+c+'</div><button onclick="cp(\''+c+'\',this)">📋 কপি করুন</button>').join('');}
+  const n = Math.min(d.count || 0, 5);
+  $('n').textContent = n;
+  $('arc').style.strokeDashoffset = 302 - (302 * n / 5);
+  [...$('dots').children].forEach((x,i) => x.classList.toggle('on', i < n));
+  $('rw').innerHTML = (d.amount && d.amount > 0) ? '🎁 প্রতিটি কোডে রিওয়ার্ড: <em>৳' + d.amount + '</em>' : '';
+  
+  if (d.codes && d.codes.length) {
+    const key = d.codes.join(',');
+    if (key !== shown) {
+      shown = key;
+      $('codes').innerHTML = d.codes.map(c =>
+        '<div class="c">' + c + '</div><button onclick="cp(\'' + c + '\',this)">📋 কপি করুন</button>'
+      ).join('');
+    }
     $('code').classList.add('show');
-  }else{shown="";$('code').classList.remove('show');}
-  banEnd=d.ban_left>0?Date.now()+d.ban_left*1000:0;tick();
+  } else {
+    shown = "";
+    $('code').classList.remove('show');
+  }
+  banEnd = (d.ban_left && d.ban_left > 0) ? Date.now() + (d.ban_left * 1000) : 0;
+  tick();
 }
-function cp(c,b){
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(c).then(()=>{
-      b.textContent='✅ কপি হয়েছে';setTimeout(()=>b.textContent='📋 কপি করুন',1800);
-    }).catch(()=>{fallbackCopy(c,b);});
-  }else{fallbackCopy(c,b);}
+
+function cp(c, b){
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(c).then(() => {
+      b.textContent = '✅ কপি হয়েছে';
+      setTimeout(() => b.textContent = '📋 কপি করুন', 1800);
+    }).catch(() => fallbackCopy(c, b));
+  } else {
+    fallbackCopy(c, b);
+  }
 }
-function fallbackCopy(c,b){
-  const t=document.createElement('textarea');t.value=c;document.body.appendChild(t);t.select();
-  try{document.execCommand('copy');b.textContent='✅ কপি হয়েছে';}catch(e){b.textContent='❌ ব্যর্থ';}
-  t.remove();setTimeout(()=>b.textContent='📋 কপি করুন',1800);
+
+function fallbackCopy(c, b){
+  const t = document.createElement('textarea');
+  t.value = c;
+  document.body.appendChild(t);
+  t.select();
+  try { document.execCommand('copy'); b.textContent = '✅ কপি হয়েছে'; }
+  catch(e) { b.textContent = '❌ ব্যর্থ'; }
+  t.remove();
+  setTimeout(() => b.textContent = '📋 কপি করুন', 1800);
 }
+
 function tick(){
-  const l=Math.max(0,Math.ceil((banEnd-Date.now())/1000));
-  $('ban').classList.toggle('show',l>0);
-  $('banT').textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0');
+  const l = Math.max(0, Math.ceil((banEnd - Date.now()) / 1000));
+  $('ban').classList.toggle('show', l > 0);
+  $('banT').textContent = String(Math.floor(l / 60)).padStart(2, '0') + ':' + String(l % 60).padStart(2, '0');
 }
+
+// আপনার টেলিগ্রাম বটের API Domain বসাবেন (যদি সার্ভার থাকে)
+const BOT_SERVER_API = "https://your-bot-server-domain.com"; 
+
 async function poll(){
-  try{
-    const r=await fetch('/mhx/status?uid='+UID+'&sig='+SIG,{cache:'no-store'});
-    if(r.ok)render(await r.json());
-  }catch(e){}
+  if (!SIG) return; 
+  try {
+    const r = await fetch(`${BOT_SERVER_API}/mhx/status?uid=${UID}&sig=${SIG}`, { cache: 'no-store' });
+    if (r.ok) render(await r.json());
+  } catch(e){}
 }
-poll();setInterval(poll,6000);setInterval(tick,1000);
+
+poll();
+setInterval(poll, 6000);
+setInterval(tick, 1000);
 </script>
 </body>
 </html>
