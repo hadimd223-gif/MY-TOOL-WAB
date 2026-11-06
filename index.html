@@ -1,188 +1,134 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাড ভেরিফিকেশন সিস্টেম - AdMob</title>
-    
-    <!-- Google AdMob / AdSense Script Integration -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9467019896900554~2608224645" crossorigin="anonymous"></script>
-
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .card {
-            background-color: #1e293b;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-        }
-        h2 {
-            margin-bottom: 10px;
-            color: #38bdf8;
-        }
-        p {
-            color: #94a3b8;
-            font-size: 14px;
-        }
-        .progress-box {
-            font-size: 18px;
-            margin: 20px 0;
-            font-weight: bold;
-            color: #fbbf24;
-        }
-        .btn {
-            background-color: #0284c7;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn:hover {
-            background-color: #0369a1;
-        }
-        .btn:disabled {
-            background-color: #475569;
-            cursor: not-allowed;
-        }
-        .code-box {
-            background: #0f172a;
-            border: 2px dashed #38bdf8;
-            padding: 15px;
-            font-size: 20px;
-            letter-spacing: 2px;
-            font-weight: bold;
-            color: #4ade80;
-            margin: 15px 0;
-            border-radius: 6px;
-            word-break: break-all;
-        }
-        .hidden {
-            display: none;
-        }
-        #status-msg {
-            color: #f87171;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>M H X ADS</title>
+<link rel="icon" href="https://i.ibb.co.com/PsRT85vY/1792669720028.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07060d;--gold:#ffc83d;--pink:#ff4fa3;--vio:#7c5cff;--cy:#3de0ff;--txt:#f4f2ff;--mut:#a9a4c4;
+--glass:rgba(255,255,255,.07);--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:var(--bg);color:var(--txt);font-family:'Hind Siliguri',system-ui,sans-serif;overflow-x:hidden;
+padding:max(14px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.55;z-index:-1;animation:drift 18s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:var(--vio);top:-90px;left:-80px}
+.b2{width:300px;height:300px;background:var(--pink);bottom:-80px;right:-70px;animation-delay:-6s}
+.b3{width:220px;height:220px;background:var(--cy);top:45%;left:55%;opacity:.28;animation-delay:-11s}
+@keyframes drift{to{transform:translate(50px,-40px) scale(1.2)}}
+.wrap{max-width:680px;margin:0 auto;display:grid;gap:16px}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:24px;backdrop-filter:blur(22px) saturate(160%);
+-webkit-backdrop-filter:blur(22px) saturate(160%);box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);
+padding:20px;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+.glass:nth-child(2){animation-delay:.1s}.glass:nth-child(3){animation-delay:.2s}.glass:nth-child(4){animation-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.97)}}
+header{display:flex;align-items:center;gap:16px}
+.logo{width:68px;height:68px;border-radius:50%;object-fit:cover;flex:none;padding:3px;
+background:conic-gradient(var(--gold),var(--pink),var(--vio),var(--cy),var(--gold));animation:spin 8s linear infinite;
+box-shadow:0 0 30px rgba(255,200,61,.45)}
+.logo-w{position:relative;width:68px;height:68px;flex:none}
+.logo-w img{position:absolute;inset:4px;width:60px;height:60px;border-radius:50%;object-fit:cover}
+.logo-w i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--gold),var(--pink),var(--vio),var(--cy),var(--gold));
+animation:spin 6s linear infinite;box-shadow:0 0 28px rgba(255,200,61,.5)}
+@keyframes spin{to{transform:rotate(360deg)}}
+h1{font-family:Sora,sans-serif;font-weight:800;font-size:clamp(26px,7vw,36px);letter-spacing:.14em;
+background:linear-gradient(95deg,var(--gold),var(--pink) 55%,var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:14px;margin-top:2px}
+.prog{display:flex;align-items:center;gap:20px}
+.ring{position:relative;width:110px;height:110px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.ring .t{stroke:rgba(255,255,255,.1)}
+.ring .v{stroke:url(#g);stroke-dasharray:302;stroke-dashoffset:302;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 28px Sora,sans-serif}
+.ring b small{font-size:13px;color:var(--mut);font-weight:500}
+.dots{display:flex;gap:8px;margin:10px 0 8px}
+.dots span{flex:1;height:8px;border-radius:9px;background:rgba(255,255,255,.1);transition:.5s}
+.dots span.on{background:linear-gradient(90deg,var(--gold),var(--pink));box-shadow:0 0 12px rgba(255,200,61,.6)}
+.hint{color:var(--mut);font-size:14px;line-height:1.55}
+.hint em{color:var(--gold);font-style:normal;font-weight:600}
+.code{display:none;text-align:center;border-color:rgba(255,200,61,.55);background:linear-gradient(160deg,rgba(255,200,61,.16),rgba(255,79,163,.1))}
+.code.show{display:block;animation:pop .8s cubic-bezier(.2,1.4,.3,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.7) rotate(-3deg)}}
+.code h2{font:700 16px Sora,sans-serif;color:var(--gold)}
+.code .c{font:800 clamp(24px,8vw,34px) Sora,monospace;letter-spacing:.08em;margin:12px 0;padding:14px;border-radius:16px;
+background:rgba(0,0,0,.4);border:1px dashed rgba(255,200,61,.6);user-select:all;word-break:break-all}
+button{font:600 16px 'Hind Siliguri',sans-serif;color:#1a1200;border:0;border-radius:14px;padding:13px 24px;cursor:pointer;
+background:linear-gradient(95deg,var(--gold),#ff9a3d);box-shadow:0 8px 22px rgba(255,170,40,.4);transition:transform .15s}
+button:active{transform:scale(.95)}
+.ban{display:none;text-align:center;border-color:rgba(255,70,90,.6);background:rgba(255,40,70,.14)}
+.ban.show{display:block}.ban b{font:800 30px Sora,sans-serif;color:#ff7a8a}
+.wall h3{font:700 17px Sora,sans-serif;margin-bottom:12px}
+.frame{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#fff}
+iframe{display:block;width:100%;height:78vh;min-height:520px;border:0}
+.err{color:#ff9aa8;text-align:center;padding:30px}
+footer{text-align:center;color:var(--mut);font-size:12px;opacity:.7}
+</style>
 </head>
 <body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<main class="wrap">
+  <section class="glass"><header>
+    <div class="logo-w"><i></i><img src="https://i.ibb.co.com/PsRT85vY/1792669720028.jpg" alt="M H X ADS"></div>
+    <div><h1>M H X ADS</h1><p class="sub">টাস্ক করুন • কোড নিন • বটে রিওয়ার্ড পান</p></div>
+  </header></section>
 
-    <div class="card" id="main-card">
-        <h2>অ্যাড ভেরিফিকেশন</h2>
-        <p>এগিয়ে যাওয়ার জন্য আপনাকে অবশ্যই অ্যাড দেখতে হবে। অ্যাড না দেখলে পরবর্তী ধাপে যাওয়া যাবে না।</p>
-        
-        <div class="progress-box" id="progress-text">অ্যাড দেখা হয়েছে: ০/৫</div>
+  <section class="glass ban" id="ban"><p class="hint">⛔ ভুল/ব্যবহৃত কোডের কারণে সাময়িক ব্যান</p><b id="banT">05:00</b>
+    <p class="hint">সময় শেষ হলে আবার চেষ্টা করতে পারবেন।</p></section>
 
-        <!-- অ্যাড দেখার বাটন -->
-        <button class="btn" id="next-ad-btn" onclick="watchAdMobAd()">অ্যাড দেখে এগিয়ে যান</button>
-        <p id="status-msg"></p>
+  <section class="glass">
+    <div class="prog">
+      <div class="ring"><svg width="110" height="110" viewBox="0 0 110 110"><defs>
+        <linearGradient id="g"><stop offset="0" stop-color="#ffc83d"/><stop offset="1" stop-color="#ff4fa3"/></linearGradient></defs>
+        <circle class="t" cx="55" cy="55" r="48"/><circle class="v" id="arc" cx="55" cy="55" r="48"/></svg>
+        <b><span><span id="n">0</span><small> / 5</small></span></b></div>
+      <div style="flex:1"><div class="hint"><em>যেকোনো ৫টি</em> অফার/টাস্ক সম্পূর্ণ করলে এখানে স্বয়ংক্রিয়ভাবে ইউনিক কোড তৈরি হবে।</div>
+        <div class="dots" id="dots"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="hint" id="rw"></div></div>
     </div>
+  </section>
 
-    <!-- কোড পাওয়ার পর দেখানোর বক্স -->
-    <div class="card hidden" id="success-card">
-        <h2>অভিনন্দন! 🎉</h2>
-        <p>আপনার ৫টি অ্যাড দেখা সম্পূর্ণ হয়েছে। নিচের কোডটি কপি করে টেলিগ্রাম বটে দিন:</p>
-        
-        <div class="code-box" id="verification-code">LOAD1234</div>
-        
-        <button class="btn" onclick="copyCode()" id="copy-btn">কোড কপি করুন</button>
-        <p id="copy-msg" style="color: #4ade80; margin-top: 10px; display: none;">কোডটি সফলভাবে কপি হয়েছে! এবার বটে গিয়ে পেস্ট করুন।</p>
+  <section class="glass code" id="code">
+    <h2>🎉 আপনার ইউনিক কোড তৈরি হয়েছে!</h2>
+    <div id="codes"></div>
+    <p class="hint">কোডটি কপি করে টেলিগ্রাম বটে পাঠান। <em>একটি কোড একবারই ব্যবহার করা যাবে</em> — ভুল বা দ্বিতীয়বার দিলে ৫ মিনিট ব্যান।</p>
+  </section>
+
+  <section class="glass wall"><h3>🎯 অফারওয়াল</h3>
+    <div class="frame">
+      <iframe src="https://offers.cpx-research.com/index.php?app_id=37937&ext_user_id={{UID}}&secure_hash={{HASH}}&username={{UNAME_Q}}&email=&subid_1=&subid_2" title="CPX Offerwall"></iframe>
     </div>
-
-    <script>
-        // আপনার দেওয়া AdMob অ্যাড ইউনিট আইডিগুলোর তালিকা
-        const admobUnits = [
-            "ca-app-pub-9467019896900554/3758663944",
-            "ca-app-pub-9467019896900554/6576398978",
-            "ca-app-pub-9467019896900554/3355551299",
-            "ca-app-pub-9467019896900554/3733604059",
-            "ca-app-pub-9467019896900554/6355897969",
-            "ca-app-pub-9467019896900554/3083876525"
-        ];
-
-        let adCount = parseInt(localStorage.getItem('user_ad_count')) || 0;
-        const totalAds = 5;
-
-        function updateUI() {
-            if (adCount >= totalAds) {
-                document.getElementById('main-card').classList.add('hidden');
-                document.getElementById('success-card').classList.remove('hidden');
-                
-                let uniqueCode = "VERIFY-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-                document.getElementById('verification-code').innerText = uniqueCode;
-                
-                localStorage.removeItem('user_ad_count');
-            } else {
-                document.getElementById('progress-text').innerText = `অ্যাড দেখা হয়েছে: ${adCount}/${totalAds}`;
-            }
-        }
-
-        function watchAdMobAd() {
-            const btn = document.getElementById('next-ad-btn');
-            const statusMsg = document.getElementById('status-msg');
-            
-            btn.disabled = true;
-            btn.innerText = "অ্যাড লোড হচ্ছে...";
-            statusMsg.innerText = "দয়া করে সম্পূর্ণ অ্যাডটি দেখুন...";
-
-            // বর্তমান ধাপ অনুযায়ী AdMob ইউনিট সিলেক্ট করা
-            let currentAdUnit = admobUnits[adCount % admobUnits.length];
-            console.log("Loading AdMob Unit: " + currentAdUnit);
-
-            // এখানে AdMob লোড হওয়ার সিমুলেশন বা আসল রিমোট অ্যাড কল হবে। 
-            // ইউজার অ্যাড সম্পূর্ণ দেখার পর এই ফাংশনটি ট্রিগার হবে (যেমন: AdMob Rewarded/Interstitial Close ইভেন্ট)
-            setTimeout(() => {
-                // ধরে নিচ্ছি ইউজার সফলভাবে অ্যাড দেখে শেষ করেছে
-                let adWatchedSuccessfully = true; // এটি আসল অ্যাপে AdMob এর callback থেকে আসবে
-
-                if (adWatchedSuccessfully) {
-                    adCount++;
-                    localStorage.setItem('user_ad_count', adCount);
-                    statusMsg.innerText = "";
-                    updateUI();
-                } else {
-                    statusMsg.innerText = "অ্যাড সম্পূর্ণ দেখা হয়নি! দয়া করে সম্পূর্ণ অ্যাড দেখুন।";
-                }
-
-                btn.disabled = false;
-                btn.innerText = "অ্যাড দেখে এগিয়ে যান";
-            }, 3000); // ৩ সেকেন্ডের একটি অ্যাড দেখার সিমুলেশন সময় (আপনার প্রয়োজনমতো পরিবর্তন করতে পারেন)
-        }
-
-        window.onload = function() {
-            updateUI();
-        };
-
-        function copyCode() {
-            const codeText = document.getElementById('verification-code').innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                const msg = document.getElementById('copy-msg');
-                msg.style.display = 'block';
-                setTimeout(() => {
-                    msg.style.display = 'none';
-                }, 3000);
-            });
-        }
-    </script>
-
+  </section>
+  <footer>© M H X ADS • Secure Reward System</footer>
+</main>
+<script>
+const UID="{{UID}}",SIG="{{SIG}}",$=id=>document.getElementById(id);
+let shown="",banEnd=0;
+function render(d){
+  const n=Math.min(d.count,d.need);$('n').textContent=n;
+  $('arc').style.strokeDashoffset=302-302*n/d.need;
+  [...$('dots').children].forEach((x,i)=>x.classList.toggle('on',i<n));
+  $('rw').innerHTML=d.amount>0?'🎁 প্রতিটি কোডে রিওয়ার্ড: <em>৳'+d.amount+'</em>':'';
+  const key=d.codes.join(',');
+  if(d.codes.length){
+    if(key!==shown){shown=key;$('codes').innerHTML=d.codes.map(c=>
+      '<div class="c">'+c+'</div><button onclick="cp(\''+c+'\',this)">📋 কপি করুন</button>').join('');}
+    $('code').classList.add('show');
+  }else{shown="";$('code').classList.remove('show');}
+  banEnd=d.ban_left>0?Date.now()+d.ban_left*1000:0;tick();
+}
+function cp(c,b){(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).catch(()=>{
+  const t=document.createElement('textarea');t.value=c;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();});
+  b.textContent='✅ কপি হয়েছে';setTimeout(()=>b.textContent='📋 কপি করুন',1800);}
+function tick(){const l=Math.max(0,Math.ceil((banEnd-Date.now())/1000));
+  $('ban').classList.toggle('show',l>0);
+  $('banT').textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0');}
+async function poll(){
+  try{const r=await fetch('/mhx/status?uid='+UID+'&sig='+SIG,{cache:'no-store'});
+    if(r.ok)render(await r.json());}catch(e){}
+}
+poll();setInterval(poll,6000);setInterval(tick,1000);
+</script>
 </body>
 </html>
