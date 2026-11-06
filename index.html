@@ -681,9 +681,10 @@
         if (!uid) { Swal.fire('সতর্কতা', 'আগে প্লেয়ার আইডি (UID) লিখুন!', 'warning'); return; }
         if (!/^\d{5,15}$/.test(uid)) { Swal.fire('সতর্কতা', 'ইউআইডি শুধু সংখ্যা হতে হবে', 'warning'); return; }
         ffOpenModal(`<div class="ffm-load"><div class="ffm-spin"></div><p>অ্যাকাউন্ট ডিটেলস আনা হচ্ছে...</p></div>`, true);
-        const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 20000);
-        fetch(`${FF_INFO_API}?uid=${encodeURIComponent(uid)}`, { signal: ctl.signal })
-            .then(async res => { let j = null; try { j = await res.json(); } catch (e) {} if (!j) throw new Error('bad'); return j; })
+        const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
+        const getJ = async (url, strict) => { const res = await fetch(url, { signal: ctl.signal }); let j = null; try { j = await res.json(); } catch (e) {} if (!j || (strict && !res.ok)) throw new Error('bad'); return j; };
+        const q = encodeURIComponent(uid);
+        getJ(`${BACKEND_URL}/playerInfo?uid=${q}`, true).catch(e => { if (e.name === 'AbortError') throw e; return getJ(`${FF_INFO_API}?uid=${q}`, false); })
             .then(data => { clearTimeout(tm); ffRender(uid, data); })
             .catch(e => { clearTimeout(tm); ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-triangle-exclamation"></i></div><p>${e.name === 'AbortError' ? 'সার্ভার সাড়া দিচ্ছে না, আবার চেষ্টা করুন' : 'যাচাই করতে সমস্যা হয়েছে, একটু পরে আবার চেষ্টা করুন'}</p></div>`); });
     }
@@ -868,7 +869,8 @@
         if (!currentUser) throw new Error('আগে লগইন করুন');
         const token = await currentUser.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 40000);
         try {
-            const r = await fetch(BACKEND_URL + path, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(body || {}) });
+            const go = () => fetch(BACKEND_URL + path, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(body || {}) });
+            let r; try { r = await go(); } catch (e0) { if (e0.name === 'AbortError') throw e0; await new Promise(z => setTimeout(z, 2500)); r = await go(); }
             let j = {}; try { j = await r.json(); } catch (e) {}
             if (!r.ok) throw new Error(j.error || ('সার্ভার এরর ' + r.status));
             return j;
