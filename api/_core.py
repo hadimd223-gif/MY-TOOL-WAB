@@ -86,14 +86,28 @@ def auth_user():
     except Exception: raise Err("Invalid login, please login again", 401)
     return c.get("user_id") or c.get("sub"), c
 
+def _failed(j):
+    st = j.get("status") if isinstance(j, dict) else None
+    msg = str(j.get("message", "")).lower() if isinstance(j, dict) else ""
+    return st in (0, "0", False, "false", "error", "failed") or "invalid" in msg or "raw" in (j or {})
+
 def zr(url, body):
-    hd = {"Content-Type": "application/json", "Accept": "application/json", "API-KEY": API_KEY,
-          "SECRET-KEY": SECRET_KEY, "BRAND-KEY": BRAND_KEY, "RT-UDDOKTAPAY-API-KEY": API_KEY}
+    """Calls the gateway. Tries JSON first, then form-encoded (many PHP gateways only accept form data)."""
+    hd = {"Accept": "application/json", "API-KEY": API_KEY, "SECRET-KEY": SECRET_KEY, "BRAND-KEY": BRAND_KEY,
+          "X-API-KEY": API_KEY, "RT-UDDOKTAPAY-API-KEY": API_KEY}
     body = {**body, "api_key": API_KEY, "secret_key": SECRET_KEY, "brand_key": BRAND_KEY}
-    r = requests.post(url, json=body, headers=hd, timeout=30)
-    try: j = r.json()
-    except Exception: j = {"raw": r.text[:300]}
-    print("ZRPay", url.split("/")[-1], r.status_code, r.text[:400])
+    def go(**kw):
+        r = requests.post(url, headers=hd, timeout=30, **kw)
+        try: j = r.json()
+        except Exception: j = {"raw": r.text[:300]}
+        print("ZRPay", url.split("/")[-1], "json" if "json" in kw else "form", r.status_code, r.text[:400])
+        return j
+    j = go(json=body)
+    if _failed(j):
+        form = {k: (json.dumps(v) if isinstance(v, (dict, list)) else v) for k, v in body.items()}
+        j2 = go(data=form)
+        if not _failed(j2): return j2
+        j["_form_try"] = j2
     return j
 
 def pick(o, keys):
@@ -125,13 +139,23 @@ def create_payment():
     origin = str(b.get("origin", "")).rstrip("/")
     if not origin.startswith("http"): raise Err("Bad origin")
     ref = uuid.uuid4().hex
-    res = zr(CREATE_URL, {"full_name": u.get("name") or "User", "email": u.get("email") or claims.get("email") or "user@example.com",
-        "amount": str(amount), "metadata": {"ref": ref, "uid": uid}, "redirect_url": f"{origin}/index.html?payok={ref}",
-        "cancel_url": f"{origin}/index.html", "brand_key": BRAND_KEY})
+    nm = u.get("name") or "User"; em = u.get("email") or claims.get("email") or "user@example.com"
+    ph = str(u.get("phone") or u.get("mobile") or "01700000000")
+    ok_url, bad_url = f"{origin}/index.html?payok={ref}", f"{origin}/index.html"
+    res = zr(CREATE_URL, {
+        "full_name": nm, "cus_name": nm, "customer_name": nm, "name": nm,
+        "email": em, "cus_email": em, "customer_email": em,
+        "phone": ph, "cus_phone": ph, "customer_phone": ph, "mobile": ph,
+        "amount": str(amount), "currency": "BDT",
+        "order_id": ref, "trx_id": ref, "transaction_id": ref, "reference": ref,
+        "metadata": {"ref": ref, "uid": uid},
+        "redirect_url": ok_url, "success_url": ok_url, "return_url": ok_url, "callback_url": ok_url,
+        "cancel_url": bad_url, "fail_url": bad_url, "failed_url": bad_url,
+        "webhook_url": f"{origin}/api/health", "ipn_url": f"{origin}/api/health"})
     url = pick(res, ["payment_url", "paymentUrl", "checkout_url", "redirect_url", "payment_link", "link", "url"])
     if not (isinstance(url, str) and url.startswith("http")):
         raise Err("ZRPay error: " + str(res)[:300], 502)
-    gid = str(pick(res, ["invoice_id", "payment_id", "transaction_id", "trx_id", "id"]) or "")
+    gid = str(pick(res, ["invoice_id", "payment_id", "transaction_id", "trx_id", "id"]) or ref)
     commit([w_set(f"payments/{ref}", {"userId": uid, "email": u.get("email", ""), "amount": amount, "status": "pending", "gatewayId": gid},
                   pre={"exists": False}, now=["createdAt"])])
     return jsonify(paymentUrl=url)
@@ -144,7 +168,7 @@ def verify_payment():
     if not p or p.get("userId") != uid: raise Err("Payment not found", 404)
     if p.get("status") == "paid": return jsonify(ok=True, amount=p["amount"], already=True)
     gid = p.get("gatewayId")
-    res = zr(VERIFY_URL, {"invoice_id": gid, "payment_id": gid, "id": gid, "ref": ref})
+    res = zr(VERIFY_URL, {"invoice_id": gid, "payment_id": gid, "transaction_id": gid, "trx_id": gid, "id": gid, "order_id": ref, "ref": ref})
     st = str(pick(res, ["status", "payment_status"]) or "").lower()
     if st not in ("completed", "paid", "success", "successful"): return jsonify(ok=False, status=st)
     try: paid = int(float(pick(res, ["amount"]) or 0))
