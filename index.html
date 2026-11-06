@@ -31,6 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging-compat.js"></script>
 
     <style>
         :root{--primary:#4f46e5;--accent:#6366f1;--ink:#0f172a;--bg:#f8fafc}
@@ -191,7 +192,7 @@
                     <div class="w-7 h-7 rounded-full flex items-center justify-center bg-emerald-50 flex-shrink-0"><i class="fab fa-whatsapp text-lg text-[#25D366]"></i></div>
                     <span class="text-[11px] font-bold text-slate-700 truncate">WhatsApp</span>
                 </a>
-                <a id="home-telegram" href="#" target="_blank" class="vip-card py-3 px-2.5 flex items-center justify-between no-underline border border-white">
+                <a id="home-telegram" href="https://t.me/MHXOFC11" target="_blank" rel="noopener" class="vip-card py-3 px-2.5 flex items-center justify-between no-underline border border-white">
                     <div class="w-7 h-7 rounded-full flex items-center justify-center bg-sky-50 flex-shrink-0"><i class="fab fa-telegram-plane text-lg text-[#0088cc]"></i></div>
                     <span class="text-[11px] font-bold text-slate-700 truncate">Telegram</span>
                 </a>
@@ -1223,6 +1224,52 @@ async function dlSend() {
         clearTimeout(tm); dlBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-fire mr-1.5"></i>লাইক পাঠান'; dlUpdateInfo();
     }
 }
+</script>
+<script>
+// ================= PUSH NOTIFICATIONS (phone notifications even when the site is closed) =================
+const PUSH_VAPID_KEY = '';   // optional: Firebase Console > Project settings > Cloud Messaging > Web Push certificates > Key pair
+function pushSupported() {
+    try { return 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window && (!firebase.messaging.isSupported || firebase.messaging.isSupported()); } catch (e) { return false; }
+}
+async function pushRegister() {
+    try {
+        if (!pushSupported() || Notification.permission !== 'granted') return false;
+        const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        await navigator.serviceWorker.ready;
+        const opt = { serviceWorkerRegistration: reg }; if (PUSH_VAPID_KEY) opt.vapidKey = PUSH_VAPID_KEY;
+        const token = await firebase.messaging().getToken(opt);
+        if (!token) return false;
+        const uid = currentUser ? currentUser.uid : '', sig = token + '|' + uid;
+        let last = ''; try { last = localStorage.getItem('pushSig') || ''; } catch (e) {}
+        if (last !== sig) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (currentUser) headers['Authorization'] = 'Bearer ' + await currentUser.getIdToken();
+            const r = await fetch(BACKEND_URL + '/savePushToken', { method: 'POST', headers, body: JSON.stringify({ token }) });
+            if (r.ok) { try { localStorage.setItem('pushSig', sig); } catch (e) {} }
+        }
+        return true;
+    } catch (e) { console.warn('push register failed', e); return false; }
+}
+async function pushAskPermission() {
+    const p = await Notification.requestPermission();
+    if (p === 'granted') {
+        const ok = await pushRegister();
+        Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: ok ? 'success' : 'info', title: ok ? 'নোটিফিকেশন চালু হয়েছে 🔔' : 'নোটিফিকেশন চালু করা যায়নি, পরে আবার চেষ্টা করুন' });
+    }
+}
+function pushMaybePrompt() {
+    if (!pushSupported()) return;
+    if (Notification.permission === 'granted') { pushRegister(); return; }
+    if (Notification.permission !== 'default') return;
+    let t = 0; try { t = Number(localStorage.getItem('pushAskedAt') || 0); } catch (e) {}
+    if (Date.now() - t < 3 * 86400000) return;           // asked recently -> don't nag
+    if (Swal.isVisible()) { setTimeout(pushMaybePrompt, 5000); return; }
+    try { localStorage.setItem('pushAskedAt', String(Date.now())); } catch (e) {}
+    Swal.fire({ title: '🔔 নোটিফিকেশন চালু করুন', html: 'নতুন অফার, আপডেট ও জরুরি মেসেজ সরাসরি আপনার <b>ফোনের নোটিফিকেশনে</b> পাবেন।', showCancelButton: true, confirmButtonText: 'অনুমতি দিন', cancelButtonText: 'পরে', reverseButtons: true })
+        .then(r => { if (r.isConfirmed) pushAskPermission(); });
+}
+window.addEventListener('load', () => setTimeout(pushMaybePrompt, 3500));
+auth.onAuthStateChanged(() => { if (pushSupported() && Notification.permission === 'granted') pushRegister(); });   // link this device to the logged-in user
 </script>
 </body>
 </html>
