@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>M H X স্টোর</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M H X Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0c0a1d;--c:#171433;--p:#7c5cff;--p2:#19d3c5;--t:#f1efff;--m:#9a96c4;--ok:#22c55e;--no:#ef4444}
@@ -8,6 +8,8 @@
 body{background:radial-gradient(circle at 50% -10%,#2b1f74,var(--bg) 55%) fixed;color:var(--t);min-height:100vh;padding-bottom:84px}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;position:sticky;top:0;background:#0c0a1dd9;backdrop-filter:blur(10px);z-index:5}
 header b{font-size:21px;letter-spacing:.5px;background:linear-gradient(90deg,var(--p),var(--p2));-webkit-background-clip:text;color:transparent}
+.brand-container{display:flex;align-items:center;gap:10px;}
+.brand-logo{height:35px;max-width:120px;object-fit:contain;border-radius:6px;}
 main{max-width:520px;margin:auto;padding:16px}
 .card{background:var(--c);border:1px solid #ffffff14;border-radius:18px;padding:18px;margin-bottom:14px}
 .btn{background:var(--p);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:600;cursor:pointer;width:100%}
@@ -32,58 +34,62 @@ nav button.on{color:var(--p2);font-weight:700}
 .hide{display:none!important}
 @media(prefers-reduced-motion:no-preference){.add{transition:transform .15s}.add:active{transform:scale(.96)}}
 </style></head><body>
-<header><b id="brand">M H X স্টোর</b><span id="hb" class="badge hide"></span></header>
+<header>
+ <div class="brand-container">
+   <img id="brandLogo" class="brand-logo hide" alt="Logo">
+   <b id="brand">M H X Store</b>
+ </div>
+ <span id="hb" class="badge hide"></span>
+</header>
 
 <main id="auth">
- <div class="card"><h2 style="margin-bottom:12px">লগইন বা সাইন আপ</h2>
-  <button class="btn g" id="g">Google দিয়ে চালিয়ে যান</button>
-  <p class="m" style="text-align:center;margin:12px 0">অথবা ইমেইল ও পাসওয়ার্ড</p>
-  <input id="em" type="email" placeholder="ইমেইল"><input id="pw" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
-  <div class="row"><button class="btn" id="login">লগইন</button><button class="btn alt" id="signup">সাইন আপ</button></div>
+ <div class="card"><h2 style="margin-bottom:12px">Login or Sign Up</h2>
+  <button class="btn g" id="g">Continue with Google</button>
+  <p class="m" style="text-align:center;margin:12px 0">Or Email & Password</p>
+  <input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password (Min 6 characters)">
+  <div class="row"><button class="btn" id="login">Login</button><button class="btn alt" id="signup">Sign Up</button></div>
  </div>
 </main>
 
 <main id="app" class="hide">
  <section id="v-home">
-  <div class="card"><div class="m">আপনার ব্যালেন্স</div><div class="bal" id="bal">৳0</div>
+  <div class="card"><div class="m">Your Balance</div><div class="bal" id="bal">৳0</div>
    <div class="m" id="rp"></div><div class="bar"><i id="rbar" style="width:0"></i></div></div>
   <button class="add" id="addbtn"><span>+</span>Add Money</button>
-  <div class="card"><b>প্রমো কোড</b><div class="row" style="margin-top:10px"><input id="pc" placeholder="কোড লিখুন" style="margin:0"><button class="btn" id="redeem" style="width:130px">রিডিম করুন</button></div></div>
-  <div class="card"><b>নোটিফিকেশন</b><div id="notes" class="m" style="margin-top:8px">কোনো নোটিফিকেশন নেই</div></div>
+  <div class="card"><b>Promo Code</b><div class="row" style="margin-top:10px"><input id="pc" placeholder="Enter Code" style="margin:0"><button class="btn" id="redeem" style="width:130px">Redeem</button></div></div>
+  <div class="card"><b>Notifications</b><div id="notes" class="m" style="margin-top:8px">No notifications</div></div>
  </section>
  
  <section id="v-svc" class="hide">
   <div class="card">
-    <b>ফ্রি ফায়ার লাইক সার্ভিস ও প্যাকেজ</b>
+    <b>Free Fire Like Services & Packages</b>
     <div id="svc" style="margin-top:8px"></div>
   </div>
  </section>
 
  <section id="v-me" class="hide">
   <div class="card"><div id="nm" style="font-size:20px;font-weight:700"></div><div class="m" id="mail"></div>
-   <p style="margin-top:14px" class="m">আপনার সাপোর্ট কোড</p><div class="bal" id="sc" style="letter-spacing:4px"></div>
-   <p class="m" style="margin:10px 0">রেফার লিংক</p><input id="rl" readonly><button class="btn alt" id="cp">লিংক কপি করুন</button></div>
-  <div class="card"><b>সাপোর্ট</b><p class="m" style="margin:6px 0 12px">সমস্যা হলে টেলিগ্রামে আপনার সাপোর্ট কোডসহ মেসেজ দিন।</p>
+   <p style="margin-top:14px" class="m">Your Support Code</p><div class="bal" id="sc" style="letter-spacing:4px"></div>
+   <p class="m" style="margin:10px 0">Referral Link</p><input id="rl" readonly><button class="btn alt" id="cp">Copy Link</button></div>
+  <div class="card"><b>Support</b><p class="m" style="margin:6px 0 12px">If you have any issue, message on Telegram with your Support Code.</p>
    <a id="tg" target="_blank" rel="noopener"><button class="btn">Telegram: @mhxffv111</button></a></div>
-  <button class="btn alt" id="out">লগআউট</button>
+  <button class="btn alt" id="out">Logout</button>
  </section>
- <nav><button class="on" data-v="home">হোম</button><button data-v="svc">লাইক সার্ভিস</button><button data-v="me">প্রোফাইল</button></nav>
+ <nav><button class="on" data-v="home">Home</button><button data-v="svc">Services</button><button data-v="me">Profile</button></nav>
 </main>
 
-<!-- অটো পেমেন্ট মোডাল -->
 <div class="modal" id="dm"><div class="sheet">
- <h3 style="margin-bottom:6px">অটো অ্যাড মানি (ZRPAYBD)</h3>
- <p class="m" style="margin-bottom:12px">অ্যামাউন্ট সিলেক্ট করুন এবং সরাসরি গেটওয়ে থেকে পেমেন্ট কমপ্লিট করুন।</p>
+ <h3 style="margin-bottom:6px">Auto Add Money (ZRPAYBD)</h3>
+ <p class="m" style="margin-bottom:12px">Select amount and complete payment through gateway.</p>
  <div class="chips"><button>10</button><button>50</button><button>100</button><button>500</button></div>
- <input id="amt" type="number" min="10" placeholder="পরিমাণ (সর্বনিম্ন ১০ টাকা)">
- <div class="row"><button class="btn alt" id="dc">বাতিল</button><button class="btn" id="ds">পেমেন্ট গেটওয়েতে যান</button></div>
+ <input id="amt" type="number" min="10" placeholder="Amount (Min 10 BDT)">
+ <div class="row"><button class="btn alt" id="dc">Cancel</button><button class="btn" id="ds">Go to Payment Gateway</button></div>
 </div></div>
 
-<!-- লাইক সার্ভিস ইনপুট মোডাল -->
 <div class="modal" id="orderModal"><div class="sheet">
- <h3 id="ordTitle" style="margin-bottom:6px">অর্ডার কনফার্ম করুন</h3>
+ <h3 id="ordTitle" style="margin-bottom:6px">Confirm Order</h3>
  <p class="m" id="ordPrice" style="margin-bottom:12px"></p>
- <input id="ffUid" type="text" placeholder="Free Fire UID দিন (যেমন: 1203435801)">
+ <input id="ffUid" type="text" placeholder="Enter Free Fire UID (e.g. 1203435801)">
  <select id="ffServer">
     <option value="BD">Bangladesh (BD)</option>
     <option value="IND">India (IND)</option>
@@ -92,10 +98,10 @@ nav button.on{color:var(--p2);font-weight:700}
     <option value="TH">Thailand (TH)</option>
     <option value="PK">Pakistan (PK)</option>
  </select>
- <div class="row"><button class="btn alt" id="ordCancel">বাতিল</button><button class="btn" id="ordConfirm">অর্ডার সাবমিট করুন</button></div>
+ <div class="row"><button class="btn alt" id="ordCancel">Cancel</button><button class="btn" id="ordConfirm">Submit Order</button></div>
 </div></div>
 
-<div class="modal" id="ban"><div class="sheet"><h3>অ্যাকাউন্ট ব্যান করা হয়েছে</h3><p class="m" style="margin:8px 0">সাপোর্টে যোগাযোগ করুন: @mhxffv111</p><button class="btn alt" onclick="location.reload()">রিফ্রেশ</button></div></div>
+<div class="modal" id="ban"><div class="sheet"><h3>Account Banned</h3><p class="m" style="margin:8px 0">Contact Support: @mhxffv111</p><button class="btn alt" onclick="location.reload()">Refresh</button></div></div>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -103,29 +109,38 @@ import{getAnalytics}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-ana
 import{getAuth,GoogleAuthProvider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,addDoc,onSnapshot,collection,query,orderBy,limit,serverTimestamp,increment,runTransaction,updateDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app=initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",storageBucket:"m-h-x-wab-7abdf.firebasestorage.app",messagingSenderId:"570748526283",appId:"1:570748526283:web:3c786486aa3f838188c54e",measurementId:"G-VV3NQB0T1X"});
+const app=initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",storageBucket:"m-h-x-wab-7appdf.firebasestorage.app",messagingSenderId:"570748526283",appId:"1:570748526283:web:3c786486aa3f838188c54e",measurementId:"G-VV3NQB0T1X"});
 try{getAnalytics(app)}catch(e){}
 
 const auth=getAuth(app),db=getFirestore(app),$=i=>document.getElementById(i);
 const fmt=n=>"৳"+(+n||0).toFixed(2).replace(/\.00$/,"");
 const go=async f=>{try{await f()}catch(e){alert(e.message)}};
-let S={name:"M H X স্টোর",resellerMin:500,refBonus:0},me,uid,svc=[],unsub=[],selectedSvc=null;
+let S={name:"M H X Store",resellerMin:500,refBonus:0,logoUrl:""},me,uid,svc=[],unsub=[],selectedSvc=null;
+let isSigningUp = false;
 
 const isRes=()=>me&&(me.role==="reseller"||me.role==="admin");
+const ZRPAYBD_CONFIG = {apiKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",secretKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",brandKey:"br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",createUrl:"https://pay.zrpaybd.xyz/api/payment/create"};
 
-// ZRPAYBD Payment Gateway Config (From Python Bot)
-const ZRPAYBD_CONFIG = {
-  apiKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
-  secretKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
-  brandKey: "br5LDVhBna8JuxSmORMEalQRpqUfemn2XrrBcvdh1uLGKladkz",
-  createUrl: "https://pay.zrpaybd.xyz/api/payment/create"
-};
-
-onSnapshot(doc(db,"settings","site"),d=>{if(d.exists())S={...S,...d.data()};$("brand").textContent=S.name;document.title=S.name;draw()});
+onSnapshot(doc(db,"settings","site"),d=>{
+  if(d.exists()){
+    S={...S,...d.data()};
+    $("brand").textContent=S.name || "M H X Store";
+    document.title=S.name || "M H X Store";
+    if(S.logoUrl){
+      $("brandLogo").src = S.logoUrl;
+      $("brandLogo").classList.remove("hide");
+      $("brand").classList.add("hide");
+    } else {
+      $("brandLogo").classList.add("hide");
+      $("brand").classList.remove("hide");
+    }
+  }
+  draw();
+});
 
 $("g").onclick=()=>go(()=>signInWithPopup(auth,new GoogleAuthProvider()));
-$("login").onclick=()=>go(()=>signInWithEmailAndPassword(auth,$("em").value,$("pw").value));
-$("signup").onclick=()=>go(()=>createUserWithEmailAndPassword(auth,$("em").value,$("pw").value));
+$("login").onclick=()=>go(async()=>{isSigningUp=false;const em=$("em").value.trim(),pw=$("pw").value;if(!em||!pw)throw Error("Please enter email and password!");await signInWithEmailAndPassword(auth,em,pw)});
+$("signup").onclick=()=>go(async()=>{const em=$("em").value.trim(),pw=$("pw").value;if(!em||!pw)throw Error("Please enter email and password!");if(pw.length<6)throw Error("Password must be at least 6 characters!");isSigningUp=true;const cred=await createUserWithEmailAndPassword(auth,em,pw);await ensure(cred.user);await signOut(auth);isSigningUp=false;$("em").value=$("pw").value="";alert("Account created successfully! Please login with your email and password.")});
 $("out").onclick=()=>signOut(auth);
 
 async function ensure(u){
@@ -139,30 +154,18 @@ async function ensure(u){
 }
 
 onAuthStateChanged(auth,async u=>{
- unsub.forEach(f=>f());unsub=[];
+ unsub.forEach(f=>f());unsub=[];if(isSigningUp)return;
  if(!u){uid=me=null;$("auth").classList.remove("hide");$("app").classList.add("hide");return}
  uid=u.uid;await go(()=>ensure(u));
  $("auth").classList.add("hide");$("app").classList.remove("hide");
  unsub.push(onSnapshot(doc(db,"users",uid),d=>{me=d.data();draw()}));
- unsub.push(onSnapshot(collection(db,"services"),s=>{
-   svc=s.docs.map(d=>({id:d.id,...d.data()}));
-   if(svc.length === 0) loadDefaultServices();
-   draw();
- }));
- unsub.push(onSnapshot(query(collection(db,"notifications"),orderBy("at","desc"),limit(15)),s=>{
-  $("notes").innerHTML=s.docs.map(d=>`<div class="item"><span>${esc(d.data().text)}</span></div>`).join("")||"কোনো নোটিফিকেশন নেই"}));
+ unsub.push(onSnapshot(collection(db,"services"),s=>{svc=s.docs.map(d=>({id:d.id,...d.data()}));if(svc.length===0)loadDefaultServices();draw()}));
+ unsub.push(onSnapshot(query(collection(db,"notifications"),orderBy("at","desc"),limit(15)),s=>{$("notes").innerHTML=s.docs.map(d=>`<div class="item"><span>${esc(d.data().text)}</span></div>`).join("")||"No notifications"}));
 });
 
-// ডিফল্ট লাইক প্যাকেজগুলো ডাটাবেজে লোড রাখা (যদি অ্যাডমিন প্যানেল থেকে অ্যাড না থাকে)
-function loadDefaultServices() {
-  const defaultPkgs = [
-    { name: "🔥 Daily Like (220+ Likes)", price: 6, resellerPrice: 4, type: "daily" },
-    { name: "💎 Daily Like PRO+ (30 Daily Limit)", price: 6, resellerPrice: 4, type: "daily_pro" },
-    { name: "🤖 Auto Like - 7 Days", price: 90, resellerPrice: 75, type: "auto_7" },
-    { name: "🤖 Auto Like - 15 Days", price: 150, resellerPrice: 125, type: "auto_15" },
-    { name: "🤖 Auto Like - 30 Days", price: 250, resellerPrice: 200, type: "auto_30" }
-  ];
-  svc = defaultPkgs.map((item, idx) => ({ id: "def_" + idx, ...item }));
+function loadDefaultServices(){
+ const defaultPkgs=[{name:"🔥 Daily Like (220+ Likes)",price:6,resellerPrice:4,type:"daily"},{name:"💎 Daily Like PRO+ (30 Daily Limit)",price:6,resellerPrice:4,type:"daily_pro"},{name:"🤖 Auto Like - 7 Days",price:90,resellerPrice:75,type:"auto_7"},{name:"🤖 Auto Like - 15 Days",price:150,resellerPrice:125,type:"auto_15"},{name:"🤖 Auto Like - 30 Days",price:250,resellerPrice:200,type:"auto_30"}];
+ svc=defaultPkgs.map((item,idx)=>({id:"def_"+idx,...item}));
 }
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -173,147 +176,34 @@ function draw(){
  $("bal").textContent=fmt(me.balance);
  const hb=$("hb");hb.classList.remove("hide");hb.textContent=me.role==="admin"?"Admin":isRes()?"Reseller":"User";hb.className="badge"+(isRes()?" r":"");
  const min=+S.resellerMin||500,pct=Math.min(100,(me.totalDeposit||0)/min*100);
- $("rp").textContent=isRes()?"আপনি একজন রিসেলার":`রিসেলার হতে আরও ${fmt(Math.max(0,min-(me.totalDeposit||0)))} ডিপোজিট করুন`;
+ $("rp").textContent=isRes()?"You are a Reseller":`Deposit ${fmt(Math.max(0,min-(me.totalDeposit||0)))} more to become Reseller`;
  $("rbar").style.width=pct+"%";
  $("nm").textContent=me.name;$("mail").textContent=me.email;$("sc").textContent=me.supportCode;
  $("rl").value=location.origin+location.pathname+"?ref="+me.supportCode;
- $("tg").href="https://t.me/mhxffv111?text="+encodeURIComponent("সাপোর্ট কোড: "+me.supportCode);
- 
- $("svc").innerHTML=svc.map(s=>{const p=isRes()&&s.resellerPrice!=null?s.resellerPrice:s.price;
-  return`<div class="item"><div><b>${esc(s.name)}</b><div class="m">${fmt(p)}</div></div><button class="btn" data-b="${s.id}">অর্ডার করুন</button></div>`}).join("")||'<p class="m">এখনও কোনো সার্ভিস নেই</p>';
+ $("tg").href="https://t.me/mhxffv111?text="+encodeURIComponent("Support Code: "+me.supportCode);
+ $("svc").innerHTML=svc.map(s=>{const p=isRes()&&s.resellerPrice!=null?s.resellerPrice:s.price;return`<div class="item"><div><b>${esc(s.name)}</b><div class="m">${fmt(p)}</div></div><button class="btn" data-b="${s.id}">Order Now</button></div>`}).join("")||'<p class="m">No services available</p>';
 }
 
-// সার্ভিস / লাইক ক্রয় হ্যান্ডলার
-$("svc").onclick=e=>{
-  const id=e.target.dataset.b;if(!id)return;
-  selectedSvc = svc.find(x=>x.id===id);
-  if(!selectedSvc) return;
-  
-  const price = +(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);
-  $("ordTitle").textContent = selectedSvc.name;
-  $("ordPrice").textContent = `মূল্য: ${fmt(price)}`;
-  $("ffUid").value = "";
-  $("orderModal").classList.add("show");
-};
-
+$("svc").onclick=e=>{const id=e.target.dataset.b;if(!id)return;selectedSvc=svc.find(x=>x.id===id);if(!selectedSvc)return;const price=+(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);$("ordTitle").textContent=selectedSvc.name;$("ordPrice").textContent=`Price: ${fmt(price)}`;$("ffUid").value="";$("orderModal").classList.add("show")};
 $("ordCancel").onclick=()=>$("orderModal").classList.remove("show");
+$("ordConfirm").onclick=()=>go(async()=>{const uidInput=$("ffUid").value.trim(),serverInput=$("ffServer").value;if(!uidInput||uidInput.length<5)throw Error("Please enter a valid Free Fire UID!");const p=+(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);await runTransaction(db,async t=>{const r=doc(db,"users",uid),d=await t.get(r);if(d.data().banned)throw Error("Account is banned");if(d.data().balance<p)throw Error("Insufficient balance! Please Add Money.");t.update(r,{balance:d.data().balance-p});t.set(doc(collection(db,"orders")),{user_id:uid,game_uid:uidInput,server:serverInput,service_id:selectedSvc.id,service_name:selectedSvc.name,price:p,status:"pending",order_date:serverTimestamp()})});$("orderModal").classList.remove("show");alert("Your like order has been submitted successfully!")});
 
-$("ordConfirm").onclick=()=>go(async()=>{
-  const uidInput = $("ffUid").value.trim();
-  const serverInput = $("ffServer").value;
-  
-  if(!uidInput || uidInput.length < 5) throw Error("সঠিক Free Fire UID প্রদান করুন!");
-  const p = +(isRes()&&selectedSvc.resellerPrice!=null?selectedSvc.resellerPrice:selectedSvc.price);
-  
-  await runTransaction(db, async t => {
-    const r = doc(db, "users", uid), d = await t.get(r);
-    if(d.data().banned) throw Error("অ্যাকাউন্ট ব্যান");
-    if(d.data().balance < p) throw Error("পর্যাপ্ত ব্যালেন্স নেই! দয়া করে Add Money করুন।");
-    
-    t.update(r, { balance: d.data().balance - p });
-    t.set(doc(collection(db, "orders")), {
-      user_id: uid,
-      game_uid: uidInput,
-      server: serverInput,
-      service_id: selectedSvc.id,
-      service_name: selectedSvc.name,
-      price: p,
-      status: "pending",
-      order_date: serverTimestamp()
-    });
-  });
-  
-  $("orderModal").classList.remove("show");
-  alert("আপনার লাইক অর্ডারটি সফলভাবে প্রসেসিংয়ে জমা হয়েছে!");
-});
-
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
- document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
- ["home","svc","me"].forEach(v=>$("v-"+v).classList.toggle("hide",v!==b.dataset.v))});
-$("cp").onclick=()=>{navigator.clipboard.writeText($("rl").value);alert("কপি হয়েছে")};
-
-$("addbtn").onclick=()=>$("dm").classList.add("show");
-$("dc").onclick=()=>$("dm").classList.remove("show");
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["home","svc","me"].forEach(v=>$("v-"+v).classList.toggle("hide",v!==b.dataset.v))});
+$("cp").onclick=()=>{navigator.clipboard.writeText($("rl").value);alert("Link copied")};
+$("addbtn").onclick=()=>$("dm").classList.add("show");$("dc").onclick=()=>$("dm").classList.remove("show");
 document.querySelectorAll(".chips button").forEach(b=>b.onclick=()=>$("amt").value=b.textContent);
 
-// ZRPAYBD অটো-পেমেন্ট গেটওয়ে চালুকরণ
 $("ds").onclick=()=>go(async()=>{
- const a=+$("amt").value;
- if(a<10) throw Error("সর্বনিম্ন ১০ টাকা এড করতে হবে");
- 
- const orderRef = "ORD" + Date.now() + uid.substring(0,5);
- const payload = {
-    cus_name: me.name || `User ${uid}`,
-    cus_email: me.email || `user${uid}@gmail.com`,
-    amount: String(a),
-    success_url: location.origin + location.pathname + `?pay_status=success&ref=${orderRef}&amount=${a}`,
-    cancel_url: location.origin + location.pathname + `?pay_status=cancel`,
-    metadata: { user_id: uid, amount: String(a), order_ref: orderRef }
- };
- 
- try {
-   const res = await fetch(ZRPAYBD_CONFIG.createUrl, {
-     method: "POST",
-     headers: {
-       "Content-Type": "application/json",
-       "API-KEY": ZRPAYBD_CONFIG.apiKey,
-       "SECRET-KEY": ZRPAYBD_CONFIG.secretKey,
-       "BRAND-KEY": ZRPAYBD_CONFIG.brandKey
-     },
-     body: JSON.stringify(payload)
-   });
-   const data = await res.json();
-   if(data && data.status === 1 && data.payment_url){
-     window.location.href = data.payment_url;
-   } else {
-     throw new Error(data.message || "পেমেন্ট গেটওয়ে চালু করা যায়নি!");
-   }
- } catch(e) {
-   alert("Payment Error: " + e.message);
- }
+ const a=+$("amt").value;if(a<10)throw Error("Minimum deposit is 10 BDT");
+ const orderRef="ORD"+Date.now()+uid.substring(0,5),payload={cus_name:me.name||`User ${uid}`,cus_email:me.email||`user${uid}@gmail.com`,amount:String(a),success_url:location.origin+location.pathname+`?pay_status=success&ref=${orderRef}&amount=${a}`,cancel_url:location.origin+location.pathname+`?pay_status=cancel`,metadata:{user_id:uid,amount:String(a),order_ref:orderRef}};
+ try{const res=await fetch(ZRPAYBD_CONFIG.createUrl,{method:"POST",headers:{"Content-Type":"application/json","API-KEY":ZRPAYBD_CONFIG.apiKey,"SECRET-KEY":ZRPAYBD_CONFIG.secretKey,"BRAND-KEY":ZRPAYBD_CONFIG.brandKey},body:JSON.stringify(payload)});const data=await res.json();if(data&&data.status===1&&data.payment_url){window.location.href=data.payment_url}else{throw new Error(data.message||"Failed to initialize payment gateway!")}}catch(e){alert("Payment Error: "+e.message)}
 });
 
-// পেমেন্ট থেকে রিটার্ন আসার পর ব্যালেন্স যোগ করার লজিক
-async function handlePaymentReturn() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const status = urlParams.get("pay_status");
-  const ref = urlParams.get("ref");
-  const amt = parseFloat(urlParams.get("amount"));
-  
-  if(status === "success" && ref && amt > 0 && uid) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-    await runTransaction(db, async t => {
-      const userRef = doc(db, "users", uid);
-      const userDoc = await t.get(userRef);
-      if(userDoc.exists()) {
-        const currentBal = userDoc.data().balance || 0;
-        const currentDep = userDoc.data().totalDeposit || 0;
-        t.update(userRef, {
-          balance: currentBal + amt,
-          totalDeposit: currentDep + amt
-        });
-        t.set(doc(collection(db, "deposits")), {
-          uid: uid,
-          amount: amt,
-          payment_key: ref,
-          status: "completed",
-          at: serverTimestamp()
-        });
-      }
-    });
-    alert(`অটো পেমেন্ট সফল হয়েছে! ৳${amt} ব্যালেন্সে যোগ করা হয়েছে।`);
-  } else if(status === "cancel") {
-    window.history.replaceState({}, document.title, window.location.pathname);
-    alert("পেমেন্ট বাতিল করা হয়েছে!");
-  }
+async function handlePaymentReturn(){
+ const urlParams=new URLSearchParams(window.location.search),status=urlParams.get("pay_status"),ref=urlParams.get("ref"),amt=parseFloat(urlParams.get("amount"));
+ if(status==="success"&&ref&&amt>0&&uid){window.history.replaceState({},document.title,window.location.pathname);await runTransaction(db,async t=>{const userRef=doc(db,"users",uid),userDoc=await t.get(userRef);if(userDoc.exists()){const currentBal=userDoc.data().balance||0,currentDep=userDoc.data().totalDeposit||0;t.update(userRef,{balance:currentBal+amt,totalDeposit:currentDep+amt});t.set(doc(collection(db,"deposits")),{uid:uid,amount:amt,payment_key:ref,status:"completed",at:serverTimestamp()})}});alert(`Auto payment successful! ৳${amt} added to your balance.`)}else if(status==="cancel"){window.history.replaceState({},document.title,window.location.pathname);alert("Payment was cancelled!")}
 }
 
-// ফায়ারবেস অথেন্টিকেশন সম্পন্ন হলে পেমেন্ট চেক করা হবে
-onAuthStateChanged(auth, u => { if(u) handlePaymentReturn(); });
-
-$("redeem").onclick=()=>go(async()=>{const c=$("pc").value.trim().toUpperCase();if(!c)return;const pr=doc(db,"promos",c);
- await runTransaction(db,async t=>{const p=await t.get(pr);if(!p.exists())throw Error("কোডটি সঠিক নয়");const d=p.data(),u=d.usedBy||[];
-  if((d.used||0)>=d.maxUses)throw Error("কোডের সীমা শেষ");if(u.includes(uid))throw Error("আপনি আগেই ব্যবহার করেছেন");
-  t.update(pr,{used:(d.used||0)+1,usedBy:[...u,uid]});t.update(doc(db,"users",uid),{balance:increment(d.amount)})});
- $("pc").value="";alert("প্রমো কোড সফল হয়েছে")});
+onAuthStateChanged(auth,u=>{if(u&&!isSigningUp)handlePaymentReturn()});
+$("redeem").onclick=()=>go(async()=>{const c=$("pc").value.trim().toUpperCase();if(!c)return;const pr=doc(db,"promos",c);await runTransaction(db,async t=>{const p=await t.get(pr);if(!p.exists())throw Error("Invalid promo code");const d=p.data(),u=d.usedBy||[];if((d.used||0)>=d.maxUses)throw Error("Promo code limit reached");if(u.includes(uid))throw Error("You have already used this code");t.update(pr,{used:(d.used||0)+1,usedBy:[...u,uid]});t.update(doc(db,"users",uid),{balance:increment(d.amount)})});$("pc").value="";alert("Promo code redeemed successfully")});
 </script></body></html>

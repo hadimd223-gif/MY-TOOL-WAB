@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Panel</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M H X Store - Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0c0a1d;--c:#171433;--p:#7c5cff;--p2:#19d3c5;--t:#f1efff;--m:#9a96c4;--no:#ef4444;--ok:#22c55e}
 *{box-sizing:border-box;margin:0;font-family:"Hind Siliguri",system-ui,sans-serif}
 body{background:var(--bg);color:var(--t);min-height:100vh}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#12102b;border-bottom:1px solid #ffffff14}
+header b{font-size:20px;background:linear-gradient(90deg,var(--p),var(--p2));-webkit-background-clip:text;color:transparent}
+.brand-container{display:flex;align-items:center;gap:10px;}
+.brand-logo{height:32px;max-width:110px;object-fit:contain;border-radius:6px;}
 main{max-width:760px;margin:auto;padding:16px}
 .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px}
 .tabs button{padding:10px 16px;border-radius:10px;border:0;background:#ffffff12;color:var(--t);cursor:pointer;white-space:nowrap}
@@ -21,36 +24,44 @@ input,select,textarea{width:100%;padding:11px;border-radius:10px;border:1px soli
 label{display:inline-flex;gap:6px;margin:0 12px 8px 0;font-size:14px;align-items:center}label input{width:auto;margin:0}
 button:focus-visible,input:focus-visible{outline:2px solid var(--p2);outline-offset:2px}
 </style></head><body>
-<header><b id="brand">Admin</b><span><span class="m" id="who"></span> <button class="btn a" id="out">লগআউট</button></span></header>
+<header>
+ <div class="brand-container">
+   <img id="adminLogo" class="brand-logo hide" alt="Logo">
+   <b id="brand">M H X Store Admin</b>
+ </div>
+ <span><span class="m" id="who"></span> <button class="btn a" id="out">Logout</button></span>
+</header>
 <main>
 <div id="login" class="card" style="max-width:380px;margin:40px auto">
- <h3 style="margin-bottom:12px">অ্যাডমিন লগইন</h3>
- <button class="btn" id="g" style="width:100%;margin-bottom:12px">Google দিয়ে লগইন</button>
- <input id="em" type="email" placeholder="ইমেইল"><input id="pw" type="password" placeholder="পাসওয়ার্ড">
- <button class="btn a" id="li" style="width:100%">ইমেইল দিয়ে লগইন</button>
+ <h3 style="margin-bottom:12px">Admin Login</h3>
+ <button class="btn" id="g" style="width:100%;margin-bottom:12px">Continue with Google</button>
+ <input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password">
+ <button class="btn a" id="li" style="width:100%">Login with Email</button>
 </div>
 <div id="panel" class="hide">
  <div class="tabs" id="tabs"></div>
  <div id="t-users">
-  <div class="card"><b>সাপোর্ট কোড দিয়ে ইউজার খুঁজুন</b>
-   <div class="row" style="margin-top:10px"><input id="sc" placeholder="৬ সংখ্যার কোড" maxlength="6"><button class="btn" id="find">খুঁজুন</button></div></div>
+  <div class="card"><b>Search User by Support Code</b>
+   <div class="row" style="margin-top:10px"><input id="sc" placeholder="6-digit code" maxlength="6"><button class="btn" id="find">Search</button></div></div>
   <div id="ures"></div>
  </div>
- <div id="t-dep" class="hide"><div class="card"><b>পেন্ডিং ডিপোজিট</b><div id="deps" style="margin-top:8px"></div></div></div>
+ <div id="t-dep" class="hide"><div class="card"><b>Pending Deposits</b><div id="deps" style="margin-top:8px"></div></div></div>
  <div id="t-svc" class="hide">
-  <div class="card"><b>নতুন সার্ভিস</b><div class="row" style="margin-top:10px"><input id="sn" placeholder="নাম"><input id="sp" type="number" placeholder="দাম"><input id="sr" type="number" placeholder="রিসেলার দাম"><button class="btn" id="sa">যোগ করুন</button></div></div>
-  <div class="card"><b>সার্ভিস ও প্রাইস</b><div id="svcs" style="margin-top:8px"></div></div>
+  <div class="card"><b>Add New Service</b><div class="row" style="margin-top:10px"><input id="sn" placeholder="Service Name"><input id="sp" type="number" placeholder="Price"><input id="sr" type="number" placeholder="Reseller Price"><button class="btn" id="sa">Add Service</button></div></div>
+  <div class="card"><b>Services & Pricing</b><div id="svcs" style="margin-top:8px"></div></div>
  </div>
- <div id="t-promo" class="hide"><div class="card"><b>প্রমো কোড তৈরি</b>
-  <div class="row" style="margin:10px 0"><input id="pcode" placeholder="কোড (যেমন MHX50)"><input id="pamt" type="number" placeholder="টাকা"><input id="pmax" type="number" placeholder="সর্বোচ্চ ব্যবহার"><button class="btn" id="pa">তৈরি করুন</button></div>
+ <div id="t-promo" class="hide"><div class="card"><b>Create Promo Code</b>
+  <div class="row" style="margin:10px 0"><input id="pcode" placeholder="Code (e.g. MHX50)"><input id="pamt" type="number" placeholder="Amount"><input id="pmax" type="number" placeholder="Max Uses"><button class="btn" id="pa">Create</button></div>
   <div id="promos"></div></div></div>
- <div id="t-note" class="hide"><div class="card"><b>সব ইউজারকে নোটিফিকেশন</b><textarea id="nt" rows="4" placeholder="বার্তা লিখুন" style="margin-top:10px"></textarea><button class="btn" id="ns">পাঠান</button></div></div>
- <div id="t-set" class="hide"><div class="card"><b>ওয়েবসাইট সেটিংস</b><div style="margin-top:10px">
-  <p class="m">ওয়েবসাইটের নাম</p><input id="s-name">
-  <p class="m">রিসেলার হতে মোট ডিপোজিট (টাকা)</p><input id="s-min" type="number">
-  <p class="m">রেফার বোনাস (টাকা)</p><input id="s-ref" type="number">
-  <p class="m">bKash নম্বর</p><input id="s-bk"><p class="m">Nagad নম্বর</p><input id="s-ng">
-  <button class="btn" id="s-save">সেভ করুন</button></div></div></div>
+ <div id="t-note" class="hide"><div class="card"><b>Broadcast Notification</b><textarea id="nt" rows="4" placeholder="Write message..." style="margin-top:10px"></textarea><button class="btn" id="ns">Send</button></div></div>
+ <div id="t-set" class="hide">
+  <div class="card"><b>Website Settings & Logo</b><div style="margin-top:10px">
+   <p class="m">Website Name</p><input id="s-name">
+   <p class="m">Logo Image URL (যে কোনো ইমেজ লিংক এখানে বসান)</p><input id="s-logo" placeholder="https://example.com/logo.png">
+   <p class="m">Reseller Minimum Deposit (BDT)</p><input id="s-min" type="number">
+   <p class="m">Referral Bonus (BDT)</p><input id="s-ref" type="number">
+   <button class="btn" id="s-save">Save Settings</button></div></div>
+ </div>
 </div>
 </main>
 
@@ -58,89 +69,118 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--p2);outline-off
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,collection,query,where,serverTimestamp,increment}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const app=initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",storageBucket:"m-h-x-wab-7abdf.firebasestorage.app",messagingSenderId:"570748526283",appId:"1:570748526283:web:3c786486aa3f838188c54e",measurementId:"G-VV3NQB0T1X"});
+
+const app=initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",storageBucket:"m-h-x-wab-7appdf.firebasestorage.app",messagingSenderId:"570748526283",appId:"1:570748526283:web:3c786486aa3f838188c54e",measurementId:"G-VV3NQB0T1X"});
 const auth=getAuth(app),db=getFirestore(app),$=i=>document.getElementById(i);
 const go=async f=>{try{await f()}catch(e){alert(e.message)}};
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let me,S={resellerMin:500},cur=null;
+let me,S={resellerMin:500,logoUrl:""},cur=null;
 const can=k=>me&&(!me.perms||me.perms.all||me.perms[k]);
-const TABS=[["users","ইউজার",()=>can("ban")||can("balance")||can("roles")],["dep","ডিপোজিট",()=>can("balance")],["svc","প্রাইস",()=>can("price")],["promo","প্রমো",()=>can("promo")],["note","নোটিফিকেশন",()=>can("notify")],["set","সেটিংস",()=>can("site")]];
+const TABS=[["users","Users",()=>can("ban")||can("balance")||can("roles")],["dep","Deposits",()=>can("balance")],["svc","Services",()=>can("price")],["promo","Promo",()=>can("promo")],["note","Notification",()=>can("notify")],["set","Settings",()=>can("site")]];
 
 $("g").onclick=()=>go(()=>signInWithPopup(auth,new GoogleAuthProvider()));
 $("li").onclick=()=>go(()=>signInWithEmailAndPassword(auth,$("em").value,$("pw").value));
 $("out").onclick=()=>signOut(auth);
+
 onAuthStateChanged(auth,async u=>{
  if(!u){$("login").classList.remove("hide");$("panel").classList.add("hide");return}
  const d=await getDoc(doc(db,"users",u.uid));me=d.exists()?d.data():null;
- if(!me||me.role!=="admin"||me.banned){alert("এই পেজে ঢোকার অনুমতি নেই");return signOut(auth)}
+ if(!me||me.role!=="admin"||me.banned){alert("You do not have permission to access this page!");return signOut(auth)}
  $("login").classList.add("hide");$("panel").classList.remove("hide");$("who").textContent=me.email;boot()});
 
 function boot(){
  const t=TABS.filter(x=>x[2]());
  $("tabs").innerHTML=t.map(x=>`<button data-t="${x[0]}">${x[1]}</button>`).join("");
  $("tabs").onclick=e=>{const k=e.target.dataset.t;if(k)show(k)};show(t[0]?.[0]);
- onSnapshot(doc(db,"settings","site"),d=>{if(d.exists()){S={...S,...d.data()};$("brand").textContent=S.name||"Admin";
-  $("s-name").value=S.name||"";$("s-min").value=S.resellerMin??500;$("s-ref").value=S.refBonus??0;$("s-bk").value=S.bkash||"";$("s-ng").value=S.nagad||""}});
+ 
+ onSnapshot(doc(db,"settings","site"),d=>{
+   if(d.exists()){
+     S={...S,...d.data()};
+     $("brand").textContent=S.name||"M H X Store Admin";
+     $("s-name").value=S.name||"";
+     $("s-logo").value=S.logoUrl||"";
+     $("s-min").value=S.resellerMin??500;
+     $("s-ref").value=S.refBonus??0;
+     if(S.logoUrl){
+       $("adminLogo").src=S.logoUrl;
+       $("adminLogo").classList.remove("hide");
+       $("brand").classList.add("hide");
+     } else {
+       $("adminLogo").classList.add("hide");
+       $("brand").classList.remove("hide");
+     }
+   }
+ });
+  
  onSnapshot(query(collection(db,"deposits"),where("status","==","pending")),s=>{
-  $("deps").innerHTML=s.docs.map(d=>{const x=d.data();return`<div class="item"><div><b>৳${x.amount}</b> — ${esc(x.method)}<div class="m">${esc(x.email)} | কোড ${esc(x.supportCode)} | TrxID: ${esc(x.trxId)}</div></div>
-   <span><button class="btn o" data-ok="${d.id}">Approve</button> <button class="btn r" data-no="${d.id}">Reject</button></span></div>`}).join("")||'<p class="m">কোনো পেন্ডিং অনুরোধ নেই</p>';
+  $("deps").innerHTML=s.docs.map(d=>{const x=d.data();return`<div class="item"><div><b>৳${x.amount}</b><div class="m">${esc(x.email)} | Code: ${esc(x.supportCode || "Auto")} | Key: ${esc(x.payment_key || "ZRPAY")}</div></div>
+   <span><button class="btn o" data-ok="${d.id}">Approve</button> <button class="btn r" data-no="${d.id}">Reject</button></span></div>`}).join("")||'<p class="m">No pending deposit requests</p>';
   window._deps=Object.fromEntries(s.docs.map(d=>[d.id,d.data()]))});
+  
  onSnapshot(collection(db,"services"),s=>{
-  $("svcs").innerHTML=s.docs.map(d=>{const x=d.data();return`<div class="item"><b>${esc(x.name)}</b><span class="row"><input data-p="${d.id}" type="number" value="${x.price}" style="width:90px"><input data-r="${d.id}" type="number" value="${x.resellerPrice??""}" placeholder="রিসেলার" style="width:90px"><button class="btn" data-sv="${d.id}">সেভ</button><button class="btn r" data-del="${d.id}">মুছুন</button></span></div>`}).join("")||'<p class="m">কোনো সার্ভিস নেই</p>'});
+  $("svcs").innerHTML=s.docs.map(d=>{const x=d.data();return`<div class="item"><b>${esc(x.name)}</b><span class="row"><input data-p="${d.id}" type="number" value="${x.price}" style="width:90px"><input data-r="${d.id}" type="number" value="${x.resellerPrice??""}" placeholder="Reseller" style="width:90px"><button class="btn" data-sv="${d.id}">Save</button><button class="btn r" data-del="${d.id}">Delete</button></span></div>`}).join("")||'<p class="m">No services available</p>'});
+  
  onSnapshot(collection(db,"promos"),s=>{
-  $("promos").innerHTML=s.docs.map(d=>{const x=d.data();return`<div class="item"><span><b>${esc(d.id)}</b> — ৳${x.amount} (${x.used||0}/${x.maxUses})</span><button class="btn r" data-dp="${d.id}">মুছুন</button></div>`}).join("")});
+  $("promos").innerHTML=s.docs.map(d=>{const x=d.data();return`<div class="item"><span><b>${esc(d.id)}</b> — ৳${x.amount} (${x.used||0}/${x.maxUses})</span><button class="btn r" data-dp="${d.id}">Delete</button></div>`}).join("")});
 }
+
 function show(k){["users","dep","svc","promo","note","set"].forEach(x=>$("t-"+x).classList.toggle("hide",x!==k));
  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===k))}
 
-// Deposits
 $("deps").onclick=e=>go(async()=>{const id=e.target.dataset.ok||e.target.dataset.no;if(!id)return;const x=window._deps[id];
  if(e.target.dataset.no){await updateDoc(doc(db,"deposits",id),{status:"rejected"});return}
  const ur=doc(db,"users",x.uid),u=(await getDoc(ur)).data(),tot=(u.totalDeposit||0)+x.amount,up={balance:increment(x.amount),totalDeposit:increment(x.amount)};
  if(u.role==="user"&&tot>=(+S.resellerMin||500))up.role="reseller";
  await updateDoc(ur,up);await updateDoc(doc(db,"deposits",id),{status:"approved"})});
 
-// Users
 $("find").onclick=()=>go(async()=>{const c=await getDoc(doc(db,"codes",$("sc").value.trim()));
- if(!c.exists()){cur=null;$("ures").innerHTML='<div class="card m">এই কোডে কোনো ইউজার নেই</div>';return}
+ if(!c.exists()){cur=null;$("ures").innerHTML='<div class="card m">No user found with this support code</div>';return}
  cur=c.data().uid;await loadUser()});
+
 async function loadUser(){
  const u=(await getDoc(doc(db,"users",cur))).data(),p=u.perms||{};
- const P=[["ban","ব্যান/আনব্যান"],["balance","ব্যালেন্স"],["site","সাইট সেটিংস"],["price","প্রাইস"],["notify","নোটিফিকেশন"],["promo","প্রমো"],["roles","রোল"]];
+ const P=[["ban","Ban/Unban"],["balance","Balance"],["site","Site Settings"],["price","Pricing"],["notify","Notifications"],["promo","Promo"],["roles","Roles"]];
  $("ures").innerHTML=`<div class="card"><table>
-  <tr><td>নাম</td><td>${esc(u.name)}</td></tr><tr><td>জিমেইল/ইমেইল</td><td>${esc(u.email)}</td></tr>
-  <tr><td>UID</td><td>${esc(cur)}</td></tr><tr><td>পাসওয়ার্ড</td><td class="m">Firebase পাসওয়ার্ড হ্যাশ করে রাখে, দেখা সম্ভব নয়। নিচের বাটনে রিসেট লিংক পাঠান।</td></tr>
-  <tr><td>ব্যালেন্স</td><td><b>৳${u.balance}</b> (মোট ডিপোজিট ৳${u.totalDeposit||0})</td></tr>
-  <tr><td>রোল</td><td>${esc(u.role)}</td></tr><tr><td>স্ট্যাটাস</td><td>${u.banned?"🚫 ব্যান":"সক্রিয়"}</td></tr></table>
+  <tr><td>Name</td><td>${esc(u.name)}</td></tr><tr><td>Email</td><td>${esc(u.email)}</td></tr>
+  <tr><td>UID</td><td>${esc(cur)}</td></tr><tr><td>Password</td><td class="m">Hashed by Firebase. Send reset email below.</td></tr>
+  <tr><td>Balance</td><td><b>৳${u.balance}</b> (Total Deposit ৳${u.totalDeposit||0})</td></tr>
+  <tr><td>Role</td><td>${esc(u.role)}</td></tr><tr><td>Status</td><td>${u.banned?"🚫 Banned":"Active"}</td></tr></table>
   <div class="row" style="margin-top:12px">
-   ${can("balance")?`<input id="ba" type="number" placeholder="টাকার পরিমাণ"><button class="btn o" id="b-add">যোগ</button><button class="btn r" id="b-sub">কাটুন</button>`:""}
-   ${can("ban")?`<button class="btn ${u.banned?"o":"r"}" id="b-ban">${u.banned?"আনব্যান":"ব্যান করুন"}</button>`:""}
-   <button class="btn a" id="b-rs">পাসওয়ার্ড রিসেট ইমেইল</button></div></div>
-  ${can("roles")?`<div class="card"><b>রোল ম্যানেজমেন্ট</b><select id="rl" style="margin-top:10px"><option value="user">User</option><option value="reseller">Reseller</option><option value="admin">Admin</option></select>
-   <div id="pp" class="${u.role==="admin"?"":"hide"}"><p class="m" style="margin-bottom:8px">অ্যাডমিন এক্সেস</p>${P.map(([k,l])=>`<label><input type="checkbox" data-pk="${k}" ${p[k]?"checked":""}>${l}</label>`).join("")}<br></div>
-   <button class="btn" id="rsave">রোল সেভ</button></div>`:""}`;
+   ${can("balance")?`<input id="ba" type="number" placeholder="Amount"><button class="btn o" id="b-add">Add</button><button class="btn r" id="b-sub">Deduct</button>`:""}
+   ${can("ban")?`<button class="btn ${u.banned?"o":"r"}" id="b-ban">${u.banned?"Unban":"Ban User"}</button>`:""}
+   <button class="btn a" id="b-rs">Reset Password Email</button></div></div>
+  ${can("roles")?`<div class="card"><b>Role Management</b><select id="rl" style="margin-top:10px"><option value="user">User</option><option value="reseller">Reseller</option><option value="admin">Admin</option></select>
+   <div id="pp" class="${u.role==="admin"?"":"hide"}"><p class="m" style="margin-bottom:8px">Admin Access Control</p>${P.map(([k,l])=>`<label><input type="checkbox" data-pk="${k}" ${p[k]?"checked":""}>${l}</label>`).join("")}<br></div>
+   <button class="btn" id="rsave">Save Role</button></div>`:""}`;
  if($("rl")){$("rl").value=u.role;$("rl").onchange=e=>$("pp").classList.toggle("hide",e.target.value!=="admin");
   $("rsave").onclick=()=>go(async()=>{const r=$("rl").value,perms={};document.querySelectorAll("[data-pk]").forEach(c=>perms[c.dataset.pk]=c.checked);
-   await updateDoc(doc(db,"users",cur),r==="admin"?{role:r,perms}:{role:r,perms:null});alert("সেভ হয়েছে");loadUser()})}
- const ch=async d=>{const a=+$("ba").value;if(!(a>0))throw Error("সঠিক পরিমাণ দিন");await updateDoc(doc(db,"users",cur),{balance:increment(d*a)});loadUser()};
+   await updateDoc(doc(db,"users",cur),r==="admin"?{role:r,perms}:{role:r,perms:null});alert("Saved successfully");loadUser()})}
+ const ch=async d=>{const a=+$("ba").value;if(!(a>0))throw Error("Enter valid amount");await updateDoc(doc(db,"users",cur),{balance:increment(d*a)});loadUser()};
  if($("b-add")){$("b-add").onclick=()=>go(()=>ch(1));$("b-sub").onclick=()=>go(()=>ch(-1))}
  if($("b-ban"))$("b-ban").onclick=()=>go(async()=>{await updateDoc(doc(db,"users",cur),{banned:!u.banned});loadUser()});
- $("b-rs").onclick=()=>go(async()=>{await sendPasswordResetEmail(auth,u.email);alert("রিসেট ইমেইল পাঠানো হয়েছে")});
+ $("b-rs").onclick=()=>go(async()=>{await sendPasswordResetEmail(auth,u.email);alert("Password reset email sent")});
 }
 
-// Services
-$("sa").onclick=()=>go(async()=>{if(!$("sn").value||!$("sp").value)throw Error("নাম ও দাম দিন");
+$("sa").onclick=()=>go(async()=>{if(!$("sn").value||!$("sp").value)throw Error("Enter name and price");
  await addDoc(collection(db,"services"),{name:$("sn").value,price:+$("sp").value,resellerPrice:$("sr").value?+$("sr").value:null});$("sn").value=$("sp").value=$("sr").value=""});
 $("svcs").onclick=e=>go(async()=>{const d=e.target.dataset;
- if(d.del&&confirm("মুছে ফেলবেন?"))await deleteDoc(doc(db,"services",d.del));
- if(d.sv){const r=document.querySelector(`[data-r="${d.sv}"]`).value;await updateDoc(doc(db,"services",d.sv),{price:+document.querySelector(`[data-p="${d.sv}"]`).value,resellerPrice:r?+r:null});alert("প্রাইস আপডেট হয়েছে")}});
+ if(d.del&&confirm("Delete this service?"))await deleteDoc(doc(db,"services",d.del));
+ if(d.sv){const r=document.querySelector(`[data-r="${d.sv}"]`).value;await updateDoc(doc(db,"services",d.sv),{price:+document.querySelector(`[data-p="${d.sv}"]`).value,resellerPrice:r?+r:null});alert("Price updated")}});
 
-// Promo
-$("pa").onclick=()=>go(async()=>{const c=$("pcode").value.trim().toUpperCase();if(!c||!(+$("pamt").value>0))throw Error("কোড ও টাকা দিন");
+$("pa").onclick=()=>go(async()=>{const c=$("pcode").value.trim().toUpperCase();if(!c||!(+$("pamt").value>0))throw Error("Enter code and amount");
  await setDoc(doc(db,"promos",c),{amount:+$("pamt").value,maxUses:+$("pmax").value||1,used:0,usedBy:[]});$("pcode").value=$("pamt").value=$("pmax").value=""});
 $("promos").onclick=e=>{if(e.target.dataset.dp)go(()=>deleteDoc(doc(db,"promos",e.target.dataset.dp)))};
 
-// Broadcast & settings
-$("ns").onclick=()=>go(async()=>{const t=$("nt").value.trim();if(!t)throw Error("বার্তা লিখুন");await addDoc(collection(db,"notifications"),{text:t,at:serverTimestamp()});$("nt").value="";alert("পাঠানো হয়েছে")});
-$("s-save").onclick=()=>go(async()=>{await setDoc(doc(db,"settings","site"),{name:$("s-name").value.trim()||"M H X স্টোর",resellerMin:+$("s-min").value,refBonus:+$("s-ref").value,bkash:$("s-bk").value.trim(),nagad:$("s-ng").value.trim()},{merge:true});alert("সেভ হয়েছে")});
+$("ns").onclick=()=>go(async()=>{const t=$("nt").value.trim();if(!t)throw Error("Enter message");await addDoc(collection(db,"notifications"),{text:t,at:serverTimestamp()});$("nt").value="";alert("Notification sent successfully")});
+
+// Settings Save with Logo URL Support
+$("s-save").onclick=()=>go(async()=>{
+  await setDoc(doc(db,"settings","site"),{
+    name:$("s-name").value.trim()||"M H X Store",
+    logoUrl:$("s-logo").value.trim(),
+    resellerMin:+$("s-min").value,
+    refBonus:+$("s-ref").value
+  },{merge:true});
+  alert("Settings & Logo saved successfully!");
+});
 </script></body></html>
