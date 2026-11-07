@@ -129,6 +129,18 @@
         html, body { height: 100%; }
         body { height: 100vh; height: 100dvh; }
         #main-content, #main-content > div, aside nav { min-height: 0; }
+        /* --- sidebar scroll fix: on phones the WHOLE sidebar panel scrolls (touch-friendly), so every button down to Logout can be reached --- */
+        @media (max-width: 1023px) {
+            #sidebar { display: block; height: 100vh; height: 100dvh; overflow-y: auto !important; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; touch-action: pan-y; }
+            #sidebar.hidden { display: none !important; }
+            #sidebar nav { overflow: visible !important; flex: none; min-height: auto; padding-bottom: 1rem; }
+            #sidebar > div:last-child { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
+        }
+        @media (min-width: 1024px) {
+            #sidebar:not(.hidden) { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+            #sidebar nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+            #sidebar > div { flex-shrink: 0; }
+        }
         #main-content > div { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: 6rem !important; }
     </style>
 </head>
@@ -178,6 +190,7 @@
             <a href="#" onclick="switchView('users')" id="nav-users" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-users w-8 text-center"></i> Users
             </a>
+            <a href="#" onclick="openPaySettings();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-percent w-8 text-center"></i> Reseller &amp; Pay Settings</a>
             <a href="#" onclick="switchView('unpin')" id="nav-unpin" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-key w-8 text-center"></i> Unpin Code
             </a>
@@ -192,7 +205,6 @@
             <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
             <a href="#" onclick="switchView('promos')" id="nav-promos" class="nav-link flex items-center px-4 py-3"><i class="fas fa-ticket-alt w-8 text-center"></i> Promo Codes</a>
             <a href="#" onclick="openPayments();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-receipt w-8 text-center"></i> Payments Log</a>
-            <a href="#" onclick="openPaySettings();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-percent w-8 text-center"></i> Reseller &amp; Pay Settings</a>
             <a href="#" onclick="openExtras();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-toolbox w-8 text-center"></i> Extras</a>
         </nav>
         <div class="p-6 border-t border-dark-border">
@@ -1865,7 +1877,7 @@ function alRenderRows() {
             <div><label class="block text-[11px] text-gray-400 mb-1">Reseller price ৳</label><input class="flat-input" type="number" min="0" data-k="resellerPrice" data-i="${i}" value="${p.resellerPrice == null ? '' : p.resellerPrice}" placeholder="optional"></div>
         </div>
         <label class="block text-[11px] text-gray-400 mt-3 mb-1">Details (ইউজার প্যাকেজ কার্ডে দেখবে — যত খুশি লিখতে পারেন, নতুন লাইনও কাজ করবে)</label>
-        <textarea class="flat-input" rows="5" maxlength="800" data-k="desc" data-i="${i}" placeholder="যেমন:&#10;✅ প্রতিদিন ২২০+ লাইক যাবে&#10;🕓 প্রতিদিন ভোর ৪:০৫ এ অটো সেন্ড&#10;🎮 একটি UID তে ৩০ দিন">${esc(p.desc || '')}</textarea>
+        <textarea class="flat-input" rows="9" maxlength="1500" style="min-height:190px;resize:vertical;line-height:1.6" data-k="desc" data-i="${i}" placeholder="যেমন:&#10;✅ প্রতিদিন ২২০+ লাইক যাবে&#10;🕓 প্রতিদিন ভোর ৪:০৫ এ অটো সেন্ড&#10;🎮 একটি UID তে ৩০ দিন">${esc(p.desc || '')}</textarea>
     </div>`).join('') || '<p class="text-sm text-gray-500">No packages — add one.</p>';
 }
 function alReadRows() {
@@ -1902,7 +1914,7 @@ async function alSave() {
     if (isNaN(hr) || hr < 0 || hr > 23 || isNaN(mn) || mn < 0 || mn > 59) return SA('Invalid time', 'ঘণ্টা 0-23 এবং মিনিট 0-59 এর মধ্যে দিন', 'warning');
     if (isNaN(fee) || fee < 0) return SA('Invalid fee', 'UID Change ফি সঠিক দিন', 'warning');
     for (const p of rows) { if (!p.name) p.name = p.days + ' Days'; if (!(p.days >= 1 && p.days <= 365) || !(p.price >= 0)) return SA('Invalid package', 'প্রতিটি প্যাকেজের দিন (1-365) ও দাম সঠিক দিন', 'warning'); }
-    const clean = rows.map(p => ({ id: String(p.id), name: p.name, days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, active: p.active !== false, desc: String(p.desc || '').slice(0, 800) }));
+    const clean = rows.map(p => ({ id: String(p.id), name: p.name, days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, active: p.active !== false, desc: String(p.desc || '').slice(0, 1500) }));
     try {
         showLoading();
         await db.collection('settings').doc('autolike').set({ enabled: document.getElementById('al-enabled').checked, sendHour: hr, sendMinute: mn, changeFee: fee, offMsg: document.getElementById('al-offmsg').value.trim(), packages: clean }, { merge: true });
