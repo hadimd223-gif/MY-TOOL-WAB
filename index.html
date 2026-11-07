@@ -136,7 +136,7 @@
         </div>
         <div id="header-login-container">
             <button onclick="showAuthPage()" class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-4 py-2 rounded-2xl text-xs font-extrabold shadow-md shadow-indigo-500/20">
-                <i class="fas fa-sign-in-alt mr-1"></i> Login
+                <i class="fas fa-sign-in-alt mr-1"></i> লগইন
             </button>
         </div>
         </div>
@@ -152,8 +152,8 @@
                 <i class="fas fa-times text-sm"></i>
             </button>
             <div class="pr-6">
-                <div class="font-bold text-xs mb-0.5 opacity-90"><i class="fas fa-bullhorn mr-1.5"></i> Notice</div>
-                <div id="notice-text" class="text-xs leading-relaxed text-indigo-100">Welcome to the M H X TopUp platform! If you ever run into any trouble, our support team is happy to help.</div>
+                <div class="font-bold text-xs mb-0.5 opacity-90"><i class="fas fa-bullhorn mr-1.5"></i> নোটিশ</div>
+                <div id="notice-text" class="text-xs leading-relaxed text-indigo-100">স্বাগতম আমাদের M H X TopUp প্ল্যাটফর্মে! যেকোনো সমস্যায় সাপোর্টে যোগাযোগ করুন।</div>
             </div>
         </div>
     </div>
@@ -168,38 +168,38 @@
                 </button>
 
                 <div id="login-view">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-6">Log in</h2>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6">লগইন করুন</h2>
                     <button onclick="handleGoogleLogin()" class="w-full bg-white border border-slate-200 text-slate-700 font-semibold py-3 rounded-2xl shadow-sm hover:bg-indigo-50 transition flex items-center justify-center gap-3 mb-6">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Continue with Google
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Google দিয়ে লগইন
                     </button>
                     <div class="mb-4">
-                        <label class="block text-slate-700 text-xs font-bold mb-1.5">Email</label>
+                        <label class="block text-slate-700 text-xs font-bold mb-1.5">ইমেইল</label>
                         <input type="email" id="login-email" placeholder="example@gmail.com" class="zp-input">
                     </div>
                     <div class="mb-6">
-                        <label class="block text-slate-700 text-xs font-bold mb-1.5">Password</label>
+                        <label class="block text-slate-700 text-xs font-bold mb-1.5">পাসওয়ার্ড</label>
                         <input type="password" id="login-pass" placeholder="••••••••" class="zp-input">
                     </div>
-                    <button onclick="handleLogin()" class="zp-btn w-full">Login</button>
+                    <button onclick="handleLogin()" class="zp-btn w-full">লগইন</button>
                     <div class="mt-6 text-center text-sm text-slate-600">
-                        Don’t have an account? <button onclick="toggleAuth('register')" class="text-indigo-600 font-bold hover:underline">Sign up</button>
+                        একাউন্ট নেই? <button onclick="toggleAuth('register')" class="text-indigo-600 font-bold hover:underline">রেজিস্ট্রেশন করুন</button>
                     </div>
                 </div>
 
                 <div id="register-view" class="hidden">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-6">Create account</h2>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6">নতুন একাউন্ট</h2>
                     <button onclick="handleGoogleLogin()" class="w-full bg-white border border-slate-200 text-slate-700 font-semibold py-3 rounded-2xl shadow-sm hover:bg-indigo-50 transition flex items-center justify-center gap-3 mb-6">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Sign up with Google
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Google দিয়ে সাইন আপ
                     </button>
                     <div class="space-y-4 mb-6">
-                        <div><label class="block text-slate-700 text-xs font-bold mb-1">Your name</label><input type="text" id="reg-name" placeholder="Enter your name" class="zp-input"></div>
-                        <div><label class="block text-slate-700 text-xs font-bold mb-1">Email</label><input type="email" id="reg-email" placeholder="example@gmail.com" class="zp-input"></div>
-                        <div><label class="block text-slate-700 text-xs font-bold mb-1">Password</label><input type="password" id="reg-pass" placeholder="At least 6 characters" class="zp-input"></div>
-                        <div><label class="block text-slate-700 text-xs font-bold mb-1">Referral code <span class="text-slate-400 font-normal">(optional)</span></label><input type="text" id="reg-ref" placeholder="Friend’s referral code" class="zp-input uppercase" style="letter-spacing:.1em" oninput="this.value=this.value.toUpperCase()"></div>
+                        <div><label class="block text-slate-700 text-xs font-bold mb-1">আপনার নাম</label><input type="text" id="reg-name" placeholder="নাম লিখুন" class="zp-input"></div>
+                        <div><label class="block text-slate-700 text-xs font-bold mb-1">ইমেইল</label><input type="email" id="reg-email" placeholder="example@gmail.com" class="zp-input"></div>
+                        <div><label class="block text-slate-700 text-xs font-bold mb-1">পাসওয়ার্ড</label><input type="password" id="reg-pass" placeholder="কমপক্ষে ৬ ডিজিট" class="zp-input"></div>
+                        <div><label class="block text-slate-700 text-xs font-bold mb-1">রেফার কোড <span class="text-slate-400 font-normal">(ঐচ্ছিক)</span></label><input type="text" id="reg-ref" placeholder="বন্ধুর রেফার কোড" class="zp-input uppercase" style="letter-spacing:.1em" oninput="this.value=this.value.toUpperCase()"></div>
                     </div>
-                    <button onclick="handleRegister()" class="zp-btn w-full">Sign up</button>
+                    <button onclick="handleRegister()" class="zp-btn w-full">রেজিস্ট্রেশন</button>
                     <div class="mt-6 text-center text-sm text-slate-600">
-                        Already have an account? <button onclick="toggleAuth('login')" class="text-indigo-600 font-bold hover:underline">Log in</button>
+                        আগে থেকেই একাউন্ট আছে? <button onclick="toggleAuth('login')" class="text-indigo-600 font-bold hover:underline">লগইন করুন</button>
                     </div>
                 </div>
             </div>
@@ -217,14 +217,14 @@
             <!-- User Status Card -->
             <div class="vip-card p-5 mb-5">
                 <div class="flex justify-between items-center mb-1">
-                    <div class="text-sm text-slate-600">Welcome, <b id="hero-name" class="text-slate-900">Guest</b></div>
+                    <div class="text-sm text-slate-600">স্বাগতম, <b id="hero-name" class="text-slate-900">গেস্ট ইউজার</b></div>
                     <div id="hero-role-badge"></div>
                 </div>
-                <div class="text-xs text-slate-400 mb-1">Main balance</div>
+                <div class="text-xs text-slate-400 mb-1">মূল ব্যালেন্স</div>
                 <div class="text-3xl font-extrabold text-indigo-600 mb-4">৳<span id="hero-bal">0.00</span></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="document.getElementById('services-list').scrollIntoView({behavior:'smooth'})" class="py-3 rounded-2xl text-white font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 shadow-md shadow-indigo-500/20 text-xs tracking-wide"><i class="fa-solid fa-bolt mr-1.5"></i>Top up</button>
-                    <button onclick="showSec('addmoney')" class="py-3 rounded-2xl font-bold border border-indigo-200/80 bg-white/90 text-indigo-900 hover:bg-indigo-50 text-xs shadow-sm"><i class="fa-solid fa-wallet mr-1.5"></i>Add money</button>
+                    <button onclick="document.getElementById('services-list').scrollIntoView({behavior:'smooth'})" class="py-3 rounded-2xl text-white font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 shadow-md shadow-indigo-500/20 text-xs tracking-wide"><i class="fa-solid fa-bolt mr-1.5"></i>টপআপ করুন</button>
+                    <button onclick="showSec('addmoney')" class="py-3 rounded-2xl font-bold border border-indigo-200/80 bg-white/90 text-indigo-900 hover:bg-indigo-50 text-xs shadow-sm"><i class="fa-solid fa-wallet mr-1.5"></i>টাকা অ্যাড করুন</button>
                 </div>
             </div>
 
@@ -249,20 +249,20 @@
                 <div class="flex items-center gap-3 relative">
                     <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-fire"></i></div>
                     <div class="min-w-0 flex-1">
-                        <div class="font-extrabold text-base leading-tight">Daily Like</div>
-                        <div class="text-[11px] opacity-90 mt-0.5">Every day <b id="dl-home-likes">220</b>+ likes • only ৳<b id="dl-home-price">6</b></div>
+                        <div class="font-extrabold text-base leading-tight">ডেইলি লাইক</div>
+                        <div class="text-[11px] opacity-90 mt-0.5">প্রতিদিন <b id="dl-home-likes">220</b>+ লাইক • মাত্র ৳<b id="dl-home-price">6</b></div>
                     </div>
-                    <div class="bg-white text-rose-600 text-[11px] font-extrabold px-3 py-1.5 rounded-xl flex-shrink-0">Get likes <i class="fa-solid fa-arrow-right ml-0.5"></i></div>
+                    <div class="bg-white text-rose-600 text-[11px] font-extrabold px-3 py-1.5 rounded-xl flex-shrink-0">লাইক নিন <i class="fa-solid fa-arrow-right ml-0.5"></i></div>
                 </div>
             </div>
 
-            <h3 class="font-bold text-slate-800 text-sm mb-3 px-1"><i class="fas fa-gamepad text-indigo-600 mr-2"></i>All games & services</h3>
+            <h3 class="font-bold text-slate-800 text-sm mb-3 px-1"><i class="fas fa-gamepad text-indigo-600 mr-2"></i>সকল গেম ও সার্ভিস</h3>
             <div id="services-list" class="space-y-6 mb-8 px-1">
-                <div class="text-center py-10 text-slate-400"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i> Loading games...</div>
+                <div class="text-center py-10 text-slate-400"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i> গেম লোড হচ্ছে...</div>
             </div>
 
             <div class="mt-8 mb-4 px-1">
-                <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fas fa-history text-indigo-600 mr-2"></i>Recent orders</h3>
+                <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fas fa-history text-indigo-600 mr-2"></i>সাম্প্রতিক অর্ডারসমূহ</h3>
                 <div id="latest-orders-list" class="space-y-2.5">
                     <div class="vip-card p-3 animate-pulse flex items-center justify-between">
                         <div class="h-4 bg-slate-200 rounded w-32"></div>
@@ -275,15 +275,15 @@
         <!-- Tutorials Section -->
         <section id="tutorial-sec" class="hidden animate-fade-in pb-20 px-1">
             <div class="vip-card p-5">
-                <h2 class="font-bold text-lg text-slate-800 mb-1">Video tutorials</h2>
-                <p class="text-xs text-slate-500 mb-4">Learn how to use our services</p>
+                <h2 class="font-bold text-lg text-slate-800 mb-1">ভিডিও টিউটোরিয়াল</h2>
+                <p class="text-xs text-slate-500 mb-4">আমাদের সার্ভিসগুলো ব্যবহারের নিয়ম শিখুন</p>
                 <div id="tutorial-list-container" class="space-y-3"></div>
             </div>
         </section>
 
         <!-- Orders History Section -->
         <section id="history-sec" class="hidden animate-fade-in pb-24">
-            <div class="vip-card px-4 py-3.5 mb-3"><h2 class="text-base font-bold text-slate-800"><i class="fas fa-box text-indigo-600 mr-2"></i>My order history</h2></div>
+            <div class="vip-card px-4 py-3.5 mb-3"><h2 class="text-base font-bold text-slate-800"><i class="fas fa-box text-indigo-600 mr-2"></i>আমার অর্ডার হিস্ট্রি</h2></div>
             <div id="history-list"></div>
         </section>
 
@@ -293,27 +293,27 @@
                 <button onclick="showSec('home')" class="text-slate-500 hover:text-indigo-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 absolute top-3.5 right-3.5"><i class="fas fa-times"></i></button>
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md" style="background:linear-gradient(135deg,#f97316,#ef4444 55%,#be185d)"><i class="fa-solid fa-fire"></i></div>
                 <div>
-                    <h3 class="font-bold text-slate-800 text-sm">Daily Like</h3>
-                    <p class="text-[11px] text-indigo-600 font-semibold">Enter your UID and get instant profile likes</p>
+                    <h3 class="font-bold text-slate-800 text-sm">ডেইলি লাইক</h3>
+                    <p class="text-[11px] text-indigo-600 font-semibold">UID দিন, ইনস্ট্যান্ট প্রোফাইল লাইক পান</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-3 gap-2 mb-3">
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-indigo-600">৳<span id="dl-balance">0</span></div></div>
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Price</div><div class="text-base font-extrabold text-rose-600">৳<span id="dl-price">6</span></div></div>
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">You’ll get</div><div class="text-base font-extrabold text-emerald-600"><span id="dl-likes">220</span>+</div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">আপনার ব্যালেন্স</div><div class="text-base font-extrabold text-indigo-600">৳<span id="dl-balance">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">প্রাইস</div><div class="text-base font-extrabold text-rose-600">৳<span id="dl-price">6</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">লাইক পাবেন</div><div class="text-base font-extrabold text-emerald-600"><span id="dl-likes">220</span>+</div></div>
             </div>
 
             <div class="vip-card p-4 mb-3">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">1</span>
-                    <h3 class="font-bold text-slate-800 text-xs">Enter your game UID</h3>
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">১</span>
+                    <h3 class="font-bold text-slate-800 text-xs">গেম UID দিন</h3>
                 </div>
-                <input type="tel" inputmode="numeric" id="dl-uid" maxlength="15" placeholder="e.g. 1234567890" class="zp-input text-sm py-2.5 mb-3" oninput="this.value=this.value.replace(/\D/g,'')">
-                <div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>Select region (server) <span class="text-rose-500">*</span></div>
+                <input type="tel" inputmode="numeric" id="dl-uid" maxlength="15" placeholder="যেমন: 1234567890" class="zp-input text-sm py-2.5 mb-3" oninput="this.value=this.value.replace(/\D/g,'')">
+                <div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>রিজিয়ন (সার্ভার) সিলেক্ট করুন <span class="text-rose-500">*</span></div>
                 <div id="dl-servers" class="flex flex-wrap gap-1.5 mb-4"></div>
-                <button id="dl-btn" onclick="dlSend()" class="zp-btn w-full text-sm"><i class="fa-solid fa-fire mr-1.5"></i>Send likes</button>
-                <p class="zp-sub mt-2.5 leading-relaxed"><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i>A UID can receive likes once per day. If the likes can’t be delivered (for example, if already received today), you won’t be charged anything.</p>
+                <button id="dl-btn" onclick="dlSend()" class="zp-btn w-full text-sm"><i class="fa-solid fa-fire mr-1.5"></i>লাইক পাঠান</button>
+                <p class="zp-sub mt-2.5 leading-relaxed"><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i>একই UID-তে দিনে একবারই লাইক যায়। লাইক না গেলে (যেমন আজ আগেই নেওয়া থাকলে) আপনার কোনো টাকা কাটা হবে না।</p>
             </div>
 
             <div id="dl-result"></div>
@@ -328,14 +328,14 @@
                 <img id="topup-game-img" src="" class="w-14 h-14 rounded-2xl object-cover shadow-sm">
                 <div>
                     <h3 class="font-bold text-slate-800 text-sm" id="topup-game-title">Game Name</h3>
-                    <p class="text-[11px] text-indigo-600 font-semibold" id="topup-sub-title">Auto instant delivery</p>
+                    <p class="text-[11px] text-indigo-600 font-semibold" id="topup-sub-title">অটো ইনস্ট্যান্ট ডেলিভারি</p>
                 </div>
             </div>
 
             <div class="vip-card p-4 mb-3">
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">1</span>
-                    <h3 class="font-bold text-slate-800 text-xs">Choose a package</h3>
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">১</span>
+                    <h3 class="font-bold text-slate-800 text-xs">প্যাকেজ সিলেক্ট করুন</h3>
                 </div>
                 <div id="product-loader" class="text-center py-8 hidden"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i></div>
                 <div id="products-grid" class="grid grid-cols-2 gap-2.5"></div>
@@ -343,39 +343,39 @@
 
             <div id="player-id-section" class="vip-card p-4 mb-3">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">2</span>
-                    <h3 class="font-bold text-slate-800 text-xs">Enter your game user ID (UID)</h3>
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">২</span>
+                    <h3 class="font-bold text-slate-800 text-xs">গেম ইউজার আইডি (UID) দিন</h3>
                 </div>
                 <div class="mb-2">
-                    <input type="text" id="game-player-id" placeholder="Enter Player ID here" class="zp-input text-sm py-2.5">
+                    <input type="text" id="game-player-id" placeholder="Player ID এখানে লিখুন" class="zp-input text-sm py-2.5">
                 </div>
-                <div class="mb-3"><div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>Select region (server) <span class="text-rose-500">*</span></div><div id="ff-servers" class="flex flex-wrap gap-1.5"></div></div>
+                <div class="mb-3"><div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>রিজিয়ন (সার্ভার) সিলেক্ট করুন <span class="text-rose-500">*</span></div><div id="ff-servers" class="flex flex-wrap gap-1.5"></div></div>
                 <div id="uidCheckBtn" onclick="uidCheck()" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white text-center py-2.5 rounded-2xl font-bold text-xs shadow-md shadow-indigo-500/20 cursor-pointer">
-                    Verify player name
+                    প্লেয়ার নেম যাচাই করুন
                 </div>
             </div>
 
 
             <div class="vip-card p-4 mb-4">
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">3</span>
-                    <h3 class="font-bold text-slate-800 text-xs">Payment method</h3>
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">৩</span>
+                    <h3 class="font-bold text-slate-800 text-xs">পেমেন্ট মাধ্যম</h3>
                 </div>
                 <div class="grid grid-cols-2 gap-2.5 mb-3">
                     <div onclick="selectPaymentOption('wallet')" id="opt-wallet" class="pay-option-card selected p-3 text-center">
                         <i class="fas fa-wallet text-indigo-600 text-xl mb-1"></i>
-                        <div class="font-bold text-xs">Wallet balance</div>
+                        <div class="font-bold text-xs">ওয়ালেট ব্যালেন্স</div>
                     </div>
                     <div onclick="selectPaymentOption('instant')" id="opt-instant" class="pay-option-card p-3 text-center">
                         <i class="fas fa-bolt text-indigo-600 text-xl mb-1"></i>
-                        <div class="font-bold text-xs">Instant payment</div>
+                        <div class="font-bold text-xs">ইনস্ট্যান্ট পেমেন্ট</div>
                     </div>
                 </div>
-                <div class="mb-3"><label class="zp-sub font-bold block mb-1"><i class="fa-solid fa-ticket text-indigo-600 mr-1"></i>Promo code (optional)</label>
+                <div class="mb-3"><label class="zp-sub font-bold block mb-1"><i class="fa-solid fa-ticket text-indigo-600 mr-1"></i>প্রোমো কোড (ঐচ্ছিক)</label>
                     <div class="flex gap-2"><input id="order-promo" placeholder="PROMO CODE" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="applyOrderPromo()" class="px-4 rounded-2xl bg-indigo-600 text-white text-xs font-bold">Apply</button></div>
                     <p id="order-promo-msg" class="zp-sub mt-1"></p></div>
-                <p class="text-[11px] text-slate-500 mb-3">Your current balance: <span class="text-indigo-600 font-bold">৳<span id="topup-balance-display">0.00</span></span></p>
-                <button onclick="processOrder()" class="zp-btn w-full text-sm">Confirm order</button>
+                <p class="text-[11px] text-slate-500 mb-3">আপনার বর্তমান ব্যালেন্স: <span class="text-indigo-600 font-bold">৳<span id="topup-balance-display">0.00</span></span></p>
+                <button onclick="processOrder()" class="zp-btn w-full text-sm">অর্ডার কনফার্ম করুন</button>
             </div>
         </section>
 
@@ -385,14 +385,14 @@
                 <div class="vip-card p-6 mb-4">
                     <div class="flex items-center gap-3 mb-5">
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white flex items-center justify-center text-xl shadow-md"><i class="fas fa-wallet"></i></div>
-                        <div><h2 class="font-extrabold text-base text-slate-900">Auto top-up / Add balance</h2><p class="text-xs text-slate-500">Safe & secure payment via ZRPay gateway</p></div>
+                        <div><h2 class="font-extrabold text-base text-slate-900">অটো টপআপ / ব্যালেন্স অ্যাড</h2><p class="text-xs text-slate-500">ZRPay গেটওয়ে দ্বারা নিরাপদ পেমেন্ট</p></div>
                     </div>
-                    <label class="text-xs font-bold text-slate-700 mb-1.5 block">Amount (৳)</label>
-                    <input id="new-amount-input" type="number" min="10" placeholder="Minimum ৳10" class="zp-input mb-5">
-                    <label class="text-xs font-bold text-slate-700 mb-1.5 block"><i class="fa-solid fa-gift text-indigo-600 mr-1"></i>Bonus promo code (optional)</label>
+                    <label class="text-xs font-bold text-slate-700 mb-1.5 block">টাকার পরিমাণ (৳)</label>
+                    <input id="new-amount-input" type="number" min="10" placeholder="সর্বনিম্ন ১০ টাকা" class="zp-input mb-5">
+                    <label class="text-xs font-bold text-slate-700 mb-1.5 block"><i class="fa-solid fa-gift text-indigo-600 mr-1"></i>বোনাস প্রোমো কোড (ঐচ্ছিক)</label>
                     <input id="dep-promo" placeholder="PROMO CODE" class="zp-input mb-2 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()">
                     <p id="dep-promo-msg" class="zp-sub mb-4"></p>
-                    <button onclick="startGateway()" class="zp-btn w-full"><i class="fas fa-shield-alt mr-2"></i>Pay securely</button>
+                    <button onclick="startGateway()" class="zp-btn w-full"><i class="fas fa-shield-alt mr-2"></i>সিকিউর পেমেন্ট করুন</button>
                 </div>
             </div>
         </section>
@@ -405,10 +405,10 @@
                 <div id="acc-profile-role-badge" class="mb-2"></div>
                 <div class="text-xs text-slate-500 mb-4" id="acc-profile-email">email@gmail.com</div>
                 <div class="bg-indigo-50/80 border border-indigo-100 rounded-2xl p-3.5 inline-block">
-                    <div class="text-[11px] text-indigo-700 font-semibold">Support PIN</div>
+                    <div class="text-[11px] text-indigo-700 font-semibold">সাপোর্ট পিন (Support PIN)</div>
                     <div class="flex items-center justify-center gap-2.5">
                         <div class="text-lg font-mono font-bold text-indigo-600" id="acc-profile-pin">------</div>
-                        <button type="button" onclick="copySupportPin(this)" title="Copy" class="w-8 h-8 rounded-xl bg-white border border-indigo-100 text-indigo-600 shadow-sm flex items-center justify-center active:scale-90 transition"><i class="fa-regular fa-copy"></i></button>
+                        <button type="button" onclick="copySupportPin(this)" title="কপি করুন" class="w-8 h-8 rounded-xl bg-white border border-indigo-100 text-indigo-600 shadow-sm flex items-center justify-center active:scale-90 transition"><i class="fa-regular fa-copy"></i></button>
                     </div>
                 </div>
             </div>
@@ -416,61 +416,61 @@
             <!-- Reseller Progress Bar Card -->
             <div id="reseller-progress-card" class="vip-card p-5 mb-4">
                 <div class="flex justify-between items-center text-xs font-bold mb-2">
-                    <span class="text-slate-700"><i class="fas fa-award text-indigo-600 mr-1.5"></i>Reseller status progress</span>
+                    <span class="text-slate-700"><i class="fas fa-award text-indigo-600 mr-1.5"></i>রিসেলার স্ট্যাটাস প্রোগ্রেস</span>
                     <span id="reseller-status-text" class="text-indigo-600">৳0 / ৳500</span>
                 </div>
                 <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-2">
                     <div id="reseller-progress-bar" class="bg-gradient-to-r from-indigo-500 to-indigo-700 h-full w-0 transition-all duration-500"></div>
                 </div>
-                <p id="reseller-hint-text" class="text-[11px] text-slate-500">Deposit a total of ৳500 and you’ll automatically unlock reseller discounts!</p>
+                <p id="reseller-hint-text" class="text-[11px] text-slate-500">মোট ৫০০ টাকা ডিপোজিট করলে স্বয়ংক্রিয়ভাবে রিসেলার ডিসকাউন্ট সুবিধা পেয়ে যাবেন!</p>
             </div>
 
             <div class="vip-card p-4 mb-4 space-y-3">
                 <div class="flex justify-between text-xs text-slate-600 py-1 border-b border-slate-100">
-                    <span>Total deposit:</span>
+                    <span>টোটাল ডিপোজিট:</span>
                     <span class="font-bold text-slate-800">৳<span id="acc-total-deposit">0</span></span>
                 </div>
                 <div class="flex justify-between text-xs text-slate-600 py-1 border-b border-slate-100">
-                    <span>Wallet balance:</span>
+                    <span>ওয়ালেট ব্যালেন্স:</span>
                     <span class="font-bold text-indigo-600">৳<span id="acc-profile-balance">0</span></span>
                 </div>
             </div>
 
             <div class="vip-card p-4 mb-4">
-                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-ticket text-indigo-600 mr-1.5"></i>Promo code</div>
-                <div class="flex gap-2"><input id="profile-promo" placeholder="Enter code" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="redeemPromo()" class="px-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 text-white text-xs font-bold">Redeem</button></div>
-                <p class="zp-sub mt-2">Redeem cash codes here. Use discount codes when ordering, and bonus codes when adding money to your wallet.</p>
+                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-ticket text-indigo-600 mr-1.5"></i>প্রোমো কোড</div>
+                <div class="flex gap-2"><input id="profile-promo" placeholder="কোড লিখুন" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="redeemPromo()" class="px-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 text-white text-xs font-bold">Redeem</button></div>
+                <p class="zp-sub mt-2">টাকার কোড এখানে রিডিম করুন। ডিসকাউন্ট কোড অর্ডারের সময় এবং বোনাস কোড ওয়ালেটে টাকা অ্যাড করার সময় ব্যবহার করুন।</p>
             </div>
 
             <div class="vip-card p-4 mb-4" id="ref-card">
-                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-user-plus text-indigo-600 mr-1.5"></i>Refer & earn</div>
+                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-user-plus text-indigo-600 mr-1.5"></i>রেফার করে ইনকাম করুন</div>
                 <div class="rounded-2xl p-3.5 text-white text-center" style="background:linear-gradient(135deg,#312e81,#4f46e5 55%,#7c3aed)">
-                    <div class="text-[10px] opacity-80 mb-1">Your referral code</div>
+                    <div class="text-[10px] opacity-80 mb-1">আপনার রেফার কোড</div>
                     <div id="ref-code" class="text-2xl font-extrabold tracking-[.25em]">------</div>
                     <div class="flex gap-2 mt-3">
-                        <button onclick="copyRef('code')" class="flex-1 py-2 rounded-xl bg-white/20 text-[11px] font-bold border border-white/30"><i class="fas fa-copy mr-1"></i>Copy code</button>
-                        <button onclick="copyRef('link')" class="flex-1 py-2 rounded-xl bg-white text-indigo-700 text-[11px] font-bold"><i class="fas fa-share-nodes mr-1"></i>Share link</button>
+                        <button onclick="copyRef('code')" class="flex-1 py-2 rounded-xl bg-white/20 text-[11px] font-bold border border-white/30"><i class="fas fa-copy mr-1"></i>কোড কপি</button>
+                        <button onclick="copyRef('link')" class="flex-1 py-2 rounded-xl bg-white text-indigo-700 text-[11px] font-bold"><i class="fas fa-share-nodes mr-1"></i>লিংক শেয়ার</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 mt-3">
-                    <div class="rounded-2xl bg-indigo-50 py-2.5 text-center"><b id="ref-count" class="text-lg text-indigo-700">0</b><div class="text-[10px] text-slate-500 font-semibold">Total referrals</div></div>
-                    <div class="rounded-2xl bg-emerald-50 py-2.5 text-center"><b class="text-lg text-emerald-700">৳<span id="ref-earned">0</span></b><div class="text-[10px] text-slate-500 font-semibold">Total earnings</div></div>
+                    <div class="rounded-2xl bg-indigo-50 py-2.5 text-center"><b id="ref-count" class="text-lg text-indigo-700">0</b><div class="text-[10px] text-slate-500 font-semibold">মোট রেফার</div></div>
+                    <div class="rounded-2xl bg-emerald-50 py-2.5 text-center"><b class="text-lg text-emerald-700">৳<span id="ref-earned">0</span></b><div class="text-[10px] text-slate-500 font-semibold">মোট ইনকাম</div></div>
                 </div>
-                <p class="zp-sub mt-2" id="ref-info">Share your code with a friend. When they create a new account you’ll get ৳1, plus 10% commission on every deposit they make.</p>
+                <p class="zp-sub mt-2" id="ref-info">বন্ধুকে আপনার কোড দিন। সে নতুন অ্যাকাউন্ট খুললে আপনি পাবেন ৳১, আর তার প্রতিটি ডিপোজিটে পাবেন ১০% কমিশন।</p>
             </div>
 
             <div class="px-1">
                 <button onclick="handleLogout()" class="w-full py-3.5 bg-white border border-red-200/80 shadow-sm rounded-2xl flex items-center justify-center gap-2 hover:bg-red-50 text-red-500 font-bold text-sm transition">
-                    <i class="fas fa-sign-out-alt"></i> Log out
+                    <i class="fas fa-sign-out-alt"></i> লগ আউট করুন
                 </button>
             </div>
         </section>
 
         <!-- Get API (resellers) -->
         <section id="api-sec" class="hidden animate-fade-in pb-24">
-            <button onclick="showSec('home')" class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1.5"><i class="fas fa-arrow-left"></i> Go back</button>
+            <button onclick="showSec('home')" class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1.5"><i class="fas fa-arrow-left"></i> ফিরে যান</button>
             <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">Get <span class="text-indigo-600">API</span></h2>
-            <p class="zp-sub mb-4 mt-1">Your personal Like API key for resellers. Use it on your own website or Telegram bot.</p>
+            <p class="zp-sub mb-4 mt-1">রিসেলারদের জন্য আপনার ব্যক্তিগত Like API key। নিজের ওয়েবসাইট বা টেলিগ্রাম বটে ব্যবহার করুন।</p>
             <div id="api-body"><div class="text-center py-10"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i></div></div>
         </section>
     </main>
@@ -478,11 +478,11 @@
     <!-- Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 z-50">
         <div class="max-w-md mx-auto flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-indigo-50/80 shadow-xl">
-            <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>Home</span></button>
-            <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
+            <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>হোম</span></button>
+            <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>অর্ডারস</span></button>
             <button class="mhx-bolt" onclick="showSec('home')"><i class="fa-solid fa-bolt"></i></button>
-            <button id="nav-addmoney" onclick="showSec('addmoney')" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></button>
-            <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+            <button id="nav-addmoney" onclick="showSec('addmoney')" class="nav-item"><i class="fa-solid fa-wallet"></i><span>ওয়ালেট</span></button>
+            <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>প্রোফাইল</span></button>
         </div>
     </nav>
     <a id="fab-support" href="https://t.me/mhxffv111" target="_blank" rel="noopener"><i class="fa-solid fa-headset"></i></a>
@@ -523,8 +523,8 @@
         if (payRef) {
             window.history.replaceState({}, document.title, window.location.pathname);
             Swal.fire({
-                title: 'Checking payment...',
-                text: 'Please wait a moment.',
+                title: 'পেমেন্ট চেক করা হচ্ছে...',
+                text: 'দয়া করে কিছুক্ষণ অপেক্ষা করুন।',
                 allowOutsideClick: false,
                 didOpen: () => Swal.showLoading()
             });
@@ -539,17 +539,50 @@
                         });
                         const data = await res.json();
                         if (data.ok) {
-                            Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and ৳${data.amount} has been added!` + (data.bonus?`<br><b>🎁 Bonus ৳${data.bonus}</b>`:'') + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
+                            Swal.fire({icon:'success',title:'সফল!',html:`আপনার পেমেন্ট সফল হয়েছে এবং ৳${data.amount} যোগ হয়েছে!` + (data.bonus?`<br><b>🎁 বোনাস ৳${data.bonus}</b>`:'') + (data.promoted?'<br><b>🎉 আপনি এখন রিসেলার!</b>':'')});
                         } else {
-                            Swal.fire('Status', 'Your payment is still processing or pending.', 'info');
+                            Swal.fire('স্ট্যাটাস', 'পেমেন্ট এখনো প্রসেসিং বা পেন্ডিং আছে।', 'info');
                         }
                     } catch (e) {
-                        Swal.fire('Notice', 'Payment verification status has been updated.', 'info');
+                        Swal.fire('নোটিশ', 'পেমেন্ট ভেরিফিকেশন স্ট্যাটাস আপডেট হয়েছে।', 'info');
                     }
                 }
             });
         }
     });
+
+    // ===== Home quick links (WhatsApp / Telegram / App Download) — controlled from Admin > Settings =====
+    function qlUrl(kind, v) {
+        v = String(v == null ? '' : v).trim();
+        if (!v) return '';
+        if (kind === 'wa') {
+            if (/^https?:\/\//i.test(v)) return v;
+            if (/^(wa\.me|api\.whatsapp\.com|chat\.whatsapp\.com)/i.test(v)) return 'https://' + v;
+            const d = v.replace(/[^0-9]/g, '');
+            return d ? 'https://wa.me/' + d : '';
+        }
+        if (/^https?:\/\//i.test(v)) return v;
+        if (kind === 'tg' && v[0] === '@') return 'https://t.me/' + v.slice(1);
+        if (kind === 'tg' && /^[A-Za-z0-9_]{4,}$/.test(v)) return 'https://t.me/' + v;
+        return 'https://' + v.replace(/^\/+/, '');
+    }
+    function wireQuickLinks(g) {
+        const map = { 'home-whatsapp': ['wa', g.whatsapp, 'WhatsApp'], 'home-telegram': ['tg', g.telegram || 'https://t.me/MHXOFC11', 'Telegram'], 'home-app-dl': ['app', g.appLink, 'App download'] };
+        Object.keys(map).forEach(id => {
+            const el = document.getElementById(id); if (!el) return;
+            const url = qlUrl(map[id][0], map[id][1]);
+            el._qlUrl = url; el.setAttribute('href', url || '#'); el.setAttribute('rel', 'noopener noreferrer'); el.setAttribute('target', '_blank');
+            if (!el._qlBound) {
+                el._qlBound = true;
+                el.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (!el._qlUrl) { Swal.fire({ toast: true, position: 'top', icon: 'info', title: map[id][2] + ' link isn\u2019t available yet', showConfirmButton: false, timer: 1800 }); return; }
+                    const w = window.open(el._qlUrl, '_blank', 'noopener');
+                    if (!w) window.location.href = el._qlUrl;
+                });
+            }
+        });
+    }
 
     function loadGlobalSettings() {
         db.collection("settings").doc("general").onSnapshot((doc) => {
@@ -563,6 +596,7 @@
                 if(generalSettings.notice) {
                     document.getElementById('notice-text').innerText = generalSettings.notice;
                 }
+                wireQuickLinks(generalSettings);
             }
         });
     }
@@ -581,7 +615,7 @@
         const name = document.getElementById('reg-name').value;
         const email = document.getElementById('reg-email').value;
         const pass = document.getElementById('reg-pass').value;
-        if(!name || !email || !pass) return Swal.fire('Oops', 'Please fill in all the fields', 'warning');
+        if(!name || !email || !pass) return Swal.fire('ত্রুটি', 'সবগুলো ঘর পূরণ করুন', 'warning');
 
         Swal.showLoading();
         auth.createUserWithEmailAndPassword(email, pass)
@@ -589,8 +623,8 @@
                 name: name, email: email, balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date()
             }))
             .then(() => applyPendingRef())
-            .then((rmsg) => { Swal.fire({icon:'success', title:'Success!', html:'Your account has been created successfully!' + (rmsg ? '<br><small>' + esc(rmsg) + '</small>' : '')}); showSec('home'); })
-            .catch((err) => Swal.fire('Oops', err.message, 'error'));
+            .then((rmsg) => { Swal.fire({icon:'success', title:'সফল!', html:'একাউন্ট সফলভাবে তৈরি হয়েছে!' + (rmsg ? '<br><small>' + esc(rmsg) + '</small>' : '')}); showSec('home'); })
+            .catch((err) => Swal.fire('ত্রুটি', err.message, 'error'));
     }
 
     function handleLogin() {
@@ -600,7 +634,7 @@
         Swal.showLoading();
         auth.signInWithEmailAndPassword(email, pass)
         .then(() => { showSec('home'); Swal.close(); })
-        .catch((err) => Swal.fire('Login failed', err.message, 'error'));
+        .catch((err) => Swal.fire('লগইন ব্যর্থ', err.message, 'error'));
     }
     
     function handleGoogleLogin() {
@@ -615,7 +649,7 @@
                 }
             });
             showSec('home');
-        }).catch((error) => { Swal.fire('Oops', error.message, 'error'); });
+        }).catch((error) => { Swal.fire('ত্রুটি', error.message, 'error'); });
     }
 
     function showAuthPage() { showSec('auth'); }
@@ -642,7 +676,7 @@
         db.collection('users').doc(uid).onSnapshot((doc) => {
             if (doc.exists) {
                 userData = doc.data();
-                if (userData.banned) { Swal.fire({icon:"error",title:"Account banned",text:"Your account has been banned. Please contact support.",allowOutsideClick:false}).then(()=>auth.signOut()); return; }
+                if (userData.banned) { Swal.fire({icon:"error",title:"অ্যাকাউন্ট ব্যান",text:"আপনার অ্যাকাউন্টটি ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।",allowOutsideClick:false}).then(()=>auth.signOut()); return; }
                 userBalance = userData.balance || 0;
                 const userName = userData.name || "User";
                 const totalDep = userData.totalDeposit || 0;
@@ -676,9 +710,9 @@
                 document.getElementById('reseller-progress-bar').style.width = progress + '%';
                 document.getElementById('reseller-status-text').innerText = `৳${totalDep} / ৳${threshold}`;
                 if(role === 'reseller' || role === 'admin') {
-                    document.getElementById('reseller-hint-text').innerText = '🎉 Congratulations! You can now buy everything at special reseller prices.';
+                    document.getElementById('reseller-hint-text').innerText = '🎉 অভিনন্দন! আপনি বর্তমানে বিশেষ রিসেলার মূল্যে সকল পণ্য কিনতে পারছেন।';
                 } else {
-                    document.getElementById('reseller-hint-text').innerText = `Just ৳${Math.max(0, threshold - totalDep)} more in deposits and you’ll unlock reseller status!`;
+                    document.getElementById('reseller-hint-text').innerText = `আর মাত্র ৳${Math.max(0, threshold - totalDep)} ডিপোজিট করলেই আপনি রিসেলার স্ট্যাটাস পেয়ে যাবেন!`;
                 }
             }
         });
@@ -693,11 +727,11 @@
 
     async function loadGamesAndCategories() {
         const listContainer = document.getElementById('services-list');
-        listContainer.innerHTML = `<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i> Loading games...</div>`;
+        listContainer.innerHTML = `<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i> গেম লোড হচ্ছে...</div>`;
         try {
             const servicesSnap = await db.collection("services").get();
             if (servicesSnap.empty) {
-                listContainer.innerHTML = `<div class="text-center text-slate-400 py-6">No games found</div>`;
+                listContainer.innerHTML = `<div class="text-center text-slate-400 py-6">কোনো গেম পাওয়া যায়নি</div>`;
                 return;
             }
             listContainer.innerHTML = "";
@@ -713,7 +747,7 @@
             });
             listContainer.innerHTML = `<div class="grid grid-cols-3 gap-2.5">${gamesHTML}</div>`;
         } catch (error) {
-            listContainer.innerHTML = `<div class="text-center text-red-500 py-6">We couldn’t load the games. Please try again.</div>`;
+            listContainer.innerHTML = `<div class="text-center text-red-500 py-6">গেম লোড করতে সমস্যা হয়েছে।</div>`;
         }
     }
 
@@ -721,7 +755,7 @@
         db.collection("tutorials").onSnapshot((snapshot) => {
             const container = document.getElementById('tutorial-list-container');
             container.innerHTML = "";
-            if (snapshot.empty) { container.innerHTML = `<p class="text-slate-400 text-xs text-center">No tutorials yet</p>`; return; }
+            if (snapshot.empty) { container.innerHTML = `<p class="text-slate-400 text-xs text-center">কোনো টিউটোরিয়াল নেই</p>`; return; }
             snapshot.forEach(doc => {
                 const data = doc.data();
                 container.innerHTML += `<div class="border border-indigo-100 p-3 rounded-2xl bg-indigo-50/40"><a href="${data.link}" target="_blank" class="text-indigo-600 font-bold text-sm flex items-center justify-between"><span class="truncate">${data.title}</span> <i class="fas fa-external-link-alt text-xs"></i></a></div>`;
@@ -748,7 +782,7 @@
         db.collection('services').doc(gameId).collection('products').orderBy('price', 'asc').get()
             .then((snapshot) => {
                 loader.classList.add('hidden');
-                if(snapshot.empty) { grid.innerHTML = `<div class="col-span-2 text-center text-slate-400 py-6">No packages available</div>`; return; }
+                if(snapshot.empty) { grid.innerHTML = `<div class="col-span-2 text-center text-slate-400 py-6">কোনো প্যাকেজ নেই</div>`; return; }
                 const isReseller = userData.role === 'reseller' || userData.role === 'admin';
                 snapshot.forEach(doc => {
                     const prod = doc.data();
@@ -784,16 +818,16 @@
     async function processOrder() {
         if (!currentUser) { showSec('auth'); return; }
         const playerId = document.getElementById('game-player-id').value.trim();
-        if(!playerId && selectedGameType !== 'code') return Swal.fire('Heads up', 'Please enter the Player ID (UID)!', 'warning');
-        if(!selectedProduct) return Swal.fire('Heads up', 'Please select a package!', 'warning');
+        if(!playerId && selectedGameType !== 'code') return Swal.fire('সতর্কতা', 'দয়া করে প্লেয়ার আইডি (UID) দিন!', 'warning');
+        if(!selectedProduct) return Swal.fire('সতর্কতা', 'দয়া করে একটি প্যাকেজ সিলেক্ট করুন!', 'warning');
         if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
-        Swal.fire({title:'Processing your order...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        Swal.fire({title:'অর্ডার প্রসেস হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
         try {
             const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
             document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
-            Swal.fire({icon:'success', title:'Congratulations!', html:'Your order has been submitted successfully!' + (r.discount?`<br><b>Discount ৳${r.discount} — Paid ৳${r.price}</b>`:'')});
+            Swal.fire({icon:'success', title:'অভিনন্দন!', html:'আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে!' + (r.discount?`<br><b>ডিসকাউন্ট ৳${r.discount} — পরিশোধ ৳${r.price}</b>`:'')});
             showSec('home');
-        } catch(err) { Swal.fire('Oops', err.message, 'error'); }
+        } catch(err) { Swal.fire('ত্রুটি', err.message, 'error'); }
     }
 
     const FF_INFO_API = "https://info-api-pink-seven.vercel.app/player-info";
@@ -828,8 +862,8 @@
         try {
             currentUser = auth.currentUser || currentUser;
             await api('/applyReferral', { code: code });
-            return 'Referral successful 🎉';
-        } catch (e) { return 'Referral code: ' + e.message; }
+            return 'রেফার সফল হয়েছে 🎉';
+        } catch (e) { return 'রেফার কোড: ' + e.message; }
         finally { try { localStorage.removeItem('pendingRef'); } catch (e) {} }
     }
     async function loadReferral() {
@@ -839,29 +873,29 @@
             document.getElementById('ref-code').innerText = r.code;
             document.getElementById('ref-count').innerText = r.count;
             document.getElementById('ref-earned').innerText = r.earned;
-            document.getElementById('ref-info').innerText = `Share your code with a friend. When they create a new account you’ll get ৳${r.bonus}, plus ${r.percent}% commission on every deposit they make.`;
+            document.getElementById('ref-info').innerText = `বন্ধুকে আপনার কোড দিন। সে নতুন অ্যাকাউন্ট খুললে আপনি পাবেন ৳${r.bonus}, আর তার প্রতিটি ডিপোজিটে পাবেন ${r.percent}% কমিশন।`;
         } catch (e) { document.getElementById('ref-code').innerText = '------'; }
     }
     async function copyRef(kind) {
-        if (!myRef) return Swal.fire('Please wait', 'Loading your referral code...', 'info');
+        if (!myRef) return Swal.fire('অপেক্ষা করুন', 'রেফার কোড লোড হচ্ছে...', 'info');
         const link = location.origin + '/?ref=' + myRef.code, text = kind === 'code' ? myRef.code : link;
-        if (kind === 'link' && navigator.share) { try { await navigator.share({ title: 'M H X TopUp', text: 'Join using my referral link', url: link }); return; } catch (e) {} }
+        if (kind === 'link' && navigator.share) { try { await navigator.share({ title: 'M H X TopUp', text: 'আমার রেফার লিংক দিয়ে জয়েন করুন', url: link }); return; } catch (e) {} }
         try { await navigator.clipboard.writeText(text); } catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
-        Swal.fire({ icon: 'success', title: 'Copied!', text: text, timer: 1400, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'কপি হয়েছে!', text: text, timer: 1400, showConfirmButton: false });
     }
 
     function uidCheck() {
         const uid = document.getElementById("game-player-id").value.trim();
-        if (!uid) { Swal.fire('Heads up', 'Please enter the Player ID (UID) first!', 'warning'); return; }
-        if (!/^\d{5,15}$/.test(uid)) { Swal.fire('Heads up', 'UID must contain numbers only', 'warning'); return; }
-        if (!ffServer) { ffShake(); Swal.fire('Select a region', 'To check the UID, please select your game region (e.g. BD, PK, IND) from below first', 'warning'); return; }
-        ffOpenModal(`<div class="ffm-load"><div class="ffm-spin"></div><p>Fetching account details...</p></div>`, true);
+        if (!uid) { Swal.fire('সতর্কতা', 'আগে প্লেয়ার আইডি (UID) লিখুন!', 'warning'); return; }
+        if (!/^\d{5,15}$/.test(uid)) { Swal.fire('সতর্কতা', 'ইউআইডি শুধু সংখ্যা হতে হবে', 'warning'); return; }
+        if (!ffServer) { ffShake(); Swal.fire('রিজিয়ন সিলেক্ট করুন', 'ইউআইডি চেক করতে আগে নিচ থেকে আপনার গেমের রিজিয়ন (যেমন BD, PK, IND) সিলেক্ট করুন', 'warning'); return; }
+        ffOpenModal(`<div class="ffm-load"><div class="ffm-spin"></div><p>অ্যাকাউন্ট ডিটেলস আনা হচ্ছে...</p></div>`, true);
         const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
         const getJ = async (url, strict) => { const res = await fetch(url, { signal: ctl.signal }); let j = null; try { j = await res.json(); } catch (e) {} if (!j || (strict && !res.ok)) throw new Error('bad'); return j; };
         const q = encodeURIComponent(uid) + '&region=' + encodeURIComponent(ffServer) + '&server=' + encodeURIComponent(ffServer);
         getJ(`${BACKEND_URL}/playerInfo?uid=${q}`, true).catch(e => { if (e.name === 'AbortError') throw e; return getJ(`${FF_INFO_API}?uid=${q}`, false); })
             .then(data => { clearTimeout(tm); ffRender(uid, data); })
-            .catch(e => { clearTimeout(tm); ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-triangle-exclamation"></i></div><p>${e.name === 'AbortError' ? 'The server isn’t responding, please try again' : 'We couldn’t verify this right now, please try again shortly'}</p></div>`); });
+            .catch(e => { clearTimeout(tm); ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-triangle-exclamation"></i></div><p>${e.name === 'AbortError' ? 'সার্ভার সাড়া দিচ্ছে না, আবার চেষ্টা করুন' : 'যাচাই করতে সমস্যা হয়েছে, একটু পরে আবার চেষ্টা করুন'}</p></div>`); });
     }
 
     // ---------- Floating player-info window ----------
@@ -917,14 +951,14 @@
         document.getElementById('ffm-in').innerHTML = inner;
     }
 
-    const FF_L = { nickname:'Name', level:'Level', exp:'EXP', liked:'Likes', region:'Region', rank:'Rank', rankingPoints:'Rank points', maxRank:'Highest rank', csRank:'CS rank', csMaxRank:'CS highest rank', csRankingPoints:'CS points',
-        createAt:'Account created', lastLoginAt:'Last login', badgeCnt:'Badge count', badgeId:'Badge ID', bannerId:'Banner ID', avatarId:'Avatar ID', title:'Title', releaseVersion:'Version', accountId:'Account ID',
-        clanName:'Guild name', clanId:'Guild ID', clanLevel:'Guild level', memberNum:'Members', capacity:'Capacity', captainId:'Leader ID', signature:'Bio', language:'Language', modePrefer:'Preferred mode', timeActive:'Active time',
-        creditScore:'Credit score', name:'Name', petName:'Pet', skinId:'Skin ID', selectedSkillId:'Skill ID', isSelected:'Selected' };
-    const FF_S = { basicInfo:['fa-user','Basic info'], clanBasicInfo:['fa-shield-halved','Guild'], captainBasicInfo:['fa-crown','Guild leader'], petInfo:['fa-paw','Pet'], socialInfo:['fa-comments','Social'], profileInfo:['fa-id-card','Profile'], creditScoreInfo:['fa-star','Credit score'], diamondCostRes:['fa-gem','Diamonds'], _root:['fa-circle-info','Other info'] };
+    const FF_L = { nickname:'নাম', level:'লেভেল', exp:'EXP', liked:'লাইক', region:'রিজিয়ন', rank:'র‍্যাঙ্ক', rankingPoints:'র‍্যাঙ্ক পয়েন্ট', maxRank:'সর্বোচ্চ র‍্যাঙ্ক', csRank:'CS র‍্যাঙ্ক', csMaxRank:'CS সর্বোচ্চ র‍্যাঙ্ক', csRankingPoints:'CS পয়েন্ট',
+        createAt:'অ্যাকাউন্ট খোলা', lastLoginAt:'শেষ লগইন', badgeCnt:'ব্যাজ সংখ্যা', badgeId:'ব্যাজ আইডি', bannerId:'ব্যানার আইডি', avatarId:'অ্যাভাটার আইডি', title:'টাইটেল', releaseVersion:'ভার্সন', accountId:'অ্যাকাউন্ট আইডি',
+        clanName:'গিল্ডের নাম', clanId:'গিল্ড আইডি', clanLevel:'গিল্ড লেভেল', memberNum:'মেম্বার', capacity:'ক্যাপাসিটি', captainId:'লিডার আইডি', signature:'বায়ো', language:'ভাষা', modePrefer:'পছন্দের মোড', timeActive:'সক্রিয় সময়',
+        creditScore:'ক্রেডিট স্কোর', name:'নাম', petName:'পেট', skinId:'স্কিন আইডি', selectedSkillId:'স্কিল আইডি', isSelected:'সিলেক্টেড' };
+    const FF_S = { basicInfo:['fa-user','বেসিক ইনফো'], clanBasicInfo:['fa-shield-halved','গিল্ড'], captainBasicInfo:['fa-crown','গিল্ড লিডার'], petInfo:['fa-paw','পেট'], socialInfo:['fa-comments','সোশ্যাল'], profileInfo:['fa-id-card','প্রোফাইল'], creditScoreInfo:['fa-star','ক্রেডিট স্কোর'], diamondCostRes:['fa-gem','ডায়মন্ড'], _root:['fa-circle-info','অন্যান্য তথ্য'] };
     const ffPretty = k => String(k).replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ').replace(/^./, c => c.toUpperCase());
     function ffFmt(k, v) {
-        if (typeof v === 'boolean') return v ? 'Yes' : 'No';
+        if (typeof v === 'boolean') return v ? 'হ্যাঁ' : 'না';
         if (typeof v === 'number' || (typeof v === 'string' && /^\d{9,13}$/.test(v) && /(At|Time|Date|Login)$/i.test(k))) {
             const n = Number(v);
             if (/(At|Time|Date|Login)$/i.test(k) && n > 1e9) return new Date(n < 1e11 ? n * 1000 : n).toLocaleString('en-GB');
@@ -936,7 +970,7 @@
         const out = [];
         Object.keys(o).forEach(k => {
             const v = o[k]; if (v === null || v === undefined || v === '') return;
-            if (Array.isArray(v)) { if (!v.length) return; const prim = v.every(x => x === null || typeof x !== 'object'); out.push([k, prim ? v.join(', ') : v.length + ' items']); }
+            if (Array.isArray(v)) { if (!v.length) return; const prim = v.every(x => x === null || typeof x !== 'object'); out.push([k, prim ? v.join(', ') : v.length + ' টি আইটেম']); }
             else if (typeof v === 'object') out.push(...ffEntries(v, k));
             else out.push([k, ffFmt(k, v)]);
         });
@@ -956,12 +990,12 @@
         const name = ffFind(root, ['nickname', 'nickName', 'name', 'playerName']);
         if (!name) {
             const m = ffFind(data, ['error', 'message', 'msg']);
-            ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-user-slash"></i></div><p style="font-size:15px;color:#1e293b">ID not found</p><p style="margin-top:6px;font-weight:400">${m ? esc(m) : 'Please double-check the UID'}</p></div>`);
+            ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-user-slash"></i></div><p style="font-size:15px;color:#1e293b">আইডি পাওয়া যায়নি</p><p style="margin-top:6px;font-weight:400">${m ? esc(m) : 'UID টি আবার চেক করুন'}</p></div>`);
             return;
         }
         const lvl = ffFind(root, ['level']), reg = ffFind(root, ['region']) || ffServer, lk = ffFind(root, ['liked', 'likes']), exp = ffFind(root, ['exp']);
         const rk = ffFind(root, ['rankingPoints', 'rank']);
-        const tiles = [['fa-ranking-star', lvl, 'Level'], ['fa-heart', lk, 'Likes'], ['fa-bolt', exp, 'EXP']].filter(t => t[1] !== undefined);
+        const tiles = [['fa-ranking-star', lvl, 'লেভেল'], ['fa-heart', lk, 'লাইক'], ['fa-bolt', exp, 'EXP']].filter(t => t[1] !== undefined);
         let html = `<div class="ffm-hero"><div class="ffm-av">${esc(String(name).trim().charAt(0).toUpperCase())}</div><div class="ffm-nm">${esc(name)}</div><div class="ffm-sub">UID: ${esc(uid)}</div>
             <div class="ffm-chips">${reg ? `<span class="ffm-chip"><i class="fas fa-location-dot"></i> ${esc(reg)}</span>` : ''}${lvl !== undefined ? `<span class="ffm-chip">Lv. ${esc(lvl)}</span>` : ''}${rk !== undefined ? `<span class="ffm-chip"><i class="fas fa-trophy"></i> ${esc(ffFmt('rank', rk))}</span>` : ''}</div></div><div class="ffm-body">`;
         if (tiles.length) html += `<div class="ffm-tiles">${tiles.map((t, i) => `<div class="ffm-tile" style="animation-delay:${.2 + i * .08}s"><i class="fas ${t[0]}" style="color:#7c3aed"></i><b>${esc(ffFmt('x', t[1]))}</b><span>${t[2]}</span></div>`).join('')}</div>`;
@@ -1000,17 +1034,17 @@
     function loadHistory() {
         const list = document.getElementById('history-list');
         if (!currentUser) return;
-        list.innerHTML = '<div class="text-center py-6"><i class="fas fa-spinner fa-spin text-indigo-600"></i> Loading history...</div>';
+        list.innerHTML = '<div class="text-center py-6"><i class="fas fa-spinner fa-spin text-indigo-600"></i> হিস্ট্রি লোড হচ্ছে...</div>';
 
         db.collection('orders').where('userId', '==', currentUser.uid).limit(25).get()
             .then(snapshot => {
-                if (snapshot.empty) { list.innerHTML = `<div class="text-center py-10 text-slate-400 text-sm">No order history yet</div>`; return; }
+                if (snapshot.empty) { list.innerHTML = `<div class="text-center py-10 text-slate-400 text-sm">কোনো অর্ডার হিস্ট্রি নেই</div>`; return; }
                 list.innerHTML = "";
                 snapshot.forEach(doc => {
                     const d = doc.data();
                     let badgeColor = d.status === 'success' || d.status === 'completed' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : (d.status === 'cancel' || d.status === 'rejected' ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-amber-600 bg-amber-50 border-amber-200');
                     list.innerHTML += `<div class="vip-card p-3.5 mb-2.5 flex justify-between items-center">
-                        <div><h4 class="font-bold text-xs text-slate-800">${d.gameName}</h4><p class="text-[11px] text-slate-500">${d.productName}</p><span class="text-[10px] text-slate-400">${d.redeemCode ? 'Code: <b class="select-all">' + esc(d.redeemCode) + '</b>' : 'UID: ' + esc(d.playerId || 'N/A')}</span></div>
+                        <div><h4 class="font-bold text-xs text-slate-800">${d.gameName}</h4><p class="text-[11px] text-slate-500">${d.productName}</p><span class="text-[10px] text-slate-400">${d.redeemCode ? 'কোড: <b class="select-all">' + esc(d.redeemCode) + '</b>' : 'UID: ' + esc(d.playerId || 'N/A')}</span></div>
                         <div class="text-right"><span class="text-indigo-600 font-bold text-sm">৳${d.price}</span><div class="mt-1"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase ${badgeColor}">${d.status}</span></div></div>
                     </div>`;
                 });
@@ -1020,12 +1054,12 @@
     function loadRecentOrdersGlobal() {
         const container = document.getElementById('latest-orders-list');
         db.collection('recentOrders').orderBy('date', 'desc').limit(5).onSnapshot((snapshot) => {
-            if (snapshot.empty) { container.innerHTML = '<div class="text-center text-slate-400 text-xs py-2">No recent orders yet</div>'; return; }
+            if (snapshot.empty) { container.innerHTML = '<div class="text-center text-slate-400 text-xs py-2">কোনো সাম্প্রতিক অর্ডার নেই</div>'; return; }
             container.innerHTML = "";
             snapshot.forEach(doc => {
                 const data = doc.data();
                 container.innerHTML += `<div class="vip-card p-3 flex items-center justify-between">
-                    <span class="text-slate-700 font-bold text-xs">${esc(data.name || 'Customer')} - ${esc(data.productName)}</span>
+                    <span class="text-slate-700 font-bold text-xs">${esc(data.name || 'গ্রাহক')} - ${esc(data.productName)}</span>
                     <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-lg text-[10px] font-bold">৳${data.price}</span>
                 </div>`;
             });
@@ -1076,17 +1110,17 @@
     // ================= helpers =================
     function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     async function api(path, body) {
-        if (!currentUser) throw new Error('Please log in first');
+        if (!currentUser) throw new Error('আগে লগইন করুন');
         const token = await currentUser.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 40000);
         try {
             const go = () => fetch(BACKEND_URL + path, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(body || {}) });
             let r; try { r = await go(); } catch (e0) { if (e0.name === 'AbortError') throw e0; await new Promise(z => setTimeout(z, 2500)); r = await go(); }
             let j = {}; try { j = await r.json(); } catch (e) {}
-            if (!r.ok) throw new Error(j.error || ('Server error ' + r.status));
+            if (!r.ok) throw new Error(j.error || ('সার্ভার এরর ' + r.status));
             return j;
         } catch (e) {
-            if (e.name === 'AbortError') throw new Error('The server isn’t responding, please try again shortly');
-            if (/Failed to fetch|NetworkError|Load failed/i.test(e.message)) throw new Error('Couldn’t connect to the server');
+            if (e.name === 'AbortError') throw new Error('সার্ভার সাড়া দিচ্ছে না, একটু পরে চেষ্টা করুন');
+            if (/Failed to fetch|NetworkError|Load failed/i.test(e.message)) throw new Error('সার্ভারের সাথে কানেক্ট করা যাচ্ছে না');
             throw e;
         } finally { clearTimeout(t); }
     }
@@ -1095,37 +1129,37 @@
     async function startGateway(forced) {
         if(!currentUser) { showSec('auth'); return; }
         const amount = forced ? parseInt(forced) : parseInt(document.getElementById('new-amount-input').value);
-        if(!amount || amount < 10) { Swal.fire('Heads up', 'The minimum deposit is ৳10', 'warning'); return; }
+        if(!amount || amount < 10) { Swal.fire('সতর্কতা', 'সর্বনিম্ন ১০ টাকা ডিপোজিট করতে হবে', 'warning'); return; }
         const promoEl = document.getElementById('dep-promo');
-        Swal.fire({title:'Opening payment page...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        Swal.fire({title:'পেমেন্ট পেজ খোলা হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
         try {
             const data = await api('/createPayment', { amount: amount, origin: window.location.origin, promoCode: promoEl ? promoEl.value.trim() : '' });
-            if(!data.paymentUrl) throw new Error('Payment link not found');
+            if(!data.paymentUrl) throw new Error('পেমেন্ট লিংক পাওয়া যায়নি');
             window.location.href = data.paymentUrl;
-        } catch(err) { Swal.fire('Oops', err.message, 'error'); }
+        } catch(err) { Swal.fire('ত্রুটি', err.message, 'error'); }
     }
 
     // ================= promo codes =================
     async function applyOrderPromo() {
         const code = document.getElementById('order-promo').value.trim(), msg = document.getElementById('order-promo-msg');
         if (!currentUser) return showSec('auth');
-        if (!selectedProduct) { msg.style.color = '#dc2626'; msg.innerText = 'Please select a package first'; return; }
+        if (!selectedProduct) { msg.style.color = '#dc2626'; msg.innerText = 'আগে একটি প্যাকেজ সিলেক্ট করুন'; return; }
         if (!code) { msg.innerText = ''; return; }
         try {
             const r = await api('/checkPromo', { code: code, context: 'order', amount: selectedProduct.price });
-            msg.style.color = '#059669'; msg.innerText = `✅ Discount ৳${r.discount} — You pay ৳${selectedProduct.price - r.discount}`;
+            msg.style.color = '#059669'; msg.innerText = `✅ ডিসকাউন্ট ৳${r.discount} — আপনি দিবেন ৳${selectedProduct.price - r.discount}`;
         } catch (e) { msg.style.color = '#dc2626'; msg.innerText = e.message; }
     }
     async function redeemPromo() {
         const code = document.getElementById('profile-promo').value.trim();
         if (!currentUser) return showSec('auth');
-        if (!code) return Swal.fire('Heads up', 'Please enter a promo code', 'warning');
-        Swal.fire({title:'Checking...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        if (!code) return Swal.fire('সতর্কতা', 'প্রোমো কোড লিখুন', 'warning');
+        Swal.fire({title:'যাচাই হচ্ছে...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
         try {
             const r = await api('/redeemPromo', { code: code });
             document.getElementById('profile-promo').value = '';
-            Swal.fire({icon:'success', title:'Congratulations!', text:`৳${r.amount} has been added to your wallet`});
-        } catch (e) { Swal.fire('Oops', e.message, 'error'); }
+            Swal.fire({icon:'success', title:'অভিনন্দন!', text:`আপনার ওয়ালেটে ৳${r.amount} যোগ হয়েছে`});
+        } catch (e) { Swal.fire('ত্রুটি', e.message, 'error'); }
     }
     document.addEventListener('input', (ev) => {
         if (ev.target.id !== 'dep-promo') return;
@@ -1133,7 +1167,7 @@
         clearTimeout(window._depT); if (!code || !currentUser) { msg.innerText = ''; return; }
         window._depT = setTimeout(async () => {
             try { const r = await api('/checkPromo', { code: code, context: 'deposit', amount: amt });
-                msg.style.color = '#059669'; msg.innerText = `✅ ${r.value}% bonus` + (r.bonus ? ` (৳${r.bonus} on this amount)` : ''); }
+                msg.style.color = '#059669'; msg.innerText = `✅ ${r.value}% বোনাস` + (r.bonus ? ` (এই অ্যামাউন্টে ৳${r.bonus})` : ''); }
             catch (e) { msg.style.color = '#dc2626'; msg.innerText = e.message; }
         }, 600);
     });
@@ -1158,19 +1192,19 @@
         const l = liveNotices();
         const html = l.length ? l.map(n => { const t = NT[n.type] || NT.info, d = new Date(ntTime(n));
             return `<div style="text-align:left;border:1px solid #e2e8f0;border-left:4px solid ${t[0]};border-radius:14px;padding:10px 12px;margin-bottom:8px">
-              <div style="font-weight:800;font-size:13px;color:${t[0]}"><i class="fa-solid ${t[1]}"></i> ${esc(n.title || 'Notice')}</div>
+              <div style="font-weight:800;font-size:13px;color:${t[0]}"><i class="fa-solid ${t[1]}"></i> ${esc(n.title || 'নোটিশ')}</div>
               <div style="font-size:12px;color:#334155;margin-top:3px;white-space:pre-wrap">${esc(n.message)}</div>
-              ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" style="font-size:11px;color:#4f46e5;font-weight:700">Open link →</a>` : ''}
+              ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" style="font-size:11px;color:#4f46e5;font-weight:700">লিংক খুলুন →</a>` : ''}
               <div style="font-size:10px;color:#94a3b8;margin-top:4px">${d.toLocaleString('bn-BD')}</div></div>`; }).join('')
-            : '<p style="color:#94a3b8;font-size:13px">No notifications yet</p>';
-        Swal.fire({ title: '🔔 Notifications', html: '<div style="max-height:55vh;overflow:auto">' + html + '</div>', confirmButtonText: 'Okay' });
+            : '<p style="color:#94a3b8;font-size:13px">কোনো নোটিফিকেশন নেই</p>';
+        Swal.fire({ title: '🔔 নোটিফিকেশন', html: '<div style="max-height:55vh;overflow:auto">' + html + '</div>', confirmButtonText: 'ঠিক আছে' });
         if (l.length) localStorage.setItem('noticeSeen', String(ntTime(l[0]))); updateBell();
     }
     db.collection('notices').orderBy('createdAt', 'desc').limit(30).onSnapshot(snap => {
         noticesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         if (!noticesFirstLoad) snap.docChanges().forEach(c => { if (c.type === 'added' && !c.doc.metadata.hasPendingWrites) {
             const n = c.doc.data(); if (n.active === false) return;
-            Swal.fire({ toast: true, position: 'top', timer: 5000, showConfirmButton: false, icon: 'info', title: n.title || 'New notification', text: n.message }); } });
+            Swal.fire({ toast: true, position: 'top', timer: 5000, showConfirmButton: false, icon: 'info', title: n.title || 'নতুন নোটিফিকেশন', text: n.message }); } });
         noticesFirstLoad = false; renderTicker(); updateBell();
     }, () => {});
 </script>
@@ -1234,42 +1268,42 @@ function dlCountUp(el, to, ms) {
 }
 function dlRow(k, v) { return `<div class="dl-row"><span>${k}</span><span>${v}</span></div>`; }
 function dlShow(html) { const box = document.getElementById('dl-result'); box.innerHTML = html; box.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-function dlCopy(t) { try { navigator.clipboard.writeText(t); Swal.fire({ toast: true, position: 'top', timer: 1400, showConfirmButton: false, icon: 'success', title: 'Copied' }); } catch (e) {} }
+function dlCopy(t) { try { navigator.clipboard.writeText(t); Swal.fire({ toast: true, position: 'top', timer: 1400, showConfirmButton: false, icon: 'success', title: 'কপি হয়েছে' }); } catch (e) {} }
 
 function dlRenderResult(r) {
     const n = v => (v === null || v === undefined || v === '') ? 'N/A' : Number(v).toLocaleString('en-US');
     if (r.status === 'success') {
         dlShow(`<div class="dl-card dl-ok">
-            <div class="text-center mb-3"><div class="text-4xl mb-1">✅</div><h3 class="font-extrabold text-emerald-700 text-base">Likes sent successfully!</h3></div>
+            <div class="text-center mb-3"><div class="text-4xl mb-1">✅</div><h3 class="font-extrabold text-emerald-700 text-base">লাইক সফলভাবে পাঠানো হয়েছে!</h3></div>
             <div class="flex gap-2 mb-3">
-                <div class="dl-stat"><small>Before</small><b class="text-slate-700" id="dl-s-before">${typeof r.before === 'number' ? '0' : 'N/A'}</b></div>
-                <div class="dl-stat" style="border-color:#6ee7b7;background:#ecfdf5"><small>Sent</small><b class="text-emerald-600">+<span id="dl-s-given">0</span></b></div>
-                <div class="dl-stat"><small>Now</small><b class="text-indigo-600" id="dl-s-after">${typeof r.after === 'number' ? '0' : 'N/A'}</b></div>
+                <div class="dl-stat"><small>আগে ছিল</small><b class="text-slate-700" id="dl-s-before">${typeof r.before === 'number' ? '0' : 'N/A'}</b></div>
+                <div class="dl-stat" style="border-color:#6ee7b7;background:#ecfdf5"><small>পাঠানো হয়েছে</small><b class="text-emerald-600">+<span id="dl-s-given">0</span></b></div>
+                <div class="dl-stat"><small>এখন হয়েছে</small><b class="text-indigo-600" id="dl-s-after">${typeof r.after === 'number' ? '0' : 'N/A'}</b></div>
             </div>
             <div class="bg-white/80 rounded-2xl px-3 py-1">
-                ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 Player', esc(r.player))}${dlRow('🌍 Server', esc(r.region))}
-                ${dlRow('📦 Package', esc(r.package))}${dlRow('🔑 Order no.', `${esc(r.orderNo)} <i class="fa-regular fa-copy text-indigo-500 cursor-pointer ml-1" onclick="dlCopy('${esc(r.orderNo)}')"></i>`)}
-                ${dlRow('💰 Cost', '৳' + esc(r.price))}${dlRow('🕐 Time', esc(r.time) + ' (BDT)')}
+                ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 প্লেয়ার', esc(r.player))}${dlRow('🌍 সার্ভার', esc(r.region))}
+                ${dlRow('📦 প্যাকেজ', esc(r.package))}${dlRow('🔑 অর্ডার নং', `${esc(r.orderNo)} <i class="fa-regular fa-copy text-indigo-500 cursor-pointer ml-1" onclick="dlCopy('${esc(r.orderNo)}')"></i>`)}
+                ${dlRow('💰 খরচ', '৳' + esc(r.price))}${dlRow('🕐 সময়', esc(r.time) + ' (BDT)')}
             </div>
-            <button onclick="document.getElementById('dl-result').innerHTML='';window.scrollTo({top:0,behavior:'smooth'})" class="zp-btn w-full text-xs mt-3 py-3">Send likes to another UID</button>
+            <button onclick="document.getElementById('dl-result').innerHTML='';window.scrollTo({top:0,behavior:'smooth'})" class="zp-btn w-full text-xs mt-3 py-3">আরেকটি UID-তে লাইক পাঠান</button>
         </div>`);
         if (typeof r.before === 'number') dlCountUp(document.getElementById('dl-s-before'), r.before, 900);
         dlCountUp(document.getElementById('dl-s-given'), Number(r.given) || 0, 900);
         if (typeof r.after === 'number') dlCountUp(document.getElementById('dl-s-after'), r.after, 1100);
     } else if (r.status === 'already') {
         dlShow(`<div class="dl-card dl-warn">
-            <div class="text-center mb-3"><div class="text-4xl mb-1">⚠️</div><h3 class="font-extrabold text-amber-700 text-base">Today’s likes were already received!</h3></div>
+            <div class="text-center mb-3"><div class="text-4xl mb-1">⚠️</div><h3 class="font-extrabold text-amber-700 text-base">আজকের লাইক আগেই নেওয়া হয়েছে!</h3></div>
             <div class="bg-white/80 rounded-2xl px-3 py-1">
-                ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 Player', esc(r.player))}${dlRow('🌍 Server', esc(r.region))}
-                ${dlRow('ℹ️ Message', esc(r.message))}${dlRow('💰 Charge', '৳0')}${dlRow('🔄 Refunded', '৳' + esc(r.refunded))}
+                ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 প্লেয়ার', esc(r.player))}${dlRow('🌍 সার্ভার', esc(r.region))}
+                ${dlRow('ℹ️ মেসেজ', esc(r.message))}${dlRow('💰 চার্জ', '৳0')}${dlRow('🔄 ফেরত', '৳' + esc(r.refunded))}
             </div>
-            <p class="text-center text-[12px] font-bold text-amber-700 mt-3">🌟 You haven’t been charged anything.</p>
+            <p class="text-center text-[12px] font-bold text-amber-700 mt-3">🌟 আপনার কোনো টাকা কাটা হয়নি।</p>
         </div>`);
     } else {
         dlShow(`<div class="dl-card dl-bad">
-            <div class="text-center mb-2"><div class="text-4xl mb-1">❌</div><h3 class="font-extrabold text-rose-700 text-base">Couldn’t send likes</h3></div>
-            <div class="bg-white/80 rounded-2xl px-3 py-2 text-[12px] font-bold text-slate-700 text-center">⚠️ ${esc(r.message || 'Try again')}</div>
-            <p class="text-center text-[12px] font-bold text-rose-600 mt-3">💰 You haven’t been charged. Please try again in a little while.</p>
+            <div class="text-center mb-2"><div class="text-4xl mb-1">❌</div><h3 class="font-extrabold text-rose-700 text-base">লাইক পাঠানো ব্যর্থ হয়েছে!</h3></div>
+            <div class="bg-white/80 rounded-2xl px-3 py-2 text-[12px] font-bold text-slate-700 text-center">⚠️ ${esc(r.message || 'আবার চেষ্টা করুন')}</div>
+            <p class="text-center text-[12px] font-bold text-rose-600 mt-3">💰 কোনো টাকা কাটা হয়নি। একটু পরে আবার চেষ্টা করুন।</p>
         </div>`);
     }
 }
@@ -1278,22 +1312,22 @@ async function dlSend() {
     if (dlBusy) return;
     if (!currentUser) { showSec('auth'); return; }
     const uid = document.getElementById('dl-uid').value.trim();
-    if (!/^\d{5,15}$/.test(uid)) { Swal.fire('Heads up', 'Please enter a valid UID (numbers only, 5–15 digits)', 'warning'); return; }
-    if (!dlRegion) { const b = document.getElementById('dl-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
-    if (!dlCfg.enabled) { Swal.fire('Service paused', dlCfg.offMsg || '🔥 The Daily Like service is paused for a moment. Please try again later.', 'info'); return; }
+    if (!/^\d{5,15}$/.test(uid)) { Swal.fire('সতর্কতা', 'সঠিক UID দিন (শুধু সংখ্যা, ৫-১৫ ডিজিট)', 'warning'); return; }
+    if (!dlRegion) { const b = document.getElementById('dl-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('রিজিয়ন সিলেক্ট করুন', 'আগে আপনার গেমের রিজিয়ন (যেমন BD, IND, PK) সিলেক্ট করুন', 'warning'); return; }
+    if (!dlCfg.enabled) { Swal.fire('সার্ভিস বন্ধ', dlCfg.offMsg || '🔥 ডেইলি লাইক সার্ভিস সাময়িকভাবে বন্ধ আছে। পরে আবার চেষ্টা করুন।', 'info'); return; }
     const price = dlMyPrice();
     if ((userBalance || 0) < price) {
-        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Your balance: <b>৳${userBalance || 0}</b><br>Required: <b>৳${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
+        const x = await Swal.fire({ icon: 'error', title: 'ব্যালেন্স কম!', html: `আপনার ব্যালেন্স: <b>৳${userBalance || 0}</b><br>প্রয়োজন: <b>৳${price}</b>`, showCancelButton: true, confirmButtonText: 'টাকা অ্যাড করুন', cancelButtonText: 'বাতিল' });
         if (x.isConfirmed) showSec('addmoney'); return;
     }
-    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>৳${price}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
+    const c = await Swal.fire({ title: 'কনফার্ম করুন', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>লাইক: <b>${dlCfg.likes}+</b><br>মূল্য: <b>৳${price}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'লাইক পাঠান', cancelButtonText: 'বাতিল' });
     if (!c.isConfirmed) return;
 
     const key = uid + '|' + dlRegion;
     if (!dlReqId || dlReqKey !== key) { dlReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32); dlReqKey = key; }
     dlBusy = true;
-    const btn = document.getElementById('dl-btn'); btn.disabled = true; btn.style.opacity = '.6'; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>Sending...';
-    dlShow(`<div class="dl-card dl-load"><div class="dl-spin"></div><b class="text-indigo-700 text-sm">Sending likes...</b><p class="zp-sub mt-1">Please wait, this may take about a minute. Kindly don’t close the page.</p></div>`);
+    const btn = document.getElementById('dl-btn'); btn.disabled = true; btn.style.opacity = '.6'; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>পাঠানো হচ্ছে...';
+    dlShow(`<div class="dl-card dl-load"><div class="dl-spin"></div><b class="text-indigo-700 text-sm">লাইক পাঠানো হচ্ছে...</b><p class="zp-sub mt-1">অনুগ্রহ করে অপেক্ষা করুন, এতে ১ মিনিটের মতো সময় লাগতে পারে। পেজ বন্ধ করবেন না।</p></div>`);
     const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 120000);
     try {
         const token = await currentUser.getIdToken();
@@ -1301,13 +1335,13 @@ async function dlSend() {
         let j = {}; try { j = await res.json(); } catch (e) {}
         if (!res.ok) {
             if (res.status !== 409) dlReqId = null;
-            dlRenderResult({ status: 'failed', message: j.error || ('Server error ' + res.status) });
-        } else { dlReqId = null; dlRenderResult(j); if (j.status === 'success') Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: 'success', title: `+${j.given} likes sent!` }); }
+            dlRenderResult({ status: 'failed', message: j.error || ('সার্ভার এরর ' + res.status) });
+        } else { dlReqId = null; dlRenderResult(j); if (j.status === 'success') Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: 'success', title: `+${j.given} লাইক পাঠানো হয়েছে!` }); }
     } catch (e) {
         // unknown outcome: keep the same request id so a retry can never charge twice
-        dlRenderResult({ status: 'failed', message: e.name === 'AbortError' ? 'The server isn’t responding. Please check your balance and order history, then try again.' : 'Couldn’t connect to the server, please try again.' });
+        dlRenderResult({ status: 'failed', message: e.name === 'AbortError' ? 'সার্ভার সাড়া দিচ্ছে না। আপনার ব্যালেন্স/অর্ডার হিস্ট্রি চেক করুন, তারপর আবার চেষ্টা করুন।' : 'সার্ভারের সাথে কানেক্ট করা যাচ্ছে না, আবার চেষ্টা করুন।' });
     } finally {
-        clearTimeout(tm); dlBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-fire mr-1.5"></i>Send likes'; dlUpdateInfo();
+        clearTimeout(tm); dlBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-fire mr-1.5"></i>লাইক পাঠান'; dlUpdateInfo();
     }
 }
 </script>
@@ -1340,7 +1374,7 @@ async function pushAskPermission() {
     const p = await Notification.requestPermission();
     if (p === 'granted') {
         const ok = await pushRegister();
-        Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: ok ? 'success' : 'info', title: ok ? 'Notifications are on 🔔' : 'Couldn’t turn on notifications, please try again later' });
+        Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: ok ? 'success' : 'info', title: ok ? 'নোটিফিকেশন চালু হয়েছে 🔔' : 'নোটিফিকেশন চালু করা যায়নি, পরে আবার চেষ্টা করুন' });
     }
 }
 function pushMaybePrompt() {
@@ -1351,7 +1385,7 @@ function pushMaybePrompt() {
     if (Date.now() - t < 3 * 86400000) return;           // asked recently -> don't nag
     if (Swal.isVisible()) { setTimeout(pushMaybePrompt, 5000); return; }
     try { localStorage.setItem('pushAskedAt', String(Date.now())); } catch (e) {}
-    Swal.fire({ title: '🔔 Turn on notifications', html: 'Get new offers, updates and important messages straight to your <b>phone notifications</b> .', showCancelButton: true, confirmButtonText: 'Allow', cancelButtonText: 'Later', reverseButtons: true })
+    Swal.fire({ title: '🔔 নোটিফিকেশন চালু করুন', html: 'নতুন অফার, আপডেট ও জরুরি মেসেজ সরাসরি আপনার <b>ফোনের নোটিফিকেশনে</b> পাবেন।', showCancelButton: true, confirmButtonText: 'অনুমতি দিন', cancelButtonText: 'পরে', reverseButtons: true })
         .then(r => { if (r.isConfirmed) pushAskPermission(); });
 }
 window.addEventListener('load', () => setTimeout(pushMaybePrompt, 3500));
@@ -1364,14 +1398,14 @@ function copySupportPin(btn) {
     const ic = btn.querySelector('i');
     const done = () => {
         ic.className = 'fa-solid fa-check'; btn.classList.add('copied');
-        Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Support code copied', showConfirmButton: false, timer: 1400 });
+        Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'সাপোর্ট কোড কপি হয়েছে', showConfirmButton: false, timer: 1400 });
         setTimeout(() => { ic.className = 'fa-regular fa-copy'; btn.classList.remove('copied'); }, 1500);
     };
     const fallback = () => {
         const ta = document.createElement('textarea');
         ta.value = t; ta.style.cssText = 'position:fixed;opacity:0;user-select:text;-webkit-user-select:text';
         document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, 99999);
-        try { document.execCommand('copy'); done(); } catch (e) { Swal.fire('Oops', 'Couldn’t copy', 'error'); }
+        try { document.execCommand('copy'); done(); } catch (e) { Swal.fire('ত্রুটি', 'কপি করা যায়নি', 'error'); }
         ta.remove();
     };
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done).catch(fallback); else fallback();
@@ -1381,8 +1415,8 @@ function copySupportPin(btn) {
 (function () {
     const DEF = {
         title: 'Telegram',
-        text: 'Join our Telegram channel now to get exclusive special offers, and stay with us! 🎁',
-        btn: 'Join on Telegram',
+        text: 'বিভিন্ন স্পেশাল অফার পেতে এখনই আমাদের টেলিগ্রাম চ্যানেলে জয়েন হন, জয়েন হয়ে থাকুন! 🎁',
+        btn: 'টেলিগ্রামে জয়েন করুন',
         color: '#0088cc',
         link: 'https://t.me/MHXOFC11'
     };
@@ -1409,7 +1443,7 @@ function copySupportPin(btn) {
             '<h3 class="tgp-title" id="tgp-title"></h3>' +
             '<p class="tgp-text" id="tgp-text"></p>' +
             '<a class="tgp-btn" id="tgp-join" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i><span id="tgp-btn-text"></span></a>' +
-            '<button type="button" class="tgp-close" id="tgp-close">Close</button></div>';
+            '<button type="button" class="tgp-close" id="tgp-close">বন্ধ করুন</button></div>';
         document.body.appendChild(ov);
         const logo = ov.querySelector('#tgp-logo'), join = ov.querySelector('#tgp-join');
         logo.href = link; join.href = link;
@@ -1470,8 +1504,8 @@ function copyText(t) {
     });
 }
 function apiToast(icon, title) { Swal.fire({ toast: true, position: 'top', icon, title, showConfirmButton: false, timer: 1600 }); }
-async function apiCopy(t, msg) { const ok = await copyText(t); ok ? apiToast('success', msg || 'Copied') : Swal.fire('Oops', 'Couldn’t copy', 'error'); }
-function apiCopyUrl(k) { apiCopy(BACKEND_URL + '/api/v1/external/like?apikey=' + k + '&uid=UID_HERE&region=BD', 'URL copied'); }
+async function apiCopy(t, msg) { const ok = await copyText(t); ok ? apiToast('success', msg || 'কপি হয়েছে') : Swal.fire('ত্রুটি', 'কপি করা যায়নি', 'error'); }
+function apiCopyUrl(k) { apiCopy(BACKEND_URL + '/api/v1/external/like?apikey=' + k + '&uid=UID_HERE&region=BD', 'URL কপি হয়েছে'); }
 function apiFmtTime(iso) {
     const d = new Date(iso); if (!iso || isNaN(d)) return '—';
     return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\bam\b/, 'AM').replace(/\bpm\b/, 'PM');
@@ -1561,7 +1595,7 @@ function apiDocTab(i) {
     pre.textContent = docs[i].c;
     document.querySelectorAll('#api-doc-tabs .api-tab').forEach((b, n) => b.classList.toggle('on', n === i));
 }
-function apiDocCopy() { apiCopy(apiDocs(apiInfo && apiInfo.keys && apiInfo.keys[0] ? apiInfo.keys[0].key : '')[apiDocIdx].c, 'Code copied'); }
+function apiDocCopy() { apiCopy(apiDocs(apiInfo && apiInfo.keys && apiInfo.keys[0] ? apiInfo.keys[0].key : '')[apiDocIdx].c, 'কোড কপি হয়েছে'); }
 
 function apiRender(d) {
     const keys = d.keys || [], active = keys.filter(k => k.status === 'active' && !k.adminDisabled).length;
@@ -1575,18 +1609,18 @@ function apiRender(d) {
     if (!apiOk) {
         const left = Math.max(0, apiThr - apiPaid);
         h += '<div class="vip-card p-5 mb-4 text-center"><div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl mb-3"><i class="fas fa-lock"></i></div>' +
-            '<div class="font-extrabold text-slate-800 mb-1">Deposit ৳' + apiThr + ' to unlock the API</div>' +
-            '<p class="zp-sub leading-relaxed">Just <b>৳' + left + '</b> more to deposit and the API unlocks. Only real deposits count — bonuses, promo credits and any other money in your balance don’t count.</p>' +
-            '<button onclick="showSec(\'addmoney\')" class="zp-btn w-full text-sm mt-3"><i class="fas fa-wallet mr-1.5"></i>Add money to wallet</button></div>';
+            '<div class="font-extrabold text-slate-800 mb-1">API আনলক করতে ৳' + apiThr + ' ডিপোজিট করুন</div>' +
+            '<p class="zp-sub leading-relaxed">আর মাত্র <b>৳' + left + '</b> ডিপোজিট করলেই API আনলক হবে। শুধু আসল ডিপোজিট গণ্য হবে — বোনাস, প্রোমো বা ব্যালেন্সে থাকা অন্য টাকা গণ্য হবে না।</p>' +
+            '<button onclick="showSec(\'addmoney\')" class="zp-btn w-full text-sm mt-3"><i class="fas fa-wallet mr-1.5"></i>ওয়ালেটে টাকা অ্যাড করুন</button></div>';
     } else if (!d.enabled) {
-        h += '<div class="vip-card p-4 mb-4 text-center zp-sub"><i class="fas fa-circle-pause text-amber-500 mr-1"></i>The API system is paused for the moment.</div>';
+        h += '<div class="vip-card p-4 mb-4 text-center zp-sub"><i class="fas fa-circle-pause text-amber-500 mr-1"></i>API সিস্টেম সাময়িকভাবে বন্ধ আছে।</div>';
     } else if (d.canCreate || (apiOk && !keys.length)) {
-        h += '<div class="vip-card p-4 mb-4"><div class="text-xs font-bold text-slate-600 mb-1.5">Your Telegram username</div>' +
+        h += '<div class="vip-card p-4 mb-4"><div class="text-xs font-bold text-slate-600 mb-1.5">আপনার টেলিগ্রাম ইউজারনেম</div>' +
             '<div class="flex gap-2"><input id="api-name" class="zp-input text-sm py-2.5" placeholder="@yourusername" maxlength="33" autocapitalize="off" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z0-9_@]/g,\'\')">' +
             '<button id="api-create-btn" onclick="apiCreate()" class="zp-btn px-4 text-sm whitespace-nowrap"><i class="fas fa-plus mr-1"></i>Create key</button></div>' +
-            '<p class="zp-sub mt-2">Each user can create one API key. If you delete it, you can create a new one anytime.</p></div>';
+            '<p class="zp-sub mt-2">একজন ইউজার একটি API key বানাতে পারবেন। ডিলিট করলে আবার নতুন বানানো যাবে।</p></div>';
     } else if (keys.length) {
-        h += '<div class="zp-sub text-center mb-3">You already have an API key. To create a new one, please delete the old one first.</div>';
+        h += '<div class="zp-sub text-center mb-3">আপনার API key আছে। নতুন বানাতে আগে পুরনোটি ডিলিট করুন।</div>';
     }
     if (keys.length) {
         h += '<div class="text-sm font-extrabold text-slate-900 mb-2 mt-1">Your keys</div>';
@@ -1594,7 +1628,7 @@ function apiRender(d) {
             const st = k.adminDisabled ? apiPill('Disabled by admin', '#fee2e2', '#b91c1c') : k.status === 'active' ? apiPill('Active', '#dcfce7', '#15803d') : apiPill('Revoked', '#fef3c7', '#a16207');
             const sp = k.source === 'admin' ? ' ' + apiPill('Special', '#e0e7ff', '#4338ca') : '';
             h += '<div class="vip-card p-4 mb-3"><div class="flex items-center justify-between gap-2 mb-2.5"><b class="text-slate-800 text-sm truncate">' + (k.label ? '@' + esc(k.label) : 'API key') + '</b><span class="flex-shrink-0">' + st + sp + '</span></div>' +
-                '<div class="api-keybox"><span>' + esc(k.key) + '</span><button type="button" onclick="apiCopy(\'' + esc(k.key) + '\',\'API key copied\')" aria-label="Copy key"><i class="fa-regular fa-copy"></i></button></div>' +
+                '<div class="api-keybox"><span>' + esc(k.key) + '</span><button type="button" onclick="apiCopy(\'' + esc(k.key) + '\',\'API key কপি হয়েছে\')" aria-label="Copy key"><i class="fa-regular fa-copy"></i></button></div>' +
                 '<div class="zp-sub mt-2.5">Created ' + apiDay(k.createdAt) + ' · ' + k.requests + ' requests · last used ' + apiAgo(k.lastUsedAt) + ' · ৳' + esc(k.price) + '/like · ' + esc(k.rateLimit) + ' req/min' + (k.dailyLimit ? ' · ' + esc(k.dailyLimit) + ' likes/day' : '') + (k.expiresAt ? ' · expires ' + apiDay(k.expiresAt) : '') + '</div>' +
                 '<div class="flex gap-2 mt-3"><button class="api-act" onclick="apiCopyUrl(\'' + esc(k.key) + '\')"><i class="fa-regular fa-copy"></i>Copy URL</button>' +
                 (k.status === 'active' ? '<button class="api-act" style="color:#b45309" onclick="apiAct(\'' + esc(k.key) + '\',\'revoke\')"><i class="fa-solid fa-ban"></i>Revoke</button>'
@@ -1603,19 +1637,19 @@ function apiRender(d) {
         });
     }
     h += '<div class="text-sm font-extrabold text-slate-900 mb-2 mt-4">Recent API activity</div><div class="vip-card overflow-hidden mb-4">';
-    if (!(d.logs || []).length) h += '<div class="zp-sub text-center py-6">No API requests yet.</div>';
+    if (!(d.logs || []).length) h += '<div class="zp-sub text-center py-6">এখনো কোনো API রিকোয়েস্ট নেই।</div>';
     else {
         h += '<div style="overflow-x:auto"><table class="w-full" style="font-size:11px;min-width:300px"><thead><tr style="background:#f8fafc;color:#64748b;font-weight:800;text-align:left"><th class="p-2.5">TIME</th><th class="p-2.5">UID</th><th class="p-2.5">LIKES</th><th class="p-2.5">RESULT</th></tr></thead><tbody>';
         d.logs.forEach(l => { h += '<tr style="border-top:1px solid #f1f5f9"><td class="p-2.5 text-slate-600">' + apiFmtTime(l.createdAt) + '</td><td class="p-2.5 font-mono text-slate-700">' + esc(l.uid) + '</td><td class="p-2.5 text-slate-700">' + (l.kind === 'info' ? '—' : (l.likes ? l.likes : '0')) + '</td><td class="p-2.5">' + apiResultPill(l.result, l.kind) + '</td></tr>'; });
         h += '</tbody></table></div>';
     }
     h += '</div>';
-    h += '<div class="vip-card p-4"><div class="text-sm font-extrabold text-slate-900 mb-1"><i class="fa-solid fa-book text-indigo-600 mr-1.5"></i>How to use</div>' +
-        '<p class="zp-sub leading-relaxed mb-3">Endpoint: <b>GET/POST /api/v1/external/like</b> — Parameters: <b>apikey</b>, <b>uid</b>, <b>region</b> (default BD), optional <b>request_id</b>. You’re charged only when likes are delivered successfully: ৳' + esc(d.price) + ' per like. <b>already</b> or <b>failed</b> means no charge.</p>' +
+    h += '<div class="vip-card p-4"><div class="text-sm font-extrabold text-slate-900 mb-1"><i class="fa-solid fa-book text-indigo-600 mr-1.5"></i>কীভাবে ব্যবহার করবেন</div>' +
+        '<p class="zp-sub leading-relaxed mb-3">Endpoint: <b>GET/POST /api/v1/external/like</b> — প্যারামিটার: <b>apikey</b>, <b>uid</b>, <b>region</b> (ডিফল্ট BD), optional <b>request_id</b>। লাইক সফলভাবে গেলেই শুধু ৳' + esc(d.price) + ' কাটা হয়। <b>already</b> বা <b>failed</b> হলে কোনো টাকা কাটা হয় না।</p>' +
         '<div id="api-doc-tabs" class="flex gap-1.5 mb-2.5">' + ['cURL', 'Python', 'Telegram Bot'].map((t, i) => '<button class="api-tab' + (i === apiDocIdx ? ' on' : '') + '" onclick="apiDocTab(' + i + ')">' + t + '</button>').join('') +
         '<button class="api-tab" style="margin-left:auto" onclick="apiDocCopy()"><i class="fa-regular fa-copy"></i></button></div><pre id="api-doc-code" class="api-code"></pre>' +
         '<div class="text-xs font-bold text-slate-700 mt-3 mb-1">Response (success)</div><pre class="api-code">{\n  "ok": true,\n  "status": "success",\n  "uid": "1234567890",\n  "region": "BD",\n  "player_name": "PlayerName",\n  "likes_given": 220,\n  "before_likes": 1000,\n  "after_likes": 1220,\n  "price_charged": ' + esc(d.price) + ',\n  "remaining_balance": ' + esc(Math.max(0, (d.balance || 0))) + '\n}</pre>' +
-        '<p class="zp-sub leading-relaxed mt-3"><b>status:</b> success · already · failed. <b>Error codes:</b> 401 invalid_api_key · 402 insufficient_balance · 403 key_disabled / deposit_required · 429 rate_limited. Free player info: <b>/api/v1/external/user-info</b>, balance: <b>/api/v1/external/balance</b>.</p></div>';
+        '<p class="zp-sub leading-relaxed mt-3"><b>status:</b> success · already · failed। <b>Error codes:</b> 401 invalid_api_key · 402 insufficient_balance · 403 key_disabled / reseller_only · 429 rate_limited। ফ্রি প্লেয়ার ইনফো: <b>/api/v1/external/user-info</b>, ব্যালেন্স: <b>/api/v1/external/balance</b>।</p></div>';
     return h;
 }
 async function apiOpen(silent) {
@@ -1626,29 +1660,29 @@ async function apiOpen(silent) {
         apiInfo = await api('/apiKeyManage', { action: 'info' });
         box.innerHTML = apiRender(apiInfo); apiDocTab(apiDocIdx);
     } catch (e) {
-        box.innerHTML = '<div class="vip-card p-5 text-center"><div class="text-rose-600 font-bold text-sm mb-2">' + esc(e.message) + '</div><button class="zp-btn text-sm px-5" onclick="apiOpen()">Try again</button></div>';
+        box.innerHTML = '<div class="vip-card p-5 text-center"><div class="text-rose-600 font-bold text-sm mb-2">' + esc(e.message) + '</div><button class="zp-btn text-sm px-5" onclick="apiOpen()">আবার চেষ্টা করুন</button></div>';
     }
 }
 async function apiCreate() {
     if (apiBusy) return;
     const name = (document.getElementById('api-name').value || '').trim().replace(/^@/, '');
-    if (!/^[A-Za-z0-9_]{3,32}$/.test(name)) { Swal.fire('Enter a username', 'Please enter your Telegram username (3–32 characters: English letters, numbers and _)', 'warning'); return; }
+    if (!/^[A-Za-z0-9_]{3,32}$/.test(name)) { Swal.fire('ইউজারনেম লিখুন', 'আপনার টেলিগ্রাম ইউজারনেম দিন (৩-৩২ অক্ষর: ইংরেজি অক্ষর, সংখ্যা ও _)', 'warning'); return; }
     apiBusy = true; const b = document.getElementById('api-create-btn'); if (b) b.disabled = true;
-    try { await api('/apiKeyManage', { action: 'create', name }); apiToast('success', 'API key created'); }
-    catch (e) { Swal.fire('Oops', e.message, 'error'); }
+    try { await api('/apiKeyManage', { action: 'create', name }); apiToast('success', 'API key তৈরি হয়েছে'); }
+    catch (e) { Swal.fire('ত্রুটি', e.message, 'error'); }
     finally { apiBusy = false; await apiOpen(true); }
 }
 async function apiAct(key, action) {
     if (apiBusy) return;
     if (action !== 'restore') {
-        const t = action === 'delete' ? { title: 'Delete this API key?', text: 'This key will stop working once deleted. You can create a new key later.', btn: 'Delete', col: '#dc2626' }
-                                       : { title: 'Revoke this API key?', text: 'The key will be turned off. You can restore it later if you like.', btn: 'Revoke', col: '#d97706' };
-        const r = await Swal.fire({ icon: 'warning', title: t.title, text: t.text, showCancelButton: true, confirmButtonText: t.btn, cancelButtonText: 'No', confirmButtonColor: t.col, reverseButtons: true });
+        const t = action === 'delete' ? { title: 'API key ডিলিট করবেন?', text: 'ডিলিট করলে এই key দিয়ে আর কাজ হবে না। পরে নতুন key বানাতে পারবেন।', btn: 'ডিলিট করুন', col: '#dc2626' }
+                                       : { title: 'API key Revoke করবেন?', text: 'Revoke করলে key বন্ধ হয়ে যাবে। চাইলে পরে Restore করতে পারবেন।', btn: 'Revoke করুন', col: '#d97706' };
+        const r = await Swal.fire({ icon: 'warning', title: t.title, text: t.text, showCancelButton: true, confirmButtonText: t.btn, cancelButtonText: 'না', confirmButtonColor: t.col, reverseButtons: true });
         if (!r.isConfirmed) return;
     }
     apiBusy = true;
-    try { await api('/apiKeyManage', { action, key }); apiToast('success', action === 'delete' ? 'Deleted' : action === 'revoke' ? 'Revoked' : 'Restored'); }
-    catch (e) { Swal.fire('Oops', e.message, 'error'); }
+    try { await api('/apiKeyManage', { action, key }); apiToast('success', action === 'delete' ? 'ডিলিট হয়েছে' : action === 'revoke' ? 'Revoke হয়েছে' : 'Restore হয়েছে'); }
+    catch (e) { Swal.fire('ত্রুটি', e.message, 'error'); }
     finally { apiBusy = false; await apiOpen(true); }
 }
 </script>
