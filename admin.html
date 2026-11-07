@@ -187,6 +187,7 @@
             <a href="#" onclick="switchView('banners')" id="nav-banners" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-image w-8 text-center"></i> Banners
             </a>
+            <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
             <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
             <a href="#" onclick="switchView('promos')" id="nav-promos" class="nav-link flex items-center px-4 py-3"><i class="fas fa-ticket-alt w-8 text-center"></i> Promo Codes</a>
             <a href="#" onclick="openPayments();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-receipt w-8 text-center"></i> Payments Log</a>
@@ -592,6 +593,56 @@
                 </div>
             </div>
 
+            <div id="view-apikeys" class="view-section hidden">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="ak-stats"></div>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
+                    <div class="card">
+                        <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border"><i class="fas fa-sliders-h mr-2"></i>API System Settings</h3>
+                        <div class="space-y-5">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ak-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">API system চালু (বন্ধ করলে সব key কাজ করা বন্ধ করবে)</span></label>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Global API like price (৳) — খালি রাখলে রিসেলার/ডেইলি লাইক প্রাইস ব্যবহার হবে</label><input type="number" min="0" id="ak-gprice" class="flat-input" placeholder="যেমন: 5"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Default rate limit (requests / minute) — খালি রাখলে 30</label><input type="number" min="1" id="ak-grate" class="flat-input" placeholder="যেমন: 30"></div>
+                            <p class="text-xs text-gray-500 leading-relaxed">দাম কাটার নিয়ম: key এর Custom price → Global API price → রিসেলার প্রাইস। লাইক সফলভাবে গেলেই শুধু টাকা কাটে; already/failed হলে কাটা হয় না। শুধু Reseller/Admin রোলের ইউজার API ব্যবহার করতে পারে।</p>
+                        </div>
+                        <button onclick="akSaveSettings()" class="flat-btn mt-6 w-full">Save API Settings</button>
+                    </div>
+                    <div class="card" style="border:1px solid #F49E0B">
+                        <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border"><i class="fas fa-magic mr-2"></i>Generate API Keys</h3>
+                        <div class="space-y-5">
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Holder — Support PIN / Email / UID (খালি রাখলে কারো নামে নয়, স্টকে থাকবে)</label><input type="text" id="ak-ident" class="flat-input" placeholder="যেমন: A1B2C3 অথবা user@gmail.com"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm text-gray-400 mb-2 font-medium">Label / Name</label><input type="text" id="ak-label" class="flat-input" maxlength="40" placeholder="যেমন: VIP Bot"></div>
+                                <div><label class="block text-sm text-gray-400 mb-2 font-medium">Quantity (1-50)</label><input type="number" id="ak-count" min="1" max="50" value="1" class="flat-input"></div>
+                                <div><label class="block text-sm text-gray-400 mb-2 font-medium">Custom price / like (৳)</label><input type="number" id="ak-price" min="0" class="flat-input" placeholder="খালি = ডিফল্ট"></div>
+                                <div><label class="block text-sm text-gray-400 mb-2 font-medium">Rate limit / min</label><input type="number" id="ak-rate" min="1" class="flat-input" placeholder="খালি = ডিফল্ট"></div>
+                            </div>
+                            <p class="text-xs text-gray-500 leading-relaxed">একই ইউজারের নামে একসাথে অনেকগুলো স্পেশাল key বানানো যায় (প্রতিটার আলাদা দাম/লিমিট সেট করা যায়)। Holder ছাড়া বানালে পরে "Assign" দিয়ে কাউকে দেওয়া যাবে।</p>
+                        </div>
+                        <button id="ak-gen-btn" onclick="akGenerate()" class="flat-btn mt-6 w-full"><i class="fas fa-key mr-2"></i>Generate</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:items-center gap-3 mb-3">
+                    <h3 class="text-xl font-bold text-orange-500 flex-1">All API Keys</h3>
+                    <input type="text" id="ak-search" oninput="akRender()" placeholder="Search key / name / email / PIN" class="flat-input md:w-80">
+                    <button onclick="akLoad()" class="flat-btn flat-btn-outline whitespace-nowrap"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+                </div>
+                <div class="flat-table-container mb-8">
+                    <table class="flat-table" style="min-width:1100px">
+                        <thead><tr><th>Key</th><th>Holder</th><th>Label</th><th>Price</th><th>Limit</th><th>Status</th><th>Usage</th><th>Last used</th><th class="text-center">Actions</th></tr></thead>
+                        <tbody id="ak-list"><tr><td colspan="9" class="text-center text-gray-400 py-6">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-xl font-bold text-orange-500 mb-3">Recent API activity (latest 100)</h3>
+                <div class="flat-table-container">
+                    <table class="flat-table" style="min-width:760px">
+                        <thead><tr><th>Time</th><th>Holder / Label</th><th>Player UID</th><th>Region</th><th>Result</th><th>Likes</th><th>Charged</th></tr></thead>
+                        <tbody id="ak-logs"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -692,7 +743,8 @@
                 tutorials: "Video Tutorials",
                 banners: "Slider Banners",
                 notices: "Broadcast Notifications",
-                promos: "Promo Codes"
+                promos: "Promo Codes",
+                apikeys: "API Key Management"
             };
             
             const pageTitleEl = document.getElementById('page-title');
@@ -1535,6 +1587,128 @@
             r.readAsDataURL(file);
         });
     })();
+</script>
+<script>
+// ===== API KEY MANAGEMENT (admin) =====
+const MHX_API_BACKEND = "https://9on3qmsyno.apps.bot-hosting.cloud";
+let akData = { keys: [], logs: [], settings: {}, stats: {} };
+const akEsc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const akTime = iso => { const d = new Date(iso); return (!iso || isNaN(d)) ? '—' : d.toLocaleString(); };
+const akBadge = (t, bg, fg) => '<span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background:' + bg + ';color:' + fg + '">' + akEsc(t) + '</span>';
+async function akCall(action, body) {
+    const user = auth.currentUser; if (!user) throw new Error('Login required');
+    const tk = await user.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 45000);
+    try {
+        const r = await fetch(MHX_API_BACKEND + '/adminApiKeys', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(Object.assign({ action }, body || {})) });
+        let j = {}; try { j = await r.json(); } catch (e) {}
+        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+        return j;
+    } catch (e) {
+        if (e.name === 'AbortError') throw new Error('Server timeout, try again');
+        if (/Failed to fetch|NetworkError|Load failed/i.test(e.message)) throw new Error('Cannot reach the backend server');
+        throw e;
+    } finally { clearTimeout(t); }
+}
+function akCopy(text, msg) {
+    const done = () => Swal.fire({ toast: true, position: 'top', icon: 'success', title: msg || 'Copied', showConfirmButton: false, timer: 1200 });
+    const fb = () => { const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { Swal.fire('Error', 'Copy failed', 'error'); } ta.remove(); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(fb); else fb();
+}
+async function akLoad() {
+    try {
+        akData = await akCall('list');
+        const s = akData.settings || {};
+        document.getElementById('ak-enabled').checked = s.apiEnabled !== false;
+        document.getElementById('ak-gprice').value = (s.apiLikePrice == null || s.apiLikePrice === '') ? '' : s.apiLikePrice;
+        document.getElementById('ak-grate').value = (s.apiRateLimit == null || s.apiRateLimit === '') ? '' : s.apiRateLimit;
+        akRender();
+    } catch (e) {
+        document.getElementById('ak-list').innerHTML = '<tr><td colspan="9" class="text-center py-6" style="color:#f87171">' + akEsc(e.message) + '</td></tr>';
+    }
+}
+function akRender() {
+    const st = akData.stats || {};
+    const card = (l, v, c) => '<div class="card text-center"><div class="text-xs text-gray-400 mb-1">' + l + '</div><div class="text-2xl font-extrabold" style="color:' + c + '">' + v + '</div></div>';
+    document.getElementById('ak-stats').innerHTML = card('Total keys', st.keys || 0, '#F49E0B') + card('Active keys', st.active || 0, '#34d399') + card('Total requests', st.requests || 0, '#60a5fa') + card('Total charged', '৳' + (st.spent || 0), '#f472b6');
+    const q = (document.getElementById('ak-search').value || '').toLowerCase().trim();
+    const rows = (akData.keys || []).filter(k => !q || [k.key, k.label, k.holder && k.holder.name, k.holder && k.holder.email, k.holder && k.holder.pin].some(x => String(x || '').toLowerCase().includes(q)));
+    document.getElementById('ak-list').innerHTML = rows.length ? rows.map(k => {
+        const h = k.holder;
+        const holder = h ? '<b class="text-white">' + akEsc(h.name || 'N/A') + '</b> ' + (h.role === 'admin' ? akBadge('Admin', '#e11d48', '#fff') : h.role === 'reseller' ? akBadge('Reseller', '#f59e0b', '#000') : akBadge(h.role === '?' ? 'missing' : 'User', '#475569', '#fff')) + (h.banned ? ' ' + akBadge('BANNED', '#7f1d1d', '#fff') : '') +
+            '<br><span class="text-xs text-gray-400">' + akEsc(h.email) + '<br>PIN: ' + akEsc(h.pin) + ' • ৳' + akEsc(h.balance) + '</span>' : '<span class="text-gray-500">— unassigned —</span>';
+        const status = !h ? akBadge('Unassigned', '#475569', '#fff') : k.adminDisabled ? akBadge('Disabled', '#7f1d1d', '#fff') : k.status === 'active' ? akBadge('Active', '#065f46', '#6ee7b7') : akBadge('Revoked', '#78350f', '#fcd34d');
+        const price = k.customPrice != null && k.customPrice !== '' ? '৳' + akEsc(k.customPrice) + ' <span class="text-xs text-orange-400">(custom)</span>' : (h ? '৳' + akEsc(k.price) : '<span class="text-gray-500">default</span>');
+        const kk = akEsc(k.key), btn = (ic, t, fn, cls) => '<button title="' + t + '" onclick="' + fn + '" class="flat-btn ' + (cls || 'flat-btn-outline') + ' text-xs py-2 px-2.5"><i class="fas ' + ic + '"></i></button>';
+        return '<tr><td><span class="font-mono text-xs break-all">' + kk + '</span> <button title="Copy" onclick="akCopy(\'' + kk + '\',\'Key copied\')" class="text-orange-400 ml-1"><i class="far fa-copy"></i></button><br><span class="text-xs text-gray-500">' + akTime(k.createdAt) + ' • ' + (k.source === 'admin' ? 'admin-made' : 'user-made') + '</span></td>' +
+            '<td>' + holder + '</td><td>' + akEsc(k.label || '—') + '</td><td>' + price + '</td><td>' + akEsc(k.rateLimit) + '/min</td><td>' + status + '</td>' +
+            '<td class="text-xs">' + akEsc(k.requests) + ' req<br>' + akEsc(k.likesGiven) + ' likes<br>৳' + akEsc(k.spent) + '</td><td class="text-xs text-gray-400">' + akTime(k.lastUsedAt) + '</td>' +
+            '<td><div class="flex flex-wrap gap-1.5 justify-center">' + btn('fa-pen', 'Edit price / limit / label', "akEdit('" + kk + "')") + (k.adminDisabled ? btn('fa-check', 'Enable', "akToggle('" + kk + "',false)") : btn('fa-ban', 'Disable', "akToggle('" + kk + "',true)")) +
+            (k.source === 'user' ? '' : btn('fa-user-plus', 'Assign to a user', "akAssign('" + kk + "')")) + btn('fa-sync-alt', 'Regenerate key', "akRegen('" + kk + "')") + btn('fa-trash', 'Delete', "akDelete('" + kk + "')", 'flat-btn-danger') + '</div></td></tr>';
+    }).join('') : '<tr><td colspan="9" class="text-center text-gray-400 py-6">No API keys found.</td></tr>';
+    const names = {}; (akData.keys || []).forEach(k => { if (k.holder && k.holder.userId) names[k.holder.userId] = k.holder.name || k.holder.email; });
+    const res = r => r === 'success' ? akBadge('Success', '#065f46', '#6ee7b7') : r === 'already' ? akBadge('Already', '#78350f', '#fcd34d') : r === 'failed' ? akBadge('Failed', '#7f1d1d', '#fca5a5') : akBadge(r || '—', '#1e3a8a', '#93c5fd');
+    document.getElementById('ak-logs').innerHTML = (akData.logs || []).length ? akData.logs.map(l => '<tr><td class="text-xs text-gray-400">' + akTime(l.createdAt) + '</td><td>' + akEsc(names[l.userId] || (l.userId || '').slice(0, 6)) + '<br><span class="text-xs text-gray-500">' + akEsc(l.label || '—') + '</span></td><td class="font-mono text-xs">' + akEsc(l.uid) + '</td><td>' + akEsc(l.region) + '</td><td>' + (l.kind === 'info' ? akBadge('Lookup', '#1e3a8a', '#93c5fd') : res(l.result)) + '</td><td>' + (l.kind === 'info' ? '—' : akEsc(l.likes)) + '</td><td>' + (l.price ? '৳' + akEsc(l.price) : '—') + '</td></tr>').join('') : '<tr><td colspan="7" class="text-center text-gray-400 py-6">No API activity yet.</td></tr>';
+}
+async function akSaveSettings() {
+    const en = document.getElementById('ak-enabled').checked, pr = document.getElementById('ak-gprice').value.trim(), rl = document.getElementById('ak-grate').value.trim();
+    if ((pr !== '' && !(+pr >= 0)) || (rl !== '' && !(+rl >= 1))) { Swal.fire('Error', 'Price ও rate limit এ সঠিক সংখ্যা দিন', 'error'); return; }
+    const FVd = firebase.firestore.FieldValue;
+    try {
+        showLoading();
+        await db.collection('settings').doc('general').set({ apiEnabled: en, apiLikePrice: pr === '' ? FVd.delete() : Math.round(+pr), apiRateLimit: rl === '' ? FVd.delete() : Math.round(+rl) }, { merge: true });
+        hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false }); akLoad();
+    } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+async function akGenerate() {
+    const num = id => document.getElementById(id).value.trim();
+    const count = parseInt(num('ak-count')) || 1;
+    if (count < 1 || count > 50) { Swal.fire('Error', 'Quantity 1 থেকে 50 এর মধ্যে দিন', 'error'); return; }
+    const btn = document.getElementById('ak-gen-btn'); btn.disabled = true;
+    try {
+        showLoading();
+        const r = await akCall('generate', { ident: num('ak-ident'), label: num('ak-label'), count, customPrice: num('ak-price'), rateLimit: num('ak-rate') });
+        hideLoading();
+        const who = r.holder ? 'Assigned to <b>' + akEsc(r.holder.name || r.holder.email) + '</b> (PIN ' + akEsc(r.holder.pin) + ')' : 'Unassigned (stock) keys';
+        const x = await Swal.fire({ title: r.keys.length + ' key(s) generated', width: 560, showCancelButton: true, confirmButtonText: 'Copy all', cancelButtonText: 'Close',
+            html: '<div style="text-align:left;font-size:13px">' + who + '<textarea readonly rows="8" class="swal2-textarea" style="width:100%;margin:10px 0 0;font-family:monospace;font-size:12px">' + akEsc(r.keys.join('\n')) + '</textarea></div>' });
+        if (x.isConfirmed) akCopy(r.keys.join('\n'), 'All keys copied');
+        akLoad();
+    } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+    finally { btn.disabled = false; }
+}
+async function akEdit(key) {
+    const k = (akData.keys || []).find(x => x.key === key); if (!k) return;
+    const f = (i, l, v, ph) => '<label style="font-size:12px">' + l + '</label><input id="' + i + '" class="swal2-input" style="margin:4px 0 12px;width:100%" value="' + akEsc(v == null ? '' : v) + '" placeholder="' + (ph || '') + '">';
+    const r = await Swal.fire({ title: 'Edit API key', showCancelButton: true, confirmButtonText: 'Save',
+        html: '<div style="text-align:left;font-size:13px"><p class="font-mono" style="font-size:11px;word-break:break-all;margin-bottom:10px">' + akEsc(key) + '</p>' + f('e-label', 'Label / Name', k.label, '') + f('e-price', 'Custom price per delivered like (৳) — খালি = ডিফল্ট', k.customPrice, 'default') + f('e-rate', 'Rate limit (requests / minute) — খালি = ডিফল্ট', k.rateLimit, 'default') + '</div>',
+        preConfirm: () => ({ label: document.getElementById('e-label').value.trim(), customPrice: document.getElementById('e-price').value.trim(), rateLimit: document.getElementById('e-rate').value.trim() }) });
+    if (!r.isConfirmed) return;
+    try { showLoading(); await akCall('update', Object.assign({ key }, r.value)); hideLoading(); Swal.fire({ icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false }); akLoad(); }
+    catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+async function akToggle(key, disable) {
+    const r = await Swal.fire({ icon: 'question', title: disable ? 'এই key বন্ধ করবেন?' : 'এই key চালু করবেন?', text: disable ? 'বন্ধ করলে ইউজার নিজে আর Restore/Delete করতে পারবে না।' : '', showCancelButton: true, confirmButtonText: disable ? 'Disable' : 'Enable' });
+    if (!r.isConfirmed) return;
+    try { showLoading(); await akCall('update', { key, adminDisabled: disable }); hideLoading(); akLoad(); } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+async function akAssign(key) {
+    const r = await Swal.fire({ title: 'Assign key', input: 'text', inputPlaceholder: 'Support PIN / Email / UID (খালি = unassign)', showCancelButton: true, confirmButtonText: 'Assign' });
+    if (!r.isConfirmed) return;
+    try { showLoading(); const j = await akCall('assign', { key, ident: r.value || '' }); hideLoading(); Swal.fire({ icon: 'success', title: j.holder ? 'Assigned to ' + (j.holder.name || j.holder.email) : 'Unassigned', timer: 1400, showConfirmButton: false }); akLoad(); }
+    catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+async function akRegen(key) {
+    const r = await Swal.fire({ icon: 'warning', title: 'Key regenerate করবেন?', text: 'পুরনো key সাথে সাথে বন্ধ হয়ে যাবে, ইউজারকে নতুন key দিতে হবে।', showCancelButton: true, confirmButtonText: 'Regenerate', confirmButtonColor: '#d97706' });
+    if (!r.isConfirmed) return;
+    try { showLoading(); const j = await akCall('regenerate', { key }); hideLoading(); const x = await Swal.fire({ title: 'New key', html: '<p class="font-mono" style="font-size:13px;word-break:break-all">' + akEsc(j.key) + '</p>', showCancelButton: true, confirmButtonText: 'Copy', cancelButtonText: 'Close' }); if (x.isConfirmed) akCopy(j.key, 'Key copied'); akLoad(); }
+    catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+async function akDelete(key) {
+    const r = await Swal.fire({ icon: 'warning', title: 'Key ডিলিট করবেন?', text: 'এটি স্থায়ীভাবে মুছে যাবে।', showCancelButton: true, confirmButtonText: 'Delete', confirmButtonColor: '#DC2626' });
+    if (!r.isConfirmed) return;
+    try { showLoading(); await akCall('delete', { key }); hideLoading(); akLoad(); } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+(function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'apikeys') akLoad(); return r; }; })();
 </script>
 </body>
 </html>

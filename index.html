@@ -95,6 +95,24 @@
         @keyframes tgpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
         @keyframes tgpRing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.55);opacity:0}}
         .copied{background:#dcfce7!important;color:#16a34a!important;border-color:#bbf7d0!important}
+        /* ===== profile icon menu + Get API ===== */
+        #profile-menu{position:fixed;z-index:9998;min-width:215px;background:#fff;border:1px solid #e0e7ff;border-radius:20px;box-shadow:0 18px 44px rgba(79,70,229,.22);padding:8px;animation:pmIn .18s ease both;transform-origin:top right}
+        @keyframes pmIn{from{opacity:0;transform:scale(.92) translateY(-6px)}to{opacity:1;transform:none}}
+        #profile-menu .pm-head{padding:8px 12px 10px;border-bottom:1px solid #eef2ff;margin-bottom:6px;display:flex;flex-direction:column;gap:2px}
+        #profile-menu .pm-head b{font-size:13px;color:#0f172a;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        #profile-menu .pm-head span{font-size:11px;color:#64748b;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .pm-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border-radius:14px;font-weight:700;font-size:14px;color:#334155;text-align:left;background:none;border:0;cursor:pointer}
+        .pm-item i{width:20px;text-align:center;color:#6366f1}
+        .pm-item:hover,.pm-item:active{background:#eef2ff;color:#4f46e5}
+        .api-keybox{background:#0f172a;color:#fff;border-radius:14px;padding:12px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;letter-spacing:.02em}
+        .api-keybox span{word-break:break-all;user-select:text;-webkit-user-select:text}
+        .api-keybox button{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;border:0;cursor:pointer}
+        .api-act{flex:1;padding:9px 6px;border-radius:12px;border:1px solid #e2e8f0;background:#fff;font-weight:700;font-size:12px;color:#334155;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+        .api-act:disabled{opacity:.45}
+        .api-pill{display:inline-block;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:800}
+        .api-tab{padding:7px 12px;border-radius:12px;font-size:12px;font-weight:800;background:#f1f5f9;color:#64748b;border:0;cursor:pointer}
+        .api-tab.on{background:#4f46e5;color:#fff}
+        .api-code{background:#0f172a;color:#e2e8f0;border-radius:14px;padding:12px;font-size:11.5px;line-height:1.55;overflow-x:auto;white-space:pre;font-family:ui-monospace,Menlo,Consolas,monospace;user-select:text;-webkit-user-select:text}
     </style>
 </head>
 <body class="select-none bg-[#f8fafc]">
@@ -113,7 +131,7 @@
                 <div class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-indigo-50/80 border border-indigo-100 text-indigo-600 font-extrabold text-sm shadow-sm">
                     <i class="fa-solid fa-wallet text-xs"></i>৳<span id="header-balance">0</span>
                 </div>
-                <button onclick="showSec('account')" class="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-bold flex items-center justify-center shadow-md" id="header-avatar">A</button>
+                <button onclick="toggleProfileMenu(event)" aria-label="Menu" class="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-bold flex items-center justify-center shadow-md" id="header-avatar">A</button>
             </div>
         </div>
         <div id="header-login-container">
@@ -446,6 +464,14 @@
                     <i class="fas fa-sign-out-alt"></i> লগ আউট করুন
                 </button>
             </div>
+        </section>
+
+        <!-- Get API (resellers) -->
+        <section id="api-sec" class="hidden animate-fade-in pb-24">
+            <button onclick="showSec('home')" class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1.5"><i class="fas fa-arrow-left"></i> ফিরে যান</button>
+            <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">Get <span class="text-indigo-600">API</span></h2>
+            <p class="zp-sub mb-4 mt-1">রিসেলারদের জন্য আপনার ব্যক্তিগত Like API key। নিজের ওয়েবসাইট বা টেলিগ্রাম বটে ব্যবহার করুন।</p>
+            <div id="api-body"><div class="text-center py-10"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i></div></div>
         </section>
     </main>
 
@@ -954,7 +980,7 @@
     }
 
     function showSec(secId) {
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'api') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -967,6 +993,7 @@
         if(secId === 'history') loadHistory();
         if(secId === 'account') loadReferral();
         if(secId === 'dailylike') dlOpen();
+        if(secId === 'api') apiOpen();
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
@@ -1407,6 +1434,219 @@ function copySupportPin(btn) {
     }
     if (document.readyState === 'complete') init(); else window.addEventListener('load', init);
 })();
+
+// ================= PROFILE ICON MENU =================
+// To add another button later, just add one more { icon, label, run } line to this list.
+const PROFILE_MENU = [
+    { icon: 'fa-solid fa-headset', label: 'Support', run: () => { const a = document.getElementById('fab-support'); window.open(a ? a.href : 'https://t.me/mhxffv111', '_blank', 'noopener'); } },
+    { icon: 'fa-solid fa-key', label: 'Get API', run: () => showSec('api') }
+];
+function closeProfileMenu() { const m = document.getElementById('profile-menu'); if (m) m.remove(); }
+function toggleProfileMenu(ev) {
+    if (ev) ev.stopPropagation();
+    if (document.getElementById('profile-menu')) { closeProfileMenu(); return; }
+    const r = document.getElementById('header-avatar').getBoundingClientRect();
+    const m = document.createElement('div'); m.id = 'profile-menu';
+    m.style.top = (r.bottom + 8) + 'px'; m.style.right = Math.max(12, window.innerWidth - r.right) + 'px';
+    m.innerHTML = '<div class="pm-head"><b>' + esc(userData.name || 'User') + '</b><span>' + esc(userData.email || '') + '</span></div>' +
+        PROFILE_MENU.map((it, i) => '<button type="button" class="pm-item" data-i="' + i + '"><i class="' + it.icon + '"></i><span>' + esc(it.label) + '</span></button>').join('');
+    m.addEventListener('click', e => { e.stopPropagation(); const b = e.target.closest('.pm-item'); if (!b) return; closeProfileMenu(); PROFILE_MENU[+b.dataset.i].run(); });
+    document.body.appendChild(m);
+}
+document.addEventListener('click', closeProfileMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProfileMenu(); });
+window.addEventListener('scroll', closeProfileMenu, { passive: true });
+
+// ================= GET API (reseller API keys) =================
+let apiInfo = null, apiBusy = false, apiDocIdx = 0;
+function copyText(t) {
+    return new Promise(res => {
+        const fb = () => {
+            const ta = document.createElement('textarea'); ta.value = t; ta.style.cssText = 'position:fixed;opacity:0;user-select:text;-webkit-user-select:text';
+            document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, 99999);
+            let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} ta.remove(); res(ok);
+        };
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(() => res(true)).catch(fb); else fb();
+    });
+}
+function apiToast(icon, title) { Swal.fire({ toast: true, position: 'top', icon, title, showConfirmButton: false, timer: 1600 }); }
+async function apiCopy(t, msg) { const ok = await copyText(t); ok ? apiToast('success', msg || 'কপি হয়েছে') : Swal.fire('ত্রুটি', 'কপি করা যায়নি', 'error'); }
+function apiCopyUrl(k) { apiCopy(BACKEND_URL + '/api/v1/external/like?apikey=' + k + '&uid=UID_HERE&region=BD', 'URL কপি হয়েছে'); }
+function apiFmtTime(iso) {
+    const d = new Date(iso); if (!iso || isNaN(d)) return '—';
+    return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\bam\b/, 'AM').replace(/\bpm\b/, 'PM');
+}
+function apiAgo(iso) {
+    const t = new Date(iso).getTime(); if (!iso || isNaN(t)) return 'never';
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    return s < 60 ? 'just now' : s < 3600 ? Math.floor(s / 60) + 'm ago' : s < 86400 ? Math.floor(s / 3600) + 'h ago' : Math.floor(s / 86400) + 'd ago';
+}
+function apiDay(iso) { const d = new Date(iso); return (!iso || isNaN(d)) ? '—' : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+function apiPill(txt, bg, fg) { return '<span class="api-pill" style="background:' + bg + ';color:' + fg + '">' + esc(txt) + '</span>'; }
+function apiResultPill(r, kind) {
+    if (kind === 'info') return apiPill('Lookup', '#e0e7ff', '#4338ca');
+    if (r === 'success') return apiPill('Success', '#dcfce7', '#15803d');
+    if (r === 'already') return apiPill('Already liked', '#fef3c7', '#a16207');
+    if (r === 'failed') return apiPill('Failed', '#fee2e2', '#b91c1c');
+    return apiPill(r || '—', '#f1f5f9', '#475569');
+}
+function apiDocs(key) {
+    const K = key || 'YOUR_API_KEY', B = BACKEND_URL;
+    return [
+        { t: 'cURL', c: `curl -G "${B}/api/v1/external/like" \\
+  --data-urlencode "apikey=${K}" \\
+  --data-urlencode "uid=1234567890" \\
+  --data-urlencode "region=BD"
+
+# key can also be sent as a header:
+# curl -H "X-API-KEY: ${K}" "${B}/api/v1/external/like?uid=1234567890&region=BD"
+
+# free player lookup:
+# curl "${B}/api/v1/external/user-info?apikey=${K}&uid=1234567890&region=BD"` },
+        { t: 'Python', c: `import requests
+
+API = "${B}/api/v1/external/like"
+KEY = "${K}"
+
+r = requests.get(API, params={
+    "apikey": KEY,
+    "uid": "1234567890",
+    "region": "BD",
+    # "request_id": "my-unique-id-123",  # optional: a retry with the same id is never charged twice
+}, timeout=100)
+
+data = r.json()
+if data.get("status") == "success":
+    print(data["player_name"], data["likes_given"], "likes sent")
+    print("Balance left:", data["remaining_balance"])
+else:
+    print(data.get("message_en") or data.get("message"))` },
+        { t: 'Telegram Bot', c: `# pip install python-telegram-bot requests
+import asyncio, requests
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+
+BOT_TOKEN = "YOUR_BOT_TOKEN"
+API_URL = "${B}/api/v1/external/like"
+API_KEY = "${K}"
+
+async def like(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Usage: /like UID [REGION]")
+        return
+    uid = context.args[0]
+    region = context.args[1].upper() if len(context.args) > 1 else "BD"
+    await update.message.reply_text("Sending likes...")
+    try:
+        r = await asyncio.to_thread(requests.get, API_URL, params={"apikey": API_KEY, "uid": uid, "region": region}, timeout=100)
+        d = r.json()
+    except Exception as e:
+        await update.message.reply_text(f"Error: {e}")
+        return
+    if d.get("status") == "success":
+        text = f"✅ {d['player_name']} got {d['likes_given']} likes ({d['before_likes']} → {d['after_likes']})\\nBalance: ৳{d['remaining_balance']}"
+    else:
+        text = f"❌ {d.get('message_en') or d.get('message')}"
+    await update.message.reply_text(text)
+
+app = ApplicationBuilder().token(BOT_TOKEN).build()
+app.add_handler(CommandHandler("like", like))
+app.run_polling()` }
+    ];
+}
+function apiDocTab(i) {
+    apiDocIdx = i;
+    const key = apiInfo && apiInfo.keys && apiInfo.keys[0] ? apiInfo.keys[0].key : '';
+    const docs = apiDocs(key), pre = document.getElementById('api-doc-code'); if (!pre) return;
+    pre.textContent = docs[i].c;
+    document.querySelectorAll('#api-doc-tabs .api-tab').forEach((b, n) => b.classList.toggle('on', n === i));
+}
+function apiDocCopy() { apiCopy(apiDocs(apiInfo && apiInfo.keys && apiInfo.keys[0] ? apiInfo.keys[0].key : '')[apiDocIdx].c, 'কোড কপি হয়েছে'); }
+
+function apiRender(d) {
+    const keys = d.keys || [], active = keys.filter(k => k.status === 'active' && !k.adminDisabled).length;
+    let h = '<div class="vip-card p-4 mb-4 space-y-2.5">' +
+        '<div class="flex justify-between text-sm"><span class="text-slate-600">Wallet balance</span><b class="text-indigo-600">৳' + esc(d.balance) + '</b></div>' +
+        '<div class="flex justify-between text-sm"><span class="text-slate-600">Active keys</span><b class="text-slate-800">' + active + ' / ' + keys.length + '</b></div>' +
+        '<div class="flex justify-between text-sm"><span class="text-slate-600">Price per delivered like</span><b class="text-rose-600">৳' + esc(d.price) + '</b></div></div>';
+    if (!d.eligible) {
+        const left = Math.max(0, (d.threshold || 500) - (d.totalDeposit || 0));
+        h += '<div class="vip-card p-5 mb-4 text-center"><div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl mb-3"><i class="fas fa-lock"></i></div>' +
+            '<div class="font-extrabold text-slate-800 mb-1">API শুধু রিসেলারদের জন্য</div>' +
+            '<p class="zp-sub leading-relaxed">আর মাত্র <b>৳' + left + '</b> ডিপোজিট করলেই আপনি রিসেলার হয়ে যাবেন এবং ফ্রিতে API key বানাতে পারবেন।</p>' +
+            '<button onclick="showSec(\'addmoney\')" class="zp-btn w-full text-sm mt-3"><i class="fas fa-wallet mr-1.5"></i>ওয়ালেটে টাকা অ্যাড করুন</button></div>';
+    } else if (!d.enabled) {
+        h += '<div class="vip-card p-4 mb-4 text-center zp-sub"><i class="fas fa-circle-pause text-amber-500 mr-1"></i>API সিস্টেম সাময়িকভাবে বন্ধ আছে।</div>';
+    } else if (d.canCreate) {
+        h += '<div class="vip-card p-4 mb-4"><div class="text-xs font-bold text-slate-600 mb-1.5">আপনার টেলিগ্রাম ইউজারনেম</div>' +
+            '<div class="flex gap-2"><input id="api-name" class="zp-input text-sm py-2.5" placeholder="@yourusername" maxlength="33" autocapitalize="off" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z0-9_@]/g,\'\')">' +
+            '<button id="api-create-btn" onclick="apiCreate()" class="zp-btn px-4 text-sm whitespace-nowrap"><i class="fas fa-plus mr-1"></i>Create key</button></div>' +
+            '<p class="zp-sub mt-2">একজন ইউজার একটি API key বানাতে পারবেন। ডিলিট করলে আবার নতুন বানানো যাবে।</p></div>';
+    } else if (keys.length) {
+        h += '<div class="zp-sub text-center mb-3">আপনার API key আছে। নতুন বানাতে আগে পুরনোটি ডিলিট করুন।</div>';
+    }
+    if (keys.length) {
+        h += '<div class="text-sm font-extrabold text-slate-900 mb-2 mt-1">Your keys</div>';
+        keys.forEach(k => {
+            const st = k.adminDisabled ? apiPill('Disabled by admin', '#fee2e2', '#b91c1c') : k.status === 'active' ? apiPill('Active', '#dcfce7', '#15803d') : apiPill('Revoked', '#fef3c7', '#a16207');
+            const sp = k.source === 'admin' ? ' ' + apiPill('Special', '#e0e7ff', '#4338ca') : '';
+            h += '<div class="vip-card p-4 mb-3"><div class="flex items-center justify-between gap-2 mb-2.5"><b class="text-slate-800 text-sm truncate">' + (k.label ? '@' + esc(k.label) : 'API key') + '</b><span class="flex-shrink-0">' + st + sp + '</span></div>' +
+                '<div class="api-keybox"><span>' + esc(k.key) + '</span><button type="button" onclick="apiCopy(\'' + esc(k.key) + '\',\'API key কপি হয়েছে\')" aria-label="Copy key"><i class="fa-regular fa-copy"></i></button></div>' +
+                '<div class="zp-sub mt-2.5">Created ' + apiDay(k.createdAt) + ' · ' + k.requests + ' requests · last used ' + apiAgo(k.lastUsedAt) + ' · ৳' + esc(k.price) + '/like · ' + esc(k.rateLimit) + ' req/min</div>' +
+                '<div class="flex gap-2 mt-3"><button class="api-act" onclick="apiCopyUrl(\'' + esc(k.key) + '\')"><i class="fa-regular fa-copy"></i>Copy URL</button>' +
+                (k.status === 'active' ? '<button class="api-act" style="color:#b45309" onclick="apiAct(\'' + esc(k.key) + '\',\'revoke\')"><i class="fa-solid fa-ban"></i>Revoke</button>'
+                    : '<button class="api-act" style="color:#15803d" ' + (k.adminDisabled ? 'disabled' : '') + ' onclick="apiAct(\'' + esc(k.key) + '\',\'restore\')"><i class="fa-solid fa-rotate-left"></i>Restore</button>') +
+                (k.source === 'user' && !k.adminDisabled ? '<button class="api-act" style="color:#dc2626" onclick="apiAct(\'' + esc(k.key) + '\',\'delete\')"><i class="fa-regular fa-trash-can"></i>Delete</button>' : '') + '</div></div>';
+        });
+    }
+    h += '<div class="text-sm font-extrabold text-slate-900 mb-2 mt-4">Recent API activity</div><div class="vip-card overflow-hidden mb-4">';
+    if (!(d.logs || []).length) h += '<div class="zp-sub text-center py-6">এখনো কোনো API রিকোয়েস্ট নেই।</div>';
+    else {
+        h += '<div style="overflow-x:auto"><table class="w-full" style="font-size:11px;min-width:300px"><thead><tr style="background:#f8fafc;color:#64748b;font-weight:800;text-align:left"><th class="p-2.5">TIME</th><th class="p-2.5">UID</th><th class="p-2.5">LIKES</th><th class="p-2.5">RESULT</th></tr></thead><tbody>';
+        d.logs.forEach(l => { h += '<tr style="border-top:1px solid #f1f5f9"><td class="p-2.5 text-slate-600">' + apiFmtTime(l.createdAt) + '</td><td class="p-2.5 font-mono text-slate-700">' + esc(l.uid) + '</td><td class="p-2.5 text-slate-700">' + (l.kind === 'info' ? '—' : (l.likes ? l.likes : '0')) + '</td><td class="p-2.5">' + apiResultPill(l.result, l.kind) + '</td></tr>'; });
+        h += '</tbody></table></div>';
+    }
+    h += '</div>';
+    h += '<div class="vip-card p-4"><div class="text-sm font-extrabold text-slate-900 mb-1"><i class="fa-solid fa-book text-indigo-600 mr-1.5"></i>কীভাবে ব্যবহার করবেন</div>' +
+        '<p class="zp-sub leading-relaxed mb-3">Endpoint: <b>GET/POST /api/v1/external/like</b> — প্যারামিটার: <b>apikey</b>, <b>uid</b>, <b>region</b> (ডিফল্ট BD), optional <b>request_id</b>। লাইক সফলভাবে গেলেই শুধু ৳' + esc(d.price) + ' কাটা হয়। <b>already</b> বা <b>failed</b> হলে কোনো টাকা কাটা হয় না।</p>' +
+        '<div id="api-doc-tabs" class="flex gap-1.5 mb-2.5">' + ['cURL', 'Python', 'Telegram Bot'].map((t, i) => '<button class="api-tab' + (i === apiDocIdx ? ' on' : '') + '" onclick="apiDocTab(' + i + ')">' + t + '</button>').join('') +
+        '<button class="api-tab" style="margin-left:auto" onclick="apiDocCopy()"><i class="fa-regular fa-copy"></i></button></div><pre id="api-doc-code" class="api-code"></pre>' +
+        '<div class="text-xs font-bold text-slate-700 mt-3 mb-1">Response (success)</div><pre class="api-code">{\n  "ok": true,\n  "status": "success",\n  "uid": "1234567890",\n  "region": "BD",\n  "player_name": "PlayerName",\n  "likes_given": 220,\n  "before_likes": 1000,\n  "after_likes": 1220,\n  "price_charged": ' + esc(d.price) + ',\n  "remaining_balance": ' + esc(Math.max(0, (d.balance || 0))) + '\n}</pre>' +
+        '<p class="zp-sub leading-relaxed mt-3"><b>status:</b> success · already · failed। <b>Error codes:</b> 401 invalid_api_key · 402 insufficient_balance · 403 key_disabled / reseller_only · 429 rate_limited। ফ্রি প্লেয়ার ইনফো: <b>/api/v1/external/user-info</b>, ব্যালেন্স: <b>/api/v1/external/balance</b>।</p></div>';
+    return h;
+}
+async function apiOpen(silent) {
+    const box = document.getElementById('api-body'); if (!box) return;
+    if (!silent && !apiInfo) box.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i></div>';
+    try {
+        apiInfo = await api('/apiKeyManage', { action: 'info' });
+        box.innerHTML = apiRender(apiInfo); apiDocTab(apiDocIdx);
+    } catch (e) {
+        box.innerHTML = '<div class="vip-card p-5 text-center"><div class="text-rose-600 font-bold text-sm mb-2">' + esc(e.message) + '</div><button class="zp-btn text-sm px-5" onclick="apiOpen()">আবার চেষ্টা করুন</button></div>';
+    }
+}
+async function apiCreate() {
+    if (apiBusy) return;
+    const name = (document.getElementById('api-name').value || '').trim().replace(/^@/, '');
+    if (!/^[A-Za-z0-9_]{3,32}$/.test(name)) { Swal.fire('ইউজারনেম লিখুন', 'আপনার টেলিগ্রাম ইউজারনেম দিন (৩-৩২ অক্ষর: ইংরেজি অক্ষর, সংখ্যা ও _)', 'warning'); return; }
+    apiBusy = true; const b = document.getElementById('api-create-btn'); if (b) b.disabled = true;
+    try { await api('/apiKeyManage', { action: 'create', name }); apiToast('success', 'API key তৈরি হয়েছে'); }
+    catch (e) { Swal.fire('ত্রুটি', e.message, 'error'); }
+    finally { apiBusy = false; await apiOpen(true); }
+}
+async function apiAct(key, action) {
+    if (apiBusy) return;
+    if (action !== 'restore') {
+        const t = action === 'delete' ? { title: 'API key ডিলিট করবেন?', text: 'ডিলিট করলে এই key দিয়ে আর কাজ হবে না। পরে নতুন key বানাতে পারবেন।', btn: 'ডিলিট করুন', col: '#dc2626' }
+                                       : { title: 'API key Revoke করবেন?', text: 'Revoke করলে key বন্ধ হয়ে যাবে। চাইলে পরে Restore করতে পারবেন।', btn: 'Revoke করুন', col: '#d97706' };
+        const r = await Swal.fire({ icon: 'warning', title: t.title, text: t.text, showCancelButton: true, confirmButtonText: t.btn, cancelButtonText: 'না', confirmButtonColor: t.col, reverseButtons: true });
+        if (!r.isConfirmed) return;
+    }
+    apiBusy = true;
+    try { await api('/apiKeyManage', { action, key }); apiToast('success', action === 'delete' ? 'ডিলিট হয়েছে' : action === 'revoke' ? 'Revoke হয়েছে' : 'Restore হয়েছে'); }
+    catch (e) { Swal.fire('ত্রুটি', e.message, 'error'); }
+    finally { apiBusy = false; await apiOpen(true); }
+}
 </script>
 </body>
 </html>
