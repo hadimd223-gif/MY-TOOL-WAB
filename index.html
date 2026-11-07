@@ -519,7 +519,11 @@
         loadGlobalSettings();
         
         const params = new URLSearchParams(window.location.search);
-        const payRef = params.get('payok');
+        const rawPay = params.get('payok') || '';
+        // some gateways glue their own params onto our return link (…?payok=REF?invoice_id=XYZ) – split them back out
+        const payRef = ((rawPay.match(/^[A-Za-z0-9]+/) || [''])[0]);
+        const payInvoice = params.get('invoice_id') || params.get('invoiceId') || params.get('payment_id') || params.get('transaction_id') || ((rawPay.match(/(?:invoice_id|invoiceId|payment_id|transaction_id)=([^&]+)/) || [])[1]) || '';
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
         if (payRef) {
             window.history.replaceState({}, document.title, window.location.pathname);
             Swal.fire({
@@ -528,25 +532,50 @@
                 allowOutsideClick: false,
                 didOpen: () => Swal.showLoading()
             });
+            let started = false;
             auth.onAuthStateChanged(async (user) => {
-                if (user) {
+                if (!user || started) return;
+                started = true;
+                let data = null, lastErr = '';
+                // the gateway can take a few seconds to mark the payment as paid → check up to 8 times
+                for (let i = 0; i < 8; i++) {
                     try {
                         const token = await user.getIdToken();
                         const res = await fetch(`${BACKEND_URL}/verifyPayment`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-                            body: JSON.stringify({ ref: payRef })
+                            body: JSON.stringify({ ref: payRef, invoiceId: payInvoice })
                         });
-                        const data = await res.json();
-                        if (data.ok) {
-                            Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and ৳${data.amount} has been added!` + (data.bonus?`<br><b>🎁 Bonus ৳${data.bonus}</b>`:'') + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
-                        } else {
-                            Swal.fire('Status', 'Your payment is still processing or pending.', 'info');
-                        }
-                    } catch (e) {
-                        Swal.fire('Notice', 'Payment verification status has been updated.', 'info');
-                    }
+                        data = await res.json().catch(() => ({}));
+                        if (data.ok) break;
+                        lastErr = data.error || '';
+                        if (!res.ok && res.status !== 502 && res.status !== 503) break;   // real error (not just "not paid yet")
+                    } catch (e) { lastErr = e.message; }
+                    await sleep(4000);
                 }
+                if (data && data.ok) {
+                    Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and ৳${data.amount} has been added!` + (data.bonus?`<br><b>🎁 Bonus ৳${data.bonus}</b>`:'') + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
+                } else if (lastErr) {
+                    Swal.fire('Payment problem', lastErr + ' — If money was deducted, please contact support with your payment time and amount.', 'error');
+                } else {
+                    Swal.fire('Still pending', 'We could not confirm your payment yet. If you already paid, your balance will be added automatically within a few minutes — just reopen the site.', 'info');
+                }
+            });
+        } else {
+            // user paid but closed the tab before coming back? re-check recent pending payments once after login
+            let synced = false;
+            auth.onAuthStateChanged(async (user) => {
+                if (!user || synced) return;
+                synced = true;
+                try {
+                    const token = await user.getIdToken();
+                    const r = await fetch(`${BACKEND_URL}/syncPayments`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: '{}' });
+                    const j = await r.json().catch(() => ({}));
+                    if (j.credited && j.credited.length) {
+                        const tot = j.credited.reduce((a, c) => a + (c.amount || 0) + (c.bonus || 0), 0);
+                        Swal.fire({ icon: 'success', title: 'Payment received!', text: `৳${tot} has been added to your wallet.` });
+                    }
+                } catch (e) {}
             });
         }
     });
