@@ -244,15 +244,24 @@
                 </a>
             </div>
             
-            <div onclick="showSec('dailylike')" class="mb-5 cursor-pointer rounded-3xl p-4 text-white relative overflow-hidden shadow-lg shadow-rose-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#f97316,#ef4444 55%,#be185d)">
-                <div class="absolute -right-4 -top-4 text-white/10 text-8xl"><i class="fa-solid fa-fire"></i></div>
-                <div class="flex items-center gap-3 relative">
-                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-fire"></i></div>
-                    <div class="min-w-0 flex-1">
-                        <div class="font-extrabold text-base leading-tight">Daily Like</div>
-                        <div class="text-[11px] opacity-90 mt-0.5">Every day <b id="dl-home-likes">220</b>+ likes • only ৳<b id="dl-home-price">6</b></div>
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div onclick="showSec('dailylike')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-rose-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#f97316,#ef4444 55%,#be185d)">
+                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-fire"></i></div>
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-fire"></i></div>
+                        <div class="font-extrabold text-[15px] leading-tight">Daily Like</div>
+                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug"><b id="dl-home-likes">220</b>+ likes • only ৳<b id="dl-home-price">6</b></div>
+                        <div class="mt-2.5 bg-white text-rose-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Get likes <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
-                    <div class="bg-white text-rose-600 text-[11px] font-extrabold px-3 py-1.5 rounded-xl flex-shrink-0">Get likes <i class="fa-solid fa-arrow-right ml-0.5"></i></div>
+                </div>
+                <div onclick="showSec('autolike')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-indigo-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#c026d3)">
+                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-robot"></i></div>
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-robot"></i></div>
+                        <div class="font-extrabold text-[15px] leading-tight">Auto Like</div>
+                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Sent every day at <b id="al-home-time">4:05 AM</b> • from ৳<b id="al-home-price">–</b></div>
+                        <div class="mt-2.5 bg-white text-indigo-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Subscribe <i class="fa-solid fa-arrow-right ml-1"></i></div>
+                    </div>
                 </div>
             </div>
 
@@ -317,6 +326,47 @@
             </div>
 
             <div id="dl-result"></div>
+        </section>
+
+        <!-- Auto Like Section -->
+        <section id="autolike-sec" class="hidden animate-fade-in pb-10">
+            <div class="vip-card p-3.5 flex items-center gap-3 mb-3 relative">
+                <button onclick="showSec('home')" class="text-slate-500 hover:text-indigo-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 absolute top-3.5 right-3.5"><i class="fas fa-times"></i></button>
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md" style="background:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#c026d3)"><i class="fa-solid fa-robot"></i></div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">Auto Like</h3>
+                    <p class="text-[11px] text-indigo-600 font-semibold">Your daily likes, sent automatically</p>
+                </div>
+            </div>
+
+            <div id="al-mine"></div>
+
+            <div class="grid grid-cols-3 gap-2 mb-3">
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-indigo-600">৳<span id="al-balance">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Sent daily at</div><div class="text-sm font-extrabold text-rose-600 mt-0.5" id="al-time">4:05 AM</div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Each day</div><div class="text-base font-extrabold text-emerald-600"><span id="al-likes">220</span>+</div></div>
+            </div>
+
+            <div class="vip-card p-4 mb-3">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">1</span>
+                    <h3 class="font-bold text-slate-800 text-xs">Choose a package</h3>
+                </div>
+                <div id="al-pk-grid" class="grid grid-cols-2 gap-2.5"><div class="col-span-2 text-center py-6 text-slate-400"><i class="fas fa-spinner fa-spin text-indigo-600"></i></div></div>
+            </div>
+
+            <div class="vip-card p-4 mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-indigo-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">2</span>
+                    <h3 class="font-bold text-slate-800 text-xs">Enter the UID that will get the likes</h3>
+                </div>
+                <input type="tel" inputmode="numeric" id="al-uid" maxlength="15" placeholder="e.g. 1234567890" class="zp-input text-sm py-2.5 mb-3" oninput="this.value=this.value.replace(/\D/g,'')">
+                <div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-indigo-600 mr-1"></i>Select region (server) <span class="text-rose-500">*</span></div>
+                <div id="al-servers" class="flex flex-wrap gap-1.5 mb-4"></div>
+                <button id="al-btn" onclick="alBuy()" class="zp-btn w-full text-sm"><i class="fa-solid fa-robot mr-1.5"></i><span id="al-btn-txt">Subscribe</span></button>
+                <p class="zp-sub mt-2.5 leading-relaxed"><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i>The UID gets locked to your subscription and receives its Daily Like automatically every day. The package price is charged once from your wallet. If a daily like can’t be delivered, the money is not refunded (the failed day is not counted, though).</p>
+            </div>
+            <div id="al-result"></div>
         </section>
 
         <!-- TopUp / Order Page -->
@@ -489,9 +539,11 @@
 </div>
 
 <script>
+    // Set AUTH_PROXY = true ONLY after adding vercel.json (rewrites) + the OAuth redirect URI. It fixes Google login on phones that block third-party storage.
+    const AUTH_PROXY = false;
     const firebaseConfig = {
       apiKey: "AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",
-      authDomain: "m-h-x-wab-7abdf.firebaseapp.com",
+      authDomain: AUTH_PROXY ? location.host : "m-h-x-wab-7abdf.firebaseapp.com",
       databaseURL: "https://m-h-x-wab-7abdf-default-rtdb.firebaseio.com",
       projectId: "m-h-x-wab-7abdf",
       storageBucket: "m-h-x-wab-7appdf.firebasestorage.app",
@@ -672,20 +724,75 @@
         .catch((err) => Swal.fire('Login failed', err.message, 'error'));
     }
     
-    function handleGoogleLogin() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).then((result) => {
-            const user = result.user;
-            db.collection('users').doc(user.uid).get().then((docSnapshot) => {
-                if (!docSnapshot.exists) {
-                    db.collection('users').doc(user.uid).set({
-                        name: user.displayName, email: user.email, balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date(), photoURL: user.photoURL
-                    }).then(() => applyPendingRef());
-                }
-            });
-            showSec('home');
-        }).catch((error) => { Swal.fire('Oops', error.message, 'error'); });
+    let gBusy = false;
+    // ---- Google login (popup first, redirect as a fallback, clear error messages) ----
+    function isInAppBrowser() {
+        const ua = navigator.userAgent || '';
+        return /FBAN|FBAV|Instagram|Messenger|Line\/|TikTok|musical_ly|Snapchat|; wv\)/i.test(ua) || (/(iPhone|iPad|iPod)/i.test(ua) && /AppleWebKit/i.test(ua) && !/Safari/i.test(ua));
     }
+    async function googleAfter(user) {
+        const ref = db.collection('users').doc(user.uid);
+        let snap = null;
+        try { snap = await ref.get(); } catch (e) { snap = null; }
+        if (snap && snap.exists) return null;
+        await ref.set({ name: user.displayName || (user.email || 'User').split('@')[0], email: user.email || '', balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date(), photoURL: user.photoURL || '' });
+        return applyPendingRef();
+    }
+    function googleErr(e) {
+        const c = (e && e.code) || '';
+        let m;
+        if (c === 'auth/unauthorized-domain') m = 'এই ওয়েবসাইটের ডোমেইন Firebase-এ অনুমোদিত নয়। Firebase Console → Authentication → Settings → Authorized domains-এ এই ডোমেইনটি যোগ করুন: ' + location.hostname;
+        else if (c === 'auth/operation-not-allowed') m = 'Google লগইন চালু করা নেই। Firebase Console → Authentication → Sign-in method → Google চালু (Enable) করুন।';
+        else if (c === 'auth/network-request-failed') m = 'ইন্টারনেট সংযোগে সমস্যা, আবার চেষ্টা করুন।';
+        else if (c === 'auth/account-exists-with-different-credential') m = 'এই ইমেইল দিয়ে আগে অন্য পদ্ধতিতে অ্যাকাউন্ট খোলা হয়েছে। আগের পদ্ধতিতে লগইন করুন।';
+        else if (c === 'auth/user-disabled') m = 'এই অ্যাকাউন্টটি বন্ধ করা আছে। সাপোর্টে যোগাযোগ করুন।';
+        else if (c === 'auth/web-storage-unsupported') m = 'আপনার ব্রাউজারে Cookie/Storage বন্ধ আছে। ব্রাউজারের সেটিংসে Cookie চালু করুন, অথবা Chrome/Safari দিয়ে খুলুন।';
+        else if (c === 'auth/invalid-api-key') m = 'Firebase API key সঠিক নয়।';
+        else if (c === 'permission-denied' || /Missing or insufficient permissions/i.test((e && e.message) || '')) m = 'লগইন হয়েছে কিন্তু অ্যাকাউন্ট তৈরি করা যায়নি (Firestore permission)। firestore.rules ফাইলটি Firebase-এ Publish করা আছে কিনা দেখুন।';
+        else m = (e && e.message) || 'Google login failed';
+        return m + (c ? ' [' + c + ']' : '');
+    }
+    function openInBrowserHelp() {
+        Swal.fire({ icon: 'info', title: 'Browser-এ খুলুন', html: 'Google এই অ্যাপের ভেতরের (in-app / WebView) ব্রাউজারে সাইন-ইন ব্লক করে।<br>লিংকটি কপি করে <b>Chrome</b> বা <b>Safari</b>-তে খুলুন।', showCancelButton: true, confirmButtonText: 'লিংক কপি করুন', cancelButtonText: 'বন্ধ' })
+            .then((x) => { if (x.isConfirmed) { try { navigator.clipboard.writeText(location.href); } catch (e) {} } });
+    }
+    async function googleRedirect(provider) {
+        try { sessionStorage.setItem('gRedirect', '1'); } catch (e) {}
+        await auth.signInWithRedirect(provider);
+    }
+    async function handleGoogleLogin() {
+        if (gBusy) return;
+        if (isInAppBrowser()) { openInBrowserHelp(); return; }
+        gBusy = true;
+        const t0 = Date.now();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('email'); provider.addScope('profile');
+        provider.setCustomParameters({ prompt: 'select_account' });
+        try {
+            const result = await auth.signInWithPopup(provider);      // must be called straight from the click (no await before it)
+            Swal.fire({ title: 'Logging in...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            await googleAfter(result.user);
+            Swal.close(); showSec('home');
+        } catch (e) {
+            const c = (e && e.code) || '';
+            if (c === 'auth/cancelled-popup-request') { /* a second click cancelled the first popup */ }
+            else if (c === 'auth/popup-closed-by-user') {
+                if (Date.now() - t0 < 3000) {   // closed almost instantly = the browser blocked it, not the user
+                    const x = await Swal.fire({ icon: 'warning', title: 'Google window বন্ধ হয়ে গেছে', text: 'আপনার ব্রাউজার Google পপ-আপ আটকে দিয়েছে মনে হচ্ছে। অন্য পদ্ধতিতে চেষ্টা করবেন?', showCancelButton: true, confirmButtonText: 'আবার চেষ্টা করুন', cancelButtonText: 'বাতিল' });
+                    if (x.isConfirmed) { gBusy = false; try { await googleRedirect(provider); } catch (e2) { Swal.fire('Google login failed', googleErr(e2), 'error'); } }
+                }
+            }
+            else if (c === 'auth/popup-blocked' || c === 'auth/operation-not-supported-in-this-environment' || c === 'auth/web-storage-unsupported') {
+                try { await googleRedirect(provider); return; } catch (e2) { Swal.fire('Google login failed', googleErr(e2), 'error'); }
+            } else { console.error('google login', e); Swal.fire('Google login failed', googleErr(e), 'error'); }
+        } finally { gBusy = false; }
+    }
+    // finishes a Google login that used the redirect fallback (phones / strict browsers)
+    auth.getRedirectResult().then((r) => {
+        let wasRedirect = false; try { wasRedirect = sessionStorage.getItem('gRedirect') === '1'; sessionStorage.removeItem('gRedirect'); } catch (e) {}
+        if (r && r.user) { Swal.fire({ title: 'Logging in...', allowOutsideClick: false, didOpen: () => Swal.showLoading() }); return googleAfter(r.user).then(() => { Swal.close(); showSec('home'); }); }
+        if (wasRedirect && !auth.currentUser) Swal.fire('লগইন সম্পূর্ণ হয়নি', 'Google থেকে ফিরে আসার পর লগইন সংরক্ষণ হয়নি। আপনার ব্রাউজার (Safari / Brave / Private mode) এই পদ্ধতি আটকে দিচ্ছে। Chrome-এ সাধারণ (non-private) ট্যাবে খুলে আবার চেষ্টা করুন।', 'warning');
+    }).catch((e) => { if (e && e.code && e.code !== 'auth/no-auth-event') Swal.fire('Google login failed', googleErr(e), 'error'); });
 
     function showAuthPage() { showSec('auth'); }
     function handleLogout() { auth.signOut().then(() => { showSec('home'); }); }
@@ -1049,7 +1156,7 @@
     }
 
     function showSec(secId) {
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'api') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'api') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -1062,6 +1169,7 @@
         if(secId === 'history') loadHistory();
         if(secId === 'account') loadReferral();
         if(secId === 'dailylike') dlOpen();
+        if(secId === 'autolike') alOpen();
         if(secId === 'api') apiOpen();
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -1508,7 +1616,8 @@ function copySupportPin(btn) {
 // To add another button later, just add one more { icon, label, run } line to this list.
 const PROFILE_MENU = [
     { icon: 'fa-solid fa-headset', label: 'Support', run: () => { const a = document.getElementById('fab-support'); window.open(a ? a.href : 'https://t.me/mhxffv111', '_blank', 'noopener'); } },
-    { icon: 'fa-solid fa-key', label: 'Get API', run: () => showSec('api') }
+    { icon: 'fa-solid fa-key', label: 'Get API', run: () => showSec('api') },
+    { icon: 'fa-solid fa-robot', label: 'Your Auto Like UID', run: () => alMy() }
 ];
 function closeProfileMenu() { const m = document.getElementById('profile-menu'); if (m) m.remove(); }
 function toggleProfileMenu(ev) {
@@ -1719,6 +1828,156 @@ async function apiAct(key, action) {
     try { await api('/apiKeyManage', { action, key }); apiToast('success', action === 'delete' ? 'Deleted' : action === 'revoke' ? 'Revoked' : 'Restored'); }
     catch (e) { Swal.fire('Oops', e.message, 'error'); }
     finally { apiBusy = false; await apiOpen(true); }
+}
+</script>
+<script>
+// ================= AUTO LIKE (subscription: daily like sent automatically) =================
+let alCfg = { enabled: true, packages: [], sendTime: '04:05', changeFee: 10, offMsg: '' }, alMine = null, alPkg = '', alRegion = '', alBusy = false, alReqId = null, alReqKey = '';
+try { alRegion = (localStorage.getItem('alRegion') || '').toUpperCase(); } catch (e) {}
+function alFmtTime(t) { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return t || ''; let h = +m[1]; const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return h + ':' + m[2] + ' ' + ap; }
+function alPrice(p) { const rs = userData && (userData.role === 'reseller' || userData.role === 'admin'); return (rs && p.resellerPrice !== null && p.resellerPrice !== undefined) ? p.resellerPrice : p.price; }
+function alHomeUpdate() {
+    const t = document.getElementById('al-home-time'), p = document.getElementById('al-home-price');
+    if (t) t.innerText = alFmtTime(alCfg.sendTime);
+    if (p && alCfg.packages.length) p.innerText = Math.min.apply(null, alCfg.packages.map(alPrice));
+}
+async function alLoadCfg() {
+    try { const r = await fetch(BACKEND_URL + '/autoLikeInfo'); const j = await r.json(); if (r.ok && j && j.packages) alCfg = { enabled: j.enabled !== false, packages: j.packages, sendTime: j.sendTime || '04:05', changeFee: j.changeFee, offMsg: j.offMsg || '' }; } catch (e) {}
+    alHomeUpdate(); alRenderPkgs();
+}
+function alRenderServers() {
+    const box = document.getElementById('al-servers'); if (!box) return;
+    const lock = alMine && alMine.status === 'active';
+    box.innerHTML = DL_REGIONS.map(s => `<span class="ffs-chip ${alRegion === s ? 'on' : ''}" ${lock ? 'style="opacity:' + (alRegion === s ? 1 : .35) + ';pointer-events:none"' : `onclick="alPickRegion('${s}')"`}>${alRegion === s ? '✓ ' : ''}${s}</span>`).join('');
+}
+function alPickRegion(v) { alRegion = v; try { localStorage.setItem('alRegion', v); } catch (e) {} alRenderServers(); const bx = document.getElementById('al-servers'); if (bx) bx.classList.remove('ffs-bad'); }
+function alPick(id) { alPkg = id; alRenderPkgs(); }
+function alRenderPkgs() {
+    const box = document.getElementById('al-pk-grid'); if (!box) return;
+    if (!alCfg.packages.length) { box.innerHTML = '<div class="col-span-2 text-center py-6 text-slate-400 text-sm">No packages available right now</div>'; return; }
+    if (!alCfg.packages.some(p => p.id === alPkg)) alPkg = alCfg.packages[0].id;
+    box.innerHTML = alCfg.packages.map(p => {
+        const on = p.id === alPkg, pr = alPrice(p), per = (pr / p.days).toFixed(1).replace(/\.0$/, '');
+        const lines = String(p.desc || '').split('\n').map(x => x.trim()).filter(Boolean).map(x => `<div style="font-size:13px;color:#334155;line-height:1.6;padding:3px 0">${esc(x)}</div>`).join('');
+        return `<div onclick="alPick('${esc(p.id)}')" class="cursor-pointer rounded-2xl p-3.5 transition active:scale-[.99]" style="grid-column:1/-1;border:2px solid ${on ? '#4f46e5' : '#e2e8f0'};background:${on ? '#eef2ff' : '#fff'};box-shadow:${on ? '0 8px 22px rgba(79,70,229,.18)' : 'none'}">
+            <div class="flex items-center gap-3">
+                <div class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px]" style="border:2px solid ${on ? '#4f46e5' : '#cbd5e1'};background:${on ? '#4f46e5' : '#fff'};color:#fff">${on ? '<i class="fas fa-check"></i>' : ''}</div>
+                <div class="min-w-0 flex-1"><div class="font-extrabold text-slate-800 text-sm leading-tight">${esc(p.name)}</div><div class="text-[11px] text-slate-500 font-semibold">${p.days} days • ≈ ৳${per}/day</div></div>
+                <div class="text-right flex-shrink-0"><div class="text-xl font-extrabold text-rose-600 leading-none">৳${pr}</div></div>
+            </div>
+            ${lines ? `<div style="margin-top:10px;padding-top:8px;border-top:1px dashed ${on ? '#c7d2fe' : '#e2e8f0'}">${lines}</div>` : ''}</div>`;
+    }).join('');
+}
+function alUpdateInfo() {
+    const e = document.getElementById('al-balance'); if (e) e.innerText = Number(userBalance || 0).toFixed(2).replace(/\.00$/, '');
+    const t = document.getElementById('al-time'); if (t) t.innerText = alFmtTime(alCfg.sendTime);
+    const l = document.getElementById('al-likes'); if (l && typeof dlCfg !== 'undefined') l.innerText = dlCfg.likes;
+}
+function alFmtDay(d) { if (!d) return '—'; const x = new Date(d + 'T00:00:00'); return isNaN(x) ? d : x.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+function alResultLabel(r) { return r === 'success' ? '✅ Delivered' : r === 'already' ? '⚠️ Already received' : r === 'failed' ? '❌ Failed' : r === 'uid_change' ? '🔁 UID changed' : (r || '—'); }
+function alMineCard(m) {
+    if (!m) return '';
+    const act = m.status === 'active';
+    if (!act) return `<div class="dl-card" style="background:#f8fafc;border:1px solid #e2e8f0"><div class="text-center text-[12px] font-bold text-slate-600">${m.status === 'cancelled' ? 'Your last Auto Like subscription was cancelled.' : 'Your last Auto Like subscription has finished.'} Pick a package below to start again.</div></div>`;
+    const pct = m.total ? Math.max(4, Math.round(m.remaining / m.total * 100)) : 0;
+    return `<div class="dl-card" style="background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #c7d2fe">
+        <div class="flex items-center justify-between mb-2"><b class="text-indigo-700 text-sm"><i class="fa-solid fa-circle-check mr-1"></i>Auto Like is active</b><span class="text-[11px] font-bold text-slate-500">${esc(m.package)}</span></div>
+        <div class="bg-white/80 rounded-2xl px-3 py-1">${dlRow('🎮 UID', esc(m.uid) + ' (' + esc(m.region) + ')')}${dlRow('📅 Days left', '<b class="text-indigo-600">' + m.remaining + '</b> / ' + m.total)}${dlRow('🕐 Next like', alFmtDay(m.nextDate) + ', ' + alFmtTime(m.sendTime))}</div>
+        <div class="h-2 rounded-full bg-indigo-100 mt-3 overflow-hidden"><div style="width:${pct}%;height:100%;background:linear-gradient(90deg,#6366f1,#c026d3)"></div></div>
+        <p class="text-[11px] text-slate-500 mt-2 text-center">Buy again with the same UID to add more days.</p></div>`;
+}
+async function alLoadMine(quiet) {
+    if (!currentUser) return;
+    try { const j = await api('/autoLikeMine', {}); alMine = j.subscription; if (j.changeFee !== undefined) alCfg.changeFee = j.changeFee; alMine && (alMine._history = j.history || []); }
+    catch (e) { if (!quiet) console.log('autolike mine', e.message); return; }
+    const box = document.getElementById('al-mine'); if (box) box.innerHTML = alMineCard(alMine);
+    const u = document.getElementById('al-uid'), act = alMine && alMine.status === 'active';
+    if (u) { if (act) { u.value = alMine.uid; u.readOnly = true; u.style.opacity = .6; alRegion = alMine.region; } else { u.readOnly = false; u.style.opacity = ''; } }
+    const bt = document.getElementById('al-btn-txt'); if (bt) bt.innerText = act ? 'Add more days to this UID' : 'Subscribe';
+    alRenderServers();
+}
+function alOpen() { alRenderServers(); alUpdateInfo(); alLoadCfg(); alLoadMine(); }
+setInterval(() => { const s = document.getElementById('autolike-sec'); if (s && !s.classList.contains('hidden')) alUpdateInfo(); }, 1500);
+window.addEventListener('load', () => { alLoadCfg(); });
+
+async function alBuy() {
+    if (alBusy) return;
+    if (!currentUser) { showSec('auth'); return; }
+    if (!alCfg.enabled) { Swal.fire('Service paused', alCfg.offMsg || '🤖 Auto Like is paused for a moment. Please try again later.', 'info'); return; }
+    const pkg = alCfg.packages.find(p => p.id === alPkg); if (!pkg) { Swal.fire('Heads up', 'Please choose a package', 'warning'); return; }
+    const uid = document.getElementById('al-uid').value.trim();
+    if (!/^\d{5,15}$/.test(uid)) { Swal.fire('Heads up', 'Please enter a valid UID (numbers only, 5–15 digits)', 'warning'); return; }
+    if (!alRegion) { const b = document.getElementById('al-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
+    const price = alPrice(pkg);
+    if ((userBalance || 0) < price) {
+        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Your balance: <b>৳${userBalance || 0}</b><br>Required: <b>৳${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
+        if (x.isConfirmed) showSec('addmoney'); return;
+    }
+    const act = alMine && alMine.status === 'active';
+    const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay ৳' + price, cancelButtonText: 'Cancel',
+        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>৳${price}</b>
+        <div style="font-size:11px;color:#64748b;margin-top:8px">${act ? 'These days will be added to your running subscription. ' : 'This UID will be locked to your subscription (you can change it later for a small fee). '}No refund if a daily like can’t be delivered.</div>` });
+    if (!c.isConfirmed) return;
+    const key = pkg.id + '|' + uid + '|' + alRegion;
+    if (!alReqId || alReqKey !== key) { alReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32); alReqKey = key; }
+    alBusy = true;
+    const btn = document.getElementById('al-btn'), bt = document.getElementById('al-btn-txt'), old = bt.innerText; btn.disabled = true; btn.style.opacity = '.6'; bt.innerText = 'Processing...';
+    try {
+        const j = await api('/autoLikeBuy', { packageId: pkg.id, uid, region: alRegion, reqId: alReqId }); alReqId = null;
+        await alLoadMine(true);
+        Swal.fire({ icon: 'success', title: 'Auto Like activated! 🎉', html: `<b>${esc(pkg.name)}</b> for UID <b>${esc(uid)}</b>.<br>The first like goes out ${alMine ? alFmtDay(alMine.nextDate) + ' at ' : 'at '}<b>${alFmtTime(alCfg.sendTime)}</b> (BD time), then every day.` });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) { alReqId = (e.message || '').indexOf('Couldn’t connect') >= 0 || (e.message || '').indexOf('isn’t responding') >= 0 ? alReqId : null; Swal.fire('Couldn’t subscribe', e.message || 'Please try again', 'error'); }
+    finally { alBusy = false; btn.disabled = false; btn.style.opacity = ''; bt.innerText = (alMine && alMine.status === 'active') ? 'Add more days to this UID' : old; alUpdateInfo(); }
+}
+
+// ---- profile menu: "Your Auto Like UID" ----
+async function alMy() {
+    if (!currentUser) { showSec('auth'); return; }
+    Swal.fire({ title: 'Loading...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+    let j; try { j = await api('/autoLikeMine', {}); } catch (e) { Swal.fire('Oops', e.message, 'error'); return; }
+    alMine = j.subscription; if (alCfg) alCfg.changeFee = j.changeFee;
+    const m = j.subscription;
+    if (!m) {
+        const x = await Swal.fire({ icon: 'info', title: 'No Auto Like yet', text: 'You haven’t subscribed to Auto Like. Get your daily likes sent automatically every day!', showCancelButton: true, confirmButtonText: 'See packages', cancelButtonText: 'Close' });
+        if (x.isConfirmed) showSec('autolike'); return;
+    }
+    const act = m.status === 'active';
+    const hist = (j.history || []).slice(0, 6).map(h => `<div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;padding:4px 0;border-bottom:1px dashed #e2e8f0"><span style="color:#64748b">${esc(alFmtDay(h.day))}</span><span style="font-weight:700;text-align:right">${esc(alResultLabel(h.result))}${h.given ? ' +' + h.given : ''}</span></div>`).join('');
+    const x = await Swal.fire({
+        title: act ? 'Your Auto Like' : 'Auto Like ended', width: 380, showCancelButton: true, showDenyButton: !act, denyButtonText: 'Buy again', cancelButtonText: 'Close',
+        showConfirmButton: act, confirmButtonText: 'Change UID (৳' + j.changeFee + ')',
+        html: `<div style="text-align:left">${dlRow('🎮 UID', esc(m.uid) + ' (' + esc(m.region) + ')')}${dlRow('📦 Package', esc(m.package))}${dlRow('📅 Days left', act ? '<b style="color:#4f46e5">' + m.remaining + '</b> / ' + m.total : 'Finished')}
+            ${dlRow('🕐 Daily time', alFmtTime(m.sendTime) + ' (BD)')}${act ? dlRow('⏭️ Next like', alFmtDay(m.nextDate) + ', ' + alFmtTime(m.sendTime)) : ''}${dlRow('👍 Total likes sent', Number(m.likesTotal || 0).toLocaleString('en-US'))}
+            ${m.lastDay ? dlRow('📮 Last send', esc(alFmtDay(m.lastDay)) + ' • ' + esc(alResultLabel(m.lastResult))) : ''}
+            ${hist ? '<div style="margin-top:10px;font-size:11px;font-weight:800;color:#4f46e5">Recent activity</div>' + hist : ''}</div>`
+    });
+    if (x.isDenied) { showSec('autolike'); return; }
+    if (x.isConfirmed) alChangeUid(m);
+}
+async function alChangeUid(m) {
+    const fee = alCfg.changeFee;
+    const opts = DL_REGIONS.map(r => `<option value="${r}" ${r === m.region ? 'selected' : ''}>${r}</option>`).join('');
+    const x = await Swal.fire({
+        title: 'Change UID', confirmButtonText: 'Pay ৳' + fee + ' & change', showCancelButton: true, focusConfirm: false,
+        html: `<div style="font-size:12px;color:#64748b;margin-bottom:8px">Current: <b>${esc(m.uid)}</b> (${esc(m.region)})<br>Changing the UID costs <b>৳${fee}</b>, taken from your wallet. Your remaining days stay the same.</div>
+            <input id="al-new-uid" class="swal2-input" inputmode="numeric" maxlength="15" placeholder="New UID" style="margin:6px 0">
+            <select id="al-new-region" class="swal2-select" style="margin:6px 0;width:80%">${opts}</select>`,
+        preConfirm: () => {
+            const u = (document.getElementById('al-new-uid').value || '').replace(/\D/g, ''), r = document.getElementById('al-new-region').value;
+            if (!/^\d{5,15}$/.test(u)) { Swal.showValidationMessage('Enter a valid UID (5–15 digits)'); return false; }
+            if (u === m.uid && r === m.region) { Swal.showValidationMessage('This is already your current UID'); return false; }
+            if ((userBalance || 0) < fee) { Swal.showValidationMessage('Not enough balance — you need ৳' + fee); return false; }
+            return { uid: u, region: r };
+        }
+    });
+    if (!x.isConfirmed) return;
+    Swal.fire({ title: 'Changing UID...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+    try {
+        const r = await api('/autoLikeChangeUid', x.value);
+        Swal.fire({ icon: 'success', title: 'UID changed', html: `Auto Like will now go to <b>${esc(r.uid)}</b> (${esc(r.region)}).` });
+        if (!document.getElementById('autolike-sec').classList.contains('hidden')) alLoadMine(true);
+    } catch (e) { Swal.fire('Couldn’t change UID', e.message, 'error'); }
 }
 </script>
 </body>

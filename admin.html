@@ -188,6 +188,7 @@
                 <i class="fas fa-image w-8 text-center"></i> Banners
             </a>
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
+            <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
             <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
             <a href="#" onclick="switchView('promos')" id="nav-promos" class="nav-link flex items-center px-4 py-3"><i class="fas fa-ticket-alt w-8 text-center"></i> Promo Codes</a>
             <a href="#" onclick="openPayments();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-receipt w-8 text-center"></i> Payments Log</a>
@@ -668,6 +669,48 @@
                 </div>
             </div>
 
+            <div id="view-autolike" class="view-section hidden">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="card text-center"><div class="text-xs text-gray-400">Active subscribers</div><div class="text-3xl font-extrabold text-orange-500" id="al-st-active">0</div></div>
+                    <div class="card text-center"><div class="text-xs text-gray-400">Total subscriptions</div><div class="text-3xl font-extrabold text-white" id="al-st-total">0</div></div>
+                    <div class="card text-center"><div class="text-xs text-gray-400">Daily send time (BD)</div><div class="text-3xl font-extrabold text-white" id="al-st-time">04:05</div></div>
+                    <div class="card text-center"><div class="text-xs text-gray-400">UID change fee</div><div class="text-3xl font-extrabold text-white">৳<span id="al-st-fee">10</span></div></div>
+                </div>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
+                    <div class="card">
+                        <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border"><i class="fas fa-sliders-h mr-2"></i>Auto Like Settings</h3>
+                        <div class="space-y-5">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="al-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">Auto Like সার্ভিস চালু (বন্ধ করলে নতুন কেউ কিনতে পারবে না ও অটো সেন্ড থেমে থাকবে)</span></label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm text-gray-400 mb-2 font-medium">প্রতিদিন পাঠানোর সময় — ঘণ্টা (0-23, বাংলাদেশ সময়)</label><input type="number" min="0" max="23" id="al-hour" class="flat-input" placeholder="4"></div>
+                                <div><label class="block text-sm text-gray-400 mb-2 font-medium">মিনিট (0-59)</label><input type="number" min="0" max="59" id="al-min" class="flat-input" placeholder="5"></div>
+                            </div>
+                            <p class="text-xs text-gray-500 -mt-2">ডিফল্ট: ভোর ৪টা ৫ মিনিট (04:05). সময় বদলালে পরের সেন্ড থেকে কার্যকর হবে।</p>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">UID Change ফি (৳) — ডিফল্ট ১০</label><input type="number" min="0" id="al-fee" class="flat-input" placeholder="10"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">সার্ভিস বন্ধ থাকলে ইউজারকে যে মেসেজ দেখাবে (ঐচ্ছিক)</label><input type="text" id="al-offmsg" class="flat-input" maxlength="160" placeholder="🤖 অটো লাইক সাময়িকভাবে বন্ধ আছে"></div>
+                        </div>
+                        <h4 class="text-lg font-bold text-orange-500 mt-8 mb-3">Packages</h4>
+                        <div id="al-pk-rows" class="space-y-4"></div>
+                        <button onclick="alAddRow()" class="flat-btn mt-3" style="background:#374151"><i class="fas fa-plus mr-2"></i>Add package</button>
+                        <p class="text-xs text-gray-500 mt-3 leading-relaxed">যত খুশি প্যাকেজ যোগ করতে পারবেন (যেমন 30, 60, 90 দিন) — Add package চাপুন, দিন ও দাম দিন, Details-এ লিখুন কত লাইক যাবে ও কখন যাবে, তারপর Save করুন। Reseller ৳ খালি রাখলে রিসেলাররাও সাধারণ দামই দেবে। প্যাকেজ কেনার সময় এই দাম ইউজারের ব্যালেন্স থেকে একবারে কেটে নেওয়া হয়; পরে ডেইলি লাইক না গেলে কোনো টাকা রিফান্ড হয় না (শুধু ব্যর্থ হওয়া দিনটি প্যাকেজ থেকে কাটা হয় না)।</p>
+                        <button onclick="alSave()" class="flat-btn mt-6 w-full">Save Auto Like Settings</button>
+                    </div>
+                    <div class="card" style="border:1px solid #F49E0B">
+                        <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-bolt mr-2"></i>Quick actions</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed mb-4">নির্ধারিত সময়ের আগেই সবার (আজ যারা এখনো পায়নি) অটো লাইক এখনই পাঠাতে চাইলে নিচের বাটন চাপুন। যাদের আজকের লাইক আগেই গেছে তাদের দ্বিতীয়বার যাবে না।</p>
+                        <button onclick="alRunNow()" class="flat-btn w-full"><i class="fas fa-paper-plane mr-2"></i>Send today's Auto Likes now</button>
+                        <p class="text-xs text-gray-500 mt-4 leading-relaxed">সিস্টেমটি সার্ভারে (main.py) নিজে নিজে চলে — প্রতি ৩০ সেকেন্ডে চেক করে। সার্ভার সেট করা সময়ের পরে চালু হলেও ওই দিনের লাইক পাঠিয়ে দেবে। কোনো সেন্ড ফেইল হলে আজ সর্বোচ্চ ৬ বার, ৮ মিনিট পরপর আবার চেষ্টা করে।</p>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-orange-500 mb-3">Subscribers</h3>
+                <div class="flat-table-container">
+                    <table class="flat-table" style="min-width:980px">
+                        <thead><tr><th>User</th><th>Player UID</th><th>Package</th><th>Days left</th><th>Last send</th><th>Likes sent</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="al-subs"><tr><td colspan="8" class="text-center text-gray-400 py-6">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -769,7 +812,8 @@
                 banners: "Slider Banners",
                 notices: "Broadcast Notifications",
                 promos: "Promo Codes",
-                apikeys: "API Key Management"
+                apikeys: "API Key Management",
+                autolike: "Auto Like Management"
             };
             
             const pageTitleEl = document.getElementById('page-title');
@@ -802,6 +846,7 @@
             if(viewId === 'banners') loadBanners();
             if(viewId === 'notices') loadNotices();
             if(viewId === 'promos') loadPromos();
+            if(viewId === 'autolike') loadAutoLike();
         }
 
         async function loadDashboardData() {
@@ -1801,6 +1846,116 @@ async function apkRemove() {
 }
 (function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'settings') apkRefresh(); return r; }; })();
 
+</script>
+
+<script>
+// ================= AUTO LIKE (admin) =================
+let alPk = [];
+const AL_DEFAULT_PK = [{ id: 'd3', name: '3 Days', days: 3, price: 15, resellerPrice: null, active: true }, { id: 'd7', name: '7 Days', days: 7, price: 35, resellerPrice: null, active: true },
+    { id: 'd15', name: '15 Days', days: 15, price: 70, resellerPrice: null, active: true }, { id: 'd30', name: '1 Month', days: 30, price: 130, resellerPrice: null, active: true }];
+function alRenderRows() {
+    document.getElementById('al-pk-rows').innerHTML = alPk.map((p, i) => `<div class="rounded-2xl p-4" style="border:1px solid #F49E0B55;background:rgba(0,0,0,.25)">
+        <div class="flex items-center justify-between mb-3"><b class="text-orange-400 text-sm">Package #${i + 1}</b>
+            <div class="flex items-center gap-4"><label class="flex items-center gap-2 text-xs text-gray-300 cursor-pointer"><input type="checkbox" class="w-5 h-5 accent-orange-500" data-k="active" data-i="${i}" ${p.active !== false ? 'checked' : ''}>ইউজারদের দেখাবে</label>
+            <button class="text-red-400 hover:text-red-300" onclick="alDelRow(${i})" title="Remove"><i class="fas fa-trash"></i></button></div></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="col-span-2 md:col-span-1"><label class="block text-[11px] text-gray-400 mb-1">Name / Title</label><input class="flat-input" data-k="name" data-i="${i}" value="${esc(p.name)}" placeholder="e.g. 30 Days Pro"></div>
+            <div><label class="block text-[11px] text-gray-400 mb-1">Days (যত দিন)</label><input class="flat-input" type="number" min="1" data-k="days" data-i="${i}" value="${p.days}"></div>
+            <div><label class="block text-[11px] text-gray-400 mb-1">Price ৳</label><input class="flat-input" type="number" min="0" data-k="price" data-i="${i}" value="${p.price}"></div>
+            <div><label class="block text-[11px] text-gray-400 mb-1">Reseller price ৳</label><input class="flat-input" type="number" min="0" data-k="resellerPrice" data-i="${i}" value="${p.resellerPrice == null ? '' : p.resellerPrice}" placeholder="optional"></div>
+        </div>
+        <label class="block text-[11px] text-gray-400 mt-3 mb-1">Details (ইউজার প্যাকেজ কার্ডে দেখবে — যত খুশি লিখতে পারেন, নতুন লাইনও কাজ করবে)</label>
+        <textarea class="flat-input" rows="9" maxlength="1500" style="min-height:190px;resize:vertical;line-height:1.6" data-k="desc" data-i="${i}" placeholder="যেমন:&#10;✅ প্রতিদিন ২২০+ লাইক যাবে&#10;🕓 প্রতিদিন ভোর ৪:০৫ এ অটো সেন্ড&#10;🎮 একটি UID তে ৩০ দিন">${esc(p.desc || '')}</textarea>
+    </div>`).join('') || '<p class="text-sm text-gray-500">No packages — add one.</p>';
+}
+function alReadRows() {
+    const rows = alPk.map(p => Object.assign({}, p));
+    document.querySelectorAll('#al-pk-rows [data-k]').forEach(el => {
+        const i = +el.dataset.i, k = el.dataset.k;
+        if (k === 'active') rows[i].active = el.checked;
+        else if (k === 'name') rows[i].name = el.value.trim();
+        else if (k === 'desc') rows[i].desc = el.value.replace(/\s+$/, '');
+        else if (k === 'resellerPrice') rows[i].resellerPrice = el.value === '' ? null : Math.max(0, Math.round(+el.value));
+        else rows[i][k] = Math.round(+el.value);
+    });
+    return rows;
+}
+function alAddRow() { alPk = alReadRows(); alPk.push({ id: 'p' + Date.now().toString(36), name: '', days: 7, price: 0, resellerPrice: null, active: true, desc: '' }); alRenderRows(); }
+function alDelRow(i) { alPk = alReadRows(); alPk.splice(i, 1); alRenderRows(); }
+async function loadAutoLike() {
+    try {
+        const doc = await db.collection('settings').doc('autolike').get(), g = doc.exists ? doc.data() : {};
+        document.getElementById('al-enabled').checked = g.enabled !== false;
+        document.getElementById('al-hour').value = g.sendHour == null ? 4 : g.sendHour;
+        document.getElementById('al-min').value = g.sendMinute == null ? 5 : g.sendMinute;
+        document.getElementById('al-fee').value = g.changeFee == null ? 10 : g.changeFee;
+        document.getElementById('al-offmsg').value = g.offMsg || '';
+        alPk = Array.isArray(g.packages) ? g.packages.map(p => ({ id: p.id, name: p.name || '', days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, active: p.active !== false, desc: p.desc || '' })) : AL_DEFAULT_PK.map(p => Object.assign({}, p));
+        alRenderRows();
+        document.getElementById('al-st-time').innerText = String(g.sendHour == null ? 4 : g.sendHour).padStart(2, '0') + ':' + String(g.sendMinute == null ? 5 : g.sendMinute).padStart(2, '0');
+        document.getElementById('al-st-fee').innerText = g.changeFee == null ? 10 : g.changeFee;
+    } catch (e) { SA('Error', e.message, 'error'); }
+    alLoadSubs();
+}
+async function alSave() {
+    const rows = alReadRows(), hr = parseInt(document.getElementById('al-hour').value), mn = parseInt(document.getElementById('al-min').value), fee = parseInt(document.getElementById('al-fee').value);
+    if (isNaN(hr) || hr < 0 || hr > 23 || isNaN(mn) || mn < 0 || mn > 59) return SA('Invalid time', 'ঘণ্টা 0-23 এবং মিনিট 0-59 এর মধ্যে দিন', 'warning');
+    if (isNaN(fee) || fee < 0) return SA('Invalid fee', 'UID Change ফি সঠিক দিন', 'warning');
+    for (const p of rows) { if (!p.name) p.name = p.days + ' Days'; if (!(p.days >= 1 && p.days <= 365) || !(p.price >= 0)) return SA('Invalid package', 'প্রতিটি প্যাকেজের দিন (1-365) ও দাম সঠিক দিন', 'warning'); }
+    const clean = rows.map(p => ({ id: String(p.id), name: p.name, days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, active: p.active !== false, desc: String(p.desc || '').slice(0, 1500) }));
+    try {
+        showLoading();
+        await db.collection('settings').doc('autolike').set({ enabled: document.getElementById('al-enabled').checked, sendHour: hr, sendMinute: mn, changeFee: fee, offMsg: document.getElementById('al-offmsg').value.trim(), packages: clean }, { merge: true });
+        hideLoading(); alPk = clean; alRenderRows();
+        document.getElementById('al-st-time').innerText = String(hr).padStart(2, '0') + ':' + String(mn).padStart(2, '0'); document.getElementById('al-st-fee').innerText = fee;
+        Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false });
+    } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+function alWhen(v) { if (!v) return '—'; try { return v.toDate ? v.toDate().toLocaleString() : String(v); } catch (e) { return String(v); } }
+async function alLoadSubs() {
+    const box = document.getElementById('al-subs');
+    try {
+        const snap = await db.collection('autoLikes').get();
+        const list = snap.docs.map(d => Object.assign({ _id: d.id }, d.data()));
+        const isAct = s => (s.status || 'active') === 'active' && (s.remaining || 0) > 0;
+        list.sort((a, b) => (isAct(b) - isAct(a)) || ((b.startedAt && b.startedAt.seconds || 0) - (a.startedAt && a.startedAt.seconds || 0)));
+        document.getElementById('al-st-active').innerText = list.filter(isAct).length; document.getElementById('al-st-total').innerText = list.length;
+        box.innerHTML = list.length ? list.map(s => {
+            const act = isAct(s), st = act ? '<span class="text-emerald-400 font-bold">Active</span>' : (s.status === 'cancelled' ? '<span class="text-red-400 font-bold">Cancelled</span>' : '<span class="text-gray-400 font-bold">Expired</span>');
+            const last = s.lastDay ? esc(s.lastDay) + '<br><span class="text-xs ' + (s.lastResult === 'success' ? 'text-emerald-400' : s.lastResult === 'failed' ? 'text-red-400' : 'text-amber-400') + '">' + esc(s.lastResult || '') + '</span>' : '—';
+            return `<tr><td><b class="text-white">${esc(s.userName || '')}</b><br><span class="text-xs text-gray-500">${esc(s.userEmail || '')}</span></td>
+              <td><b class="text-orange-400">${esc(s.playerId)}</b><br><span class="text-xs text-gray-500">${esc(s.region)}${s.uidChanges ? ' • changed ×' + s.uidChanges : ''}</span></td>
+              <td>${esc(s.packageName || '')}<br><span class="text-xs text-gray-500">paid ৳${s.paid || 0}</span></td>
+              <td><b class="text-white">${s.remaining || 0}</b> / ${s.totalDays || 0}</td><td class="text-xs">${last}</td><td>${s.likesTotal || 0}</td><td>${st}</td>
+              <td class="whitespace-nowrap"><button class="flat-btn text-xs py-2 px-2" onclick="alAddDays('${s._id}')" title="Add days"><i class="fas fa-plus"></i></button>
+                ${act ? `<button class="flat-btn text-xs py-2 px-2" style="background:#2563eb" onclick="alSendOne('${s._id}')" title="Send now"><i class="fas fa-paper-plane"></i></button>
+                <button class="flat-btn text-xs py-2 px-2" style="background:#dc2626" onclick="alSetStatus('${s._id}','cancelled')" title="Cancel (no refund)"><i class="fas fa-ban"></i></button>`
+                : ((s.remaining || 0) > 0 ? `<button class="flat-btn text-xs py-2 px-2" style="background:#16a34a" onclick="alSetStatus('${s._id}','active')" title="Re-activate"><i class="fas fa-play"></i></button>` : '')}</td></tr>`;
+        }).join('') : '<tr><td colspan="8" class="text-center text-gray-500 py-6">No auto like subscribers yet</td></tr>';
+    } catch (e) { box.innerHTML = '<tr><td colspan="8" class="text-center text-red-400 py-6">' + esc(e.message) + ' (firestore.rules আপডেট করে Publish করেছেন?)</td></tr>'; }
+}
+async function alAddDays(id) {
+    const r = await Swal.fire({ title: 'কত দিন যোগ করবেন?', input: 'number', inputValue: 1, showCancelButton: true });
+    if (!r.isConfirmed) return; const n = parseInt(r.value); if (!(n >= 1 && n <= 365)) return SA('Invalid', '1-365 দিন দিন', 'warning');
+    try { await db.collection('autoLikes').doc(id).update({ remaining: firebase.firestore.FieldValue.increment(n), totalDays: firebase.firestore.FieldValue.increment(n), status: 'active' }); alLoadSubs(); } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function alSetStatus(id, status) {
+    if (status === 'cancelled') { const r = await Swal.fire({ title: 'Cancel this subscription?', text: 'কোনো টাকা রিফান্ড হবে না। ইউজারের অটো লাইক বন্ধ হয়ে যাবে।', icon: 'warning', showCancelButton: true }); if (!r.isConfirmed) return; }
+    try { await db.collection('autoLikes').doc(id).update({ status }); alLoadSubs(); } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function alCall(body) {
+    const tk = await auth.currentUser.getIdToken();
+    const r = await fetch(MHX_API_BACKEND + '/adminAutoLikeRun', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body || {}) });
+    const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || ('Server error ' + r.status)); return j;
+}
+async function alRunNow() {
+    const c = await Swal.fire({ title: 'Send now?', text: 'আজ যারা এখনো অটো লাইক পায়নি তাদের সবার লাইক এখনই পাঠানো হবে।', icon: 'question', showCancelButton: true, confirmButtonText: 'Send now' });
+    if (!c.isConfirmed) return;
+    try { showLoading(); const j = await alCall({}); hideLoading(); Swal.fire('Started', j.queued + ' জনের লাইক পাঠানো শুরু হয়েছে (পেছনে চলছে)। কিছুক্ষণ পর তালিকা রিফ্রেশ করুন।', 'success'); setTimeout(alLoadSubs, 8000); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function alSendOne(id) {
+    try { showLoading(); await alCall({ userId: id }); hideLoading(); Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Sending...', timer: 1800, showConfirmButton: false }); setTimeout(alLoadSubs, 6000); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
 </script>
 </body>
 </html>

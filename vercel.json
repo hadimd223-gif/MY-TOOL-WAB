@@ -1,6 +1,6 @@
 {
-  "cleanUrls": true,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/__/auth/:path*", "destination": "https://m-h-x-wab-7abdf.firebaseapp.com/__/auth/:path*" },
+    { "source": "/__/firebase/init.json", "destination": "https://m-h-x-wab-7abdf.firebaseapp.com/__/firebase/init.json" }
   ]
 }
