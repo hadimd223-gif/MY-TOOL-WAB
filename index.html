@@ -113,7 +113,140 @@
         .api-tab{padding:7px 12px;border-radius:12px;font-size:12px;font-weight:800;background:#f1f5f9;color:#64748b;border:0;cursor:pointer}
         .api-tab.on{background:#4f46e5;color:#fff}
         .api-code{background:#0f172a;color:#e2e8f0;border-radius:14px;padding:12px;font-size:11.5px;line-height:1.55;overflow-x:auto;white-space:pre;font-family:ui-monospace,Menlo,Consolas,monospace;user-select:text;-webkit-user-select:text}
+        /* ================= MHX PREMIUM POPUPS / TOASTS / LOADERS ================= */
+        .swal2-container{font-family:'Outfit','Noto Serif Bengali',sans-serif!important;padding:16px!important}
+        .swal2-container.swal2-backdrop-show,.swal2-container.swal2-noanimation{background:radial-gradient(circle at 50% 28%,rgba(99,102,241,.38),rgba(15,10,40,.72) 72%)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+        .swal2-popup.mhx-pop:not(.swal2-toast){position:relative;overflow:hidden;border-radius:30px;padding:34px 22px 22px;background:#fff;border:1px solid rgba(199,210,254,.75);box-shadow:0 34px 90px rgba(49,46,129,.42),0 0 0 1px rgba(255,255,255,.7) inset;font-family:inherit}
+        .swal2-popup.mhx-pop:not(.swal2-toast)::before{content:"";position:absolute;left:0;right:0;top:0;height:150px;background:linear-gradient(165deg,#e0e7ff 0%,#f5f3ff 48%,rgba(255,255,255,0) 100%);pointer-events:none}
+        .swal2-popup.mhx-pop:not(.swal2-toast)::after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#6366f1,#8b5cf6,#d946ef);pointer-events:none}
+        .mhx-pop:not(.swal2-toast)>*:not(.swal2-close):not(.swal2-timer-progress-bar-container){position:relative}
+        .mhx-pop:not(.swal2-toast) .swal2-title{font-family:inherit;font-size:1.32rem;font-weight:800;color:#0f172a;padding:0 .2em;margin:0 0 6px;letter-spacing:-.01em;line-height:1.3}
+        .mhx-pop:not(.swal2-toast) .swal2-html-container{margin:4px 2px 0;padding:0;font-size:.93rem;line-height:1.7;color:#475569;font-weight:500}
+        .mhx-pop .swal2-html-container b,.mhx-pop .swal2-html-container strong{color:#4338ca;font-weight:800}
+        .mhx-pop .swal2-html-container small{color:#64748b}
+        /* icons */
+        .mhx-pop:not(.swal2-toast) .swal2-icon{font-size:.92em;margin:0 auto 16px;border-width:.2em;box-shadow:0 12px 30px rgba(99,102,241,.2)}
+        .mhx-pop .swal2-icon.swal2-success{border-color:#a7f3d0;color:#10b981;background:#ecfdf5}
+        .mhx-pop .swal2-icon.swal2-error{border-color:#fecdd3;color:#f43f5e;background:#fff1f2}
+        .mhx-pop .swal2-icon.swal2-warning{border-color:#fde68a;color:#f59e0b;background:#fffbeb}
+        .mhx-pop .swal2-icon.swal2-info{border-color:#c7d2fe;color:#6366f1;background:#eef2ff}
+        .mhx-pop .swal2-icon.swal2-question{border-color:#ddd6fe;color:#7c3aed;background:#f5f3ff}
+        .mhx-pop .swal2-icon.swal2-success [class^=swal2-success-line]{background:#10b981}
+        .mhx-pop .swal2-icon.swal2-success .swal2-success-ring{border:.2em solid rgba(16,185,129,.28)}
+        .mhx-pop .swal2-icon.swal2-success [class^=swal2-success-circular-line],.mhx-pop .swal2-icon.swal2-success .swal2-success-fix{display:none}
+        .mhx-pop .swal2-icon.swal2-error [class^=swal2-x-mark-line]{background:#f43f5e}
+        /* buttons */
+        .mhx-pop .swal2-actions{margin:22px 0 0;width:100%;gap:10px;flex-wrap:wrap}
+        .mhx-btn{border:0;border-radius:16px;padding:13px 20px;font-family:inherit;font-weight:800;font-size:.95rem;cursor:pointer;min-width:110px;flex:1 1 auto;transition:transform .15s ease,box-shadow .2s ease,filter .2s}
+        .mhx-btn:active{transform:scale(.96)}
+        .mhx-btn:focus-visible{outline:0;box-shadow:0 0 0 4px rgba(99,102,241,.28)}
+        .mhx-btn-primary{color:#fff;background:linear-gradient(135deg,#6366f1,#4338ca);box-shadow:0 12px 26px rgba(79,70,229,.35)}
+        .mhx-btn-primary:hover{filter:brightness(1.07)}
+        .mhx-btn-ghost{color:#64748b;background:#f1f5f9}
+        .mhx-btn-ghost:hover{background:#e2e8f0}
+        .mhx-btn-deny{color:#fff;background:linear-gradient(135deg,#fb7185,#e11d48);box-shadow:0 12px 26px rgba(225,29,72,.3)}
+        /* inputs */
+        .mhx-pop .swal2-input,.mhx-pop .swal2-select,.mhx-pop .swal2-textarea{font-family:inherit;border:1.5px solid #e2e8f0;border-radius:16px;background:#f8fafc;font-weight:700;color:#0f172a;box-shadow:none;margin:10px 0 0;transition:.2s}
+        .mhx-pop .swal2-input:focus,.mhx-pop .swal2-select:focus,.mhx-pop .swal2-textarea:focus{border-color:#6366f1;background:#fff;box-shadow:0 0 0 4px rgba(99,102,241,.14)}
+        .mhx-pop .swal2-validation-message{border-radius:14px;background:#fff1f2;color:#e11d48;font-weight:700;margin:12px 0 0}
+        .mhx-pop .swal2-close{color:#94a3b8;border-radius:50%;width:34px;height:34px;margin:10px 10px 0 0}
+        .mhx-pop .swal2-close:hover{background:#eef2ff;color:#4f46e5}
+        /* premium loader (link creating / checking / processing) */
+        .mhx-pop.mhx-loading .swal2-actions{order:-1;margin:4px 0 18px}
+        .mhx-pop .swal2-loader{width:66px;height:66px;margin:0 auto;border:0!important;border-radius:50%;background:conic-gradient(from 0deg,rgba(99,102,241,0) 0%,#6366f1 48%,#c026d3 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));animation:mhxSpin .95s linear infinite;filter:drop-shadow(0 6px 14px rgba(99,102,241,.45))}
+        .mhx-sub{font-size:.9rem;color:#64748b;font-weight:600;line-height:1.6}
+        .mhx-bar{position:relative;height:5px;width:68%;margin:18px auto 2px;border-radius:99px;background:#e0e7ff;overflow:hidden}
+        .mhx-bar i{position:absolute;top:0;bottom:0;left:0;width:40%;border-radius:99px;background:linear-gradient(90deg,#6366f1,#c026d3);animation:mhxBar 1.3s ease-in-out infinite}
+        .mhx-pop .swal2-timer-progress-bar{background:linear-gradient(90deg,#6366f1,#c026d3)!important;height:4px}
+        @keyframes mhxSpin{to{transform:rotate(360deg)}}
+        @keyframes mhxBar{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+        @keyframes mhxIn{0%{opacity:0;transform:translateY(30px) scale(.86)}60%{opacity:1;transform:translateY(-4px) scale(1.02)}100%{opacity:1;transform:none}}
+        @keyframes mhxOut{to{opacity:0;transform:translateY(14px) scale(.94)}}
+        @keyframes mhxTin{from{opacity:0;transform:translateY(-26px) scale(.9)}to{opacity:1;transform:none}}
+        @keyframes mhxTout{to{opacity:0;transform:translateY(-16px) scale(.94)}}
+        .mhx-in{animation:mhxIn .5s cubic-bezier(.22,1,.36,1)}
+        .mhx-out{animation:mhxOut .24s ease forwards}
+        .mhx-tin{animation:mhxTin .4s cubic-bezier(.22,1,.36,1)}
+        .mhx-tout{animation:mhxTout .22s ease forwards}
+        /* toasts / notification bars */
+        .swal2-container.swal2-top{padding-top:14px!important}
+        .swal2-popup.swal2-toast.mhx-toast{width:auto;max-width:92vw;padding:10px 18px 10px 10px;border-radius:20px;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #e0e7ff;box-shadow:0 16px 40px rgba(79,70,229,.28);font-family:inherit}
+        .mhx-toast .swal2-title{font-family:inherit;font-size:13.5px;font-weight:800;color:#0f172a;margin:0 4px;text-align:left}
+        .mhx-toast .swal2-html-container{font-size:12px;color:#64748b;margin:2px 4px 0;padding:0;text-align:left}
+        .mhx-toast .swal2-icon{margin:0 8px 0 2px;border-width:.2em}
+        /* ===== UID check modal ===== */
+        #ffm-ov{background:radial-gradient(circle at 50% 25%,rgba(99,102,241,.38),rgba(15,10,40,.74) 72%)!important}
+        #ffm-ov .ffm-card{border-radius:32px;border:1px solid rgba(199,210,254,.6);box-shadow:0 36px 96px rgba(49,46,129,.55)}
+        #ffm-ov .ffm-hero{background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#7c3aed 80%,#c026d3 125%)}
+        #ffm-ov .ffm-load{padding:58px 24px 52px;font-size:14px;color:#64748b}
+        #ffm-ov .ffm-load b.mhx-lt{display:block;font-size:17px;font-weight:800;color:#0f172a;margin-bottom:4px}
+        #ffm-ov .ffm-spin{width:66px;height:66px;border:0;margin:0 auto 18px;background:conic-gradient(from 0deg,rgba(99,102,241,0) 0%,#6366f1 48%,#c026d3 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));filter:drop-shadow(0 6px 14px rgba(99,102,241,.45))}
+        #ffm-ov .ffm-err{width:78px;height:78px;margin:0 auto 16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;background:#fffbeb;color:#f59e0b;box-shadow:0 12px 28px rgba(245,158,11,.25)}
+        #ffm-ov .ffm-tile{border:1px solid #eef2ff;border-radius:18px}
+        #ffm-ov .ffm-sec{border:1px solid #eef2ff;border-radius:20px}
+        /* ===== Daily / Auto Like result + checking cards ===== */
+        body .dl-card{position:relative;overflow:hidden;border-radius:28px;padding:20px 18px 18px;box-shadow:0 16px 40px rgba(79,70,229,.13)}
+        body .dl-card::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--dlc,linear-gradient(90deg,#6366f1,#8b5cf6,#d946ef))}
+        body .dl-ok{--dlc:linear-gradient(90deg,#10b981,#34d399);box-shadow:0 16px 40px rgba(16,185,129,.16)}
+        body .dl-warn{--dlc:linear-gradient(90deg,#f59e0b,#fbbf24);box-shadow:0 16px 40px rgba(245,158,11,.16)}
+        body .dl-bad{--dlc:linear-gradient(90deg,#f43f5e,#fb7185);box-shadow:0 16px 40px rgba(244,63,94,.15)}
+        body .dl-load{padding:26px 18px 22px}
+        body .dl-spin{width:60px;height:60px;border:0;margin:2px auto 14px;background:conic-gradient(from 0deg,rgba(99,102,241,0) 0%,#6366f1 48%,#c026d3 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));filter:drop-shadow(0 6px 14px rgba(99,102,241,.45))}
+        body .dl-stat{border-radius:20px;box-shadow:0 6px 16px rgba(79,70,229,.07)}
     </style>
+<script>
+/* ===== MHX premium notification layer: restyles every SweetAlert popup / toast / loader in the app ===== */
+(function () {
+    if (!window.Swal) return;
+    const raw = Swal.fire.bind(Swal);
+    Swal.fire = function (a, b, c) {
+        let o;
+        if (a && typeof a === 'object' && !(typeof HTMLElement !== 'undefined' && a instanceof HTMLElement)) o = Object.assign({}, a);
+        else { o = {}; if (a !== undefined) o.title = a; if (b !== undefined) o.html = b; if (c !== undefined) o.icon = c; }
+        const toast = !!o.toast, cc = Object.assign({}, o.customClass || {});
+        const base = toast
+            ? { popup: 'mhx-pop mhx-toast' }
+            : { popup: 'mhx-pop', confirmButton: 'mhx-btn mhx-btn-primary', cancelButton: 'mhx-btn mhx-btn-ghost', denyButton: 'mhx-btn mhx-btn-deny' };
+        Object.keys(base).forEach(k => { cc[k] = base[k] + (cc[k] ? ' ' + cc[k] : ''); });
+        o.customClass = cc;
+        if (o.buttonsStyling === undefined) o.buttonsStyling = false;
+        if (toast) {
+            if (o.timerProgressBar === undefined) o.timerProgressBar = true;
+            o.showClass = Object.assign({ popup: 'mhx-tin' }, o.showClass);
+            o.hideClass = Object.assign({ popup: 'mhx-tout' }, o.hideClass);
+        } else {
+            if (o.width === undefined) o.width = 380;
+            if (o.returnFocus === undefined) o.returnFocus = false;
+            o.showClass = Object.assign({ popup: 'mhx-in' }, o.showClass);
+            o.hideClass = Object.assign({ popup: 'mhx-out' }, o.hideClass);
+        }
+        return raw(o);
+    };
+    const rawLoad = Swal.showLoading.bind(Swal);
+    Swal.showLoading = function (btn) {
+        const r = rawLoad(btn), p = Swal.getPopup && Swal.getPopup();
+        if (p) { p.classList.add('mhx-pop', 'mhx-loading'); }
+        return r;
+    };
+})();
+
+/* branded "please wait" card (spinner + title + subtitle + shimmer bar) */
+function mhxBusy(title, sub) {
+    return Swal.fire({ title: title, html: '<div class="mhx-sub">' + (sub || 'Please wait a moment…') + '</div><div class="mhx-bar"><i></i></div>',
+        allowOutsideClick: false, allowEscapeKey: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+}
+/* branded "done" card that closes by itself */
+function mhxDone(title, sub, ms) {
+    return Swal.fire({ icon: 'success', title: title, html: sub ? '<div class="mhx-sub">' + sub + '</div>' : '', showConfirmButton: false, allowOutsideClick: false, timer: ms || 1400, timerProgressBar: true });
+}
+/* friendly text for Firebase login / signup errors */
+function authMsg(e) {
+    const m = { 'auth/invalid-credential': 'Incorrect email or password. Please try again.', 'auth/wrong-password': 'Incorrect password. Please try again.', 'auth/user-not-found': 'No account found with this email.',
+        'auth/invalid-email': 'Please enter a valid email address.', 'auth/email-already-in-use': 'This email is already registered. Please log in instead.', 'auth/weak-password': 'Password is too weak — please use at least 6 characters.',
+        'auth/too-many-requests': 'Too many attempts. Please wait a minute and try again.', 'auth/network-request-failed': 'Network problem. Please check your internet connection.', 'auth/user-disabled': 'This account has been disabled. Please contact support.' };
+    return m[e && e.code] || (e && e.message) || 'Something went wrong, please try again.';
+}
+</script>
 </head>
 <body class="select-none bg-[#f8fafc]">
 
@@ -578,12 +711,7 @@
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         if (payRef) {
             window.history.replaceState({}, document.title, window.location.pathname);
-            Swal.fire({
-                title: 'Checking payment...',
-                text: 'Please wait a moment.',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
+            mhxBusy('Verifying your payment…', 'Confirming with the gateway — this can take a few seconds.');
             let started = false;
             auth.onAuthStateChanged(async (user) => {
                 if (!user || started) return;
@@ -704,24 +832,24 @@
         const pass = document.getElementById('reg-pass').value;
         if(!name || !email || !pass) return Swal.fire('Oops', 'Please fill in all the fields', 'warning');
 
-        Swal.showLoading();
+        mhxBusy('Creating your account…', 'Setting up your wallet & profile.');
         auth.createUserWithEmailAndPassword(email, pass)
             .then((cred) => db.collection('users').doc(cred.user.uid).set({
                 name: name, email: email, balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date()
             }))
             .then(() => applyPendingRef())
-            .then((rmsg) => { Swal.fire({icon:'success', title:'Success!', html:'Your account has been created successfully!' + (rmsg ? '<br><small>' + esc(rmsg) + '</small>' : '')}); showSec('home'); })
-            .catch((err) => Swal.fire('Oops', err.message, 'error'));
+            .then((rmsg) => { Swal.fire({icon:'success', title:'Account created! 🎉', html:'Welcome aboard — your account is ready.' + (rmsg ? '<br><small>' + esc(rmsg) + '</small>' : '')}); showSec('home'); })
+            .catch((err) => Swal.fire('Couldn’t sign up', authMsg(err), 'error'));
     }
 
     function handleLogin() {
         const email = document.getElementById('login-email').value;
         const pass = document.getElementById('login-pass').value;
         if(!email || !pass) return;
-        Swal.showLoading();
+        mhxBusy('Signing you in…', 'Just a moment.');
         auth.signInWithEmailAndPassword(email, pass)
         .then(() => { showSec('home'); Swal.close(); })
-        .catch((err) => Swal.fire('Login failed', err.message, 'error'));
+        .catch((err) => Swal.fire('Login failed', authMsg(err), 'error'));
     }
     
     let gBusy = false;
@@ -770,7 +898,7 @@
         provider.setCustomParameters({ prompt: 'select_account' });
         try {
             const result = await auth.signInWithPopup(provider);      // must be called straight from the click (no await before it)
-            Swal.fire({ title: 'Logging in...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            mhxBusy('Signing you in…', 'Setting up your account.');
             await googleAfter(result.user);
             Swal.close(); showSec('home');
         } catch (e) {
@@ -790,7 +918,7 @@
     // finishes a Google login that used the redirect fallback (phones / strict browsers)
     auth.getRedirectResult().then((r) => {
         let wasRedirect = false; try { wasRedirect = sessionStorage.getItem('gRedirect') === '1'; sessionStorage.removeItem('gRedirect'); } catch (e) {}
-        if (r && r.user) { Swal.fire({ title: 'Logging in...', allowOutsideClick: false, didOpen: () => Swal.showLoading() }); return googleAfter(r.user).then(() => { Swal.close(); showSec('home'); }); }
+        if (r && r.user) { mhxBusy('Signing you in…', 'Setting up your account.'); return googleAfter(r.user).then(() => { Swal.close(); showSec('home'); }); }
         if (wasRedirect && !auth.currentUser) Swal.fire('লগইন সম্পূর্ণ হয়নি', 'Google থেকে ফিরে আসার পর লগইন সংরক্ষণ হয়নি। আপনার ব্রাউজার (Safari / Brave / Private mode) এই পদ্ধতি আটকে দিচ্ছে। Chrome-এ সাধারণ (non-private) ট্যাবে খুলে আবার চেষ্টা করুন।', 'warning');
     }).catch((e) => { if (e && e.code && e.code !== 'auth/no-auth-event') Swal.fire('Google login failed', googleErr(e), 'error'); });
 
@@ -963,7 +1091,7 @@
         if(!playerId && selectedGameType !== 'code') return Swal.fire('Heads up', 'Please enter the Player ID (UID)!', 'warning');
         if(!selectedProduct) return Swal.fire('Heads up', 'Please select a package!', 'warning');
         if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
-        Swal.fire({title:'Processing your order...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        mhxBusy('Placing your order…', 'Securing your package & updating your wallet.');
         try {
             const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
             document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
@@ -1031,7 +1159,7 @@
         if (!uid) { Swal.fire('Heads up', 'Please enter the Player ID (UID) first!', 'warning'); return; }
         if (!/^\d{5,15}$/.test(uid)) { Swal.fire('Heads up', 'UID must contain numbers only', 'warning'); return; }
         if (!ffServer) { ffShake(); Swal.fire('Select a region', 'To check the UID, please select your game region (e.g. BD, PK, IND) from below first', 'warning'); return; }
-        ffOpenModal(`<div class="ffm-load"><div class="ffm-spin"></div><p>Fetching account details...</p></div>`, true);
+        ffOpenModal(`<div class="ffm-load"><div class="ffm-spin"></div><b class="mhx-lt">Checking your UID…</b><p>Fetching account details</p><div class="mhx-bar"><i></i></div></div>`, true);
         const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
         const getJ = async (url, strict) => { const res = await fetch(url, { signal: ctl.signal }); let j = null; try { j = await res.json(); } catch (e) {} if (!j || (strict && !res.ok)) throw new Error('bad'); return j; };
         const q = encodeURIComponent(uid) + '&region=' + encodeURIComponent(ffServer) + '&server=' + encodeURIComponent(ffServer);
@@ -1274,10 +1402,11 @@
         const amount = forced ? parseInt(forced) : parseInt(document.getElementById('new-amount-input').value);
         if(!amount || amount < 10) { Swal.fire('Heads up', 'The minimum deposit is ৳10', 'warning'); return; }
         const promoEl = document.getElementById('dep-promo');
-        Swal.fire({title:'Opening payment page...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        mhxBusy('Creating your payment link…', 'Securing your transaction with the payment gateway.');
         try {
             const data = await api('/createPayment', { amount: amount, origin: window.location.origin, promoCode: promoEl ? promoEl.value.trim() : '' });
             if(!data.paymentUrl) throw new Error('Payment link not found');
+            await mhxDone('Your link is ready!', 'Taking you to the secure payment page…', 1200);
             window.location.href = data.paymentUrl;
         } catch(err) { Swal.fire('Oops', err.message, 'error'); }
     }
@@ -1297,7 +1426,7 @@
         const code = document.getElementById('profile-promo').value.trim();
         if (!currentUser) return showSec('auth');
         if (!code) return Swal.fire('Heads up', 'Please enter a promo code', 'warning');
-        Swal.fire({title:'Checking...', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading()});
+        mhxBusy('Checking your code…', 'Validating it with the server.');
         try {
             const r = await api('/redeemPromo', { code: code });
             document.getElementById('profile-promo').value = '';
@@ -1934,7 +2063,7 @@ async function alBuy() {
 // ---- profile menu: "Your Auto Like UID" ----
 async function alMy() {
     if (!currentUser) { showSec('auth'); return; }
-    Swal.fire({ title: 'Loading...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+    mhxBusy('Checking your Auto Like…', 'Fetching your subscription details.');
     let j; try { j = await api('/autoLikeMine', {}); } catch (e) { Swal.fire('Oops', e.message, 'error'); return; }
     alMine = j.subscription; if (alCfg) alCfg.changeFee = j.changeFee;
     const m = j.subscription;
@@ -1972,7 +2101,7 @@ async function alChangeUid(m) {
         }
     });
     if (!x.isConfirmed) return;
-    Swal.fire({ title: 'Changing UID...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+    mhxBusy('Updating your UID…', 'Auto Like will use the new UID from now on.');
     try {
         const r = await api('/autoLikeChangeUid', x.value);
         Swal.fire({ icon: 'success', title: 'UID changed', html: `Auto Like will now go to <b>${esc(r.uid)}</b> (${esc(r.region)}).` });
