@@ -291,6 +291,14 @@
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Logo URL</label><input type="text" id="set-logo" class="flat-input"><input type="file" id="logo-file" accept="image/*" class="mt-2 text-sm text-gray-400"><img id="logo-prev" class="mt-2 w-16 h-16 rounded-xl object-cover hidden"></div>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Notice</label><textarea id="set-notice" class="flat-input h-24"></textarea></div>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">App Download Link</label><input type="text" id="set-applink" class="flat-input"></div>
+                        <div class="rounded-2xl p-4" style="border:1px dashed #F49E0B">
+                            <label class="block text-sm text-orange-400 mb-2 font-bold"><i class="fas fa-mobile-alt mr-1"></i>Upload APK (সরাসরি আপলোড)</label>
+                            <p class="text-xs text-gray-500 mb-3 leading-relaxed">এখান থেকে .apk ফাইল আপলোড করলে ওয়েবসাইটের "App Download" বাটন অটোমেটিক সেই ফাইলটাই ডাউনলোড করাবে। নতুন ভার্সন আপলোড করলে পুরনোটা রিপ্লেস হয়ে যাবে।</p>
+                            <input type="file" id="apk-file" accept=".apk,application/vnd.android.package-archive" class="text-sm text-gray-400 mb-3 block">
+                            <div id="apk-prog-wrap" class="hidden mb-3"><div class="w-full rounded-full" style="background:#1f2430;height:10px"><div id="apk-prog" class="rounded-full" style="background:#F49E0B;height:10px;width:0%"></div></div><div id="apk-prog-txt" class="text-xs text-gray-400 mt-1"></div></div>
+                            <div class="flex gap-2"><button type="button" id="apk-up-btn" onclick="apkUpload()" class="flat-btn flex-1"><i class="fas fa-upload mr-2"></i>Upload APK</button><button type="button" onclick="apkRemove()" class="flat-btn flat-btn-danger"><i class="fas fa-trash"></i></button></div>
+                            <div id="apk-status" class="text-xs text-gray-400 mt-3 leading-relaxed">Loading...</div>
+                        </div>
                         </div>
                         <button onclick="saveSettings('general')" class="flat-btn mt-6 w-full">Save General Info</button>
                     </div>
@@ -1746,6 +1754,53 @@ async function akDelete(key) {
     try { showLoading(); await akCall('delete', { key }); hideLoading(); akLoad(); } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
 }
 (function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'apikeys') akLoad(); return r; }; })();
+// ===== APK upload (admin) =====
+const apkFmt = n => n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB';
+async function apkRefresh() {
+    const box = document.getElementById('apk-status'); if (!box) return;
+    try {
+        const r = await (await fetch(MHX_API_BACKEND + '/apkInfo')).json();
+        box.innerHTML = r.exists ? '<span style="color:#34d399"><i class="fas fa-check-circle mr-1"></i>Uploaded:</span> <b class="text-white">' + akEsc(r.name) + '</b> • ' + apkFmt(r.size) + ' • ' + new Date(r.updatedAt).toLocaleString() + '<br>Link: <span class="font-mono break-all">' + akEsc(MHX_API_BACKEND + '/download/app.apk') + '</span>' : 'কোনো APK আপলোড করা নেই।';
+    } catch (e) { box.textContent = 'Status লোড করা যায়নি (' + e.message + ')'; }
+}
+async function apkUpload() {
+    const inp = document.getElementById('apk-file'), f = inp.files && inp.files[0];
+    if (!f) { Swal.fire('Error', 'আগে একটি .apk ফাইল সিলেক্ট করুন', 'error'); return; }
+    if (!/\.apk$/i.test(f.name)) { Swal.fire('Error', 'শুধু .apk ফাইল দিন', 'error'); return; }
+    const user = auth.currentUser; if (!user) { Swal.fire('Error', 'Login required', 'error'); return; }
+    const tk = await user.getIdToken(), btn = document.getElementById('apk-up-btn'), wrap = document.getElementById('apk-prog-wrap'), bar = document.getElementById('apk-prog'), txt = document.getElementById('apk-prog-txt');
+    btn.disabled = true; wrap.classList.remove('hidden'); bar.style.width = '0%'; txt.textContent = 'Uploading...';
+    const fd = new FormData(); fd.append('file', f); fd.append('name', f.name);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', MHX_API_BACKEND + '/adminUploadApk'); xhr.setRequestHeader('Authorization', 'Bearer ' + tk);
+    xhr.upload.onprogress = e => { if (e.lengthComputable) { const p = Math.round(e.loaded / e.total * 100); bar.style.width = p + '%'; txt.textContent = p + '% • ' + apkFmt(e.loaded) + ' / ' + apkFmt(e.total); } };
+    xhr.onerror = () => { btn.disabled = false; Swal.fire('Error', 'আপলোড ব্যর্থ — সার্ভারে পৌঁছানো যায়নি (ফাইল বড় হলে হোস্টের আপলোড লিমিট হতে পারে)', 'error'); };
+    xhr.onload = async () => {
+        btn.disabled = false; let j = {}; try { j = JSON.parse(xhr.responseText); } catch (e) {}
+        if (xhr.status < 200 || xhr.status >= 300) { Swal.fire('Error', j.error || ('HTTP ' + xhr.status), 'error'); return; }
+        const url = MHX_API_BACKEND + '/download/app.apk';
+        try { await db.collection('settings').doc('general').set({ appLink: url, apkName: j.name, apkSize: j.size, apkUpdatedAt: j.updatedAt }, { merge: true }); } catch (e) { Swal.fire('Warning', 'APK আপলোড হয়েছে কিন্তু লিংক সেভ হয়নি: ' + e.message, 'warning'); return; }
+        const al = document.getElementById('set-applink'); if (al) al.value = url;
+        inp.value = ''; txt.textContent = 'Done ✓'; apkRefresh();
+        Swal.fire({ icon: 'success', title: 'APK uploaded', text: 'এখন থেকে ইউজাররা "App Download" চাপলে এই APK ডাউনলোড করবে।', timer: 2200, showConfirmButton: false });
+    };
+    xhr.send(fd);
+}
+async function apkRemove() {
+    const r = await Swal.fire({ icon: 'warning', title: 'APK মুছে ফেলবেন?', text: 'App Download বাটন আর কাজ করবে না (যদি না অন্য লিংক দেন)।', showCancelButton: true, confirmButtonText: 'Delete', confirmButtonColor: '#DC2626' });
+    if (!r.isConfirmed) return;
+    try {
+        showLoading();
+        const tk = await auth.currentUser.getIdToken();
+        const res = await fetch(MHX_API_BACKEND + '/adminDeleteApk', { method: 'POST', headers: { 'Authorization': 'Bearer ' + tk } }); const j = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(j.error || ('HTTP ' + res.status));
+        const al = document.getElementById('set-applink');
+        if (al && al.value.indexOf('/download/app.apk') !== -1) { al.value = ''; await db.collection('settings').doc('general').set({ appLink: '', apkName: '', apkSize: 0 }, { merge: true }); }
+        hideLoading(); apkRefresh();
+    } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+}
+(function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'settings') apkRefresh(); return r; }; })();
+
 </script>
 </body>
 </html>

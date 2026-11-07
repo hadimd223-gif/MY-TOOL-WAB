@@ -577,6 +577,12 @@
                 el.addEventListener('click', function (e) {
                     e.preventDefault();
                     if (!el._qlUrl) { Swal.fire({ toast: true, position: 'top', icon: 'info', title: map[id][2] + ' link isn\u2019t available yet', showConfirmButton: false, timer: 1800 }); return; }
+                    if (id === 'home-app-dl' && /\/download\/app\.apk|\.apk(\?|$)/i.test(el._qlUrl)) {
+                        if (/iphone|ipad|ipod/i.test(navigator.userAgent)) { Swal.fire({ icon: 'info', title: 'Android only', text: 'This app is an Android APK, so it can be installed on Android phones only.' }); return; }
+                        const a = document.createElement('a'); a.href = el._qlUrl; a.setAttribute('download', ''); a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
+                        Swal.fire({ icon: 'success', title: 'Download started', html: 'When it finishes, tap the downloaded file to install.<br><span style="font-size:12px;color:#64748b">If Android asks, allow \u201cInstall unknown apps\u201d for your browser.</span>', confirmButtonText: 'Got it' });
+                        return;
+                    }
                     const w = window.open(el._qlUrl, '_blank', 'noopener');
                     if (!w) window.location.href = el._qlUrl;
                 });
