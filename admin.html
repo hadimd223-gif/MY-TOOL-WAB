@@ -1698,7 +1698,7 @@ async function akGenerate() {
 async function akBuildCustom() {
     const v = id => document.getElementById(id).value.trim();
     const code = v('cb-key');
-    if (code && !/^[A-Za-z0-9_\-]{6,64}$/.test(code)) { Swal.fire('Error', 'Key code এ শুধু English letter, number, - ও _ (৬-৬৪ অক্ষর) দিন', 'error'); return; }
+    if (code && !/^[A-Za-z0-9_\-]{8,64}$/.test(code)) { Swal.fire('Error', 'Key code এ শুধু English letter, number, - ও _ (৮-৬৪ অক্ষর) দিন', 'error'); return; }
     const num = id => v(id) === '' ? '' : +v(id);
     for (const id of ['cb-price', 'cb-rate', 'cb-daily', 'cb-max']) if (v(id) !== '' && !(+v(id) >= 0)) { Swal.fire('Error', 'সঠিক সংখ্যা দিন', 'error'); return; }
     const btn = document.getElementById('cb-btn'); btn.disabled = true;
