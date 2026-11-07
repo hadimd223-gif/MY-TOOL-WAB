@@ -1458,7 +1458,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProfile
 window.addEventListener('scroll', closeProfileMenu, { passive: true });
 
 // ================= GET API (reseller API keys) =================
-let apiInfo = null, apiBusy = false, apiDocIdx = 0;
+let apiInfo = null, apiBusy = false, apiDocIdx = 0, apiCfg = {};
 function copyText(t) {
     return new Promise(res => {
         const fb = () => {
@@ -1569,15 +1569,18 @@ function apiRender(d) {
         '<div class="flex justify-between text-sm"><span class="text-slate-600">Wallet balance</span><b class="text-indigo-600">৳' + esc(d.balance) + '</b></div>' +
         '<div class="flex justify-between text-sm"><span class="text-slate-600">Active keys</span><b class="text-slate-800">' + active + ' / ' + keys.length + '</b></div>' +
         '<div class="flex justify-between text-sm"><span class="text-slate-600">Price per delivered like</span><b class="text-rose-600">৳' + esc(d.price) + '</b></div></div>';
-    if (!d.eligible) {
-        const left = Math.max(0, (d.threshold || 500) - (d.totalDeposit || 0));
+    const apiThr = Number(d.apiMinDeposit != null ? d.apiMinDeposit : (apiCfg.apiMinDeposit != null ? apiCfg.apiMinDeposit : 100)) || 100;
+    const apiPaid = Number(d.paidDeposit != null ? d.paidDeposit : (typeof userData !== 'undefined' && userData && userData.paidDeposit != null ? userData.paidDeposit : (d.totalDeposit || 0))) || 0;
+    const apiOk = d.apiEligible != null ? !!d.apiEligible : apiPaid >= apiThr;
+    if (!apiOk) {
+        const left = Math.max(0, apiThr - apiPaid);
         h += '<div class="vip-card p-5 mb-4 text-center"><div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl mb-3"><i class="fas fa-lock"></i></div>' +
-            '<div class="font-extrabold text-slate-800 mb-1">API শুধু রিসেলারদের জন্য</div>' +
-            '<p class="zp-sub leading-relaxed">আর মাত্র <b>৳' + left + '</b> ডিপোজিট করলেই আপনি রিসেলার হয়ে যাবেন এবং ফ্রিতে API key বানাতে পারবেন।</p>' +
+            '<div class="font-extrabold text-slate-800 mb-1">API আনলক করতে ৳' + apiThr + ' ডিপোজিট করুন</div>' +
+            '<p class="zp-sub leading-relaxed">আর মাত্র <b>৳' + left + '</b> ডিপোজিট করলেই API আনলক হবে। শুধু আসল ডিপোজিট গণ্য হবে — বোনাস, প্রোমো বা ব্যালেন্সে থাকা অন্য টাকা গণ্য হবে না।</p>' +
             '<button onclick="showSec(\'addmoney\')" class="zp-btn w-full text-sm mt-3"><i class="fas fa-wallet mr-1.5"></i>ওয়ালেটে টাকা অ্যাড করুন</button></div>';
     } else if (!d.enabled) {
         h += '<div class="vip-card p-4 mb-4 text-center zp-sub"><i class="fas fa-circle-pause text-amber-500 mr-1"></i>API সিস্টেম সাময়িকভাবে বন্ধ আছে।</div>';
-    } else if (d.canCreate) {
+    } else if (d.canCreate || (apiOk && !keys.length)) {
         h += '<div class="vip-card p-4 mb-4"><div class="text-xs font-bold text-slate-600 mb-1.5">আপনার টেলিগ্রাম ইউজারনেম</div>' +
             '<div class="flex gap-2"><input id="api-name" class="zp-input text-sm py-2.5" placeholder="@yourusername" maxlength="33" autocapitalize="off" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z0-9_@]/g,\'\')">' +
             '<button id="api-create-btn" onclick="apiCreate()" class="zp-btn px-4 text-sm whitespace-nowrap"><i class="fas fa-plus mr-1"></i>Create key</button></div>' +
@@ -1592,7 +1595,7 @@ function apiRender(d) {
             const sp = k.source === 'admin' ? ' ' + apiPill('Special', '#e0e7ff', '#4338ca') : '';
             h += '<div class="vip-card p-4 mb-3"><div class="flex items-center justify-between gap-2 mb-2.5"><b class="text-slate-800 text-sm truncate">' + (k.label ? '@' + esc(k.label) : 'API key') + '</b><span class="flex-shrink-0">' + st + sp + '</span></div>' +
                 '<div class="api-keybox"><span>' + esc(k.key) + '</span><button type="button" onclick="apiCopy(\'' + esc(k.key) + '\',\'API key কপি হয়েছে\')" aria-label="Copy key"><i class="fa-regular fa-copy"></i></button></div>' +
-                '<div class="zp-sub mt-2.5">Created ' + apiDay(k.createdAt) + ' · ' + k.requests + ' requests · last used ' + apiAgo(k.lastUsedAt) + ' · ৳' + esc(k.price) + '/like · ' + esc(k.rateLimit) + ' req/min</div>' +
+                '<div class="zp-sub mt-2.5">Created ' + apiDay(k.createdAt) + ' · ' + k.requests + ' requests · last used ' + apiAgo(k.lastUsedAt) + ' · ৳' + esc(k.price) + '/like · ' + esc(k.rateLimit) + ' req/min' + (k.dailyLimit ? ' · ' + esc(k.dailyLimit) + ' likes/day' : '') + (k.expiresAt ? ' · expires ' + apiDay(k.expiresAt) : '') + '</div>' +
                 '<div class="flex gap-2 mt-3"><button class="api-act" onclick="apiCopyUrl(\'' + esc(k.key) + '\')"><i class="fa-regular fa-copy"></i>Copy URL</button>' +
                 (k.status === 'active' ? '<button class="api-act" style="color:#b45309" onclick="apiAct(\'' + esc(k.key) + '\',\'revoke\')"><i class="fa-solid fa-ban"></i>Revoke</button>'
                     : '<button class="api-act" style="color:#15803d" ' + (k.adminDisabled ? 'disabled' : '') + ' onclick="apiAct(\'' + esc(k.key) + '\',\'restore\')"><i class="fa-solid fa-rotate-left"></i>Restore</button>') +
@@ -1619,6 +1622,7 @@ async function apiOpen(silent) {
     const box = document.getElementById('api-body'); if (!box) return;
     if (!silent && !apiInfo) box.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-indigo-600 text-xl"></i></div>';
     try {
+        try { const g = await db.collection('settings').doc('general').get(); apiCfg = g.exists ? g.data() : {}; } catch (e) {}
         apiInfo = await api('/apiKeyManage', { action: 'info' });
         box.innerHTML = apiRender(apiInfo); apiDocTab(apiDocIdx);
     } catch (e) {

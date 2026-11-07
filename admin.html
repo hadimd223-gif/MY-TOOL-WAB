@@ -602,6 +602,7 @@
                             <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ak-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">API system চালু (বন্ধ করলে সব key কাজ করা বন্ধ করবে)</span></label>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Global API like price (৳) — খালি রাখলে রিসেলার/ডেইলি লাইক প্রাইস ব্যবহার হবে</label><input type="number" min="0" id="ak-gprice" class="flat-input" placeholder="যেমন: 5"></div>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Default rate limit (requests / minute) — খালি রাখলে 30</label><input type="number" min="1" id="ak-grate" class="flat-input" placeholder="যেমন: 30"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">API আনলক ডিপোজিট (৳) — শুধু আসল ডিপোজিট গণ্য, বোনাস নয় (খালি = 100)</label><input type="number" min="0" id="ak-mindep" class="flat-input" placeholder="100"></div>
                             <p class="text-xs text-gray-500 leading-relaxed">দাম কাটার নিয়ম: key এর Custom price → Global API price → রিসেলার প্রাইস। লাইক সফলভাবে গেলেই শুধু টাকা কাটে; already/failed হলে কাটা হয় না। শুধু Reseller/Admin রোলের ইউজার API ব্যবহার করতে পারে।</p>
                         </div>
                         <button onclick="akSaveSettings()" class="flat-btn mt-6 w-full">Save API Settings</button>
@@ -619,6 +620,22 @@
                             <p class="text-xs text-gray-500 leading-relaxed">একই ইউজারের নামে একসাথে অনেকগুলো স্পেশাল key বানানো যায় (প্রতিটার আলাদা দাম/লিমিট সেট করা যায়)। Holder ছাড়া বানালে পরে "Assign" দিয়ে কাউকে দেওয়া যাবে।</p>
                         </div>
                         <button id="ak-gen-btn" onclick="akGenerate()" class="flat-btn mt-6 w-full"><i class="fas fa-key mr-2"></i>Generate</button>
+                    </div>
+                    <div class="card" style="border:1px solid #8b5cf6;grid-column:1/-1">
+                        <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border"><i class="fas fa-wand-magic-sparkles mr-2"></i>Custom API Builder — নিজের মতো API key বানান</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Key code (খালি = অটো)</label><input type="text" id="cb-key" class="flat-input font-mono" maxlength="64" placeholder="যেমন: VIP-MYKEY-001"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Holder — PIN / Email / UID</label><input type="text" id="cb-ident" class="flat-input" placeholder="খালি = স্টক"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Label / Name</label><input type="text" id="cb-label" class="flat-input" maxlength="40"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Price / like (৳)</label><input type="number" min="0" step="0.01" id="cb-price" class="flat-input" placeholder="খালি = ডিফল্ট"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Rate limit / min</label><input type="number" min="1" id="cb-rate" class="flat-input" placeholder="খালি = ডিফল্ট"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Daily limit (likes / day)</label><input type="number" min="0" id="cb-daily" class="flat-input" placeholder="খালি = unlimited"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Max total likes</label><input type="number" min="0" id="cb-max" class="flat-input" placeholder="খালি = unlimited"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Expiry date</label><input type="date" id="cb-exp" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Note (শুধু অ্যাডমিন দেখবে)</label><input type="text" id="cb-note" class="flat-input" maxlength="120"></div>
+                        </div>
+                        <label class="flex items-center gap-2 mt-4 text-sm text-gray-300 cursor-pointer"><input type="checkbox" id="cb-free" class="w-4 h-4 accent-orange-500"> ব্যালেন্স না কেটে চলবে (Free key)</label>
+                        <button id="cb-btn" onclick="akBuildCustom()" class="flat-btn mt-5 w-full"><i class="fas fa-wand-magic-sparkles mr-2"></i>Create Custom API</button>
                     </div>
                 </div>
 
@@ -1621,6 +1638,7 @@ async function akLoad() {
         document.getElementById('ak-enabled').checked = s.apiEnabled !== false;
         document.getElementById('ak-gprice').value = (s.apiLikePrice == null || s.apiLikePrice === '') ? '' : s.apiLikePrice;
         document.getElementById('ak-grate').value = (s.apiRateLimit == null || s.apiRateLimit === '') ? '' : s.apiRateLimit;
+        document.getElementById('ak-mindep').value = (s.apiMinDeposit == null || s.apiMinDeposit === '') ? '' : s.apiMinDeposit;
         akRender();
     } catch (e) {
         document.getElementById('ak-list').innerHTML = '<tr><td colspan="9" class="text-center py-6" style="color:#f87171">' + akEsc(e.message) + '</td></tr>';
@@ -1650,12 +1668,12 @@ function akRender() {
     document.getElementById('ak-logs').innerHTML = (akData.logs || []).length ? akData.logs.map(l => '<tr><td class="text-xs text-gray-400">' + akTime(l.createdAt) + '</td><td>' + akEsc(names[l.userId] || (l.userId || '').slice(0, 6)) + '<br><span class="text-xs text-gray-500">' + akEsc(l.label || '—') + '</span></td><td class="font-mono text-xs">' + akEsc(l.uid) + '</td><td>' + akEsc(l.region) + '</td><td>' + (l.kind === 'info' ? akBadge('Lookup', '#1e3a8a', '#93c5fd') : res(l.result)) + '</td><td>' + (l.kind === 'info' ? '—' : akEsc(l.likes)) + '</td><td>' + (l.price ? '৳' + akEsc(l.price) : '—') + '</td></tr>').join('') : '<tr><td colspan="7" class="text-center text-gray-400 py-6">No API activity yet.</td></tr>';
 }
 async function akSaveSettings() {
-    const en = document.getElementById('ak-enabled').checked, pr = document.getElementById('ak-gprice').value.trim(), rl = document.getElementById('ak-grate').value.trim();
+    const en = document.getElementById('ak-enabled').checked, pr = document.getElementById('ak-gprice').value.trim(), rl = document.getElementById('ak-grate').value.trim(), md = document.getElementById('ak-mindep').value.trim();
     if ((pr !== '' && !(+pr >= 0)) || (rl !== '' && !(+rl >= 1))) { Swal.fire('Error', 'Price ও rate limit এ সঠিক সংখ্যা দিন', 'error'); return; }
     const FVd = firebase.firestore.FieldValue;
     try {
         showLoading();
-        await db.collection('settings').doc('general').set({ apiEnabled: en, apiLikePrice: pr === '' ? FVd.delete() : Math.round(+pr), apiRateLimit: rl === '' ? FVd.delete() : Math.round(+rl) }, { merge: true });
+        await db.collection('settings').doc('general').set({ apiEnabled: en, apiLikePrice: pr === '' ? FVd.delete() : Math.round(+pr), apiRateLimit: rl === '' ? FVd.delete() : Math.round(+rl), apiMinDeposit: md === '' ? 100 : Math.max(0, Math.round(+md)) }, { merge: true });
         hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false }); akLoad();
     } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
 }
@@ -1676,12 +1694,31 @@ async function akGenerate() {
     } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     finally { btn.disabled = false; }
 }
+
+async function akBuildCustom() {
+    const v = id => document.getElementById(id).value.trim();
+    const code = v('cb-key');
+    if (code && !/^[A-Za-z0-9_\-]{6,64}$/.test(code)) { Swal.fire('Error', 'Key code এ শুধু English letter, number, - ও _ (৬-৬৪ অক্ষর) দিন', 'error'); return; }
+    const num = id => v(id) === '' ? '' : +v(id);
+    for (const id of ['cb-price', 'cb-rate', 'cb-daily', 'cb-max']) if (v(id) !== '' && !(+v(id) >= 0)) { Swal.fire('Error', 'সঠিক সংখ্যা দিন', 'error'); return; }
+    const btn = document.getElementById('cb-btn'); btn.disabled = true;
+    try {
+        showLoading();
+        const r = await akCall('generate', { ident: v('cb-ident'), label: v('cb-label'), count: 1, customKey: code, customPrice: num('cb-price'), rateLimit: num('cb-rate'),
+            dailyLimit: num('cb-daily'), maxLikes: num('cb-max'), expiresAt: v('cb-exp') ? new Date(v('cb-exp') + 'T23:59:59').toISOString() : '', note: v('cb-note'), free: document.getElementById('cb-free').checked });
+        hideLoading();
+        const x = await Swal.fire({ title: 'Custom API তৈরি হয়েছে', html: '<p class="font-mono" style="font-size:13px;word-break:break-all">' + akEsc(r.keys[0]) + '</p>', showCancelButton: true, confirmButtonText: 'Copy', cancelButtonText: 'Close' });
+        if (x.isConfirmed) akCopy(r.keys[0], 'Key copied');
+        akLoad();
+    } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+    finally { btn.disabled = false; }
+}
 async function akEdit(key) {
     const k = (akData.keys || []).find(x => x.key === key); if (!k) return;
     const f = (i, l, v, ph) => '<label style="font-size:12px">' + l + '</label><input id="' + i + '" class="swal2-input" style="margin:4px 0 12px;width:100%" value="' + akEsc(v == null ? '' : v) + '" placeholder="' + (ph || '') + '">';
     const r = await Swal.fire({ title: 'Edit API key', showCancelButton: true, confirmButtonText: 'Save',
-        html: '<div style="text-align:left;font-size:13px"><p class="font-mono" style="font-size:11px;word-break:break-all;margin-bottom:10px">' + akEsc(key) + '</p>' + f('e-label', 'Label / Name', k.label, '') + f('e-price', 'Custom price per delivered like (৳) — খালি = ডিফল্ট', k.customPrice, 'default') + f('e-rate', 'Rate limit (requests / minute) — খালি = ডিফল্ট', k.rateLimit, 'default') + '</div>',
-        preConfirm: () => ({ label: document.getElementById('e-label').value.trim(), customPrice: document.getElementById('e-price').value.trim(), rateLimit: document.getElementById('e-rate').value.trim() }) });
+        html: '<div style="text-align:left;font-size:13px"><p class="font-mono" style="font-size:11px;word-break:break-all;margin-bottom:10px">' + akEsc(key) + '</p>' + f('e-label', 'Label / Name', k.label, '') + f('e-price', 'Custom price per delivered like (৳) — খালি = ডিফল্ট', k.customPrice, 'default') + f('e-rate', 'Rate limit (requests / minute) — খালি = ডিফল্ট', k.rateLimit, 'default') + f('e-daily', 'Daily limit (likes / day) — খালি = unlimited', k.dailyLimit, 'unlimited') + f('e-max', 'Max total likes — খালি = unlimited', k.maxLikes, 'unlimited') + f('e-exp', 'Expiry (YYYY-MM-DD) — খালি = কখনো না', k.expiresAt ? String(k.expiresAt).slice(0, 10) : '', 'none') + f('e-newkey', 'Key code বদলান (খালি = একই থাকবে)', '', 'NEW-KEY-CODE') + '</div>',
+        preConfirm: () => ({ label: document.getElementById('e-label').value.trim(), customPrice: document.getElementById('e-price').value.trim(), rateLimit: document.getElementById('e-rate').value.trim(), dailyLimit: document.getElementById('e-daily').value.trim(), maxLikes: document.getElementById('e-max').value.trim(), expiresAt: document.getElementById('e-exp').value.trim() ? new Date(document.getElementById('e-exp').value.trim() + 'T23:59:59').toISOString() : '', newKey: document.getElementById('e-newkey').value.trim() }) });
     if (!r.isConfirmed) return;
     try { showLoading(); await akCall('update', Object.assign({ key }, r.value)); hideLoading(); Swal.fire({ icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false }); akLoad(); }
     catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
