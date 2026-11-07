@@ -71,6 +71,30 @@
         #top-ticker{margin:10px 12px 0;border-radius:16px;background:linear-gradient(90deg,#4f46e5,#7c3aed);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;padding:8px 10px;box-shadow:0 8px 20px rgba(79,70,229,.25);overflow:hidden}
         #top-ticker .tk-text{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
         .zp-sub{font-size:11px;color:#64748b}
+        /* ===== Telegram floating popup ===== */
+        .tgp-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:tgpFade .35s ease both}
+        .tgp-overlay.closing{animation:tgpFadeOut .28s ease both}
+        .tgp-card{position:relative;width:100%;max-width:340px;background:#fff;border-radius:30px;padding:78px 22px 20px;text-align:center;box-shadow:0 30px 70px rgba(2,132,199,.35);animation:tgpPop .6s cubic-bezier(.34,1.56,.64,1) both}
+        .tgp-overlay.closing .tgp-card{animation:tgpPopOut .28s ease both}
+        .tgp-card:before{content:"";position:absolute;left:0;right:0;top:0;height:120px;border-radius:30px 30px 0 0;background:linear-gradient(160deg,#e0f2fe,#fff)}
+        .tgp-logo{position:absolute;left:50%;top:-52px;margin-left:-60px;width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:62px;text-decoration:none;background:linear-gradient(135deg,#37aee2,#1e96c8);border:5px solid #fff;box-shadow:0 14px 34px rgba(0,136,204,.45);animation:tgpFloat 3s ease-in-out infinite;overflow:hidden}
+        .tgp-logo img{width:100%;height:100%;object-fit:cover}
+        .tgp-logo i{margin-right:6px}
+        .tgp-ring{position:absolute;left:50%;top:-52px;margin-left:-60px;width:120px;height:120px;border-radius:50%;border:3px solid rgba(55,174,226,.6);animation:tgpRing 2.2s ease-out infinite;pointer-events:none}
+        .tgp-title{position:relative;font-size:22px;font-weight:800;color:#0f172a;margin:0 0 6px}
+        .tgp-text{position:relative;font-size:13.5px;line-height:1.65;color:#475569;margin:0 4px 18px}
+        .tgp-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:14px 16px;border-radius:18px;color:#fff;font-weight:800;font-size:15px;text-decoration:none;background:#0088cc;transition:transform .15s ease,filter .15s ease}
+        .tgp-btn:active{transform:scale(.96)}
+        .tgp-btn i{font-size:19px}
+        .tgp-close{position:relative;display:block;width:100%;margin-top:10px;padding:12px;border-radius:16px;border:0;background:#f1f5f9;color:#64748b;font-weight:700;font-size:13.5px;cursor:pointer;transition:background .15s}
+        .tgp-close:active{background:#e2e8f0}
+        @keyframes tgpFade{from{opacity:0}to{opacity:1}}
+        @keyframes tgpFadeOut{to{opacity:0}}
+        @keyframes tgpPop{from{opacity:0;transform:translateY(40px) scale(.7)}to{opacity:1;transform:none}}
+        @keyframes tgpPopOut{to{opacity:0;transform:translateY(30px) scale(.85)}}
+        @keyframes tgpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+        @keyframes tgpRing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.55);opacity:0}}
+        .copied{background:#dcfce7!important;color:#16a34a!important;border-color:#bbf7d0!important}
     </style>
 </head>
 <body class="select-none bg-[#f8fafc]">
@@ -364,7 +388,10 @@
                 <div class="text-xs text-slate-500 mb-4" id="acc-profile-email">email@gmail.com</div>
                 <div class="bg-indigo-50/80 border border-indigo-100 rounded-2xl p-3.5 inline-block">
                     <div class="text-[11px] text-indigo-700 font-semibold">সাপোর্ট পিন (Support PIN)</div>
-                    <div class="text-lg font-mono font-bold text-indigo-600" id="acc-profile-pin">------</div>
+                    <div class="flex items-center justify-center gap-2.5">
+                        <div class="text-lg font-mono font-bold text-indigo-600" id="acc-profile-pin">------</div>
+                        <button type="button" onclick="copySupportPin(this)" title="কপি করুন" class="w-8 h-8 rounded-xl bg-white border border-indigo-100 text-indigo-600 shadow-sm flex items-center justify-center active:scale-90 transition"><i class="fa-regular fa-copy"></i></button>
+                    </div>
                 </div>
             </div>
 
@@ -978,12 +1005,44 @@
         }, () => { container.innerHTML = ''; });
     }
 
+    // ---- Banner slider: auto-change every 7 seconds ----
+    let bannerTimer = null, bannerIdx = 0, bannerCount = 0;
+    function bannerGo(i) {
+        const wrapper = document.getElementById('slider-wrapper');
+        if (!wrapper || !bannerCount) return;
+        bannerIdx = ((i % bannerCount) + bannerCount) % bannerCount;
+        wrapper.style.transform = 'translateX(-' + (bannerIdx * 100) + '%)';
+        document.querySelectorAll('#slider-dots button').forEach((d, n) => {
+            d.style.width = n === bannerIdx ? '20px' : '8px';
+            d.style.opacity = n === bannerIdx ? '1' : '.55';
+        });
+    }
+    function bannerStart() {
+        clearInterval(bannerTimer);
+        if (bannerCount > 1) bannerTimer = setInterval(() => bannerGo(bannerIdx + 1), 7000);
+    }
+    (function bannerSwipeInit() {
+        const box = document.getElementById('banner-container');
+        if (!box) return;
+        let x0 = null;
+        box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+        box.addEventListener('touchend', e => {
+            if (x0 === null) return;
+            const dx = e.changedTouches[0].clientX - x0; x0 = null;
+            if (Math.abs(dx) > 40) { bannerGo(bannerIdx + (dx < 0 ? 1 : -1)); bannerStart(); }
+        }, { passive: true });
+    })();
     function loadBanners() {
         db.collection("banners").onSnapshot((snapshot) => {
             const wrapper = document.getElementById('slider-wrapper');
-            let slidesHTML = "";
-            snapshot.forEach((doc) => { if(doc.data().image) slidesHTML += `<img src="${doc.data().image}" class="w-full h-full object-cover flex-shrink-0">`; });
-            if(slidesHTML) wrapper.innerHTML = slidesHTML;
+            const dots = document.getElementById('slider-dots');
+            let slidesHTML = "", n = 0;
+            snapshot.forEach((doc) => { if(doc.data().image) { slidesHTML += `<img src="${doc.data().image}" class="w-full h-full object-cover flex-shrink-0">`; n++; } });
+            if (!slidesHTML) return;
+            wrapper.innerHTML = slidesHTML;
+            bannerCount = n; bannerIdx = 0;
+            dots.innerHTML = n > 1 ? Array.from({ length: n }, (_, k) => `<button type="button" onclick="bannerGo(${k});bannerStart()" aria-label="Banner ${k + 1}" style="height:8px;width:8px;border-radius:99px;background:#fff;border:0;padding:0;transition:all .3s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></button>`).join('') : '';
+            bannerGo(0); bannerStart();
         });
     }
 
@@ -1270,6 +1329,84 @@ function pushMaybePrompt() {
 }
 window.addEventListener('load', () => setTimeout(pushMaybePrompt, 3500));
 auth.onAuthStateChanged(() => { if (pushSupported() && Notification.permission === 'granted') pushRegister(); });   // link this device to the logged-in user
+
+// ================= SUPPORT PIN COPY =================
+function copySupportPin(btn) {
+    const t = (document.getElementById('acc-profile-pin').innerText || '').trim();
+    if (!t || /^-+$/.test(t)) return;
+    const ic = btn.querySelector('i');
+    const done = () => {
+        ic.className = 'fa-solid fa-check'; btn.classList.add('copied');
+        Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'সাপোর্ট কোড কপি হয়েছে', showConfirmButton: false, timer: 1400 });
+        setTimeout(() => { ic.className = 'fa-regular fa-copy'; btn.classList.remove('copied'); }, 1500);
+    };
+    const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = t; ta.style.cssText = 'position:fixed;opacity:0;user-select:text;-webkit-user-select:text';
+        document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, 99999);
+        try { document.execCommand('copy'); done(); } catch (e) { Swal.fire('ত্রুটি', 'কপি করা যায়নি', 'error'); }
+        ta.remove();
+    };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done).catch(fallback); else fallback();
+}
+
+// ================= TELEGRAM FLOATING POPUP (every visit, controlled from admin) =================
+(function () {
+    const DEF = {
+        title: 'Telegram',
+        text: 'বিভিন্ন স্পেশাল অফার পেতে এখনই আমাদের টেলিগ্রাম চ্যানেলে জয়েন হন, জয়েন হয়ে থাকুন! 🎁',
+        btn: 'টেলিগ্রামে জয়েন করুন',
+        color: '#0088cc',
+        link: 'https://t.me/MHXOFC11'
+    };
+    function fixLink(u) {
+        u = (u || '').trim();
+        if (!u) return '';
+        if (/^https?:\/\//i.test(u)) return u;
+        if (u[0] === '@') return 'https://t.me/' + u.slice(1);
+        return 'https://' + u.replace(/^\/+/, '');
+    }
+    function closePop(ov) {
+        ov.classList.add('closing');
+        setTimeout(() => ov.remove(), 300);
+    }
+    function showPop(g) {
+        if (document.getElementById('tgp-overlay')) return;
+        const link = fixLink(g.tgPopupLink) || fixLink(g.telegram) || DEF.link;
+        const color = /^#[0-9a-f]{6}$/i.test(g.tgPopupBtnColor || '') ? g.tgPopupBtnColor : DEF.color;
+        const ov = document.createElement('div');
+        ov.id = 'tgp-overlay'; ov.className = 'tgp-overlay';
+        ov.innerHTML = '<div class="tgp-card" role="dialog" aria-modal="true">' +
+            '<span class="tgp-ring"></span>' +
+            '<a class="tgp-logo" id="tgp-logo" target="_blank" rel="noopener"></a>' +
+            '<h3 class="tgp-title" id="tgp-title"></h3>' +
+            '<p class="tgp-text" id="tgp-text"></p>' +
+            '<a class="tgp-btn" id="tgp-join" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i><span id="tgp-btn-text"></span></a>' +
+            '<button type="button" class="tgp-close" id="tgp-close">বন্ধ করুন</button></div>';
+        document.body.appendChild(ov);
+        const logo = ov.querySelector('#tgp-logo'), join = ov.querySelector('#tgp-join');
+        logo.href = link; join.href = link;
+        if (g.tgPopupImage) { const im = document.createElement('img'); im.alt = 'Telegram'; im.src = g.tgPopupImage; im.onerror = () => { logo.innerHTML = '<i class="fab fa-telegram-plane"></i>'; }; logo.appendChild(im); }
+        else logo.innerHTML = '<i class="fab fa-telegram-plane"></i>';
+        ov.querySelector('#tgp-title').textContent = g.tgPopupTitle || DEF.title;
+        ov.querySelector('#tgp-text').textContent = g.tgPopupText || DEF.text;
+        ov.querySelector('#tgp-btn-text').textContent = g.tgPopupBtnText || DEF.btn;
+        join.style.background = color;
+        join.style.boxShadow = '0 10px 24px ' + color + '66';
+        join.addEventListener('click', () => setTimeout(() => closePop(ov), 150));
+        logo.addEventListener('click', () => setTimeout(() => closePop(ov), 150));
+        ov.querySelector('#tgp-close').addEventListener('click', () => closePop(ov));
+        ov.addEventListener('click', e => { if (e.target === ov) closePop(ov); });
+    }
+    function init() {
+        setTimeout(() => {
+            db.collection('settings').doc('general').get()
+                .then(doc => { const g = doc.exists ? doc.data() : {}; if (g.tgPopupEnabled === false) return; showPop(g); })
+                .catch(() => showPop({}));
+        }, 700);
+    }
+    if (document.readyState === 'complete') init(); else window.addEventListener('load', init);
+})();
 </script>
 </body>
 </html>

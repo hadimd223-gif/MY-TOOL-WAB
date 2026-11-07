@@ -305,6 +305,24 @@
                         <button onclick="saveSettings('social')" class="flat-btn mt-6 w-full">Save Social Links</button>
                     </div>
 
+                    <div class="card" style="border:1px solid #0088cc">
+                        <h3 class="text-xl font-bold text-orange-500 mb-1 pb-3 border-b border-dark-border"><i class="fab fa-telegram-plane mr-2" style="color:#38bdf8"></i>Telegram Popup (Floating Window)</h3>
+                        <p class="text-xs text-gray-400 mb-5 mt-3">ইউজার ওয়েবসাইটে ঢুকলেই প্রতিবার এই পপআপ দেখাবে। এখান থেকে ছবি, লেখা, লিংক, বাটনের নাম ও রঙ যেকোনো সময় বদলাতে পারবেন।</p>
+                        <div class="space-y-5">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="set-tgp-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">Popup চালু রাখুন</span></label>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Logo / Image URL (খালি রাখলে ডিফল্ট Telegram লোগো)</label><input type="text" id="set-tgp-image" class="flat-input" placeholder="https://..."><input type="file" id="tgp-file" accept="image/*" class="mt-2 text-sm text-gray-400"><div class="flex items-center gap-3 mt-2"><img id="tgp-prev" class="w-16 h-16 rounded-full object-cover hidden"><button type="button" onclick="document.getElementById('set-tgp-image').value='';tgpPrev()" class="flat-btn flat-btn-outline text-xs py-2 px-3">ডিফল্ট লোগো</button></div></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Title</label><input type="text" id="set-tgp-title" class="flat-input" placeholder="Telegram"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Message (লোগোর নিচের লেখা)</label><textarea id="set-tgp-text" class="flat-input h-24" placeholder="বিভিন্ন স্পেশাল অফার পেতে এখনই আমাদের টেলিগ্রাম চ্যানেলে জয়েন হন..."></textarea></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Telegram Channel Link (খালি রাখলে Social Links এর Telegram Link ব্যবহার হবে)</label><input type="text" id="set-tgp-link" class="flat-input" placeholder="https://t.me/yourchannel"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Join Button Text</label><input type="text" id="set-tgp-btn" class="flat-input" placeholder="টেলিগ্রামে জয়েন করুন" oninput="tgpPrev()"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">Join Button Color</label>
+                                <div class="flex items-center gap-3"><input type="color" id="set-tgp-color" value="#0088cc" oninput="tgpPrev()" style="width:64px;height:44px;border:0;background:none;padding:0;cursor:pointer"><span id="tgp-hex" class="text-sm font-mono text-gray-300">#0088cc</span></div>
+                                <div id="tgp-btn-prev" class="mt-3 text-center text-white font-bold rounded-2xl py-3 px-4" style="background:#0088cc"><i class="fab fa-telegram-plane mr-2"></i><span>টেলিগ্রামে জয়েন করুন</span></div>
+                            </div>
+                        </div>
+                        <button onclick="saveSettings('tgpopup')" class="flat-btn mt-6 w-full">Save Telegram Popup</button>
+                    </div>
+
                     <div class="card">
                         <h3 class="text-xl font-bold text-orange-500 mb-6 pb-3 border-b border-dark-border">Payment Admin Numbers</h3>
                         <div class="space-y-5">
@@ -749,6 +767,16 @@
                     if(document.getElementById('set-api-key')) document.getElementById('set-api-key').value = d.autoTopUpApiKey || '';
                     if(document.getElementById('set-api-url')) document.getElementById('set-api-url').value = d.autoTopUpApiUrl || '';
                     if(document.getElementById('set-api-callback')) document.getElementById('set-api-callback').value = d.autoTopUpCallbackUrl || '';
+                    if(document.getElementById('set-tgp-enabled')) {
+                        document.getElementById('set-tgp-enabled').checked = d.tgPopupEnabled !== false;
+                        document.getElementById('set-tgp-image').value = d.tgPopupImage || '';
+                        document.getElementById('set-tgp-title').value = d.tgPopupTitle || '';
+                        document.getElementById('set-tgp-text').value = d.tgPopupText || '';
+                        document.getElementById('set-tgp-link').value = d.tgPopupLink || '';
+                        document.getElementById('set-tgp-btn').value = d.tgPopupBtnText || '';
+                        document.getElementById('set-tgp-color').value = /^#[0-9a-f]{6}$/i.test(d.tgPopupBtnColor || '') ? d.tgPopupBtnColor : '#0088cc';
+                        tgpPrev();
+                    }
                 }
             });
             db.collection('settings').doc('videos').get().then(doc => {
@@ -782,6 +810,16 @@
                     telegram: document.getElementById('set-telegram').value,
                     facebook: document.getElementById('set-facebook').value,
                     youtube: document.getElementById('set-youtube').value
+                }, {merge: true});
+            } else if (type === 'tgpopup') {
+                p1 = db.collection('settings').doc('general').set({
+                    tgPopupEnabled: document.getElementById('set-tgp-enabled').checked,
+                    tgPopupImage: document.getElementById('set-tgp-image').value.trim(),
+                    tgPopupTitle: document.getElementById('set-tgp-title').value.trim(),
+                    tgPopupText: document.getElementById('set-tgp-text').value.trim(),
+                    tgPopupLink: document.getElementById('set-tgp-link').value.trim(),
+                    tgPopupBtnText: document.getElementById('set-tgp-btn').value.trim(),
+                    tgPopupBtnColor: document.getElementById('set-tgp-color').value
                 }, {merge: true});
             } else if (type === 'payment') {
                 p1 = db.collection('admin').doc('payment').set({
@@ -1467,6 +1505,36 @@
     }
     const togglePromo = (id, on) => db.collection('promos').doc(id).update({ active: on });
     async function delPromo(id) { const r = await Swal.fire({ title: 'Delete ' + id + '?', icon: 'warning', showCancelButton: true }); if (r.isConfirmed) db.collection('promos').doc(id).delete(); }
+</script>
+<script>
+    function tgpPrev() {
+        const c = document.getElementById('set-tgp-color'); if (!c) return;
+        document.getElementById('tgp-hex').innerText = c.value;
+        const b = document.getElementById('tgp-btn-prev'); b.style.background = c.value;
+        b.querySelector('span').innerText = document.getElementById('set-tgp-btn').value || 'টেলিগ্রামে জয়েন করুন';
+        const im = document.getElementById('tgp-prev'), u = document.getElementById('set-tgp-image').value.trim();
+        if (u) { im.src = u; im.classList.remove('hidden'); } else { im.classList.add('hidden'); }
+    }
+    (function () {
+        const f = document.getElementById('tgp-file'); if (!f) return;
+        document.getElementById('set-tgp-image').addEventListener('input', tgpPrev);
+        f.addEventListener('change', () => {
+            const file = f.files[0]; if (!file) return;
+            const r = new FileReader();
+            r.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                    const m = 320, k = Math.min(1, m / Math.max(img.width, img.height));
+                    const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    document.getElementById('set-tgp-image').value = c.toDataURL('image/png');
+                    tgpPrev();
+                };
+                img.src = r.result;
+            };
+            r.readAsDataURL(file);
+        });
+    })();
 </script>
 </body>
 </html>
