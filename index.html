@@ -333,6 +333,95 @@ function authMsg(e) {
         .hdr-av-img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
         @media (prefers-reduced-motion:reduce){.mhx-bolt::after,.lb-sk,.lb-refresh.spin i{animation:none}}
     </style>
+
+    <style id="mhx-theme"></style>
+    <script>
+    /* ===== MHX Theme engine: colours set from Admin > Theme & Colors ===== */
+    (function () {
+        var SLOTS = {
+            textMain:   { tx: 'body,.text-slate-900,.text-slate-800,.text-slate-700,.lb-nm,.tgp-title' },
+            textMuted:  { tx: '.text-slate-600,.text-slate-500,.text-slate-400,.zp-sub' },
+            brandText:  { tx: '.text-brand-500,.text-brand-600,.text-brand-700,.text-brand-900,.lb-amt' },
+            pageBg:     { bg: 'html,body', fx: 'background-attachment:fixed !important;' },
+            header:     { bg: 'header.sticky', tx: '#header-site-name', bd: 'header.sticky' },
+            bottomNav:  { bg: 'nav.fixed>div', bd: 'nav.fixed>div' },
+            navText:    { tx: '.nav-item' },
+            navActive:  { bg: '.nav-item.active-tab', tx: '.nav-item.active-tab' },
+            centerBtn:  { bg: '.mhx-bolt', bd: '.mhx-bolt', glow: 1 },
+            card:       { bg: '.vip-card', bd: '.vip-card' },
+            productCard:{ bg: '.product-card', bd: '.product-card' },
+            productSel: { bg: '.product-card.selected', bd: '.product-card.selected' },
+            payCard:    { bg: '.pay-option-card', bd: '.pay-option-card' },
+            paySel:     { bg: '.pay-option-card.selected', bd: '.pay-option-card.selected' },
+            input:      { bg: '.zp-input', tx: '.zp-input', bd: '.zp-input' },
+            notice:     { bg: '#notice-section>div', tx: '#notice-section>div,#notice-section .text-brand-100', glow: 1 },
+            ticker:     { bg: '#top-ticker', tx: '#top-ticker', glow: 1 },
+            mainBtn:    { bg: '.zp-btn', tx: '.zp-btn', glow: 1 },
+            loginBtn:   { bg: '#header-login-container button', tx: '#header-login-container button', glow: 1 },
+            topupBtn:   { bg: '#home-sec .vip-card .grid.grid-cols-2>button:first-child', tx: '#home-sec .vip-card .grid.grid-cols-2>button:first-child', glow: 1 },
+            addMoneyBtn:{ bg: '#home-sec .vip-card .grid.grid-cols-2>button:last-child', tx: '#home-sec .vip-card .grid.grid-cols-2>button:last-child', bd: '#home-sec .vip-card .grid.grid-cols-2>button:last-child' },
+            balanceChip:{ bg: '#header-balance-container div.rounded-2xl', tx: '#header-balance-container div.rounded-2xl', bd: '#header-balance-container div.rounded-2xl' },
+            avatar:     { bg: '#header-avatar', tx: '#header-avatar', glow: 1 },
+            bell:       { bg: '.zp-bell', tx: '.zp-bell', bd: '.zp-bell' },
+            fab:        { bg: '#fab-support', tx: '#fab-support', glow: 1 },
+            dailyCard:  { bg: '#home-sec [onclick*=dailylike]', tx: '#home-sec [onclick*=dailylike]', glow: 1 },
+            autoCard:   { bg: '#home-sec [onclick*=autolike]', tx: '#home-sec [onclick*=autolike]', glow: 1 },
+            dailyIcon:  { bg: '#dailylike-sec .w-14.h-14' },
+            autoIcon:   { bg: '#autolike-sec .w-14.h-14' },
+            uidBtn:     { bg: '#uidCheckBtn', tx: '#uidCheckBtn', glow: 1 },
+            promoBtn:   { bg: '#account-sec button[onclick*=redeemPromo]', tx: '#account-sec button[onclick*=redeemPromo]', glow: 1 },
+            walletIcon: { bg: '#addmoney-sec .w-12.h-12.rounded-2xl' },
+            resellerBar:{ bg: '#reseller-progress-bar' },
+            refCard:    { bg: '#ref-card>.text-white', tx: '#ref-card>.text-white' },
+            leaderHero: { bg: '.lb-hero', tx: '.lb-hero', glow: 1 },
+            leaderBar:  { bg: '.lb-bar i' },
+            profileAvatar: { bg: '.av-wrap .av-img' },
+            popupBtn:   { bg: '.mhx-btn-primary', tx: '.mhx-btn-primary', glow: 1 },
+            popupBg:    { bg: '.swal2-popup.mhx-pop:not(.swal2-toast)', bd: '.swal2-popup.mhx-pop:not(.swal2-toast)' },
+            profileMenu:{ bg: '#profile-menu', bd: '#profile-menu' }
+        };
+        function ok(v) { return typeof v === 'string' && v.length < 80 && !/[;{}<>\\]/.test(v); }
+        function rgba(c, a) {
+            var m = /^#?([0-9a-f]{6})$/i.exec(c || ''); if (!m) return null;
+            var n = parseInt(m[1], 16);
+            return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
+        }
+        function build(t) {
+            var out = [];
+            if (!t || typeof t !== 'object') return '';
+            Object.keys(SLOTS).forEach(function (id) {
+                var s = SLOTS[id], v = t[id];
+                if (!v || typeof v !== 'object') return;
+                if (s.bg && ok(v.c1)) {
+                    var two = ok(v.c2) && v.c2 && v.c2 !== v.c1;
+                    var ang = isFinite(v.a) ? +v.a : 135;
+                    var bg = two ? 'linear-gradient(' + ang + 'deg,' + v.c1 + ',' + v.c2 + ')' : v.c1;
+                    out.push(s.bg + '{background:' + bg + ' !important;' + (s.fx || '') + '}');
+                    if (s.glow) { var g = rgba(two ? v.c2 : v.c1, 0.38); if (g) out.push(s.bg + '{box-shadow:0 10px 24px ' + g + ' !important}'); }
+                }
+                if (s.tx && ok(v.tx)) out.push(s.tx + '{color:' + v.tx + ' !important}');
+                if (s.bd && ok(v.bd)) out.push(s.bd + '{border-color:' + v.bd + ' !important}');
+            });
+            if (typeof t.css === 'string') out.push(t.css.replace(/[<]/g, ''));
+            return out.join('\n');
+        }
+        function paint(css) { var el = document.getElementById('mhx-theme'); if (el && el.textContent !== css) el.textContent = css; }
+        window.mhxApplyTheme = function (t) {
+            var css = build(t); paint(css);
+            try { localStorage.setItem('mhxThemeCss', css); } catch (e) {}
+            try {
+                var c = t && t.header && t.header.c1, m = document.querySelector('meta[name=theme-color]');
+                if (m) m.setAttribute('content', ok(c) && c ? c : '#059669');
+            } catch (e) {}
+        };
+        try { var cached = localStorage.getItem('mhxThemeCss'); if (cached) paint(cached); } catch (e) {}
+        /* live preview from Admin (same origin only) */
+        window.addEventListener('message', function (e) {
+            if (e.origin !== location.origin || !e.data || e.data.type !== 'mhx-theme-preview') return;
+            paint(build(e.data.theme));
+        });
+    })();
+    </script>
 </head>
 <body class="select-none bg-[#f7fdfa]">
 
@@ -913,6 +1002,7 @@ function authMsg(e) {
                 }
                 wireQuickLinks(generalSettings);
             }
+            try { if (window.mhxApplyTheme) mhxApplyTheme(doc.exists && doc.data().themeJson ? JSON.parse(doc.data().themeJson) : {}); } catch (e) {}
         });
     }
 

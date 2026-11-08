@@ -175,6 +175,9 @@
             <a href="#" onclick="switchView('settings')" id="nav-settings" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-cog w-8 text-center"></i> Settings
             </a>
+            <a href="#" onclick="switchView('theme');return false" id="nav-theme" class="nav-link flex items-center px-4 py-3">
+                <i class="fas fa-palette w-8 text-center"></i> Theme &amp; Colors
+            </a>
             <a href="#" onclick="switchView('categories')" id="nav-categories" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-tags w-8 text-center"></i> Categories
             </a>
@@ -380,6 +383,53 @@
                         </div>
                         <button onclick="saveSettings('advanced')" class="flat-btn mt-6 w-full">Save Advanced Config</button>
                     </div>
+                </div>
+            </div>
+
+            <div id="view-theme" class="view-section hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
+                    <div>
+                        <div class="card mb-6">
+                            <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-palette mr-2"></i>ওয়েবসাইটের কালার কাস্টমাইজ</h3>
+                            <p class="text-xs text-gray-400 mb-4">প্রতিটি বাটন, কার্ড, হেডার, নেভিগেশন, নোটিশ বার ইত্যাদির কালার নিজের ইচ্ছামতো বদলান। প্রতিটি জায়গায় <b>কালার ১</b> ও <b>কালার ২</b> দিলে দুই সাইডে দুই কালারের গ্রেডিয়েন্ট হবে (যেমন এক সাইড হালকা সাদা, আরেক সাইড গোলাপি)। শুধু একটা কালার দিলে সলিড কালার হবে। ডানের প্রিভিউতে সাথে সাথে দেখতে পাবেন; ঠিক লাগলে <b>Save</b> চাপুন।</p>
+                            <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-3 items-end">
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-1">⚡ কুইক কালার (পুরো সাইট একবারে)</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="color" id="th-brand" value="#ec4899" class="th-pick">
+                                        <button onclick="thApplyBrand()" class="flat-btn" style="padding:10px 16px"><i class="fas fa-magic mr-2"></i>সব বাটন/ব্যানারে লাগান</button>
+                                    </div>
+                                </div>
+                                <p class="text-[11px] text-gray-500">একটা কালার বাছাই করলে সব গ্রেডিয়েন্ট বাটন, ব্যানার, সিলেক্টেড কার্ড ও ব্র্যান্ড টেক্সট ওই কালারে বদলে যাবে। এরপর যেকোনো জায়গা আলাদাভাবে ঠিক করতে পারবেন।</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <button onclick="thSave()" class="flat-btn"><i class="fas fa-save mr-2"></i>Save (সবার জন্য চালু করুন)</button>
+                                <button onclick="thResetAll()" class="flat-btn" style="background:#3f3f46"><i class="fas fa-undo mr-2"></i>সব আগের মতো করুন</button>
+                            </div>
+                        </div>
+                        <div id="th-groups"></div>
+                        <div class="card mb-24">
+                            <h3 class="text-lg font-bold text-orange-500 mb-1"><i class="fas fa-code mr-2"></i>Advanced: নিজের CSS (ঐচ্ছিক)</h3>
+                            <p class="text-xs text-gray-400 mb-3">উপরের তালিকায় নেই এমন কিছু বদলাতে চাইলে এখানে CSS লিখুন। যেমন: <code>.vip-card{border-radius:30px}</code></p>
+                            <textarea id="th-css" class="flat-input h-28" style="font-family:monospace;font-size:12px" placeholder="/* custom css */" oninput="thSetCss(this.value)"></textarea>
+                        </div>
+                    </div>
+                    <div class="xl:sticky xl:top-4 self-start">
+                        <div class="card">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-lg font-bold text-orange-500"><i class="fas fa-mobile-screen mr-2"></i>লাইভ প্রিভিউ</h3>
+                                <button onclick="thReloadPreview()" class="text-xs text-gray-400 hover:text-orange-500"><i class="fas fa-rotate mr-1"></i>Reload</button>
+                            </div>
+                            <input id="th-url" class="flat-input mb-3" style="padding:8px 12px;font-size:12px" placeholder="আপনার সাইটের লিংক">
+                            <div style="border:6px solid #27272A;border-radius:28px;overflow:hidden;background:#fff">
+                                <iframe id="th-frame" title="preview" style="width:100%;height:600px;border:0;display:block" onload="thPush()"></iframe>
+                            </div>
+                            <p class="text-[11px] text-gray-500 mt-2">প্রিভিউ না এলে উপরের লিংকে সাইটের ঠিকানা দিয়ে Reload চাপুন (অ্যাডমিন ও সাইট একই ডোমেইনে থাকতে হবে)।</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="position:fixed;right:18px;bottom:18px;z-index:40">
+                    <button onclick="thSave()" class="flat-btn shadow-2xl"><i class="fas fa-save mr-2"></i>Save Colors</button>
                 </div>
             </div>
 
@@ -825,7 +875,8 @@
                 notices: "Broadcast Notifications",
                 promos: "Promo Codes",
                 apikeys: "API Key Management",
-                autolike: "Auto Like Management"
+                autolike: "Auto Like Management",
+                theme: "Theme & Colors"
             };
             
             const pageTitleEl = document.getElementById('page-title');
@@ -835,6 +886,7 @@
             if(pageDescEl) pageDescEl.innerText = `Manage your ${titles[viewId] ? titles[viewId].toLowerCase() : 'platform'}`;
 
             if(viewId === 'dashboard') loadDashboardData();
+            if(viewId === 'theme' && window.thInit) thInit();
             if(viewId === 'settings') loadSettings();
             if(viewId === 'categories') loadCategories();
             if(viewId === 'services') loadServices();
@@ -1969,5 +2021,183 @@ async function alSendOne(id) {
     try { showLoading(); await alCall({ userId: id }); hideLoading(); Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Sending...', timer: 1800, showConfirmButton: false }); setTimeout(alLoadSubs, 6000); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
 }
 </script>
+
+<script>
+/* ===== Theme & Colors manager ===== */
+(function () {
+    var G = [
+      ['🎨 পেজ ও লেখার রঙ', [
+        ['pageBg','পুরো পেজের ব্যাকগ্রাউন্ড',{c1:'#d9f5e8',c2:'#f7fdfa',a:180},'page'],
+        ['textMain','প্রধান লেখা (নাম, টাইটেল)',{tx:'#10201a'}],
+        ['textMuted','হালকা লেখা (সাব-টেক্সট)',{tx:'#5f7a6e'}],
+        ['brandText','ব্র্যান্ড কালার লেখা (ব্যালেন্স, আইকন, লিংক)',{tx:'#059669'},'t']
+      ]],
+      ['📌 হেডার ও নিচের নেভিগেশন', [
+        ['header','হেডার (উপরের বার)',{c1:'#ffffff',c2:'',a:90,tx:'#10201a',bd:'#ecfdf5'}],
+        ['balanceChip','হেডারের ব্যালেন্স বক্স',{c1:'#ecfdf5',c2:'',a:135,tx:'#059669',bd:'#d1fae5'},'tint'],
+        ['avatar','হেডারের প্রোফাইল বাটন',{c1:'#34d399',c2:'#047857',a:135,tx:'#ffffff'},'g'],
+        ['loginBtn','Login বাটন (হেডার)',{c1:'#059669',c2:'#047857',a:90,tx:'#ffffff'},'g'],
+        ['bell','নোটিফিকেশন বেল',{c1:'#ecfdf5',c2:'',a:135,tx:'#059669',bd:'#d1fae5'},'tint'],
+        ['bottomNav','নিচের নেভিগেশন বার',{c1:'#ffffff',c2:'',a:90,bd:'#ecfdf5'}],
+        ['navText','নেভিগেশন আইটেমের লেখা',{tx:'#5f7a6e'}],
+        ['navActive','নেভিগেশনের সিলেক্টেড ট্যাব',{c1:'#effaf5',c2:'#dff5ea',a:180,tx:'#059669'},'tint'],
+        ['centerBtn','মাঝের গোল বাটন (Leaderboard)',{c1:'#6ee7b7',c2:'#059669',a:135,bd:'#ffffff'},'g'],
+        ['fab','নিচের ডানের সাপোর্ট বাটন',{c1:'#6ee7b7',c2:'#059669',a:135,tx:'#ffffff'},'g']
+      ]],
+      ['📢 নোটিশ ও ব্যানার', [
+        ['notice','Notice বক্স (হোমের উপরে)',{c1:'#059669',c2:'#047857',a:90,tx:'#ffffff'},'g'],
+        ['ticker','ব্রডকাস্ট টিকার বার',{c1:'#059669',c2:'#34d399',a:90,tx:'#ffffff'},'g']
+      ]],
+      ['🏠 হোম পেজ', [
+        ['card','সব কার্ড (সাদা বক্স)',{c1:'#ffffff',c2:'',a:135,bd:'#ffffff'}],
+        ['topupBtn','Top up বাটন',{c1:'#059669',c2:'#047857',a:90,tx:'#ffffff'},'g'],
+        ['addMoneyBtn','Add money বাটন',{c1:'#ffffff',c2:'',a:135,tx:'#064e3b',bd:'#a7f3d0'}],
+        ['dailyCard','Daily Like কার্ড',{c1:'#10b981',c2:'#be185d',a:135,tx:'#ffffff'}],
+        ['autoCard','Auto Like কার্ড',{c1:'#059669',c2:'#f59e0b',a:135,tx:'#ffffff'}],
+        ['productCard','প্যাকেজ কার্ড',{c1:'#ffffff',c2:'',a:135,bd:'#d8ece2'}],
+        ['productSel','সিলেক্ট করা প্যাকেজ কার্ড',{c1:'#ecfdf5',c2:'',a:135,bd:'#059669'},'tint'],
+        ['uidBtn','UID চেক / অর্ডার বাটন',{c1:'#059669',c2:'#047857',a:90,tx:'#ffffff'},'g'],
+        ['dailyIcon','Daily Like পেজের আইকন',{c1:'#10b981',c2:'#be185d',a:135}],
+        ['autoIcon','Auto Like পেজের আইকন',{c1:'#059669',c2:'#f59e0b',a:135}]
+      ]],
+      ['💳 ওয়ালেট ও পেমেন্ট', [
+        ['walletIcon','ওয়ালেট আইকন',{c1:'#34d399',c2:'#047857',a:135},'g'],
+        ['payCard','পেমেন্ট মেথড কার্ড',{c1:'#ffffff',c2:'',a:135,bd:'#d8ece2'}],
+        ['paySel','সিলেক্ট করা পেমেন্ট কার্ড',{c1:'#ecfdf5',c2:'',a:135,bd:'#059669'},'tint'],
+        ['mainBtn','মূল বাটন (Login, Submit, Pay ইত্যাদি)',{c1:'#10b981',c2:'#059669',a:135,tx:'#ffffff'},'g'],
+        ['input','ইনপুট বক্স',{c1:'#ffffff',c2:'',a:135,tx:'#10201a',bd:'#d8ece2'}]
+      ]],
+      ['👤 প্রোফাইল ও লিডারবোর্ড', [
+        ['profileAvatar','প্রোফাইলের বড় ছবির বৃত্ত',{c1:'#34d399',c2:'#059669',a:135},'g'],
+        ['resellerBar','রিসেলার প্রোগ্রেস বার',{c1:'#34d399',c2:'#047857',a:90},'g'],
+        ['promoBtn','Promo Redeem বাটন',{c1:'#059669',c2:'#047857',a:90,tx:'#ffffff'},'g'],
+        ['refCard','Referral কোড বক্স',{c1:'#059669',c2:'#34d399',a:135,tx:'#ffffff'},'g'],
+        ['leaderHero','Leaderboard হিরো ব্যানার',{c1:'#059669',c2:'#6ee7b7',a:135,tx:'#ffffff'},'g'],
+        ['leaderBar','Leaderboard বার',{c1:'#10b981',c2:'#6ee7b7',a:90},'g'],
+        ['profileMenu','প্রোফাইল ড্রপডাউন মেনু',{c1:'#ffffff',c2:'',a:135,bd:'#d1fae5'}]
+      ]],
+      ['🔔 পপআপ', [
+        ['popupBg','পপআপ বক্সের ব্যাকগ্রাউন্ড',{c1:'#ffffff',c2:'',a:135,bd:'#a7f3d0'}],
+        ['popupBtn','পপআপের OK / Confirm বাটন',{c1:'#10b981',c2:'#059669',a:135,tx:'#ffffff'},'g']
+      ]]
+    ];
+    var ANG = [[90,'→ ডান'],[135,'↘ কোণা'],[180,'↓ নিচ'],[45,'↗ উপর-ডান'],[0,'↑ উপর'],[270,'← বাম'],[225,'↙ নিচ-বাম'],[315,'↖ উপর-বাম']];
+    var DEF = {}, META = {}, state = {}, inited = false, timer = null;
+    G.forEach(function (g) { g[1].forEach(function (x) { DEF[x[0]] = x[2]; META[x[0]] = x; }); });
+
+    function hex2rgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+    function rgb2hex(r) { return '#' + r.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
+    function mix(h, t, p) { var a = hex2rgb(h), b = hex2rgb(t); return rgb2hex([a[0] + (b[0] - a[0]) * p, a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p]); }
+    function lighten(h, p) { return mix(h, '#ffffff', p); }
+    function darken(h, p) { return mix(h, '#000000', p); }
+    function isHex(v) { return /^#[0-9a-f]{6}$/i.test(v || ''); }
+    function val(id, f) { var s = state[id]; return (s && s[f] != null) ? s[f] : (DEF[id][f] != null ? DEF[id][f] : ''); }
+    function css(id) { var c1 = val(id, 'c1'), c2 = val(id, 'c2'), a = val(id, 'a'); return c2 && c2 !== c1 ? 'linear-gradient(' + a + 'deg,' + c1 + ',' + c2 + ')' : c1; }
+    function safe(x) { return String(x).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function pick(id, f) {
+        var v = val(id, f), h = isHex(v) ? v : '#ffffff';
+        return '<input type="color" class="th-pick" value="' + h + '" data-id="' + id + '" data-f="' + f + '" oninput="thSet(this)">';
+    }
+
+    function row(x) {
+        var id = x[0], d = x[2], changed = !!state[id], h = '';
+        h += '<div class="th-row" id="thr-' + id + '" style="padding:12px 0;border-top:1px solid #27272A">';
+        h += '<div class="flex items-center justify-between gap-2 mb-2"><div class="text-sm font-semibold ' + (changed ? 'text-orange-400' : 'text-gray-200') + '" id="thl-' + id + '">' + safe(x[1]) + (changed ? ' ●' : '') + '</div>';
+        h += '<button class="text-[11px] text-gray-500 hover:text-orange-500" onclick="thResetOne(\'' + id + '\')"><i class="fas fa-undo mr-1"></i>রিসেট</button></div>';
+        h += '<div class="flex flex-wrap items-center gap-x-4 gap-y-2">';
+        if (d.c1 != null) {
+            h += '<div id="thsw-' + id + '" style="width:44px;height:30px;border-radius:8px;border:1px solid #3f3f46;background:' + css(id) + '"></div>';
+            h += '<label class="th-lbl">কালার ১ ' + pick(id, 'c1') + '</label>';
+            var c2 = val(id, 'c2');
+            h += '<label class="th-lbl">কালার ২ <span id="thc2w-' + id + '">' + pick(id, 'c2') + '</span> <button class="th-mini" onclick="thClear2(\'' + id + '\')">সলিড</button></label>';
+            h += '<label class="th-lbl">দিক <select class="th-sel" data-id="' + id + '" data-f="a" onchange="thSet(this)">' + ANG.map(function (o) { return '<option value="' + o[0] + '"' + (+val(id, 'a') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label>';
+        }
+        if (d.tx != null) h += '<label class="th-lbl">লেখা ' + pick(id, 'tx') + '</label>';
+        if (d.bd != null) h += '<label class="th-lbl">বর্ডার ' + pick(id, 'bd') + '</label>';
+        h += '</div></div>';
+        return h;
+    }
+    function render() {
+        var box = document.getElementById('th-groups'); if (!box) return;
+        box.innerHTML = G.map(function (g, i) {
+            return '<details class="card mb-4" ' + (i < 2 ? 'open' : '') + '><summary class="text-base font-bold text-orange-500 cursor-pointer">' + g[0] + '</summary><div class="mt-2">' + g[1].map(row).join('') + '</div></details>';
+        }).join('');
+    }
+    function refreshRow(id) {
+        var sw = document.getElementById('thsw-' + id); if (sw) sw.style.background = css(id);
+        var l = document.getElementById('thl-' + id);
+        if (l) { var ch = !!state[id]; l.className = 'text-sm font-semibold ' + (ch ? 'text-orange-400' : 'text-gray-200'); l.innerHTML = safe(META[id][1]) + (ch ? ' ●' : ''); }
+    }
+    function touch(id, f, v) {
+        var s = state[id] = state[id] || {}, d = DEF[id];
+        if (f === 'c1' || f === 'c2' || f === 'a') { s.c1 = val(id, 'c1'); s.c2 = val(id, 'c2'); s.a = +val(id, 'a'); }
+        s[f] = f === 'a' ? +v : v;
+        refreshRow(id); push();
+    }
+    window.thSet = function (el) { touch(el.dataset.id, el.dataset.f, el.value); };
+    window.thClear2 = function (id) { touch(id, 'c2', ''); var w = document.getElementById('thc2w-' + id); if (w) w.innerHTML = pick(id, 'c2'); };
+    window.thResetOne = function (id) { delete state[id]; var r = document.getElementById('thr-' + id); if (r) r.outerHTML = row(META[id]); push(); };
+    window.thSetCss = function (v) { if (v.trim()) state.css = v; else delete state.css; push(); };
+    window.thResetAll = async function () {
+        var r = await Swal.fire({ title: 'সব কালার আগের মতো করবেন?', text: 'সাইট আবার আগের ডিফল্ট কালারে ফিরে যাবে।', icon: 'question', showCancelButton: true, confirmButtonText: 'হ্যাঁ, রিসেট' });
+        if (!r.isConfirmed) return;
+        state = {}; render(); document.getElementById('th-css').value = ''; push();
+        await thSave(true);
+    };
+    window.thApplyBrand = function () {
+        var M = document.getElementById('th-brand').value; if (!isHex(M)) return;
+        G.forEach(function (g) { g[1].forEach(function (x) {
+            var id = x[0], q = x[3], d = x[2]; if (!q) return;
+            var s = {};
+            if (q === 'g') { s = { c1: M, c2: darken(M, 0.2), a: d.a }; if (d.tx != null) s.tx = '#ffffff'; }
+            else if (q === 'tint') { s = { c1: lighten(M, 0.93), c2: lighten(M, 0.86), a: 135 }; if (d.tx != null) s.tx = darken(M, 0.15); if (d.bd != null) s.bd = (id === 'productSel' || id === 'paySel') ? M : lighten(M, 0.75); if (id === 'navActive') s.a = 180; }
+            else if (q === 'page') { s = { c1: lighten(M, 0.84), c2: lighten(M, 0.96), a: 180 }; }
+            else if (q === 't') { s = { tx: darken(M, 0.12) }; }
+            state[id] = s;
+        }); });
+        render(); push();
+        Swal.fire({ icon: 'success', title: 'লাগানো হয়েছে', text: 'প্রিভিউ দেখে ঠিক লাগলে Save চাপুন।', timer: 1800, showConfirmButton: false });
+    };
+    function push() {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            var f = document.getElementById('th-frame'); if (!f || !f.contentWindow) return;
+            try { f.contentWindow.postMessage({ type: 'mhx-theme-preview', theme: state }, new URL(f.src).origin); } catch (e) {}
+        }, 120);
+    }
+    window.thPush = push;
+    window.thReloadPreview = function () {
+        var u = document.getElementById('th-url').value.trim() || (location.origin + '/');
+        var f = document.getElementById('th-frame'); f.src = u;
+    };
+    window.thSave = async function (silent) {
+        try {
+            var clean = {}; Object.keys(state).forEach(function (k) { if (k === 'css' || state[k]) clean[k] = state[k]; });
+            await db.collection('settings').doc('general').set({ themeJson: JSON.stringify(clean) }, { merge: true });
+            if (silent !== true) Swal.fire({ icon: 'success', title: 'Saved!', text: 'ওয়েবসাইটে নতুন কালার চালু হয়ে গেছে।', timer: 1800, showConfirmButton: false });
+        } catch (e) { Swal.fire('Error', e.message || 'Save হয়নি', 'error'); }
+    };
+    window.thInit = async function () {
+        try {
+            var d = (await db.collection('settings').doc('general').get()).data() || {};
+            state = d.themeJson ? JSON.parse(d.themeJson) : {};
+        } catch (e) { state = {}; }
+        render();
+        document.getElementById('th-css').value = state.css || '';
+        var u = document.getElementById('th-url');
+        if (!inited) { u.value = location.origin + '/'; inited = true; }
+        var f = document.getElementById('th-frame'); if (!f.getAttribute('src')) f.src = u.value;
+        else push();
+    };
+})();
+</script>
+<style>
+    .th-pick{width:38px;height:30px;padding:0;border:1px solid #3f3f46;border-radius:8px;background:none;cursor:pointer;vertical-align:middle}
+    .th-lbl{font-size:12px;color:#a1a1aa;display:inline-flex;align-items:center;gap:6px}
+    .th-sel{background:#09090B;border:1px solid #27272A;color:#fff;border-radius:8px;padding:5px 8px;font-size:12px}
+    .th-mini{font-size:10px;padding:3px 8px;border-radius:6px;background:#27272A;color:#d4d4d8}
+    #view-theme details>summary{list-style:none}
+    #view-theme details>summary::-webkit-details-marker{display:none}
+</style>
 </body>
 </html>
