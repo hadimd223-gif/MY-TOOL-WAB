@@ -334,6 +334,76 @@ function authMsg(e) {
         @media (prefers-reduced-motion:reduce){.mhx-bolt::after,.lb-sk,.lb-refresh.spin i{animation:none}}
     </style>
 
+    <style id="mhx-ids">
+        /* ===== ID Sell / ID Code / Maintenance ===== */
+        .ids-card{padding:12px!important;overflow:hidden}
+        .ids-video{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;cursor:pointer;background:linear-gradient(135deg,#047857,#10b981 60%,#6ee7b7);display:flex;align-items:center;justify-content:center}
+        .ids-video img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .ids-video::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(2,30,22,.45))}
+        .ids-play{position:relative;z-index:2;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.94);color:#059669;font-size:22px;display:flex;align-items:center;justify-content:center;padding-left:4px;box-shadow:0 10px 28px rgba(2,30,22,.35);transition:transform .2s}
+        .ids-video:active .ids-play{transform:scale(.9)}
+        .ids-stock{position:absolute;z-index:2;left:10px;top:10px;padding:4px 10px;border-radius:99px;font-size:10.5px;font-weight:800;background:rgba(255,255,255,.95);color:#047857}
+        .ids-stock.out{color:#e11d48}
+        .ids-watch{position:absolute;z-index:2;right:10px;bottom:9px;font-size:10.5px;font-weight:800;color:#fff;display:flex;align-items:center;gap:5px}
+        .ids-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;font-size:11px;font-weight:800;background:#ecfdf5;border:1px solid #d1fae5;color:#047857;margin:0 6px 6px 0}
+        .ids-chip i{font-size:10px}
+        .ids-chip.lv{background:#fffbeb;border-color:#fde68a;color:#b45309}
+        .ids-chip.lk{background:#fff1f2;border-color:#fecdd3;color:#be123c}
+        .ids-price{font-size:22px;font-weight:800;color:#059669;line-height:1}
+        .ids-price small{font-size:11px;font-weight:700;color:#5f7a6e;margin-right:3px}
+        .ids-buy{padding:11px 20px;border-radius:16px;color:#fff;font-weight:800;font-size:13px;background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 10px 22px rgba(5,150,105,.3);white-space:nowrap}
+        .ids-buy:disabled{background:#cbd5e1;box-shadow:none;color:#fff}
+        #ids-vmodal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,30,22,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:tgpFade .25s ease both}
+        #ids-vmodal .vm-box{position:relative;width:100%;max-width:440px}
+        #ids-vmodal .vm-frame{width:100%;border-radius:22px;overflow:hidden;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+        #ids-vmodal iframe,#ids-vmodal video{width:100%;height:100%;border:0;display:block;background:#000}
+        #ids-vmodal .vm-x{position:absolute;right:2px;top:-46px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:#047857;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        #ids-vmodal .vm-t{margin-top:12px;color:#fff;font-weight:800;font-size:14px;text-align:center}
+        .idc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:16px;background:#f7fdfa;border:1px solid #d8ece2;margin-top:8px}
+        .idc-row b.v{font-size:13.5px;color:#10201a;word-break:break-all;user-select:text;-webkit-user-select:text}
+        .idc-row .l{font-size:10.5px;font-weight:800;color:#5f7a6e;letter-spacing:.04em;text-transform:uppercase}
+        .idc-mini{flex:none;width:34px;height:34px;border-radius:12px;border:1px solid #d1fae5;background:#fff;color:#059669;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        .idc-mine{width:100%;text-align:left;padding:11px 13px;border-radius:16px;background:rgba(255,255,255,.9);border:1px solid #d8ece2;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer}
+        .idc-mine b{font-size:12.5px;color:#10201a}.idc-mine span{font-size:11px;color:#5f7a6e}
+        #mhx-maint{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at 50% 30%,rgba(16,185,129,.4),rgba(2,30,22,.9) 75%);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+        #mhx-maint .mt-card{position:relative;width:100%;max-width:360px;background:#fff;border-radius:30px;padding:76px 24px 26px;text-align:center;box-shadow:0 30px 80px rgba(2,30,22,.5);animation:tgpPop .55s cubic-bezier(.34,1.56,.64,1) both}
+        #mhx-maint .mt-card::before{content:"";position:absolute;left:0;right:0;top:0;height:120px;border-radius:30px 30px 0 0;background:linear-gradient(160deg,#d1fae5,#fff)}
+        #mhx-maint .mt-ic{position:absolute;left:50%;top:-40px;margin-left:-48px;width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;background:linear-gradient(135deg,#34d399,#047857);border:5px solid #fff;box-shadow:0 18px 40px rgba(5,150,105,.45);animation:tgpFloat 3s ease-in-out infinite}
+        #mhx-maint h2{position:relative;font-size:22px;font-weight:800;color:#10201a;margin:0 0 10px}
+        #mhx-maint .mt-msg{position:relative;font-size:14px;line-height:1.7;color:#44594f;white-space:pre-wrap;word-break:break-word}
+        #mhx-maint .mt-bar{position:relative;height:5px;width:60%;margin:20px auto 0;border-radius:99px;background:#d1fae5;overflow:hidden}
+        #mhx-maint .mt-bar i{position:absolute;top:0;bottom:0;left:0;width:40%;border-radius:99px;background:linear-gradient(90deg,#10b981,#14b8a6);animation:mhxBar 1.3s ease-in-out infinite}
+        #mhx-maint-admin{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:9990;padding:7px 14px;border-radius:99px;background:#fffbeb;border:1px solid #fde68a;color:#b45309;font-size:11px;font-weight:800;box-shadow:0 8px 20px rgba(245,158,11,.25)}
+        /* ----- ID detail sheet / closed state ----- */
+        .ids-card{content-visibility:auto;contain-intrinsic-size:auto 340px}
+        .ids-video.noimg{background:linear-gradient(135deg,#047857,#10b981 60%,#6ee7b7)}
+        .ids-vid-ic{position:relative;z-index:1;font-size:46px;color:rgba(255,255,255,.9)}
+        .ids-closed{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:99px;border:2px solid rgba(255,255,255,.9);background:linear-gradient(135deg,#fb7185,#be123c);color:#fff;font-weight:800;font-size:14px;letter-spacing:.06em;box-shadow:0 14px 32px rgba(190,18,60,.45)}
+        .ids-card.is-closed .ids-video img{filter:grayscale(.85) brightness(.7)}
+        .ids-card.is-closed .ids-video::after{background:rgba(2,30,22,.35)}
+        .ids-card.is-closed .ids-price,.ids-card.is-closed h3{opacity:.55}
+        #ids-detail{position:fixed;inset:0;z-index:10000;background:rgba(2,30,22,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:flex-end;animation:tgpFade .22s ease both}
+        #ids-detail .sheet{position:relative;width:100%;max-width:448px;max-height:94vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#f7fdfa;border-radius:28px 28px 0 0;animation:idsUp .38s cubic-bezier(.22,1,.36,1) both}
+        @keyframes idsUp{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+        #ids-detail .sx{position:sticky;top:10px;float:right;margin:10px 10px -48px 0;z-index:5;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:#047857;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.2);cursor:pointer}
+        #ids-detail .big{width:100%;aspect-ratio:4/5;max-height:64vh;object-fit:cover;display:block;background:linear-gradient(135deg,#047857,#10b981 60%,#6ee7b7)}
+        #ids-detail .bigph{width:100%;height:46vh;display:flex;align-items:center;justify-content:center;font-size:64px;color:rgba(255,255,255,.9);background:linear-gradient(135deg,#047857,#10b981 60%,#6ee7b7)}
+        #ids-detail .pad{padding:16px 16px 8px}
+        .ids-vwrap{position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:16/9;margin:8px 0 16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .ids-vwrap.tall{aspect-ratio:9/16;max-height:70vh;margin-left:auto;margin-right:auto;width:auto;max-width:100%}
+        .ids-vwrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85}
+        .ids-vwrap iframe,.ids-vwrap video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+        .ids-buybar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.97);border-top:1px solid #d1fae5}
+        /* ----- one smooth loader everywhere (replaces the old plain spinning icon) ----- */
+        .fa-spinner.fa-spin,.fa-spin.fa-spinner{animation:none!important}
+        .fa-spinner.fa-spin::before{content:"";display:inline-block;width:1em;height:1em;box-sizing:border-box;border-radius:50%;border:.17em solid transparent;border-top-color:currentColor;border-right-color:currentColor;box-shadow:inset 0 0 0 .17em rgba(16,185,129,.16);vertical-align:-.14em;animation:mhxSpin .75s cubic-bezier(.5,.15,.5,.85) infinite;will-change:transform}
+        .text-center>.fa-spinner.fa-spin{font-size:26px!important}
+        .mhx-pop .swal2-loader{box-shadow:0 0 0 8px rgba(16,185,129,.08),0 10px 30px rgba(16,185,129,.28);will-change:transform}
+        .ids-sk{border-radius:24px;height:300px;margin-bottom:16px;background:linear-gradient(90deg,#e9f8f1 25%,#f6fdf9 50%,#e9f8f1 75%);background-size:200% 100%;animation:lbSk 1.3s linear infinite}
+        .animate-pulse{animation:mhxPulse 1.4s ease-in-out infinite}
+        @keyframes mhxPulse{50%{opacity:.55}}
+        @media (prefers-reduced-motion:reduce){.fa-spinner.fa-spin::before,.ids-sk{animation-duration:2s}}
+    </style>
     <style id="mhx-theme"></style>
     <script>
     /* ===== MHX Theme engine: colours set from Admin > Theme & Colors ===== */
@@ -375,6 +445,9 @@ function authMsg(e) {
             refCard:    { bg: '#ref-card>.text-white', tx: '#ref-card>.text-white' },
             leaderHero: { bg: '.lb-hero', tx: '.lb-hero', glow: 1 },
             leaderBar:  { bg: '.lb-bar i' },
+            idCard:     { bg: '#home-sec [onclick*=idsell]', tx: '#home-sec [onclick*=idsell]', glow: 1 },
+            idListCard: { bg: '.ids-card', bd: '.ids-card' },
+            idBuyBtn:   { bg: '.ids-buy:not(:disabled),.idc-btn', tx: '.ids-buy,.idc-btn', glow: 1 },
             profileAvatar: { bg: '.av-wrap .av-img' },
             popupBtn:   { bg: '.mhx-btn-primary', tx: '.mhx-btn-primary', glow: 1 },
             popupBg:    { bg: '.swal2-popup.mhx-pop:not(.swal2-toast)', bd: '.swal2-popup.mhx-pop:not(.swal2-toast)' },
@@ -570,6 +643,18 @@ function authMsg(e) {
                         <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Sent every day at <b id="al-home-time">4:05 AM</b> • from BDT <b id="al-home-price">–</b></div>
                         <div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Subscribe <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
+                </div>
+            </div>
+
+            <div onclick="showSec('idsell')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition mb-5" style="background:linear-gradient(135deg,#047857,#10b981 55%,#6ee7b7)">
+                <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-id-card"></i></div>
+                <div class="relative flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-extrabold text-[15px] leading-tight">ID Sell</div>
+                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Ready-made IDs • watch the video before you buy</div>
+                    </div>
+                    <div class="bg-white text-brand-600 text-[11px] font-extrabold px-3 py-2 rounded-xl inline-flex items-center flex-shrink-0">Browse <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
             </div>
 
@@ -844,6 +929,25 @@ function authMsg(e) {
             <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">Get <span class="text-brand-600">API</span></h2>
             <p class="zp-sub mb-4 mt-1">Your personal Like API key for resellers. Use it on your own website or Telegram bot.</p>
             <div id="api-body"><div class="text-center py-10"><i class="fas fa-spinner fa-spin text-brand-600 text-xl"></i></div></div>
+        </section>
+        <section id="idsell-sec" class="hidden animate-fade-in pb-24">
+            <button onclick="showSec('home')" class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1.5"><i class="fas fa-arrow-left"></i> Go back</button>
+            <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">ID <span class="text-brand-600">Sell</span></h2>
+            <p class="zp-sub mb-4 mt-1">Tap the video to watch the ID. After buying, you get a code — enter it in <b>Profile menu › ID Code</b> to get the login.</p>
+            <div id="ids-list"></div>
+        </section>
+
+        <section id="idcode-sec" class="hidden animate-fade-in pb-24">
+            <button onclick="showSec('home')" class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1.5"><i class="fas fa-arrow-left"></i> Go back</button>
+            <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">ID <span class="text-brand-600">Code</span></h2>
+            <p class="zp-sub mb-4 mt-1">Bought an ID? Paste your code below to get its login details.</p>
+            <div class="vip-card p-5">
+                <label class="block text-slate-700 text-xs font-bold mb-1.5">Your ID code</label>
+                <input id="idc-input" class="zp-input" placeholder="MHX-XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')idcGet()">
+                <button id="idc-btn" onclick="idcGet()" class="zp-btn idc-btn w-full mt-4"><i class="fa-solid fa-key mr-2"></i>Get Your ID</button>
+            </div>
+            <div id="idc-result" class="mt-4"></div>
+            <div id="idc-mine" class="mt-5"></div>
         </section>
     </main>
 
@@ -1475,7 +1579,7 @@ function authMsg(e) {
     }
 
     function showSec(secId) {
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'api') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'api' || secId === 'idcode') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -1490,6 +1594,8 @@ function authMsg(e) {
         if(secId === 'dailylike') dlOpen();
         if(secId === 'autolike') alOpen();
         if(secId === 'api') apiOpen();
+        if(secId === 'idsell') idsOpen();
+        if(secId === 'idcode') idcOpen();
         if(secId === 'leaders') lbOpen(); else lbClose();
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -1938,6 +2044,7 @@ function copySupportPin(btn) {
 const PROFILE_MENU = [
     { icon: 'fa-solid fa-headset', label: 'Support', run: () => { const a = document.getElementById('fab-support'); window.open(a ? a.href : 'https://t.me/mhxffv111', '_blank', 'noopener'); } },
     { icon: 'fa-solid fa-key', label: 'Get API', run: () => showSec('api') },
+    { icon: 'fa-solid fa-id-card', label: 'ID Code', run: () => showSec('idcode') },
     { icon: 'fa-solid fa-robot', label: 'Your Auto Like UID', run: () => alMy() }
 ];
 function closeProfileMenu() { const m = document.getElementById('profile-menu'); if (m) m.remove(); }
@@ -2441,6 +2548,181 @@ async function alChangeUid(m) {
         Swal.fire({ icon: 'success', title: 'UID changed', html: `Auto Like will now go to <b>${esc(r.uid)}</b> (${esc(r.region)}).` });
         if (!document.getElementById('autolike-sec').classList.contains('hidden')) alLoadMine(true);
     } catch (e) { Swal.fire('Couldn’t change UID', e.message, 'error'); }
+}
+</script>
+
+<div id="mhx-maint" class="hidden" role="alertdialog" aria-live="polite">
+    <div class="mt-card">
+        <div class="mt-ic"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <h2 id="mt-title">Website Maintenance</h2>
+        <div class="mt-msg" id="mt-msg"></div>
+        <div class="mt-bar"><i></i></div>
+    </div>
+</div>
+<div id="mhx-maint-admin" class="hidden"><i class="fa-solid fa-screwdriver-wrench mr-1"></i>Maintenance is ON — only admins can see the site</div>
+
+<script>
+/* ================= MAINTENANCE MODE (set from Admin > Maintenance) ================= */
+function mhxMaintCheck() {
+    const g = (typeof generalSettings === 'object' && generalSettings) || {};
+    const on = !!g.maintenance, isAdmin = !!(userData && userData.role === 'admin');
+    const ov = document.getElementById('mhx-maint'), pill = document.getElementById('mhx-maint-admin');
+    if (!ov) return;
+    const show = on && !isAdmin;
+    if (show) {
+        const t = String(g.maintenanceTitle || '').trim() || 'Website Maintenance', m = String(g.maintenanceMsg || '').trim() || 'We are making the site better. Please check back soon.';
+        if (document.getElementById('mt-title').textContent !== t) document.getElementById('mt-title').textContent = t;
+        if (document.getElementById('mt-msg').textContent !== m) document.getElementById('mt-msg').textContent = m;
+    }
+    ov.classList.toggle('hidden', !show);
+    pill.classList.toggle('hidden', !(on && isAdmin));
+    document.documentElement.style.overflow = show ? 'hidden' : '';
+}
+setInterval(mhxMaintCheck, 1200); mhxMaintCheck();
+
+/* ================= ID SELL ================= */
+let idsItems = [], idsLoading = false;
+function idsEmbed(u) {
+    u = String(u || '').trim(); let m;
+    if ((m = u.match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/)))
+        return { t: 'iframe', src: 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1&rel=0&playsinline=1', thumb: 'https://i.ytimg.com/vi/' + m[1] + '/hqdefault.jpg', tall: /shorts\//.test(u) };
+    if (/facebook\.com|fb\.watch/i.test(u)) return { t: 'iframe', src: 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(u) + '&show_text=false&autoplay=true', tall: /\/reel\//.test(u) };
+    if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]+)/))) return { t: 'iframe', src: 'https://drive.google.com/file/d/' + m[1] + '/preview' };
+    if (/\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(u)) return { t: 'video', src: u };
+    return { t: 'link', src: u };
+}
+function idsChips(it) {
+    let h = '';
+    if (it.level) h += '<span class="ids-chip lv"><i class="fa-solid fa-star"></i>Level ' + esc(it.level) + '</span>';
+    if (it.likes) h += '<span class="ids-chip lk"><i class="fa-solid fa-heart"></i>' + esc(it.likes) + ' Likes</span>';
+    String(it.details || '').split('\n').map(x => x.trim()).filter(Boolean).slice(0, 12).forEach(l => { h += '<span class="ids-chip">' + esc(l) + '</span>'; });
+    return h;
+}
+function idsClosedInfo(it) {
+    Swal.fire({ icon: 'info', title: 'Closed', html: '<div class="mhx-sub" style="font-size:1rem;font-weight:700;color:#be123c">' + esc(it.closedMsg || 'This ID has already been sold.') + '</div>', confirmButtonText: 'OK' });
+}
+function idsRender() {
+    const box = document.getElementById('ids-list'); if (!box) return;
+    if (!idsItems.length) { box.innerHTML = '<div class="vip-card p-8 text-center text-slate-400 text-sm"><i class="fa-solid fa-id-card text-3xl mb-3 block text-brand-600"></i>No IDs for sale right now. Please check back soon.</div>'; return; }
+    box.innerHTML = idsItems.map((it, i) => {
+        const em = idsEmbed(it.videoUrl), img = it.image || em.thumb || '', closed = !!it.closed, out = it.available <= 0;
+        return '<div class="vip-card ids-card mb-4' + (closed ? ' is-closed' : '') + '">' +
+            '<div class="ids-video' + (img ? '' : ' noimg') + '" onclick="idsDetail(' + i + ')">' + (img ? '<img loading="lazy" decoding="async" src="' + esc(img) + '" alt="">' : '<i class="fa-solid fa-id-card ids-vid-ic"></i>') +
+            (closed ? '<button type="button" class="ids-closed" onclick="event.stopPropagation();idsClosedInfo(idsItems[' + i + '])"><i class="fa-solid fa-lock"></i>CLOSED</button>' :
+                '<span class="ids-stock' + (out ? ' out' : '') + '">' + (out ? 'Out of stock' : it.available + ' in stock') + '</span>' +
+                '<span class="ids-watch"><i class="fa-solid fa-circle-play"></i>Tap to view</span>') + '</div>' +
+            '<div class="px-1 pt-3"><h3 class="font-extrabold text-[15px] text-slate-900 mb-2 leading-snug">' + esc(it.title) + '</h3>' +
+            '<div>' + idsChips(it) + '</div>' +
+            '<div class="flex items-center justify-between gap-3 mt-1.5"><div class="ids-price"><small>BDT</small>' + esc(it.price) + '</div>' +
+            (closed ? '<button class="ids-buy" onclick="idsClosedInfo(idsItems[' + i + '])"><i class="fa-solid fa-lock mr-1.5"></i>Closed</button>' :
+                '<button class="ids-buy" ' + (out ? 'disabled' : '') + ' onclick="idsBuy(' + i + ')"><i class="fa-solid fa-cart-shopping mr-1.5"></i>' + (out ? 'Out of stock' : 'Buy now') + '</button>') + '</div></div></div>';
+    }).join('');
+}
+function idsCloseDetail() { const o = document.getElementById('ids-detail'); if (o) o.remove(); }
+function idsDetail(i) {
+    const it = idsItems[i]; if (!it) return;
+    if (it.closed) { idsClosedInfo(it); return; }
+    idsCloseDetail();
+    const em = idsEmbed(it.videoUrl), out = it.available <= 0;
+    let vid = '';
+    if (it.videoUrl) {
+        if (em.t === 'link') vid = '<a class="zp-btn block text-center text-sm mb-4" href="' + esc(em.src) + '" target="_blank" rel="noopener"><i class="fa-solid fa-circle-play mr-2"></i>Watch video</a>';
+        else if (em.t === 'video') vid = '<div class="ids-vwrap"><video src="' + esc(em.src) + '" controls playsinline preload="none"' + (it.image ? ' poster="' + esc(it.image) + '"' : '') + '></video></div>';
+        else vid = '<div class="ids-vwrap' + (em.tall ? ' tall' : '') + '" id="ids-vw" data-i="' + i + '" onclick="idsLoadVideo()">' + (em.thumb ? '<img loading="lazy" decoding="async" src="' + esc(em.thumb) + '" alt="">' : '') + '<div class="ids-play"><i class="fa-solid fa-play"></i></div></div>';
+    }
+    const ov = document.createElement('div'); ov.id = 'ids-detail';
+    ov.innerHTML = '<div class="sheet"><button type="button" class="sx" onclick="idsCloseDetail()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>' +
+        (it.image ? '<img class="big" decoding="async" src="' + esc(it.image) + '" alt="">' : '<div class="bigph"><i class="fa-solid fa-id-card"></i></div>') +
+        '<div class="pad"><h3 class="font-extrabold text-lg text-slate-900 leading-snug mb-2">' + esc(it.title) + '</h3><div>' + idsChips(it) + '</div>' +
+        (it.videoUrl ? '<div class="text-xs font-bold text-slate-700 mt-2"><i class="fa-solid fa-circle-play text-brand-600 mr-1.5"></i>Video of this ID</div>' : '') + vid + '</div>' +
+        '<div class="ids-buybar"><div class="ids-price"><small>BDT</small>' + esc(it.price) + '</div><button class="ids-buy" ' + (out ? 'disabled' : '') + ' onclick="idsCloseDetail();idsBuy(' + i + ')"><i class="fa-solid fa-cart-shopping mr-1.5"></i>' + (out ? 'Out of stock' : 'Buy now') + '</button></div></div>';
+    ov.addEventListener('click', e => { if (e.target === ov) idsCloseDetail(); });
+    document.body.appendChild(ov);
+}
+function idsLoadVideo() {
+    const w = document.getElementById('ids-vw'); if (!w || w.querySelector('iframe')) return;
+    const it = idsItems[+w.dataset.i], em = idsEmbed(it.videoUrl);
+    w.innerHTML = '<iframe src="' + esc(em.src) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+}
+async function idsOpen() {
+    const box = document.getElementById('ids-list'); if (!box || idsLoading) return; idsLoading = true;
+    if (!idsItems.length) box.innerHTML = '<div class="ids-sk"></div><div class="ids-sk"></div>';
+    try {
+        const r = await fetch(BACKEND_URL + '/idListings', { cache: 'no-store' }); const j = await r.json();
+        if (!r.ok) throw new Error(j.error || 'Server error');
+        idsItems = j.items || []; idsRender();
+    } catch (e) {
+        if (!idsItems.length) box.innerHTML = '<div class="vip-card p-5 text-center"><div class="text-rose-600 font-bold text-sm mb-2">Couldn’t load the list</div><button class="zp-btn text-sm px-5" onclick="idsOpen()">Try again</button></div>';
+    } finally { idsLoading = false; }
+}
+function idsPlay(i) {
+    const it = idsItems[i]; if (!it || !it.videoUrl) return;
+    const em = idsEmbed(it.videoUrl);
+    if (em.t === 'link') { window.open(em.src, '_blank', 'noopener'); return; }
+    idsCloseVideo();
+    const ov = document.createElement('div'); ov.id = 'ids-vmodal';
+    const inner = em.t === 'video' ? '<video src="' + esc(em.src) + '" controls autoplay playsinline></video>' : '<iframe src="' + esc(em.src) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    ov.innerHTML = '<div class="vm-box"><button class="vm-x" onclick="idsCloseVideo()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>' +
+        '<div class="vm-frame" style="' + (em.tall ? 'aspect-ratio:9/16;max-height:76vh;margin:0 auto;width:auto;max-width:100%' : 'aspect-ratio:16/9') + '">' + inner + '</div><div class="vm-t">' + esc(it.title) + '</div></div>';
+    ov.addEventListener('click', e => { if (e.target === ov) idsCloseVideo(); });
+    document.body.appendChild(ov);
+}
+function idsCopyCode(btn) { Promise.resolve(copyText(document.getElementById('ids-code-txt').textContent)).then(() => { btn.innerHTML = '<i class="fa-solid fa-check"></i>'; }); }
+function idsCloseVideo() { const o = document.getElementById('ids-vmodal'); if (o) o.remove(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { idsCloseVideo(); idsCloseDetail(); } });
+async function idsBuy(i) {
+    const it = idsItems[i]; if (!it) return;
+    if (it.closed) { idsClosedInfo(it); return; }
+    if (!currentUser) { showSec('auth'); return; }
+    const bal = Math.floor(Number(userData && userData.balance) || 0);
+    const r = await Swal.fire({ icon: 'question', title: 'Buy this ID?', html: '<div class="mhx-sub"><b>' + esc(it.title) + '</b><br>Price: <b>BDT ' + esc(it.price) + '</b><br>Your balance: BDT ' + bal + '</div>', showCancelButton: true, confirmButtonText: 'Buy for BDT ' + it.price, cancelButtonText: 'Cancel' });
+    if (!r.isConfirmed) return;
+    mhxBusy('Processing your order…', 'Please do not close this page.');
+    try {
+        const j = await api('/buyId', { listingId: it.id });
+        const x = await Swal.fire({ icon: 'success', title: 'Purchase complete!', html: '<div class="mhx-sub">Your ID code:</div><div class="api-keybox" style="margin-top:10px"><span id="ids-code-txt">' + esc(j.code) + '</span><button type="button" onclick="idsCopyCode(this)"><i class="fa-regular fa-copy"></i></button></div><div class="mhx-sub" style="margin-top:12px">Open <b>Profile menu › ID Code</b>, paste this code and tap <b>Get Your ID</b>.</div>', showCancelButton: true, confirmButtonText: 'Open ID Code', cancelButtonText: 'Close', allowOutsideClick: false });
+        idsOpen();
+        if (x.isConfirmed) { showSec('idcode'); const inp = document.getElementById('idc-input'); if (inp) inp.value = j.code; }
+    } catch (e) { Swal.fire({ icon: 'error', title: 'Couldn’t buy', text: e.message }); idsOpen(); }
+}
+
+/* ================= ID CODE (redeem -> login details) ================= */
+let idcPw = '', idcAcct = '';
+async function idcOpen() {
+    document.getElementById('idc-result').innerHTML = ''; idcPw = ''; idcAcct = '';
+    const mine = document.getElementById('idc-mine'); if (!mine) return;
+    try {
+        const j = await api('/myIdCodes', {}); const items = j.items || [];
+        mine.innerHTML = items.length ? '<div class="text-xs font-bold text-slate-700 mb-2 px-1"><i class="fa-solid fa-clock-rotate-left text-brand-600 mr-1.5"></i>Your purchased IDs (tap to use)</div>' +
+            items.map(x => '<button type="button" class="idc-mine" onclick="document.getElementById(\'idc-input\').value=\'' + esc(x.code) + '\';idcGet()"><div><b>' + esc(x.title || 'ID') + '</b><br><span>' + esc(x.code) + '</span></div><i class="fa-solid fa-chevron-right text-brand-600"></i></button>').join('') : '';
+    } catch (e) { mine.innerHTML = ''; }
+}
+function idcCopy(which, btn) {
+    const t = which === 'pw' ? idcPw : idcAcct;
+    Promise.resolve(copyText(t)).then(() => { if (btn) { const o = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-check"></i>'; setTimeout(() => btn.innerHTML = o, 1200); } });
+}
+function idcTogglePw(btn) {
+    const el = document.getElementById('idc-pw'), shown = el.dataset.s === '1';
+    el.textContent = shown ? '••••••••••' : idcPw; el.dataset.s = shown ? '0' : '1'; btn.innerHTML = '<i class="fa-solid ' + (shown ? 'fa-eye' : 'fa-eye-slash') + '"></i>';
+}
+async function idcGet() {
+    const inp = document.getElementById('idc-input'), btn = document.getElementById('idc-btn'), code = (inp.value || '').trim();
+    if (!currentUser) { showSec('auth'); return; }
+    if (code.length < 6) return Swal.fire('Oops', 'Please enter your ID code', 'warning');
+    btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Checking…';
+    try {
+        const j = await api('/redeemIdCode', { code });
+        idcPw = j.password || ''; idcAcct = j.account || '';
+        const ic = j.loginType === 'Facebook' ? 'fa-brands fa-facebook' : (j.loginType === 'Gmail' ? 'fa-brands fa-google' : 'fa-solid fa-user-lock');
+        document.getElementById('idc-result').innerHTML = '<div class="vip-card p-5 animate-fade-in">' +
+            '<div class="flex items-center gap-3 mb-2"><div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center text-lg"><i class="' + ic + '"></i></div>' +
+            '<div class="min-w-0"><div class="font-extrabold text-[15px] text-slate-900 truncate">' + esc(j.title || 'Your ID') + '</div><div class="zp-sub">' + esc(j.loginType || 'Login') + ' account</div></div></div>' +
+            '<div class="idc-row"><div class="min-w-0"><div class="l">' + (j.loginType === 'Facebook' ? 'Facebook ID / Email' : 'ID / Email') + '</div><b class="v">' + esc(j.account) + '</b></div><button class="idc-mini" onclick="idcCopy(\'acct\',this)"><i class="fa-regular fa-copy"></i></button></div>' +
+            '<div class="idc-row"><div class="min-w-0"><div class="l">Password</div><b class="v" id="idc-pw" data-s="0">••••••••••</b></div><div class="flex gap-1.5"><button class="idc-mini" onclick="idcTogglePw(this)"><i class="fa-solid fa-eye"></i></button><button class="idc-mini" onclick="idcCopy(\'pw\',this)"><i class="fa-regular fa-copy"></i></button></div></div>' +
+            (j.note ? '<div class="idc-row" style="display:block"><div class="l">Note</div><b class="v" style="font-weight:600">' + esc(j.note) + '</b></div>' : '') +
+            '<p class="zp-sub mt-3"><i class="fa-solid fa-shield-halved text-brand-600 mr-1"></i>Log in right away and change the password. Never share these details with anyone.</p></div>';
+    } catch (e) { document.getElementById('idc-result').innerHTML = ''; Swal.fire({ icon: 'error', title: 'Couldn’t get the ID', text: e.message }); }
+    finally { btn.disabled = false; btn.innerHTML = old; }
 }
 </script>
 </body>
