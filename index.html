@@ -602,7 +602,8 @@ function authMsg(e) {
                     <div id="hero-role-badge"></div>
                 </div>
                 <div class="text-xs text-slate-400 mb-1">Main balance</div>
-                <div class="text-3xl font-extrabold text-brand-600 mb-4">BDT <span id="hero-bal">0.00</span></div>
+                <div class="text-3xl font-extrabold text-brand-600 mb-1">BDT <span id="hero-bal">0.00</span></div>
+                <div class="text-xs font-bold text-amber-600 mb-4"><i class="fa-solid fa-gift mr-1"></i>Bonus: BDT <span id="hero-bonus">0.00</span></div>
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="document.getElementById('services-list').scrollIntoView({behavior:'smooth'})" class="py-3 rounded-2xl text-white font-bold bg-gradient-to-r from-brand-600 to-brand-700 shadow-md shadow-brand-500/20 text-xs tracking-wide"><i class="fa-solid fa-bolt mr-1.5"></i>Top up</button>
                     <button onclick="showSec('addmoney')" class="py-3 rounded-2xl font-bold border border-brand-200/80 bg-white/90 text-brand-900 hover:bg-brand-50 text-xs shadow-sm"><i class="fa-solid fa-wallet mr-1.5"></i>Add money</button>
@@ -701,7 +702,7 @@ function authMsg(e) {
             </div>
 
             <div class="grid grid-cols-3 gap-2 mb-3">
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="dl-balance">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="dl-balance">0</span></div><div class="text-[10px] font-bold text-amber-600">Bonus BDT <span id="dl-bonus">0</span></div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Price</div><div class="text-base font-extrabold text-rose-600">BDT <span id="dl-price">6</span></div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">You’ll get</div><div class="text-base font-extrabold text-emerald-600"><span id="dl-likes">220</span>+</div></div>
             </div>
@@ -735,7 +736,7 @@ function authMsg(e) {
             <div id="al-mine"></div>
 
             <div class="grid grid-cols-3 gap-2 mb-3">
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="al-balance">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="al-balance">0</span></div><div class="text-[10px] font-bold text-amber-600">Bonus BDT <span id="al-bonus">0</span></div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Sent daily at</div><div class="text-sm font-extrabold text-rose-600 mt-0.5" id="al-time">4:05 AM</div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Each day</div><div class="text-base font-extrabold text-emerald-600"><span id="al-likes">220</span>+</div></div>
             </div>
@@ -879,6 +880,11 @@ function authMsg(e) {
                     <span>Wallet balance:</span>
                     <span class="font-bold text-brand-600">BDT <span id="acc-profile-balance">0</span></span>
                 </div>
+                <div class="flex justify-between text-xs text-slate-600 py-1 border-b border-slate-100">
+                    <span><i class="fa-solid fa-gift text-amber-500 mr-1"></i>Bonus:</span>
+                    <span class="font-bold text-amber-600">BDT <span id="acc-profile-bonus">0</span></span>
+                </div>
+                <p class="zp-sub">Bonus comes from promo codes and deposit bonuses. You can spend it on top-ups and likes (not on ID purchases).</p>
             </div>
 
             <div class="vip-card p-4 mb-4">
@@ -985,7 +991,7 @@ function authMsg(e) {
     let currentUser = null;
     let userData = {};
     let generalSettings = {};
-    let userBalance = 0;
+    let userBalance = 0, userBonus = 0;
     let selectedProduct = null;
     let selectedGameId = null;
     let selectedGameName = "";
@@ -1242,6 +1248,7 @@ function authMsg(e) {
                 userData = doc.data();
                 if (userData.banned) { Swal.fire({icon:"error",title:"Account banned",text:"Your account has been banned. Please contact support.",allowOutsideClick:false}).then(()=>auth.signOut()); return; }
                 userBalance = userData.balance || 0;
+                userBonus = userData.bonus || 0;
                 const userName = userData.name || "User";
                 const totalDep = userData.totalDeposit || 0;
                 const role = userData.role || 'user';
@@ -1249,6 +1256,8 @@ function authMsg(e) {
                 document.getElementById('header-balance').innerText = userBalance;
                 document.getElementById('hero-name').innerText = userName;
                 document.getElementById('hero-bal').innerText = userBalance.toFixed(2);
+                document.getElementById('hero-bonus').innerText = Number(userBonus).toFixed(2);
+                document.getElementById('acc-profile-bonus').innerText = userBonus;
                 document.getElementById('topup-balance-display').innerText = userBalance.toFixed(2);
                 document.getElementById('acc-profile-name').innerText = userName;
                 pfPaintAvatars(userName);
@@ -1386,9 +1395,11 @@ function authMsg(e) {
         if(!playerId && selectedGameType !== 'code') return Swal.fire('Heads up', 'Please enter the Player ID (UID)!', 'warning');
         if(!selectedProduct) return Swal.fire('Heads up', 'Please select a package!', 'warning');
         if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
+        let payWith = 'balance';
+        if (bonusOn('topup') && Number(userBonus || 0) > 0) { payWith = await chooseWallet(0, 'topup', true); if (!payWith) return; }
         mhxBusy('Placing your order…', 'Securing your package & updating your wallet.');
         try {
-            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
+            const r = await api('/placeOrder', { payWith, gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
             document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
             Swal.fire({icon:'success', title:'Congratulations!', html:'Your order has been submitted successfully!' + (r.discount?`<br><b>Discount BDT ${r.discount} — Paid BDT ${r.price}</b>`:'')});
             showSec('home');
@@ -1800,6 +1811,37 @@ let dlRegion = ''; try { dlRegion = (localStorage.getItem('dlRegion') || '').toU
 if (!DL_REGIONS.includes(dlRegion)) dlRegion = '';
 let dlCfg = { price: 6, resellerPrice: null, likes: 220, enabled: true, offMsg: '' };
 let dlBusy = false, dlReqId = null, dlReqKey = '';
+let bonusCfg = { topup: true, dailyLike: true, autoLike: true };
+function bonusOn(p) { return bonusCfg[p] !== false; }
+const walletName = w => w === 'bonus' ? 'Bonus' : 'Main balance';
+// Returns 'balance' | 'bonus' | null (null = cancelled or not enough money). skipCheck: price unknown on the page, the server checks.
+async function chooseWallet(price, product, skipCheck) {
+    const bal = Number(userBalance || 0), bon = Number(userBonus || 0);
+    const canBal = skipCheck || bal >= price, canBon = bonusOn(product) && bon > 0 && (skipCheck || bon >= price);
+    if (!canBal && !canBon) {
+        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Main balance: <b>BDT ${bal}</b>` + (bonusOn(product) ? `<br>Bonus: <b>BDT ${bon}</b>` : '') + `<br>Required: <b>BDT ${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
+        if (x.isConfirmed) showSec('addmoney'); return null;
+    }
+    if (canBal && !canBon) return 'balance';
+    if (!canBal && canBon) return 'bonus';
+    const x = await Swal.fire({ title: 'Pay from', input: 'radio', inputValue: bal >= price ? 'balance' : 'bonus', showCancelButton: true, confirmButtonText: 'Continue', cancelButtonText: 'Cancel',
+        inputOptions: { balance: 'Main balance — BDT ' + bal, bonus: 'Bonus — BDT ' + bon } });
+    return x.isConfirmed ? (x.value || 'balance') : null;
+}
+async function dlPoll(reqId) {
+    // the connection dropped: ask the server what happened to this request. object = result, null = never reached the server, undefined = still unknown
+    for (let i = 0; i < 20; i++) {
+        await new Promise(z => setTimeout(z, i < 2 ? 2500 : 4000));
+        try {
+            const token = await currentUser.getIdToken();
+            const r = await fetch(BACKEND_URL + '/dailyLikeStatus', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ reqId }) });
+            const j = await r.json();
+            if (r.ok && j.found && !j.pending) return j.result;
+            if (r.ok && !j.found && i >= 1) return null;
+        } catch (e) {}
+    }
+    return undefined;
+}
 
 function dlMyPrice() {
     const reseller = userData && (userData.role === 'reseller' || userData.role === 'admin');
@@ -1811,13 +1853,13 @@ function dlMyPrice() {
 }
 function dlUpdateInfo() {
     const set = (id, v) => setTxt(document.getElementById(id), v);
-    set('dl-balance', Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
+    set('dl-balance', Number(userBalance || 0).toFixed(2).replace(/\.00$/, '')); set('dl-bonus', Number(userBonus || 0).toFixed(2).replace(/\.00$/, ''));
     set('dl-price', dlMyPrice()); set('dl-likes', dlCfg.likes);
     set('dl-home-price', dlMyPrice()); set('dl-home-likes', dlCfg.likes);
 }
 async function dlLoadCfg() {
     try {
-        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json();
+        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json(); if (j && j.bonusOk) bonusCfg = j.bonusOk;
         if (r.ok && j) dlCfg = { price: j.price, resellerPrice: j.resellerPrice, likes: j.likes, enabled: j.enabled !== false, offMsg: j.offMsg || '' };
     } catch (e) {}
     dlUpdateInfo();
@@ -1853,7 +1895,7 @@ function dlRenderResult(r) {
             <div class="bg-white/80 rounded-2xl px-3 py-1">
                 ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 Player', esc(r.player))}${dlRow('🌍 Server', esc(r.region))}
                 ${dlRow('📦 Package', esc(r.package))}${dlRow('🔑 Order no.', `${esc(r.orderNo)} <i class="fa-regular fa-copy text-brand-500 cursor-pointer ml-1" onclick="dlCopy('${esc(r.orderNo)}')"></i>`)}
-                ${dlRow('💰 Cost', 'BDT ' + esc(r.price))}${dlRow('🕐 Time', esc(r.time) + ' (BDT)')}
+                ${dlRow('💰 Cost', 'BDT ' + esc(r.price))}${dlRow('💳 Paid from', walletName(r.payWith))}${dlRow('🕐 Time', esc(r.time) + ' (BDT)')}
             </div>
             <button onclick="document.getElementById('dl-result').innerHTML='';window.scrollTo({top:0,behavior:'smooth'})" class="zp-btn w-full text-xs mt-3 py-3">Send likes to another UID</button>
         </div>`);
@@ -1873,7 +1915,7 @@ function dlRenderResult(r) {
         dlShow(`<div class="dl-card dl-bad">
             <div class="text-center mb-2"><div class="text-4xl mb-1">❌</div><h3 class="font-extrabold text-rose-700 text-base">Couldn’t send likes</h3></div>
             <div class="bg-white/80 rounded-2xl px-3 py-2 text-[12px] font-bold text-slate-700 text-center">⚠️ ${esc(r.message || 'Try again')}</div>
-            <p class="text-center text-[12px] font-bold text-rose-600 mt-3">💰 You haven’t been charged. Please try again in a little while.</p>
+            ${r.unknown ? '' : '<p class="text-center text-[12px] font-bold text-rose-600 mt-3">💰 You haven’t been charged. Please try again in a little while.</p>'}
         </div>`);
     }
 }
@@ -1886,11 +1928,8 @@ async function dlSend() {
     if (!dlRegion) { const b = document.getElementById('dl-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
     if (!dlCfg.enabled) { Swal.fire('Service paused', dlCfg.offMsg || '🔥 The Daily Like service is paused for a moment. Please try again later.', 'info'); return; }
     const price = dlMyPrice();
-    if ((userBalance || 0) < price) {
-        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Your balance: <b>BDT ${userBalance || 0}</b><br>Required: <b>BDT ${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
-        if (x.isConfirmed) showSec('addmoney'); return;
-    }
-    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>BDT ${price}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
+    const pw = await chooseWallet(price, 'dailyLike'); if (!pw) return;
+    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>BDT ${price}</b><br>Pay from: <b>${walletName(pw)}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
     if (!c.isConfirmed) return;
 
     const key = uid + '|' + dlRegion;
@@ -1901,15 +1940,19 @@ async function dlSend() {
     const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 120000);
     try {
         const token = await currentUser.getIdToken();
-        const res = await fetch(BACKEND_URL + '/dailyLike', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ uid, region: dlRegion, reqId: dlReqId }) });
+        const res = await fetch(BACKEND_URL + '/dailyLike', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ uid, region: dlRegion, reqId: dlReqId, payWith: pw }) });
         let j = {}; try { j = await res.json(); } catch (e) {}
         if (!res.ok) {
             if (res.status !== 409) dlReqId = null;
             dlRenderResult({ status: 'failed', message: j.error || ('Server error ' + res.status) });
         } else { dlReqId = null; dlRenderResult(j); if (j.status === 'success') Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: 'success', title: `+${j.given} likes sent!` }); }
     } catch (e) {
-        // unknown outcome: keep the same request id so a retry can never charge twice
-        dlRenderResult({ status: 'failed', message: e.name === 'AbortError' ? 'The server isn’t responding. Please check your balance and order history, then try again.' : 'Couldn’t connect to the server, please try again.' });
+        // unknown outcome: keep the same request id (a retry can never charge twice) and ask the server what happened
+        dlShow(`<div class="dl-card dl-load"><div class="dl-spin"></div><b class="text-brand-700 text-sm">Checking your request…</b><p class="zp-sub mt-1">The connection dropped. Please wait a moment while we check whether your likes went through.</p></div>`);
+        const out = await dlPoll(dlReqId);
+        if (out) { dlReqId = null; dlRenderResult(out); if (out.status === 'success') Swal.fire({ toast: true, position: 'top', timer: 2500, showConfirmButton: false, icon: 'success', title: `+${out.given} likes sent!` }); }
+        else if (out === null) { dlReqId = null; dlRenderResult({ status: 'failed', message: 'Couldn’t connect to the server. Nothing was charged — please try again.' }); }
+        else dlRenderResult({ status: 'failed', unknown: true, message: 'Your request is still being processed. Please check your order history in a minute before trying again.' });
     } finally {
         clearTimeout(tm); dlBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-fire mr-1.5"></i>Send likes'; dlUpdateInfo();
     }
@@ -2439,7 +2482,7 @@ function alRenderPkgs() {
     }).join('');
 }
 function alUpdateInfo() {
-    const e = document.getElementById('al-balance'); setTxt(e, Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
+    setTxt(document.getElementById('al-bonus'), Number(userBonus || 0).toFixed(2).replace(/\.00$/, '')); const e = document.getElementById('al-balance'); setTxt(e, Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
     const t = document.getElementById('al-time'); if (t) setTxt(t, alFmtTime(alCfg.sendTime));
     const l = document.getElementById('al-likes'); if (l && typeof dlCfg !== 'undefined') setTxt(l, dlCfg.likes);
 }
@@ -2479,13 +2522,10 @@ async function alBuy() {
     if (!/^\d{5,15}$/.test(uid)) { Swal.fire('Heads up', 'Please enter a valid UID (numbers only, 5–15 digits)', 'warning'); return; }
     if (!alRegion) { const b = document.getElementById('al-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
     const price = alPrice(pkg);
-    if ((userBalance || 0) < price) {
-        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Your balance: <b>BDT ${userBalance || 0}</b><br>Required: <b>BDT ${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
-        if (x.isConfirmed) showSec('addmoney'); return;
-    }
+    const pw = await chooseWallet(price, 'autoLike'); if (!pw) return;
     const act = alMine && alMine.status === 'active';
     const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + price, cancelButtonText: 'Cancel',
-        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>BDT ${price}</b>
+        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>BDT ${price}</b><br>Pay from: <b>${walletName(pw)}</b>
         <div style="font-size:11px;color:#5f7a6e;margin-top:8px">${act ? 'These days will be added to your running subscription. ' : 'This UID will be locked to your subscription (you can change it later for a small fee). '}No refund if a daily like can’t be delivered.</div>` });
     if (!c.isConfirmed) return;
     const key = pkg.id + '|' + uid + '|' + alRegion;
@@ -2493,7 +2533,7 @@ async function alBuy() {
     alBusy = true;
     const btn = document.getElementById('al-btn'), bt = document.getElementById('al-btn-txt'), old = bt.innerText; btn.disabled = true; btn.style.opacity = '.6'; bt.innerText = 'Processing...';
     try {
-        const j = await api('/autoLikeBuy', { packageId: pkg.id, uid, region: alRegion, reqId: alReqId }); alReqId = null;
+        const j = await api('/autoLikeBuy', { packageId: pkg.id, uid, region: alRegion, reqId: alReqId, payWith: pw }); alReqId = null;
         await alLoadMine(true);
         Swal.fire({ icon: 'success', title: 'Auto Like activated! 🎉', html: `<b>${esc(pkg.name)}</b> for UID <b>${esc(uid)}</b>.<br>The first like goes out ${alMine ? alFmtDay(alMine.nextDate) + ' at ' : 'at '}<b>${alFmtTime(alCfg.sendTime)}</b> (BD time), then every day.` });
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2527,18 +2567,21 @@ async function alMy() {
 }
 async function alChangeUid(m) {
     const fee = alCfg.changeFee;
+    const bonusPay = bonusOn('autoLike') && Number(userBonus || 0) >= fee && fee > 0;
+    const payHtml = bonusPay ? `<select id="al-new-pay" class="swal2-select" style="margin:6px 0;width:80%"><option value="balance">Pay from: Main balance (BDT ${Number(userBalance || 0)})</option><option value="bonus">Pay from: Bonus (BDT ${Number(userBonus || 0)})</option></select>` : '';
     const opts = DL_REGIONS.map(r => `<option value="${r}" ${r === m.region ? 'selected' : ''}>${r}</option>`).join('');
     const x = await Swal.fire({
         title: 'Change UID', confirmButtonText: 'Pay BDT ' + fee + ' & change', showCancelButton: true, focusConfirm: false,
         html: `<div style="font-size:12px;color:#5f7a6e;margin-bottom:8px">Current: <b>${esc(m.uid)}</b> (${esc(m.region)})<br>Changing the UID costs <b>BDT ${fee}</b>, taken from your wallet. Your remaining days stay the same.</div>
             <input id="al-new-uid" class="swal2-input" inputmode="numeric" maxlength="15" placeholder="New UID" style="margin:6px 0">
-            <select id="al-new-region" class="swal2-select" style="margin:6px 0;width:80%">${opts}</select>`,
+            <select id="al-new-region" class="swal2-select" style="margin:6px 0;width:80%">${opts}</select>${payHtml}`,
         preConfirm: () => {
             const u = (document.getElementById('al-new-uid').value || '').replace(/\D/g, ''), r = document.getElementById('al-new-region').value;
             if (!/^\d{5,15}$/.test(u)) { Swal.showValidationMessage('Enter a valid UID (5–15 digits)'); return false; }
             if (u === m.uid && r === m.region) { Swal.showValidationMessage('This is already your current UID'); return false; }
-            if ((userBalance || 0) < fee) { Swal.showValidationMessage('Not enough balance — you need BDT ' + fee); return false; }
-            return { uid: u, region: r };
+            const pw = (document.getElementById('al-new-pay') || {}).value || 'balance';
+            if ((pw === 'bonus' ? (userBonus || 0) : (userBalance || 0)) < fee) { Swal.showValidationMessage('Not enough ' + (pw === 'bonus' ? 'bonus' : 'balance') + ' — you need BDT ' + fee); return false; }
+            return { uid: u, region: r, payWith: pw };
         }
     });
     if (!x.isConfirmed) return;
@@ -2675,7 +2718,7 @@ async function idsBuy(i) {
     if (it.closed) { idsClosedInfo(it); return; }
     if (!currentUser) { showSec('auth'); return; }
     const bal = Math.floor(Number(userData && userData.balance) || 0);
-    const r = await Swal.fire({ icon: 'question', title: 'Buy this ID?', html: '<div class="mhx-sub"><b>' + esc(it.title) + '</b><br>Price: <b>BDT ' + esc(it.price) + '</b><br>Your balance: BDT ' + bal + '</div>', showCancelButton: true, confirmButtonText: 'Buy for BDT ' + it.price, cancelButtonText: 'Cancel' });
+    const r = await Swal.fire({ icon: 'question', title: 'Buy this ID?', html: '<div class="mhx-sub"><b>' + esc(it.title) + '</b><br>Price: <b>BDT ' + esc(it.price) + '</b><br>Your balance: BDT ' + bal + '<br><span style="font-size:11px;color:#8a6d00">IDs can only be bought with your main balance (not bonus).</span></div>', showCancelButton: true, confirmButtonText: 'Buy for BDT ' + it.price, cancelButtonText: 'Cancel' });
     if (!r.isConfirmed) return;
     mhxBusy('Processing your order…', 'Please do not close this page.');
     try {

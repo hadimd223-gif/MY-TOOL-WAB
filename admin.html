@@ -289,6 +289,18 @@
             </div>
 
             <div id="view-settings" class="view-section hidden">
+                <div class="card mb-6 md:mb-8" style="border:1px solid #f59e0b">
+                    <h3 class="text-xl font-bold text-amber-400 mb-1"><i class="fas fa-gift mr-2"></i>Bonus Wallet Control (কোথায় বোনাস খরচ করা যাবে)</h3>
+                    <p class="text-xs text-gray-400 mb-4">প্রোমো কোড ও ডিপোজিট বোনাসের টাকা ইউজারের <b class="text-white">Bonus</b> ব্যালেন্সে জমা হয়, মেইন ব্যালেন্সে নয়। নিচে টিক দেওয়া প্রোডাক্টে ইউজার চাইলে বোনাস দিয়ে কিনতে পারবে (তখন শুধু বোনাস থেকে কাটবে)। টিক তুলে দিলে ওই প্রোডাক্ট শুধু মেইন ব্যালেন্স দিয়ে হবে।</p>
+                    <div class="space-y-2 mb-4 text-sm text-gray-200">
+                        <label class="flex items-center gap-2"><input type="checkbox" id="bn-topup"> গেম টপ-আপ (সব সার্ভিস) — আলাদা সার্ভিস বন্ধ করতে Services পেজে "Bonus" বাটন</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="bn-daily"> Daily Like</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="bn-auto"> Auto Like (প্যাকেজ ও UID চেঞ্জ ফি)</label>
+                        <label class="flex items-center gap-2 opacity-70"><input type="checkbox" disabled> ID Sell — <b class="text-rose-400">সবসময় শুধু মেইন ব্যালেন্স</b> (বোনাস দিয়ে আইডি কেনা যায় না)</label>
+                    </div>
+                    <button onclick="saveBonusCfg()" class="flat-btn"><i class="fas fa-save mr-1"></i> Save</button>
+                </div>
+
                 <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
@@ -1150,6 +1162,7 @@
                         <td><span class="font-medium text-white">${d.name}</span></td><td><span class="px-2 py-1 bg-dark-bg rounded text-xs font-semibold uppercase text-orange-500 border border-orange-500/30">${d.type}</span></td>
                         <td class="text-center space-x-2 whitespace-nowrap">
                             <button onclick="switchView('products', '${doc.id}', '${d.name}', '${d.type}')" class="flat-btn text-xs py-2 px-3"><i class="fas fa-box md:mr-1"></i> <span class="hidden md:inline">Pkgs</span></button>
+                            <button onclick="toggleSrvBonus('${doc.id}', ${d.bonusOff ? 'true' : 'false'})" class="flat-btn text-xs py-2 px-3" style="background:${d.bonusOff ? '#7f1d1d' : '#b45309'}" title="Bonus দিয়ে এই সার্ভিস কেনা যাবে কিনা"><i class="fas fa-gift md:mr-1"></i> <span class="hidden md:inline">Bonus ${d.bonusOff ? 'OFF' : 'ON'}</span></button>
                             <button onclick="deleteDoc('services', '${doc.id}')" class="flat-btn flat-btn-danger text-xs py-2 px-3"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
@@ -1396,7 +1409,7 @@
                 const date = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate().toLocaleDateString() : 'N/A';
                 list.innerHTML += `<tr>
                     <td class="text-gray-400 text-sm">${date}</td><td><span class="font-medium text-white">${u.name || 'N/A'}</span></td>
-                    <td class="break-all">${u.email}</td><td class="font-bold text-orange-500">৳${u.balance || 0}</td>
+                    <td class="break-all">${u.email}</td><td class="font-bold text-orange-500">৳${u.balance || 0}<br><span class="text-xs text-amber-400">🎁 ৳${u.bonus || 0}</span></td>
                     <td class="text-center"><button onclick="editBalance('${u.id}', ${u.balance || 0})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-edit md:mr-1"></i> <span class="hidden md:inline">Bal</span></button></td>
                 </tr>`;
             });
@@ -1524,7 +1537,7 @@
         const d=(await db.collection('settings').doc('general').get()).data()||{},k=(await db.collection('secrets').doc('api').get()).data()||{};
         const f=(i,l,v)=>`<label style="font-size:12px">${l}</label><input id="${i}" class="swal2-input" style="margin:4px 0 10px;width:100%" value="${(v||'').toString().replace(/"/g,'&quot;')}">`;
         const r=await Swal.fire({title:'Extras',width:620,showCancelButton:true,confirmButtonText:'Save',html:'<div style="text-align:left">'+
-          f('x-url','Like API URL (use {uid} {key} {package})',k.likeUrl)+f('x-key','Like API Key (admin-only)',k.likeKey)+
+          f('x-url','Like API URL (use {uid} {region} {key} {package})',k.likeUrl||'https://fflikebd.site/ghostxlike?region=BD&uid={uid}&userkey=JIBON-5EHN2TGWG249VP')+f('x-key','Like API Key (admin-only)',k.likeKey)+
           `<label><input type="checkbox" id="x-auto" ${d.likeAuto?'checked':''}> Auto-process Like orders (while this panel is open)</label><br><br>`+
           f('x-disc','Reseller discount % (when a package has no reseller price)',d.resellerDiscount)+f('x-gn','Guild name',d.guildName)+f('x-gd','Guild description',d.guildDesc)+f('x-gl','Guild group link',d.guildLink)+'</div>',
           preConfirm:()=>{const g=i=>document.getElementById(i).value.trim();return{u:g('x-url'),k:g('x-key'),a:document.getElementById('x-auto').checked,d:+g('x-disc')||0,gn:g('x-gn'),gd:g('x-gd'),gl:g('x-gl')}}});
@@ -1544,10 +1557,10 @@
     const likeBusy=new Set();
     db.collection('orders').where('type','==','like').where('status','==','pending').onSnapshot(async snap=>{
         const g=(await db.collection('settings').doc('general').get()).data()||{};if(!g.likeAuto)return;
-        const k=(await db.collection('secrets').doc('api').get()).data()||{};if(!k.likeUrl)return;
+        const k=(await db.collection('secrets').doc('api').get()).data()||{};if(!k.likeUrl)k.likeUrl='https://fflikebd.site/ghostxlike?region=BD&uid={uid}&userkey=JIBON-5EHN2TGWG249VP';
         for(const d of snap.docs){if(likeBusy.has(d.id))continue;likeBusy.add(d.id);const o=d.data();
             try{await d.ref.update({status:'processing'});
-                const url=k.likeUrl.replace('{uid}',encodeURIComponent(o.playerId)).replace('{key}',encodeURIComponent(k.likeKey||'')).replace('{package}',encodeURIComponent(o.productName));
+                const url=k.likeUrl.replace('{uid}',encodeURIComponent(o.playerId)).replace('{key}',encodeURIComponent(k.likeKey||'')).replace('{region}',encodeURIComponent(o.server||'BD')).replace('{package}',encodeURIComponent(o.productName));
                 const res=await fetch(url);if(!res.ok)throw new Error('HTTP '+res.status);
                 await d.ref.update({status:'success',apiResponse:(await res.text()).slice(0,300)});
             }catch(err){await d.ref.update({status:'pending',apiError:String(err.message)})}}
@@ -1567,25 +1580,26 @@
       l.innerHTML=users.map(u=>{const d=u.createdAt&&u.createdAt.toDate?u.createdAt.toDate().toLocaleDateString():'N/A';
         const r=u.role==='admin'?'<span class="zp-b" style="background:#e11d48">Admin</span>':u.role==='reseller'?'<span class="zp-b" style="background:#f59e0b">Reseller</span>':'<span class="zp-b" style="background:#475569">User</span>';
         return `<tr><td class="text-gray-400 text-sm">${d}</td><td><span class="font-medium text-white">${u.name||'N/A'}</span> ${r}${u.banned?' <span class="zp-b" style="background:#7f1d1d">BANNED</span>':''}<br><span class="text-xs text-gray-400">PIN: ${pinOf(u)} • ${u.provider||'email'} • ${Math.floor(u.points||0)} pts</span></td>
-        <td class="break-all">${u.email||''}</td><td class="font-bold text-orange-500">৳${u.balance||0}</td>
+        <td class="break-all">${u.email||''}</td><td class="font-bold text-orange-500">৳${u.balance||0}<br><span class="text-xs text-amber-400">🎁 ৳${u.bonus||0}</span></td>
         <td class="text-center"><button onclick="manageUser('${u.id}')" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-user-cog md:mr-1"></i><span class="hidden md:inline">Manage</span></button></td></tr>`}).join('')}
     function searchUsers(){const t=(document.getElementById('user-search')||{}).value.toLowerCase().trim();
       renderUsers(allUsers.filter(u=>(u.email||'').toLowerCase().includes(t)||(u.name||'').toLowerCase().includes(t)||pinOf(u).toLowerCase()===t||u.id.toLowerCase()===t))}
     async function manageUser(uid){const u=allUsers.find(x=>x.id===uid);if(!u)return;const p=u.perms||{};
       const r=await Swal.fire({title:u.name||u.email,width:560,showCancelButton:true,confirmButtonText:'Apply',html:`<div style="text-align:left;font-size:13px">
-        <p>${u.email||''} • PIN <b>${pinOf(u)}</b> • Balance <b>৳${u.balance||0}</b></p><hr style="border-color:#3b4256;margin:8px 0">
+        <p>${u.email||''} • PIN <b>${pinOf(u)}</b> • Balance <b>৳${u.balance||0}</b> • Bonus <b>৳${u.bonus||0}</b></p><hr style="border-color:#3b4256;margin:8px 0">
         <label>Add / deduct balance (use − to deduct)</label><input id="m-amt" type="number" class="swal2-input" style="margin:4px 0 8px;width:100%" placeholder="e.g. 100 or -50">
+        <label>Add / deduct BONUS (use − to deduct)</label><input id="m-bonus" type="number" class="swal2-input" style="margin:4px 0 8px;width:100%" placeholder="e.g. 50 or -20">
         <label>Points (set)</label><input id="m-pts" type="number" class="swal2-input" style="margin:4px 0 8px;width:100%" value="${Math.floor(u.points||0)}">
         <label>Role</label><select id="m-role" class="swal2-select" style="width:100%;margin:4px 0 8px"><option value="user">User (remove reseller/admin)</option><option value="reseller">Reseller</option><option value="admin">Admin</option></select>
         <label><input type="checkbox" id="m-ban" ${u.banned?'checked':''}> Banned</label>
         <p style="margin:10px 0 4px"><b>Admin permissions</b> (only if role = Admin)</p><div class="zp-gr">${Object.entries(PERMS).map(([k,v])=>`<label><input type="checkbox" class="m-perm" data-k="${k}" ${p[k]?'checked':''}> ${v}</label>`).join('')}</div></div>`,
         didOpen:()=>{document.getElementById('m-role').value=u.role||'user'},
         preConfirm:()=>{const perms={};document.querySelectorAll('.m-perm').forEach(c=>perms[c.dataset.k]=c.checked);
-          return{amt:parseInt(document.getElementById('m-amt').value)||0,pts:parseInt(document.getElementById('m-pts').value)||0,role:document.getElementById('m-role').value,ban:document.getElementById('m-ban').checked,perms}}});
+          return{amt:parseInt(document.getElementById('m-amt').value)||0,bon:parseInt(document.getElementById('m-bonus').value)||0,pts:parseInt(document.getElementById('m-pts').value)||0,role:document.getElementById('m-role').value,ban:document.getElementById('m-ban').checked,perms}}});
       if(!r.isConfirmed)return;const v=r.value;
-      try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt)up.balance=FV.increment(v.amt);
+      try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt)up.balance=FV.increment(v.amt);if(v.bon)up.bonus=FV.increment(v.bon);
         await db.collection('users').doc(uid).update(up);
-        await db.collection('adminLogs').add({at:FV.serverTimestamp(),by:(auth.currentUser||{}).email||'',target:uid,change:{balanceDelta:v.amt,role:v.role,banned:v.ban,points:v.pts}});
+        await db.collection('adminLogs').add({at:FV.serverTimestamp(),by:(auth.currentUser||{}).email||'',target:uid,change:{balanceDelta:v.amt,bonusDelta:v.bon,role:v.role,banned:v.ban,points:v.pts}});
         hideLoading();Swal.fire({icon:'success',title:'Updated',timer:1200,showConfirmButton:false})}catch(e){hideLoading();Swal.fire('Error',e.message,'error')}}
     async function findByPin(){const r=await Swal.fire({title:'Find by Support Pin',input:'text',inputPlaceholder:'e.g. A1B2C3',showCancelButton:true});if(!r.isConfirmed)return;
       const t=r.value.trim().toUpperCase(),u=allUsers.find(x=>pinOf(x)===t);u?manageUser(u.id):Swal.fire('Not found','No user with this pin','error')}
@@ -1625,7 +1639,7 @@
             const d = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate().toLocaleDateString() : 'N/A';
             const r = u.role === 'admin' ? '<span class="zp-b" style="background:#e11d48">Admin</span>' : u.role === 'reseller' ? '<span class="zp-b" style="background:#f59e0b">Reseller</span>' : '<span class="zp-b" style="background:#475569">User</span>';
             return `<tr><td class="text-gray-400 text-sm">${d}</td><td><span class="font-medium text-white">${esc(u.name || 'N/A')}</span> ${r}${u.banned ? ' <span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}<br><span class="text-xs text-gray-400">PIN: <b class="text-orange-400">${pinOf(u)}</b> • ${Math.floor(u.points || u.totalDeposit || 0)} pts</span></td>
-            <td class="break-all">${esc(u.email || '')}</td><td class="font-bold text-orange-500">৳${u.balance || 0}</td>
+            <td class="break-all">${esc(u.email || '')}</td><td class="font-bold text-orange-500">৳${u.balance || 0}<br><span class="text-xs text-amber-400">🎁 ৳${u.bonus || 0}</span></td>
             <td class="text-center"><button onclick="qcShow('${u.id}');window.scrollTo({top:0,behavior:'smooth'});document.querySelector('#main-content > div').scrollTo({top:0,behavior:'smooth'})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-sliders-h md:mr-1"></i><span class="hidden md:inline">Control</span></button> <button onclick="sendResetMail('${esc(u.email || '')}')" title="Send password reset email" class="flat-btn flat-btn-outline text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-key"></i></button></td></tr>`;
         }).join('') : '<tr><td colspan="5" class="text-center text-gray-500 py-6">No users</td></tr>';
     }
@@ -1655,6 +1669,29 @@
     }
     (function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'settings') loadResellerDisc(); return r; }; })();
 
+    // ---- Bonus wallet control ----
+    async function loadBonusCfg() {
+        try {
+            const d = (await db.collection('settings').doc('bonus').get()).data() || {};
+            const on = k => d[k] !== false;
+            const set = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v; };
+            set('bn-topup', on('topup')); set('bn-daily', on('dailyLike')); set('bn-auto', on('autoLike'));
+        } catch (e) {}
+    }
+    async function saveBonusCfg() {
+        const g = id => !!(document.getElementById(id) || {}).checked;
+        try {
+            showLoading();
+            await db.collection('settings').doc('bonus').set({ topup: g('bn-topup'), dailyLike: g('bn-daily'), autoLike: g('bn-auto') }, { merge: true });
+            hideLoading(); Swal.fire('Saved', 'Bonus settings updated', 'success');
+        } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+    }
+    (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'settings') loadBonusCfg(); return r; }; })();
+    async function toggleSrvBonus(id, off) {
+        try { await db.collection('services').doc(id).update({ bonusOff: !off }); Swal.fire({ icon: 'success', title: off ? 'Bonus allowed' : 'Bonus blocked', timer: 1000, showConfirmButton: false }); }
+        catch (e) { Swal.fire('Error', e.message, 'error'); }
+    }
+
     // ---- send password reset email to a user ----
     async function sendResetMail(email) {
         if (!email) return Swal.fire('No email', 'This user has no email saved', 'warning');
@@ -1678,9 +1715,9 @@
         const b = (act, label, color, icon) => `<button onclick="userAction('${uid}','${act}')" class="flat-btn text-xs py-2.5 px-3" style="background:${color}"><i class="fas ${icon} mr-1"></i>${label}</button>`;
         box.innerHTML = `<div style="background:#161a23;border:1px solid #2a3040;border-radius:18px;padding:16px">
           <div class="flex flex-wrap justify-between gap-2 mb-3"><div><div class="text-white font-bold text-lg">${esc(u.name || 'N/A')} ${u.banned ? '<span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}</div><div class="text-gray-400 text-sm break-all">${esc(u.email || '')}</div></div>
-            <div class="text-right"><div class="text-2xl font-extrabold text-orange-500">৳${u.balance || 0}</div><div class="text-xs text-gray-400">PIN <b>${pinOf(u)}</b> • ${esc(u.role || 'user')} • ${Math.floor(u.points || u.totalDeposit || 0)} pts</div></div></div>
+            <div class="text-right"><div class="text-2xl font-extrabold text-orange-500">৳${u.balance || 0}</div><div class="text-sm font-bold text-amber-400">🎁 Bonus ৳${u.bonus || 0}</div><div class="text-xs text-gray-400">PIN <b>${pinOf(u)}</b> • ${esc(u.role || 'user')} • ${Math.floor(u.points || u.totalDeposit || 0)} pts</div></div></div>
           <div class="flex flex-wrap gap-2">
-            ${b('add', 'Add Money', '#16a34a', 'fa-plus')}${b('deduct', 'Deduct Money', '#dc2626', 'fa-minus')}
+            ${b('add', 'Add Money', '#16a34a', 'fa-plus')}${b('deduct', 'Deduct Money', '#dc2626', 'fa-minus')}${b('addbonus', 'Add Bonus', '#d97706', 'fa-gift')}${b('deductbonus', 'Deduct Bonus', '#92400e', 'fa-gift')}
             ${u.banned ? b('unban', 'Unban', '#0ea5e9', 'fa-unlock') : b('ban', 'Ban', '#7f1d1d', 'fa-ban')}
             ${u.role === 'reseller' ? b('unreseller', 'Remove Reseller', '#6b7280', 'fa-user-minus') : b('reseller', 'Make Reseller', '#f59e0b', 'fa-crown')}
             ${u.role === 'admin' ? b('unadmin', 'Remove Admin', '#6b7280', 'fa-user-shield') : b('admin', 'Make Admin', '#e11d48', 'fa-user-shield')}
@@ -1694,6 +1731,11 @@
             const r = await Swal.fire({ title: act === 'add' ? 'Add money' : 'Deduct money', input: 'number', inputLabel: 'Amount (৳)', inputAttributes: { min: 1 }, showCancelButton: true });
             const v = parseInt(r.value); if (!r.isConfirmed || !(v > 0)) return;
             return applyUser(uid, { balance: FV.increment(act === 'add' ? v : -v) }, { balanceDelta: act === 'add' ? v : -v });
+        }
+        if (act === 'addbonus' || act === 'deductbonus') {
+            const r = await Swal.fire({ title: act === 'addbonus' ? 'Add bonus' : 'Deduct bonus', input: 'number', inputLabel: 'Amount (৳)', inputAttributes: { min: 1 }, showCancelButton: true });
+            const v = parseInt(r.value); if (!r.isConfirmed || !(v > 0)) return;
+            return applyUser(uid, { bonus: FV.increment(act === 'addbonus' ? v : -v) }, { bonusDelta: act === 'addbonus' ? v : -v });
         }
         if (act === 'points') { const r = await Swal.fire({ title: 'Set points', input: 'number', inputValue: Math.floor(u.points || 0), showCancelButton: true }); if (!r.isConfirmed) return; return applyUser(uid, { points: parseInt(r.value) || 0 }, { points: r.value }); }
         const map = { ban: [{ banned: true }, 'Ban this user?'], unban: [{ banned: false }, 'Unban this user?'], reseller: [{ role: 'reseller' }, 'Make this user a Reseller?'],
