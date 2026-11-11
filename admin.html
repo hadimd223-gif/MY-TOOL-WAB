@@ -2661,15 +2661,23 @@ async function alSendOne(id) {
 let afFilter = 'review', afCfg = {}, afDef = {};
 const afE = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const afT = ms => { const d = new Date(Number(ms)); return (!ms || isNaN(d)) ? '—' : d.toLocaleString(); };
-async function afCall(body) {
+async function afCall(body, retry) {
     const user = auth.currentUser; if (!user) throw new Error('Login required');
-    const tk = await user.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 45000);
+    const tk = await user.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 60000);
     try {
         const r = await fetch(MHX_API_BACKEND + '/adminAntiFraud', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body || {}) });
         let j = {}; try { j = await r.json(); } catch (e) {}
+        if (r.status === 404) throw new Error('ব্যাকএন্ডে Anti-Fraud নেই — নতুন main.py আপলোড করে সার্ভার রিস্টার্ট করুন।');
         if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
         return j;
-    } catch (e) { if (e.name === 'AbortError') throw new Error('Server timeout'); throw e; } finally { clearTimeout(t); }
+    } catch (e) {
+        if (e.name === 'AbortError') throw new Error('সার্ভার সাড়া দিচ্ছে না (timeout), আবার চেষ্টা করুন');
+        if (/Failed to fetch|NetworkError|Load failed/i.test(e.message)) {
+            if (!retry) { await new Promise(z => setTimeout(z, 2500)); return afCall(body, true); }   // server may just be waking up / restarting
+            throw new Error('ব্যাকএন্ড সার্ভারে পৌঁছানো যাচ্ছে না। সার্ভার চালু আছে কিনা এবং নতুন main.py দিয়ে রিস্টার্ট করা হয়েছে কিনা দেখুন। (' + MHX_API_BACKEND + ')');
+        }
+        throw e;
+    } finally { clearTimeout(t); }
 }
 const AF_LABELS = {
     enabled: ['Anti-Fraud চালু', 'bool'], autoRelease: ['Clean রেফারে অটো টাকা দিন', 'bool'], banBadEmail: ['ভুয়া/ছোট/অবৈধ Gmail হলে ব্যান', 'bool'], requireVerified: ['Email verified না হলে Review-এ রাখুন', 'bool'],
