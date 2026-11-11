@@ -184,6 +184,9 @@
             <a href="#" onclick="switchView('maintenance');return false" id="nav-maintenance" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-screwdriver-wrench w-8 text-center"></i> Maintenance
             </a>
+            <a href="#" onclick="switchView('antifraud');return false" id="nav-antifraud" class="nav-link flex items-center px-4 py-3">
+                <i class="fas fa-user-shield w-8 text-center"></i> Anti-Fraud <span id="af-nav-badge" class="ml-2 px-2 py-0.5 rounded-full text-xs font-bold hidden" style="background:#dc2626;color:#fff"></span>
+            </a>
             <a href="#" onclick="switchView('categories')" id="nav-categories" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-tags w-8 text-center"></i> Categories
             </a>
@@ -467,6 +470,51 @@
                         <button onclick="mtSet(true)" class="flat-btn" style="background:#dc2626"><i class="fas fa-power-off mr-2"></i>মেইনটেন্যান্স চালু করুন</button>
                         <button onclick="mtSet(false)" class="flat-btn" style="background:#16a34a"><i class="fas fa-check mr-2"></i>সাইট আবার চালু করুন</button>
                         <button onclick="mtSaveText()" class="flat-btn" style="background:#3f3f46"><i class="fas fa-save mr-2"></i>শুধু মেসেজ সেভ</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="view-antifraud" class="view-section hidden">
+                <div class="card mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+                        <h3 class="text-xl font-bold text-orange-500"><i class="fas fa-user-shield mr-2"></i>Anti-Fraud &amp; Auto-Ban</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span id="af-st-review" class="px-3 py-1 rounded-full text-xs font-bold" style="background:#7c2d12;color:#fdba74">Review: 0</span>
+                            <span id="af-st-clean" class="px-3 py-1 rounded-full text-xs font-bold" style="background:#14532d;color:#86efac">Clean (waiting): 0</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4">কেউ রেফারে চিটিং/গ্লিচ করলে সিস্টেম নিজে থেকেই <b>রেফারার ও রেফার-হওয়া দুজনকেই ব্যান</b> করে। রেফারের টাকা সাথে সাথে যায় না — আগে এখানে ডিটেইলসসহ আসে। সব ঠিক থাকলে (Clean) হোল্ড টাইম পার হলে অটো টাকা যায়; সামান্য সন্দেহ থাকলে (Review) আপনি অ্যাপ্রুভ/রিজেক্ট না করা পর্যন্ত আটকে থাকে।</p>
+                    <div class="flex flex-wrap gap-2 mb-2" id="af-chips"></div>
+                </div>
+
+                <div class="card mb-6">
+                    <h3 class="text-lg font-bold text-white mb-3">Referral Requests</h3>
+                    <div class="flat-table-container">
+                        <table class="flat-table text-sm">
+                            <thead><tr><th>Time</th><th>Referrer (যে রেফার করল)</th><th>Referred (যে জয়েন করল)</th><th>Risk / Details</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+                            <tbody id="af-list"><tr><td colspan="6" class="text-gray-500 text-center py-6">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card mb-6">
+                    <h3 class="text-lg font-bold text-white mb-1">Protection Settings</h3>
+                    <p class="text-xs text-gray-400 mb-4">সংখ্যাগুলো আপনি যেকোনো সময় বদলাতে পারবেন। কড়া করতে সংখ্যা কমান। সেভ করার সাথে সাথে চালু হয়।</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="af-settings"></div>
+                    <div class="flex flex-wrap gap-2 mt-5">
+                        <button onclick="afSave()" class="flat-btn"><i class="fas fa-save mr-2"></i>Save Settings</button>
+                        <button onclick="afReleaseNow()" class="flat-btn" style="background:#3f3f46"><i class="fas fa-bolt mr-2"></i>Run release check now</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-lg font-bold text-white mb-3">Ban &amp; Strike Log</h3>
+                    <div class="flat-table-container">
+                        <table class="flat-table text-sm">
+                            <thead><tr><th>Time</th><th>Action</th><th>User</th><th>Reason</th><th class="text-center">Unban</th></tr></thead>
+                            <tbody id="af-log"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1003,7 +1051,8 @@
                 tcp: "TCP Board",
                 theme: "Theme & Colors",
                 idsell: "ID Sell",
-                maintenance: "Website Maintenance"
+                maintenance: "Website Maintenance",
+                antifraud: "Anti-Fraud & Auto-Ban"
             };
             
             const pageTitleEl = document.getElementById('page-title');
@@ -1016,6 +1065,7 @@
             if(viewId === 'theme' && window.thInit) thInit();
             if(viewId === 'idsell' && window.idsLoad) idsLoad();
             if(viewId === 'maintenance' && window.mtLoad) mtLoad();
+            if(viewId === 'antifraud' && window.afLoad) afLoad();
             if(viewId === 'settings') loadSettings();
             if(viewId === 'categories') loadCategories();
             if(viewId === 'services') loadServices();
@@ -2593,6 +2643,87 @@ async function alSendOne(id) {
         Swal.fire({ title: E(it.title), width: 520, html: '<div style="max-height:380px;overflow:auto;text-align:left;font-size:13px">' + rows + '</div>', confirmButtonText: 'Close' });
     };
 })();
+</script>
+
+<script>
+// ===== ANTI-FRAUD (admin) =====
+let afFilter = 'review', afCfg = {}, afDef = {};
+const afE = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const afT = ms => { const d = new Date(Number(ms)); return (!ms || isNaN(d)) ? '—' : d.toLocaleString(); };
+async function afCall(body) {
+    const user = auth.currentUser; if (!user) throw new Error('Login required');
+    const tk = await user.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 45000);
+    try {
+        const r = await fetch(MHX_API_BACKEND + '/adminAntiFraud', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body || {}) });
+        let j = {}; try { j = await r.json(); } catch (e) {}
+        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+        return j;
+    } catch (e) { if (e.name === 'AbortError') throw new Error('Server timeout'); throw e; } finally { clearTimeout(t); }
+}
+const AF_LABELS = {
+    enabled: ['Anti-Fraud চালু', 'bool'], autoRelease: ['Clean রেফারে অটো টাকা দিন', 'bool'], banBadEmail: ['ভুয়া/ছোট/অবৈধ Gmail হলে ব্যান', 'bool'], requireVerified: ['Email verified না হলে Review-এ রাখুন', 'bool'],
+    holdMinutes: ['টাকা দেওয়ার আগে হোল্ড (মিনিট)', 'num'], burst1Count: ['Burst-১: এতগুলো রেফার', 'num'], burst1Sec: ['Burst-১: এত সেকেন্ডে', 'num'], burst2Count: ['Burst-২: এতগুলো রেফার', 'num'], burst2Sec: ['Burst-২: এত সেকেন্ডে', 'num'],
+    hourCount: ['১ ঘণ্টায় এতগুলো হলে ব্যান', 'num'], dayCount: ['২৪ ঘণ্টায় এতগুলো হলে Review', 'num'], ipFlag: ['একই IP থেকে এতজন হলে Review', 'num'], ipBan: ['একই IP থেকে এতজন হলে ব্যান', 'num'],
+    devBan: ['একই ডিভাইসে এতজন হলে ব্যান', 'num'], strikeLimit: ['১ ঘণ্টায় এত Glitch strike হলে ব্যান', 'num'], bruteLimit: ['১০ মিনিটে এত ভুল কোড দিলে ব্যান', 'num']
+};
+function afRenderSettings() {
+    document.getElementById('af-settings').innerHTML = Object.keys(AF_LABELS).map(k => {
+        const [lb, ty] = AF_LABELS[k], v = afCfg[k];
+        return ty === 'bool'
+            ? `<label class="flex items-center gap-3 p-3 rounded-xl" style="background:#1f2430"><input type="checkbox" id="afs-${k}" ${v ? 'checked' : ''}><span class="text-sm text-gray-200">${lb}</span></label>`
+            : `<div><label class="block text-xs text-gray-400 mb-1">${lb}</label><input type="number" min="0" id="afs-${k}" class="flat-input" value="${afE(v)}"></div>`;
+    }).join('');
+}
+async function afSave() {
+    const o = {}; Object.keys(AF_LABELS).forEach(k => { const el = document.getElementById('afs-' + k); if (el) o[k] = AF_LABELS[k][1] === 'bool' ? el.checked : Number(el.value || 0); });
+    try { const r = await afCall({ action: 'save', settings: o }); afCfg = r.settings; Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Saved', showConfirmButton: false, timer: 1200 }); } catch (e) { Swal.fire('Error', e.message, 'error'); }
+}
+async function afReleaseNow() {
+    try { const r = await afCall({ action: 'releaseNow' }); Swal.fire({ toast: true, position: 'top', icon: 'success', title: r.paid + ' referral(s) released', showConfirmButton: false, timer: 1500 }); afLoad(); } catch (e) { Swal.fire('Error', e.message, 'error'); }
+}
+function afChips() {
+    const L = [['review', 'Review'], ['clean', 'Clean (waiting)'], ['pending', 'All pending'], ['approved', 'Approved'], ['rejected', 'Rejected'], ['banned', 'Auto-banned'], ['all', 'Everything']];
+    document.getElementById('af-chips').innerHTML = L.map(([k, n]) => `<button class="px-4 py-2 rounded-full text-xs font-bold" style="${afFilter === k ? 'background:#f97316;color:#fff' : 'background:#1f2430;color:#9ca3af'}" onclick="afFilter='${k}';afLoad()">${n}</button>`).join('');
+}
+function afBadge(it) {
+    const m = { pending: ['#78350f', '#fcd34d', 'Pending'], approved: ['#14532d', '#86efac', 'Paid'], rejected: ['#374151', '#d1d5db', 'Rejected'], banned: ['#7f1d1d', '#fca5a5', 'BANNED'] }[it.status] || ['#374151', '#d1d5db', it.status];
+    return `<span class="zp-b" style="background:${m[0]};color:${m[1]}">${m[2]}</span>`;
+}
+function afRow(it) {
+    const risk = it.risk === 'clean' ? '<span class="zp-b" style="background:#14532d;color:#86efac">CLEAN</span>' : it.risk === 'ban' ? '<span class="zp-b" style="background:#7f1d1d;color:#fca5a5">FRAUD</span>' : '<span class="zp-b" style="background:#7c2d12;color:#fdba74">REVIEW</span>';
+    const who = (n, e, id) => `<b class="text-white">${afE(n || 'N/A')}</b><br><span class="text-xs text-gray-400 break-all">${afE(e)}</span><br><span class="text-xs text-gray-500">${afE(id)}</span>`;
+    const rel = it.status === 'pending' && it.risk === 'clean' ? `<br><span class="text-xs text-gray-400">Auto-pay: ${afT(it.releaseAtMs)}</span>` : '';
+    const acts = it.status === 'pending'
+        ? `<button class="flat-btn text-xs py-2 px-3 mb-1" style="background:#16a34a" onclick="afAct('approve','${it.id}')">Approve ৳${afE(it.bonus)}</button>
+           <button class="flat-btn text-xs py-2 px-3 mb-1" style="background:#52525b" onclick="afAct('reject','${it.id}')">Reject</button>
+           <button class="flat-btn text-xs py-2 px-3" style="background:#7f1d1d" onclick="afAct('ban','${it.id}')">Ban both</button>`
+        : it.status === 'banned' ? `<button class="flat-btn text-xs py-2 px-3" style="background:#0ea5e9" onclick="afUnban('${it.referrerId}','${it.referredId}')">Unban both</button>` : '—';
+    return `<tr><td class="text-gray-400 text-xs">${afT(it.ts)}</td><td>${who(it.referrerName, it.referrerEmail, it.referrerId)}</td><td>${who(it.referredName, it.referredEmail, it.referredId)}${it.referredVerified ? '<br><span class="text-xs text-green-400">verified</span>' : ''}</td>
+        <td>${risk}<div class="text-xs text-gray-300 mt-1">${afE(it.flags) || 'কোনো সন্দেহ নেই'}</div><div class="text-xs text-gray-500 mt-1">IP: ${afE(it.ip) || '—'}<br>Device: ${afE((it.device || '').slice(0, 12)) || '—'}${it.ua ? '<br>' + afE(String(it.ua).slice(0, 60)) : ''}</div></td>
+        <td>${afBadge(it)}${rel}${it.note ? `<div class="text-xs text-gray-500 mt-1">${afE(it.note)}</div>` : ''}</td><td class="text-center">${acts}</td></tr>`;
+}
+async function afAct(action, id) {
+    const txt = { approve: 'Referral approve করে রেফারারকে টাকা দেবেন?', reject: 'Reject করবেন? (টাকা যাবে না, কিন্তু কেউ ব্যান হবে না)', ban: 'রেফারার ও রেফার-হওয়া দুজনকেই ব্যান করবেন?' }[action];
+    const c = await Swal.fire({ title: 'Confirm', text: txt, icon: 'question', showCancelButton: true }); if (!c.isConfirmed) return;
+    try { await afCall({ action, id }); afLoad(); } catch (e) { Swal.fire('Error', e.message, 'error'); }
+}
+async function afUnban(...ids) {
+    const c = await Swal.fire({ title: 'Unban?', text: 'এই অ্যাকাউন্ট(গুলো) আবার চালু হবে।', icon: 'question', showCancelButton: true }); if (!c.isConfirmed) return;
+    try { await afCall({ action: 'unban', userIds: ids.filter(Boolean) }); afLoad(); } catch (e) { Swal.fire('Error', e.message, 'error'); }
+}
+async function afLoad() {
+    afChips();
+    try {
+        const r = await afCall({ action: 'overview', filter: afFilter });
+        afCfg = r.settings || {}; afDef = r.defaults || {};
+        document.getElementById('af-st-review').innerText = 'Review: ' + r.stats.review; document.getElementById('af-st-clean').innerText = 'Clean (waiting): ' + r.stats.clean;
+        const bd = document.getElementById('af-nav-badge'); if (bd) { bd.innerText = r.stats.review; bd.classList.toggle('hidden', !r.stats.review); }
+        document.getElementById('af-list').innerHTML = r.items.length ? r.items.map(afRow).join('') : '<tr><td colspan="6" class="text-gray-500 text-center py-6">কিছু নেই</td></tr>';
+        document.getElementById('af-log').innerHTML = (r.logs || []).map(l => `<tr><td class="text-gray-400 text-xs">${afT(l.ts)}</td><td><span class="zp-b" style="background:${l.action === 'ban' ? '#7f1d1d' : l.action === 'unban' ? '#075985' : '#78350f'};color:#fff">${afE(l.action)}</span></td><td class="text-xs text-gray-300 break-all">${afE(l.target || '')}<br><span class="text-gray-500">${afE(l.userId)}</span></td><td class="text-xs text-gray-300">${afE(l.reason)}${l.details ? '<br><span class="text-gray-500">' + afE(String(l.details).slice(0, 160)) + '</span>' : ''}</td><td class="text-center">${l.action === 'ban' ? `<button class="flat-btn text-xs py-1 px-3" style="background:#0ea5e9" onclick="afUnban('${afE(l.userId)}')">Unban</button>` : ''}</td></tr>`).join('') || '<tr><td colspan="5" class="text-gray-500 text-center py-4">কোনো লগ নেই</td></tr>';
+        afRenderSettings();
+    } catch (e) { document.getElementById('af-list').innerHTML = '<tr><td colspan="6" class="text-red-400 text-center py-6">' + afE(e.message) + '</td></tr>'; }
+}
+window.afLoad = afLoad;
 </script>
 </body>
 </html>

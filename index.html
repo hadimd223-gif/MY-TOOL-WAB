@@ -1465,24 +1465,28 @@ function authMsg(e) {
     try { const rp = new URLSearchParams(location.search).get('ref'); if (rp) { localStorage.setItem('pendingRef', rp.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12)); } } catch (e) {}
     try { const pr = localStorage.getItem('pendingRef'), el = document.getElementById('reg-ref'); if (pr && el) el.value = pr; } catch (e) {}
     let myRef = null;
+    function mhxDevice() {   // anonymous device id (used by the server's anti-fraud check)
+        try { let d = localStorage.getItem('mhxDev'); if (!d) { d = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2))).replace(/-/g, ''); localStorage.setItem('mhxDev', d); } return d; } catch (e) { return ''; }
+    }
     async function applyPendingRef() {
         let code = ''; try { code = (document.getElementById('reg-ref').value || localStorage.getItem('pendingRef') || ''); } catch (e) {}
         code = code.trim().toUpperCase(); if (!code) return '';
         try {
             currentUser = auth.currentUser || currentUser;
-            await api('/applyReferral', { code: code });
-            return 'Referral successful 🎉';
+            const rr = await api('/applyReferral', { code: code, device: mhxDevice() });
+            return rr && rr.pending ? 'Referral code accepted ✅ — your friend’s bonus is added after a security check.' : 'Referral successful 🎉';
         } catch (e) { return 'Referral code: ' + e.message; }
         finally { try { localStorage.removeItem('pendingRef'); } catch (e) {} }
     }
     async function loadReferral() {
         if (!currentUser) return;
         try {
-            const r = await api('/getReferral', {}); myRef = r;
+            const r = await api('/getReferral', { device: mhxDevice() }); myRef = r;
             document.getElementById('ref-code').innerText = r.code;
             document.getElementById('ref-count').innerText = r.count;
             document.getElementById('ref-earned').innerText = r.earned;
-            document.getElementById('ref-info').innerText = `Share your code with a friend. When they create a new account you’ll get BDT ${r.bonus}, plus ${r.percent}% commission on every deposit they make.`;
+            const holdTxt = r.holdMinutes ? (r.holdMinutes >= 60 ? Math.round(r.holdMinutes / 60) + ' hour(s)' : r.holdMinutes + ' minute(s)') : '';
+            document.getElementById('ref-info').innerText = `Share your code with a friend. When they create a new account you’ll get BDT ${r.bonus}` + (holdTxt ? ` (added after a security check, up to ${holdTxt})` : '') + `, plus ${r.percent}% commission on every deposit they make. Fake, bot or multiple accounts are banned automatically.` + (r.pending ? ` ${r.pending} referral(s) waiting for verification.` : '');
         } catch (e) { document.getElementById('ref-code').innerText = '------'; }
     }
     async function copyRef(kind) {
