@@ -647,6 +647,19 @@ function authMsg(e) {
                 </div>
             </div>
 
+
+            <div onclick="showSec('tcp')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition mb-5" style="background:linear-gradient(135deg,#047857,#10b981 55%,#34d399)">
+                <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-satellite-dish"></i></div>
+                <div class="relative flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-extrabold text-[15px] leading-tight">TCP Board</div>
+                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Emote bot for your squad • from BDT <b id="tcp-home-price">–</b></div>
+                    </div>
+                    <div class="bg-white text-brand-600 text-[11px] font-extrabold px-3 py-2 rounded-xl inline-flex items-center flex-shrink-0">Buy <i class="fa-solid fa-arrow-right ml-1"></i></div>
+                </div>
+            </div>
+
             <div onclick="showSec('idsell')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition mb-5" style="background:linear-gradient(135deg,#047857,#10b981 55%,#6ee7b7)">
                 <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-id-card"></i></div>
                 <div class="relative flex items-center gap-3">
@@ -720,6 +733,26 @@ function authMsg(e) {
             </div>
 
             <div id="dl-result"></div>
+        </section>
+
+
+        <!-- TCP Board Section -->
+        <section id="tcp-sec" class="hidden animate-fade-in pb-10">
+            <div class="vip-card p-3.5 flex items-center gap-3 mb-3 relative">
+                <button onclick="showSec('home')" class="text-slate-500 hover:text-brand-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 absolute top-3.5 right-3.5"><i class="fas fa-times"></i></button>
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md" style="background:linear-gradient(135deg,#047857,#10b981 55%,#34d399)"><i class="fa-solid fa-satellite-dish"></i></div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">TCP Board</h3>
+                    <p class="text-[11px] text-brand-600 font-semibold">Buy a password • open your bot link • log in</p>
+                </div>
+            </div>
+            <div class="vip-card py-3 text-center mb-3"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="tcp-balance">0</span></div><div class="text-[10px] font-bold text-amber-600">Bonus BDT <span id="tcp-bonus">0</span></div></div>
+            <div class="vip-card p-3.5 mb-3">
+                <div class="text-[12px] font-extrabold text-slate-700 mb-2">Choose a package</div>
+                <div id="tcp-pk-grid" class="grid grid-cols-2 gap-2.5"><div class="col-span-2 text-center py-6 text-slate-400"><i class="fas fa-spinner fa-spin text-brand-600"></i></div></div>
+                <button id="tcp-btn" onclick="tcpBuy()" class="zp-btn w-full text-sm mt-4"><i class="fa-solid fa-satellite-dish mr-1.5"></i><span id="tcp-btn-txt">Buy password</span></button>
+                <p class="zp-sub mt-2.5 leading-relaxed"><i class="fa-solid fa-circle-info text-brand-500 mr-1"></i>After buying, open <b>Profile → My TCP Bot</b>. Your bot link and password are there. The timer starts when you log in for the first time.</p>
+            </div>
         </section>
 
         <!-- Auto Like Section -->
@@ -1590,7 +1623,7 @@ function authMsg(e) {
     }
 
     function showSec(secId) {
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'api' || secId === 'idcode') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'tcp' || secId === 'api' || secId === 'idcode') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -1604,6 +1637,7 @@ function authMsg(e) {
         if(secId === 'account') loadReferral();
         if(secId === 'dailylike') dlOpen();
         if(secId === 'autolike') alOpen();
+        if(secId === 'tcp') tcpOpen();
         if(secId === 'api') apiOpen();
         if(secId === 'idsell') idsOpen();
         if(secId === 'idcode') idcOpen();
@@ -2082,13 +2116,72 @@ function copySupportPin(btn) {
     if (document.readyState === 'complete') init(); else window.addEventListener('load', init);
 })();
 
+
+// ================= TCP BOARD =================
+let tcpCfg = { enabled: true, packages: [], offMsg: '' }, tcpPkg = null, tcpBusy = false, tcpReqId = null;
+const tcpPrice = p => (currentUser && userData && (userData.role === 'reseller' || userData.role === 'admin') && p.resellerPrice != null) ? p.resellerPrice : p.price;
+async function tcpLoadCfg() {
+    try { const r = await fetch(BACKEND_URL + '/tcpInfo'); const j = await r.json(); if (r.ok && j.packages) tcpCfg = { enabled: j.enabled !== false, packages: j.packages, offMsg: j.offMsg || '' }; } catch (e) {}
+    const hp = document.getElementById('tcp-home-price'); if (hp && tcpCfg.packages.length) hp.innerText = Math.min.apply(null, tcpCfg.packages.map(tcpPrice));
+    tcpRenderPkgs();
+}
+function tcpRenderPkgs() {
+    const box = document.getElementById('tcp-pk-grid'); if (!box) return;
+    if (!tcpCfg.packages.length) { box.innerHTML = '<div class="col-span-2 text-center py-6 text-slate-400 text-sm">No packages available right now</div>'; return; }
+    box.innerHTML = tcpCfg.packages.map(p => `<div onclick="tcpPick('${esc(p.id)}')" class="cursor-pointer rounded-2xl p-3 text-center border-2 ${tcpPkg === p.id ? 'border-brand-600 bg-brand-50' : 'border-slate-200 bg-white'}"><div class="font-extrabold text-slate-800 text-sm">${esc(p.name)}</div><div class="text-brand-600 font-extrabold text-base mt-0.5">BDT ${tcpPrice(p)}</div></div>`).join('');
+}
+function tcpPick(id) { tcpPkg = id; tcpRenderPkgs(); }
+function tcpOpen() {
+    const b = document.getElementById('tcp-balance'), n = document.getElementById('tcp-bonus');
+    if (b) b.innerText = userBalance; if (n) n.innerText = userBonus;
+    tcpLoadCfg();
+}
+async function tcpBuy() {
+    if (tcpBusy) return;
+    if (!currentUser) { showSec('auth'); return; }
+    if (!tcpCfg.enabled) { Swal.fire('Service paused', tcpCfg.offMsg || 'TCP Board is paused for a moment. Please try again later.', 'info'); return; }
+    const pkg = tcpCfg.packages.find(p => p.id === tcpPkg); if (!pkg) { Swal.fire('Heads up', 'Please choose a package', 'warning'); return; }
+    const price = tcpPrice(pkg);
+    const pw = await chooseWallet(price, 'autoLike'); if (!pw) return;
+    const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + price, cancelButtonText: 'Cancel',
+        html: `Package: <b>${esc(pkg.name)}</b><br>Price: <b>BDT ${price}</b><br>Pay from: <b>${walletName(pw)}</b><div style="font-size:11px;color:#5f7a6e;margin-top:8px">The timer starts at your first login on the TCP board.</div>` });
+    if (!c.isConfirmed) return;
+    if (!tcpReqId) tcpReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32);
+    tcpBusy = true; const btn = document.getElementById('tcp-btn'); btn.disabled = true; btn.style.opacity = '.6';
+    try {
+        const j = await api('/tcpBuy', { packageId: pkg.id, reqId: tcpReqId, payWith: pw }); tcpReqId = null;
+        await Swal.fire({ icon: 'success', title: 'Purchased! 🎉', html: `Your password:<br><b style="font-family:monospace;font-size:16px">${esc(j.key)}</b><br><div style="font-size:12px;margin-top:8px">Find it anytime in <b>Profile → My TCP Bot</b>.</div>` });
+        tcpMy();
+    } catch (e) { Swal.fire('Couldn’t buy', e.message || 'Please try again', 'error'); }
+    finally { tcpBusy = false; btn.disabled = false; btn.style.opacity = ''; }
+}
+function tcpLeft(k, now) {
+    if (k.state === 'unused') return k.days ? k.days + ' days (starts at first login)' : 'Unlimited';
+    if (k.state !== 'active') return k.state === 'expired' ? 'Expired' : 'Disabled';
+    if (!k.expiresMs) return 'Unlimited';
+    const ms = Math.max(0, k.expiresMs - now), d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5);
+    return d + 'd ' + h + 'h left';
+}
+async function tcpMy() {
+    if (!currentUser) { showSec('auth'); return; }
+    mhxBusy('Loading…', 'Fetching your TCP bots.');
+    let j; try { j = await api('/tcpMine', {}); } catch (e) { Swal.close(); Swal.fire('Error', e.message || 'Please try again', 'error'); return; }
+    Swal.close();
+    if (!j.keys.length) { const x = await Swal.fire({ icon: 'info', title: 'No TCP bot yet', text: 'You haven’t bought a TCP Board password.', showCancelButton: true, confirmButtonText: 'See packages', cancelButtonText: 'Close' }); if (x.isConfirmed) showSec('tcp'); return; }
+    const url = j.tcpUrl ? `<a href="${esc(j.tcpUrl)}" target="_blank" rel="noopener" style="display:block;background:#059669;color:#fff;font-weight:800;border-radius:12px;padding:10px;margin-bottom:10px;text-decoration:none;word-break:break-all">🔗 Open TCP Board</a>` : '<div style="color:#b45309;font-size:12px;margin-bottom:10px">The bot link isn’t ready yet. Contact @mhxffv111</div>';
+    const rows = j.keys.map(k => `<div style="border:1px solid #d1fae5;border-radius:12px;padding:8px;margin-bottom:8px;text-align:left"><div style="font-size:11px;color:#5f7a6e">${esc(k.label)} • ${esc(tcpLeft(k, j.now))}</div><div style="display:flex;gap:6px;align-items:center;margin-top:4px"><b style="font-family:monospace;font-size:13px;flex:1;word-break:break-all">${esc(k.key)}</b><button class="swal2-confirm swal2-styled" style="margin:0;padding:4px 10px;font-size:11px" onclick="navigator.clipboard&&navigator.clipboard.writeText('${esc(k.key)}');this.innerText='Copied'">Copy</button></div></div>`).join('');
+    Swal.fire({ title: 'My TCP Bot', html: url + rows + '<div style="font-size:11px;color:#5f7a6e">Contact: @mhxffv111</div>', confirmButtonText: 'Close' });
+}
+window.addEventListener('load', () => { tcpLoadCfg(); });
+
 // ================= PROFILE ICON MENU =================
 // To add another button later, just add one more { icon, label, run } line to this list.
 const PROFILE_MENU = [
     { icon: 'fa-solid fa-headset', label: 'Support', run: () => { const a = document.getElementById('fab-support'); window.open(a ? a.href : 'https://t.me/mhxffv111', '_blank', 'noopener'); } },
     { icon: 'fa-solid fa-key', label: 'Get API', run: () => showSec('api') },
     { icon: 'fa-solid fa-id-card', label: 'ID Code', run: () => showSec('idcode') },
-    { icon: 'fa-solid fa-robot', label: 'Your Auto Like UID', run: () => alMy() }
+    { icon: 'fa-solid fa-robot', label: 'Your Auto Like UID', run: () => alMy() },
+    { icon: 'fa-solid fa-satellite-dish', label: 'My TCP Bot', run: () => tcpMy() }
 ];
 function closeProfileMenu() { const m = document.getElementById('profile-menu'); if (m) m.remove(); }
 function toggleProfileMenu(ev) {

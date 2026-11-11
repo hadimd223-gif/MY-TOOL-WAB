@@ -211,6 +211,7 @@
             </a>
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
             <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
+            <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP Board</a>
             <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
             <a href="#" onclick="switchView('promos')" id="nav-promos" class="nav-link flex items-center px-4 py-3"><i class="fas fa-ticket-alt w-8 text-center"></i> Promo Codes</a>
             <a href="#" onclick="openPayments();return false" class="nav-link flex items-center px-4 py-3"><i class="fas fa-receipt w-8 text-center"></i> Payments Log</a>
@@ -807,6 +808,53 @@
                 </div>
             </div>
 
+
+            <div id="view-tcp" class="view-section hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8 mb-6">
+                    <div class="card">
+                        <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-sliders-h mr-2"></i>TCP Settings & Prices</h3>
+                        <div class="space-y-4">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="tcp-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">TCP Board বিক্রি চালু</span></label>
+                            <div><label class="block text-sm text-gray-400 mb-2">TCP বোর্ডের পাবলিক URL (TCP সার্ভার চালু হলে নিজে থেকেই বসে যায়; চাইলে হাতে দিন)</label><input type="text" id="tcp-url" class="flat-input" placeholder="https://..."></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="tcp-off" class="flat-input"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm text-gray-400 mb-2">Daily Like প্রাইস (৳)</label><input type="number" min="0" id="tcp-dl-price" class="flat-input"></div>
+                                <div><label class="block text-sm text-gray-400 mb-2">Daily Like রিসেলার প্রাইস (৳)</label><input type="number" min="0" id="tcp-dl-rprice" class="flat-input" placeholder="খালি = ডিফল্ট"></div>
+                            </div>
+                        </div>
+                        <h4 class="text-lg font-bold text-orange-500 mt-6 mb-3">Packages (দিন ও দাম)</h4>
+                        <div id="tcp-pk-rows" class="space-y-2"></div>
+                        <div class="flex gap-3 mt-3"><button onclick="tcpAddRow()" class="px-4 py-2 rounded-lg bg-dark-border text-white text-sm font-bold">+ Package</button><button onclick="tcpSaveCfg()" class="px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Save</button></div>
+                        <p class="text-xs text-gray-500 mt-2">Daily Like-এ কত লাইক যাবে সেটা লাইক সার্ভিসের API ঠিক করে; এখান থেকে শুধু দাম বদলায়।</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-key mr-2"></i>পাসওয়ার্ড জেনারেট</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-sm text-gray-400 mb-2">দিন (0 = আনলিমিটেড)</label>
+                                <input type="number" min="0" id="tcp-g-days" class="flat-input" value="3" list="tcp-days-list"><datalist id="tcp-days-list"><option value="0"><option value="3"><option value="5"><option value="7"><option value="10"><option value="12"><option value="15"><option value="20"><option value="25"><option value="30"></datalist></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">কতজন ব্যবহার করতে পারবে (0 = আনলিমিটেড)</label><input type="number" min="0" id="tcp-g-users" class="flat-input" value="1"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">কতগুলো বানাবেন</label><input type="number" min="1" max="100" id="tcp-g-count" class="flat-input" value="1"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">নিজের পাসওয়ার্ড (ঐচ্ছিক, 1টির জন্য)</label><input type="text" id="tcp-g-custom" class="flat-input" placeholder="VIP-NAME"></div>
+                        </div>
+                        <div class="mt-3"><label class="block text-sm text-gray-400 mb-2">লেবেল (ঐচ্ছিক)</label><input type="text" id="tcp-g-label" class="flat-input"></div>
+                        <button onclick="tcpGen()" class="mt-4 px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Generate</button>
+                        <pre id="tcp-g-out" class="mt-3 text-sm text-green-400 whitespace-pre-wrap"></pre>
+                    </div>
+                </div>
+                <div class="card mb-6">
+                    <div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold text-orange-500"><i class="fas fa-list mr-2"></i>সব পাসওয়ার্ড</h3><button onclick="tcpLoadKeys()" class="px-3 py-1.5 rounded-lg bg-dark-border text-white text-xs font-bold">Refresh</button></div>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-gray-400"><tr><th class="py-2 pr-3">Password</th><th class="pr-3">Label</th><th class="pr-3">Status</th><th class="pr-3">Users</th><th class="pr-3">Ends</th><th></th></tr></thead><tbody id="tcp-keys" class="text-white"></tbody></table></div>
+                </div>
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-boxes-stacked mr-2"></i>Guest Account Stock (MHX TCP বাটনের জন্য)</h3>
+                    <p class="text-xs text-gray-400 mb-2">প্রতি লাইনে একটি: <code>UID PASSWORD</code> অথবা <code>UID PASSWORD JWT_TOKEN REGION</code>। যেটা আগে কেউ নেয়নি সেটাই পরের জনকে যায়।</p>
+                    <textarea id="tcp-acc-text" rows="5" class="flat-input" placeholder="1234567890 ABCDEF123456 BD"></textarea>
+                    <button onclick="tcpAccAdd()" class="mt-3 px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Add to stock</button>
+                    <div class="text-sm text-gray-300 mt-4" id="tcp-acc-sum"></div>
+                    <div class="overflow-x-auto mt-2"><table class="w-full text-sm text-left"><tbody id="tcp-accs" class="text-white"></tbody></table></div>
+                </div>
+            </div>
+
             <div id="view-autolike" class="view-section hidden">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div class="card text-center"><div class="text-xs text-gray-400">Active subscribers</div><div class="text-3xl font-extrabold text-orange-500" id="al-st-active">0</div></div>
@@ -952,6 +1000,7 @@
                 promos: "Promo Codes",
                 apikeys: "API Key Management",
                 autolike: "Auto Like Management",
+                tcp: "TCP Board",
                 theme: "Theme & Colors",
                 idsell: "ID Sell",
                 maintenance: "Website Maintenance"
@@ -991,6 +1040,7 @@
             if(viewId === 'notices') loadNotices();
             if(viewId === 'promos') loadPromos();
             if(viewId === 'autolike') loadAutoLike();
+            if(viewId === 'tcp') tcpLoadAll();
         }
 
         async function loadDashboardData() {
@@ -2071,6 +2121,95 @@ async function loadAutoLike() {
     } catch (e) { SA('Error', e.message, 'error'); }
     alLoadSubs();
 }
+
+// ================= TCP BOARD (admin) =================
+async function tcpCall(action, body) {
+    const user = auth.currentUser; if (!user) throw new Error('Login required');
+    const tk = await user.getIdToken();
+    const r = await fetch(MHX_API_BACKEND + '/adminTcp', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(Object.assign({ action }, body || {})) });
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+    return j;
+}
+const tcpEsc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let tcpPk = [];
+const TCP_DEF = [3, 5, 7, 10, 12, 15, 20, 25, 30];
+function tcpRenderRows() {
+    document.getElementById('tcp-pk-rows').innerHTML = tcpPk.map((p, i) => `<div class="grid grid-cols-12 gap-2 items-center">
+        <input class="flat-input col-span-3" data-k="name" data-i="${i}" value="${tcpEsc(p.name)}" placeholder="Name">
+        <input class="flat-input col-span-2" type="number" data-k="days" data-i="${i}" value="${p.days}" placeholder="Days">
+        <input class="flat-input col-span-2" type="number" data-k="price" data-i="${i}" value="${p.price}" placeholder="Price">
+        <input class="flat-input col-span-2" type="number" data-k="resellerPrice" data-i="${i}" value="${p.resellerPrice == null ? '' : p.resellerPrice}" placeholder="Reseller">
+        <label class="col-span-2 text-xs text-white flex items-center gap-1"><input type="checkbox" data-k="active" data-i="${i}" ${p.active !== false ? 'checked' : ''}>On</label>
+        <button onclick="tcpDelRow(${i})" class="col-span-1 text-red-400"><i class="fas fa-trash"></i></button></div>`).join('');
+}
+function tcpReadRows() {
+    document.querySelectorAll('#tcp-pk-rows [data-k]').forEach(el => { const p = tcpPk[+el.dataset.i], k = el.dataset.k; if (!p) return;
+        if (k === 'active') p.active = el.checked; else if (k === 'name') p.name = el.value.trim(); else if (k === 'resellerPrice') p.resellerPrice = el.value === '' ? null : Math.round(+el.value); else p[k] = Math.round(+el.value); });
+    return tcpPk;
+}
+function tcpAddRow() { tcpReadRows(); tcpPk.push({ id: 'p' + Date.now().toString(36), name: '', days: 1, price: 0, resellerPrice: null, active: true }); tcpRenderRows(); }
+function tcpDelRow(i) { tcpReadRows(); tcpPk.splice(i, 1); tcpRenderRows(); }
+async function tcpLoadAll() { await tcpLoadCfg(); tcpLoadKeys(); tcpLoadAccs(); }
+async function tcpLoadCfg() {
+    try {
+        const j = await tcpCall('getConfig');
+        document.getElementById('tcp-enabled').checked = j.enabled !== false;
+        document.getElementById('tcp-url').value = j.tcpUrl || '';
+        document.getElementById('tcp-off').value = j.offMsg || '';
+        document.getElementById('tcp-dl-price').value = j.dailyLikePrice;
+        document.getElementById('tcp-dl-rprice').value = j.dailyLikeResellerPrice == null ? '' : j.dailyLikeResellerPrice;
+        tcpPk = j.packages.length ? j.packages : TCP_DEF.map(d => ({ id: 'd' + d, name: d + ' Days', days: d, price: 0, resellerPrice: null, active: true }));
+        tcpRenderRows();
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tcpSaveCfg() {
+    const rows = tcpReadRows();
+    try {
+        showLoading();
+        await tcpCall('setConfig', { enabled: document.getElementById('tcp-enabled').checked, tcpUrl: document.getElementById('tcp-url').value.trim(), offMsg: document.getElementById('tcp-off').value.trim(),
+            dailyLikePrice: document.getElementById('tcp-dl-price').value, dailyLikeResellerPrice: document.getElementById('tcp-dl-rprice').value, packages: rows.map(p => Object.assign({}, p, { name: p.name || (p.days + ' Days') })) });
+        hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false });
+    } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tcpGen() {
+    try {
+        showLoading();
+        const j = await tcpCall('gen', { days: +document.getElementById('tcp-g-days').value || 0, maxUsers: +document.getElementById('tcp-g-users').value || 0, count: +document.getElementById('tcp-g-count').value || 1,
+            custom: document.getElementById('tcp-g-custom').value.trim(), label: document.getElementById('tcp-g-label').value.trim() });
+        hideLoading(); document.getElementById('tcp-g-out').innerText = j.keys.join('\n'); tcpLoadKeys();
+    } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tcpLoadKeys() {
+    try {
+        const j = await tcpCall('list'), now = j.now, col = { active: '#22c55e', unused: '#eab308', expired: '#ef4444', revoked: '#ef4444' };
+        document.getElementById('tcp-keys').innerHTML = j.keys.map(k => `<tr class="border-t border-dark-border"><td class="py-2 pr-3 font-mono">${tcpEsc(k.key)}</td><td class="pr-3">${tcpEsc(k.label)}</td>
+            <td class="pr-3" style="color:${col[k.state]}">${k.state}</td><td class="pr-3">${k.users}/${k.maxUsers || '∞'}</td><td class="pr-3">${k.expiresMs ? new Date(k.expiresMs).toLocaleString() : (k.days ? 'after 1st login' : 'Unlimited')}</td>
+            <td class="whitespace-nowrap"><button class="text-orange-400 mr-2" onclick="tcpKeyAct('${tcpEsc(k.key)}','extend')">+days</button><button class="text-yellow-400 mr-2" onclick="tcpKeyAct('${tcpEsc(k.key)}','${k.state === 'revoked' ? 'unrevoke' : 'revoke'}')">${k.state === 'revoked' ? 'enable' : 'disable'}</button><button class="text-red-400" onclick="tcpKeyAct('${tcpEsc(k.key)}','delete')">delete</button></td></tr>`).join('') || '<tr><td class="py-3 text-gray-500">কোনো পাসওয়ার্ড নেই</td></tr>';
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tcpKeyAct(key, act) {
+    try {
+        let days; if (act === 'extend') { const x = await Swal.fire({ title: 'কত দিন যোগ করবেন?', input: 'number', inputValue: 1, showCancelButton: true }); if (!x.isConfirmed) return; days = +x.value; }
+        if (act === 'delete') { const x = await Swal.fire({ title: 'ডিলিট করবেন?', icon: 'warning', showCancelButton: true }); if (!x.isConfirmed) return; }
+        await tcpCall(act, { key, days }); tcpLoadKeys();
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tcpAccAdd() {
+    const t = document.getElementById('tcp-acc-text').value; if (!t.trim()) return;
+    try { showLoading(); const j = await tcpCall('accAdd', { text: t }); hideLoading(); document.getElementById('tcp-acc-text').value = ''; SA('Added', j.added + ' account(s) stock-এ যোগ হয়েছে', 'success'); tcpLoadAccs(); }
+    catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tcpLoadAccs() {
+    try {
+        const j = await tcpCall('accList'), free = j.accounts.filter(a => !a.used).length;
+        document.getElementById('tcp-acc-sum').innerText = 'Total ' + j.accounts.length + ' • Free ' + free + ' • Used ' + (j.accounts.length - free);
+        document.getElementById('tcp-accs').innerHTML = j.accounts.map(a => `<tr class="border-t border-dark-border"><td class="py-1 pr-3 font-mono">${tcpEsc(a.uid)}</td><td class="pr-3">${tcpEsc(a.region)}</td><td class="pr-3">${a.hasJwt ? 'JWT' : ''} ${a.hasPw ? 'PW' : ''}</td><td class="pr-3" style="color:${a.used ? '#ef4444' : '#22c55e'}">${a.used ? 'used' : 'free'}</td>
+            <td>${a.used ? `<button class="text-yellow-400 mr-2" onclick="tcpAccAct('${a.uid}','accReset')">reset</button>` : ''}<button class="text-red-400" onclick="tcpAccAct('${a.uid}','accDelete')">delete</button></td></tr>`).join('');
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tcpAccAct(uid, act) { try { await tcpCall(act, { uid }); tcpLoadAccs(); } catch (e) { SA('Error', e.message, 'error'); } }
+
 async function alSave() {
     const rows = alReadRows(), hr = parseInt(document.getElementById('al-hour').value), mn = parseInt(document.getElementById('al-min').value), fee = parseInt(document.getElementById('al-fee').value);
     if (isNaN(hr) || hr < 0 || hr > 23 || isNaN(mn) || mn < 0 || mn > 59) return SA('Invalid time', 'ঘণ্টা 0-23 এবং মিনিট 0-59 এর মধ্যে দিন', 'warning');
