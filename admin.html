@@ -153,9 +153,10 @@
     <div id="login-modal" class="fixed inset-0 bg-dark-bg z-50 flex items-center justify-center p-4">
         <div class="card w-full max-w-md border border-dark-border">
             <h2 class="text-3xl font-bold text-orange-500 mb-8 text-center tracking-wider">MHX ADMIN</h2>
-            <input type="email" id="admin-email" placeholder="Admin Email" class="flat-input mb-4">
-            <input type="password" id="admin-password" placeholder="Password" class="flat-input mb-8">
-            <button onclick="loginAdmin()" class="flat-btn w-full text-lg">LOGIN</button>
+            <button onclick="loginAdmin()" class="flat-btn w-full text-lg flex items-center justify-center gap-3" style="background:#fff;color:#1f2937">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="" style="width:22px;height:22px"> Continue with Google
+            </button>
+            <p class="text-xs text-gray-400 text-center mt-4">Only accounts with role = admin can enter.</p>
         </div>
     </div>
 
@@ -998,17 +999,27 @@
             }
         });
 
-        function loginAdmin() {
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-password').value;
-            if (!email || !pass) {
-                Swal.fire('Error', 'Please enter both email and password', 'error');
-                return;
-            }
-            showLoading();
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => hideLoading())
-                .catch(err => { hideLoading(); Swal.fire('Error', err.message, 'error'); });
+        let adminGBusy = false;
+        async function loginAdmin() {
+            if (adminGBusy) return;
+            adminGBusy = true;
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email'); provider.addScope('profile');
+            provider.setCustomParameters({ prompt: 'select_account' });
+            try {
+                showLoading();
+                await auth.signInWithPopup(provider);      // onAuthStateChanged checks role = admin
+                hideLoading();
+            } catch (err) {
+                hideLoading();
+                const c = (err && err.code) || '';
+                if (c === 'auth/cancelled-popup-request' || c === 'auth/popup-closed-by-user') { /* user closed the window */ }
+                else if (c === 'auth/popup-blocked' || c === 'auth/operation-not-supported-in-this-environment') {
+                    try { await auth.signInWithRedirect(provider); return; } catch (e2) { Swal.fire('Error', e2.message, 'error'); }
+                } else if (c === 'auth/unauthorized-domain') Swal.fire('Error', 'This domain is not authorised in Firebase (Authentication > Settings > Authorized domains): ' + location.hostname, 'error');
+                else if (c === 'auth/operation-not-allowed') Swal.fire('Error', 'Google sign-in is not enabled in Firebase (Authentication > Sign-in method > Google).', 'error');
+                else Swal.fire('Error', (err && err.message) || 'Google login failed', 'error');
+            } finally { adminGBusy = false; }
         }
 
         function logoutAdmin() {
