@@ -292,24 +292,9 @@
             </div>
 
             <div id="view-settings" class="view-section hidden">
-                <div class="card mb-6 md:mb-8" style="border:1px solid #f59e0b">
-                    <h3 class="text-xl font-bold text-amber-400 mb-1"><i class="fas fa-gift mr-2"></i>Bonus Wallet Control (কোথায় বোনাস খরচ করা যাবে)</h3>
-                    <p class="text-xs text-gray-400 mb-4">প্রোমো কোড ও ডিপোজিট বোনাসের টাকা ইউজারের <b class="text-white">Bonus</b> ব্যালেন্সে জমা হয়, মেইন ব্যালেন্সে নয়। নিচে টিক দেওয়া প্রোডাক্টে ইউজার চাইলে বোনাস দিয়ে কিনতে পারবে (তখন শুধু বোনাস থেকে কাটবে)। টিক তুলে দিলে ওই প্রোডাক্ট শুধু মেইন ব্যালেন্স দিয়ে হবে।</p>
-                    <div class="space-y-2 mb-4 text-sm text-gray-200">
-                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-topup"> গেম টপ-আপ (সব সার্ভিস) <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-topup" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
-                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-daily"> Daily Like <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-daily" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
-                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-auto"> Auto Like (প্যাকেজ ও UID চেঞ্জ ফি) <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-auto" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
-                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-tcp"> TCP Board (পাসওয়ার্ড/প্যাকেজ) <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-tcp" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
-                        <p class="text-xs text-gray-400 pt-1">"বোনাসে দাম %": বোনাস দিয়ে কিনলে আসল দামের কত শতাংশ কাটবে। 100 = একই দাম, 50 = অর্ধেক দাম, 150 = দেড়গুণ। মেইন ব্যালেন্সের দাম এতে বদলায় না।</p>
-                        <label class="flex items-center gap-2 opacity-70"><input type="checkbox" disabled> ID Sell — <b class="text-rose-400">সবসময় শুধু মেইন ব্যালেন্স</b> (বোনাস দিয়ে আইডি কেনা যায় না)</label>
-                    </div>
-                    <button onclick="saveBonusCfg()" class="flat-btn"><i class="fas fa-save mr-1"></i> Save</button>
-                </div>
-
-
                 <div class="card mb-6 md:mb-8" style="border:1px solid #22c55e">
                     <h3 class="text-xl font-bold text-green-400 mb-1"><i class="fas fa-fire mr-2"></i>Daily Like Control (দাম ও সেটিংস)</h3>
-                    <p class="text-xs text-gray-400 mb-4">এখান থেকে Daily Like-এর দাম কমান-বাড়ান, চালু/বন্ধ করুন। বোনাস দিয়ে কেনার দাম উপরের Bonus Wallet Control থেকে ঠিক হয়।</p>
+                    <p class="text-xs text-gray-400 mb-4">এখান থেকে Daily Like-এর দাম কমান-বাড়ান, চালু/বন্ধ করুন।</p>
                     <div class="space-y-3 text-sm text-gray-200">
                         <label class="flex items-center gap-2"><input type="checkbox" id="dl-enabled" checked> Daily Like সার্ভিস চালু</label>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -709,13 +694,13 @@
                     <h3 class="text-xl font-bold text-orange-500 mb-4">Create Promo Code</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex gap-2"><input id="p-code" class="flat-input uppercase" placeholder="CODE (e.g. EID20)"><button onclick="genPromo()" class="flat-btn px-4" title="Generate"><i class="fas fa-dice"></i></button></div>
-                        <select id="p-type" class="flat-input"><option value="cash">Cash — user gets ৳ in wallet</option><option value="discount_percent">Order discount — percent (%)</option><option value="discount_flat">Order discount — fixed ৳</option><option value="bonus_percent">Add-money bonus — percent (%)</option></select>
+                        <select id="p-type" class="flat-input"><option value="cash">Cash — user gets ৳ in wallet</option><option value="discount_percent">Order discount — percent (%)</option><option value="discount_flat">Order discount — fixed ৳</option></select>
                         <input id="p-value" type="number" step="any" class="flat-input" placeholder="Value (৳ or %)">
                         <input id="p-max" type="number" class="flat-input" placeholder="Max users (0 = unlimited)">
                         <div><label class="block text-xs text-gray-400 mb-1">Expiry date &amp; time (optional)</label><input id="p-exp" type="datetime-local" class="flat-input"></div>
                         <input id="p-note" class="flat-input" placeholder="Note (only you see this)">
                     </div>
-                    <p class="text-xs text-gray-500 mt-3">Each user can use a code only once. Cash codes are redeemed from the Profile page, discount codes at order time, bonus codes when adding money.</p>
+                    <p class="text-xs text-gray-500 mt-3">Each user can use a code only once. Cash codes are redeemed from the Profile page, discount codes at order time.</p>
                     <button onclick="savePromo()" class="flat-btn mt-5 w-full md:w-auto"><i class="fas fa-plus mr-2"></i>Save Promo Code</button>
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-orange-500 mb-4">All promo codes</h3>
@@ -814,9 +799,7 @@
                             <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ak-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">API system চালু (বন্ধ করলে সব key কাজ করা বন্ধ করবে)</span></label>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Global API like price (৳) — খালি রাখলে রিসেলার/ডেইলি লাইক প্রাইস ব্যবহার হবে</label><input type="number" min="0" id="ak-gprice" class="flat-input" placeholder="যেমন: 5"></div>
                             <div><label class="block text-sm text-gray-400 mb-2 font-medium">Default rate limit (requests / minute) — খালি রাখলে 30</label><input type="number" min="1" id="ak-grate" class="flat-input" placeholder="যেমন: 30"></div>
-                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">API আনলক ডিপোজিট (৳) — শুধু আসল ডিপোজিট গণ্য, বোনাস নয় (খালি = 100)</label><input type="number" min="0" id="ak-mindep" class="flat-input" placeholder="100"></div>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ak-bonus-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">মেইন ব্যালেন্স না থাকলে API তে বোনাস দিয়ে কাটা চলবে</span></label>
-                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">API like — বোনাস প্রাইস (৳) — মেইন ব্যালেন্স কম হলে ২২০ লাইকের জন্য বোনাস থেকে এই টাকা কাটবে (খালি = 10)</label><input type="number" min="0" id="ak-gbprice" class="flat-input" placeholder="10"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2 font-medium">API আনলক ডিপোজিট (৳) — শুধু আসল ডিপোজিট গণ্য (খালি = 100)</label><input type="number" min="0" id="ak-mindep" class="flat-input" placeholder="100"></div>
                             <p class="text-xs text-gray-500 leading-relaxed">দাম কাটার নিয়ম: key এর Custom price → Global API price → রিসেলার প্রাইস। লাইক সফলভাবে গেলেই শুধু টাকা কাটে; already/failed হলে কাটা হয় না। শুধু Reseller/Admin রোলের ইউজার API ব্যবহার করতে পারে।</p>
                         </div>
                         <button onclick="akSaveSettings()" class="flat-btn mt-6 w-full">Save API Settings</button>
@@ -884,13 +867,13 @@
                             <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="ads-off" class="flat-input"></div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div><label class="block text-sm text-gray-400 mb-2">প্রতি ধাপের সর্বনিম্ন সময় (সেকেন্ড)</label><input type="number" min="0" id="ads-min" class="flat-input" placeholder="90"></div>
-                                <div><label class="block text-sm text-gray-400 mb-2">সব ধাপ শেষে বোনাস (৳)</label><input type="number" min="0" id="ads-bonus" class="flat-input" placeholder="5"></div>
+                                <div><label class="block text-sm text-gray-400 mb-2">সব ধাপ শেষে রিওয়ার্ড (৳) — ইউজারের মেইন ব্যালেন্সে আসল টাকা হিসেবে যোগ হবে</label><input type="number" min="0" id="ads-reward" class="flat-input" placeholder="5"></div>
                                 <div><label class="block text-sm text-gray-400 mb-2">দিনে সর্বোচ্চ রাউন্ড (0 = আনলিমিটেড)</label><input type="number" min="0" id="ads-limit" class="flat-input" placeholder="0"></div>
                                 <div class="flex items-end pb-3"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ads-ban" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">সময়ের আগে শেষ করলে অটো ব্যান</span></label></div>
                             </div>
                             <div><label class="block text-sm text-gray-400 mb-2">Website URL (খালি রাখলে এই অ্যাডমিন পেজের ডোমেইন ধরা হবে)</label><input type="text" id="ads-site" class="flat-input" placeholder="https://yoursite.com/"></div>
                         </div>
-                        <p class="text-xs text-gray-500 mt-3">বোনাস ইউজারের Bonus ব্যালেন্সে যোগ হয়। সময় পার না হলে (যেমন 90 সেকেন্ডের আগে) ধাপ শেষ করলে ব্যান অপশন চালু থাকলে অ্যাকাউন্ট সাথে সাথে ব্যান হবে।</p>
+                        <p class="text-xs text-gray-500 mt-3">রিওয়ার্ডের টাকা ইউজারের একমাত্র মেইন ব্যালেন্সে যোগ হয়। সময় পার না হলে (যেমন 90 সেকেন্ডের আগে) ধাপ শেষ করলে ব্যান অপশন চালু থাকলে অ্যাকাউন্ট সাথে সাথে ব্যান হবে।</p>
                     </div>
                     <div class="card">
                         <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-chart-simple mr-2"></i>Stats</h3>
@@ -1328,7 +1311,6 @@
                         <td><span class="font-medium text-white">${d.name}</span></td><td><span class="px-2 py-1 bg-dark-bg rounded text-xs font-semibold uppercase text-orange-500 border border-orange-500/30">${d.type}</span></td>
                         <td class="text-center space-x-2 whitespace-nowrap">
                             <button onclick="switchView('products', '${doc.id}', '${d.name}', '${d.type}')" class="flat-btn text-xs py-2 px-3"><i class="fas fa-box md:mr-1"></i> <span class="hidden md:inline">Pkgs</span></button>
-                            <button onclick="toggleSrvBonus('${doc.id}', ${d.bonusOff ? 'true' : 'false'})" class="flat-btn text-xs py-2 px-3" style="background:${d.bonusOff ? '#7f1d1d' : '#b45309'}" title="Bonus দিয়ে এই সার্ভিস কেনা যাবে কিনা"><i class="fas fa-gift md:mr-1"></i> <span class="hidden md:inline">Bonus ${d.bonusOff ? 'OFF' : 'ON'}</span></button>
                             <button onclick="deleteDoc('services', '${doc.id}')" class="flat-btn flat-btn-danger text-xs py-2 px-3"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
@@ -1575,7 +1557,7 @@
                 const date = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate().toLocaleDateString() : 'N/A';
                 list.innerHTML += `<tr>
                     <td class="text-gray-400 text-sm">${date}</td><td><span class="font-medium text-white">${u.name || 'N/A'}</span></td>
-                    <td class="break-all">${u.email}</td><td class="font-bold text-orange-500">৳${u.balance || 0}<br><span class="text-xs text-amber-400">🎁 ৳${u.bonus || 0}</span></td>
+                    <td class="break-all">${u.email}</td><td class="font-bold text-orange-500">৳${u.balance || 0}</td>
                     <td class="text-center"><button onclick="editBalance('${u.id}', ${u.balance || 0})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-edit md:mr-1"></i> <span class="hidden md:inline">Bal</span></button></td>
                 </tr>`;
             });
@@ -1746,26 +1728,25 @@
       l.innerHTML=users.map(u=>{const d=u.createdAt&&u.createdAt.toDate?u.createdAt.toDate().toLocaleDateString():'N/A';
         const r=u.role==='admin'?'<span class="zp-b" style="background:#e11d48">Admin</span>':u.role==='reseller'?'<span class="zp-b" style="background:#f59e0b">Reseller</span>':'<span class="zp-b" style="background:#475569">User</span>';
         return `<tr><td class="text-gray-400 text-sm">${d}</td><td><span class="font-medium text-white">${u.name||'N/A'}</span> ${r}${u.banned?' <span class="zp-b" style="background:#7f1d1d">BANNED</span>':''}<br><span class="text-xs text-gray-400">PIN: ${pinOf(u)} • ${u.provider||'email'} • ${Math.floor(u.points||0)} pts</span></td>
-        <td class="break-all">${u.email||''}</td><td class="font-bold text-orange-500">৳${u.balance||0}<br><span class="text-xs text-amber-400">🎁 ৳${u.bonus||0}</span></td>
+        <td class="break-all">${u.email||''}</td><td class="font-bold text-orange-500">৳${u.balance||0}</td>
         <td class="text-center"><button onclick="manageUser('${u.id}')" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-user-cog md:mr-1"></i><span class="hidden md:inline">Manage</span></button></td></tr>`}).join('')}
     function searchUsers(){const t=(document.getElementById('user-search')||{}).value.toLowerCase().trim();
       renderUsers(allUsers.filter(u=>(u.email||'').toLowerCase().includes(t)||(u.name||'').toLowerCase().includes(t)||pinOf(u).toLowerCase()===t||u.id.toLowerCase()===t))}
     async function manageUser(uid){const u=allUsers.find(x=>x.id===uid);if(!u)return;const p=u.perms||{};
       const r=await Swal.fire({title:u.name||u.email,width:560,showCancelButton:true,confirmButtonText:'Apply',html:`<div style="text-align:left;font-size:13px">
-        <p>${u.email||''} • PIN <b>${pinOf(u)}</b> • Balance <b>৳${u.balance||0}</b> • Bonus <b>৳${u.bonus||0}</b></p><hr style="border-color:#3b4256;margin:8px 0">
+        <p>${u.email||''} • PIN <b>${pinOf(u)}</b> • Balance <b>৳${u.balance||0}</b></p><hr style="border-color:#3b4256;margin:8px 0">
         <label>Add / deduct balance (use − to deduct)</label><input id="m-amt" type="number" class="swal2-input" style="margin:4px 0 8px;width:100%" placeholder="e.g. 100 or -50">
-        <label>Add / deduct BONUS (use − to deduct)</label><input id="m-bonus" type="number" class="swal2-input" style="margin:4px 0 8px;width:100%" placeholder="e.g. 50 or -20">
         <label>Points (set)</label><input id="m-pts" type="number" class="swal2-input" style="margin:4px 0 8px;width:100%" value="${Math.floor(u.points||0)}">
         <label>Role</label><select id="m-role" class="swal2-select" style="width:100%;margin:4px 0 8px"><option value="user">User (remove reseller/admin)</option><option value="reseller">Reseller</option><option value="admin">Admin</option></select>
         <label><input type="checkbox" id="m-ban" ${u.banned?'checked':''}> Banned</label>
         <p style="margin:10px 0 4px"><b>Admin permissions</b> (only if role = Admin)</p><div class="zp-gr">${Object.entries(PERMS).map(([k,v])=>`<label><input type="checkbox" class="m-perm" data-k="${k}" ${p[k]?'checked':''}> ${v}</label>`).join('')}</div></div>`,
         didOpen:()=>{document.getElementById('m-role').value=u.role||'user'},
         preConfirm:()=>{const perms={};document.querySelectorAll('.m-perm').forEach(c=>perms[c.dataset.k]=c.checked);
-          return{amt:parseInt(document.getElementById('m-amt').value)||0,bon:parseInt(document.getElementById('m-bonus').value)||0,pts:parseInt(document.getElementById('m-pts').value)||0,role:document.getElementById('m-role').value,ban:document.getElementById('m-ban').checked,perms}}});
+          return{amt:parseInt(document.getElementById('m-amt').value)||0,pts:parseInt(document.getElementById('m-pts').value)||0,role:document.getElementById('m-role').value,ban:document.getElementById('m-ban').checked,perms}}});
       if(!r.isConfirmed)return;const v=r.value;
-      try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt)up.balance=FV.increment(v.amt);if(v.bon)up.bonus=FV.increment(v.bon);
+      try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt)up.balance=FV.increment(v.amt);
         await db.collection('users').doc(uid).update(up);
-        await db.collection('adminLogs').add({at:FV.serverTimestamp(),by:(auth.currentUser||{}).email||'',target:uid,change:{balanceDelta:v.amt,bonusDelta:v.bon,role:v.role,banned:v.ban,points:v.pts}});
+        await db.collection('adminLogs').add({at:FV.serverTimestamp(),by:(auth.currentUser||{}).email||'',target:uid,change:{balanceDelta:v.amt,role:v.role,banned:v.ban,points:v.pts}});
         hideLoading();Swal.fire({icon:'success',title:'Updated',timer:1200,showConfirmButton:false})}catch(e){hideLoading();Swal.fire('Error',e.message,'error')}}
     async function findByPin(){const r=await Swal.fire({title:'Find by Support Pin',input:'text',inputPlaceholder:'e.g. A1B2C3',showCancelButton:true});if(!r.isConfirmed)return;
       const t=r.value.trim().toUpperCase(),u=allUsers.find(x=>pinOf(x)===t);u?manageUser(u.id):Swal.fire('Not found','No user with this pin','error')}
@@ -1805,7 +1786,7 @@
             const d = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate().toLocaleDateString() : 'N/A';
             const r = u.role === 'admin' ? '<span class="zp-b" style="background:#e11d48">Admin</span>' : u.role === 'reseller' ? '<span class="zp-b" style="background:#f59e0b">Reseller</span>' : '<span class="zp-b" style="background:#475569">User</span>';
             return `<tr><td class="text-gray-400 text-sm">${d}</td><td><span class="font-medium text-white">${esc(u.name || 'N/A')}</span> ${r}${u.banned ? ' <span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}<br><span class="text-xs text-gray-400">PIN: <b class="text-orange-400">${pinOf(u)}</b> • ${Math.floor(u.points || u.totalDeposit || 0)} pts</span></td>
-            <td class="break-all">${esc(u.email || '')}</td><td class="font-bold text-orange-500">৳${u.balance || 0}<br><span class="text-xs text-amber-400">🎁 ৳${u.bonus || 0}</span></td>
+            <td class="break-all">${esc(u.email || '')}</td><td class="font-bold text-orange-500">৳${u.balance || 0}</td>
             <td class="text-center"><button onclick="qcShow('${u.id}');window.scrollTo({top:0,behavior:'smooth'});document.querySelector('#main-content > div').scrollTo({top:0,behavior:'smooth'})" class="flat-btn text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-sliders-h md:mr-1"></i><span class="hidden md:inline">Control</span></button> <button onclick="sendResetMail('${esc(u.email || '')}')" title="Send password reset email" class="flat-btn flat-btn-outline text-xs py-2 px-3 whitespace-nowrap"><i class="fas fa-key"></i></button></td></tr>`;
         }).join('') : '<tr><td colspan="5" class="text-center text-gray-500 py-6">No users</td></tr>';
     }
@@ -1835,29 +1816,13 @@
     }
     (function () { const _sv = switchView; switchView = function (v) { const r = _sv.apply(this, arguments); if (v === 'settings') loadResellerDisc(); return r; }; })();
 
-    // ---- Bonus wallet control ----
-    async function loadBonusCfg() {
+    // ---- Daily Like settings loader ----
+    async function loadDailyLikeCfg() {
         try {
-            const d = (await db.collection('settings').doc('bonus').get()).data() || {};
-            const on = k => d[k] !== false;
-            const set = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v; };
-            set('bn-topup', on('topup')); set('bn-daily', on('dailyLike')); set('bn-auto', on('autoLike')); set('bn-tcp', 'tcp' in d ? d.tcp !== false : on('autoLike'));
-            const pv = (id, k) => { const e = document.getElementById(id); if (e) e.value = d[k + 'Pct'] || 100; };
-            pv('bnp-topup', 'topup'); pv('bnp-daily', 'dailyLike'); pv('bnp-auto', 'autoLike'); pv('bnp-tcp', 'tcp');
             const g = (await db.collection('settings').doc('general').get()).data() || {}, sv = (id, v) => { const e = document.getElementById(id); if (e) e.value = v == null ? '' : v; };
             const dlOn = document.getElementById('dl-enabled'); if (dlOn) dlOn.checked = !(g.dailyLikeEnabled === false || ['off', 'false', '0'].includes(String(g.dailyLikeEnabled).toLowerCase()));
             sv('dl-price', g.dailyLikePrice != null ? g.dailyLikePrice : 6); sv('dl-rprice', g.dailyLikeResellerPrice); sv('dl-amount', g.dailyLikeAmount != null ? g.dailyLikeAmount : 220); sv('dl-off', g.dailyLikeOffMsg);
         } catch (e) {}
-    }
-    async function saveBonusCfg() {
-        const g = id => !!(document.getElementById(id) || {}).checked;
-        try {
-            showLoading();
-            const pc = id => { const v = parseInt((document.getElementById(id) || {}).value, 10); return v >= 1 && v <= 1000 ? v : 100; };
-            await db.collection('settings').doc('bonus').set({ topup: g('bn-topup'), dailyLike: g('bn-daily'), autoLike: g('bn-auto'), tcp: g('bn-tcp'),
-                topupPct: pc('bnp-topup'), dailyLikePct: pc('bnp-daily'), autoLikePct: pc('bnp-auto'), tcpPct: pc('bnp-tcp') }, { merge: true });
-            hideLoading(); Swal.fire('Saved', 'Bonus settings updated', 'success');
-        } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
     async function saveDailyLikeCfg() {
         const v = id => (document.getElementById(id) || {}).value;
@@ -1870,11 +1835,7 @@
             hideLoading(); Swal.fire('Saved', 'Daily Like settings updated', 'success');
         } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
-    (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'settings') loadBonusCfg(); return r; }; })();
-    async function toggleSrvBonus(id, off) {
-        try { await db.collection('services').doc(id).update({ bonusOff: !off }); Swal.fire({ icon: 'success', title: off ? 'Bonus allowed' : 'Bonus blocked', timer: 1000, showConfirmButton: false }); }
-        catch (e) { Swal.fire('Error', e.message, 'error'); }
-    }
+    (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'settings') loadDailyLikeCfg(); return r; }; })();
 
     // ---- send password reset email to a user ----
     async function sendResetMail(email) {
@@ -1899,9 +1860,9 @@
         const b = (act, label, color, icon) => `<button onclick="userAction('${uid}','${act}')" class="flat-btn text-xs py-2.5 px-3" style="background:${color}"><i class="fas ${icon} mr-1"></i>${label}</button>`;
         box.innerHTML = `<div style="background:#161a23;border:1px solid #2a3040;border-radius:18px;padding:16px">
           <div class="flex flex-wrap justify-between gap-2 mb-3"><div><div class="text-white font-bold text-lg">${esc(u.name || 'N/A')} ${u.banned ? '<span class="zp-b" style="background:#7f1d1d">BANNED</span>' : ''}</div><div class="text-gray-400 text-sm break-all">${esc(u.email || '')}</div></div>
-            <div class="text-right"><div class="text-2xl font-extrabold text-orange-500">৳${u.balance || 0}</div><div class="text-sm font-bold text-amber-400">🎁 Bonus ৳${u.bonus || 0}</div><div class="text-xs text-gray-400">PIN <b>${pinOf(u)}</b> • ${esc(u.role || 'user')} • ${Math.floor(u.points || u.totalDeposit || 0)} pts</div></div></div>
+            <div class="text-right"><div class="text-2xl font-extrabold text-orange-500">৳${u.balance || 0}</div><div class="text-xs text-gray-400">PIN <b>${pinOf(u)}</b> • ${esc(u.role || 'user')} • ${Math.floor(u.points || u.totalDeposit || 0)} pts</div></div></div>
           <div class="flex flex-wrap gap-2">
-            ${b('add', 'Add Money', '#16a34a', 'fa-plus')}${b('deduct', 'Deduct Money', '#dc2626', 'fa-minus')}${b('addbonus', 'Add Bonus', '#d97706', 'fa-gift')}${b('deductbonus', 'Deduct Bonus', '#92400e', 'fa-gift')}
+            ${b('add', 'Add Money', '#16a34a', 'fa-plus')}${b('deduct', 'Deduct Money', '#dc2626', 'fa-minus')}
             ${u.banned ? b('unban', 'Unban', '#0ea5e9', 'fa-unlock') : b('ban', 'Ban', '#7f1d1d', 'fa-ban')}
             ${u.role === 'reseller' ? b('unreseller', 'Remove Reseller', '#6b7280', 'fa-user-minus') : b('reseller', 'Make Reseller', '#f59e0b', 'fa-crown')}
             ${u.role === 'admin' ? b('unadmin', 'Remove Admin', '#6b7280', 'fa-user-shield') : b('admin', 'Make Admin', '#e11d48', 'fa-user-shield')}
@@ -1915,11 +1876,6 @@
             const r = await Swal.fire({ title: act === 'add' ? 'Add money' : 'Deduct money', input: 'number', inputLabel: 'Amount (৳)', inputAttributes: { min: 1 }, showCancelButton: true });
             const v = parseInt(r.value); if (!r.isConfirmed || !(v > 0)) return;
             return applyUser(uid, { balance: FV.increment(act === 'add' ? v : -v) }, { balanceDelta: act === 'add' ? v : -v });
-        }
-        if (act === 'addbonus' || act === 'deductbonus') {
-            const r = await Swal.fire({ title: act === 'addbonus' ? 'Add bonus' : 'Deduct bonus', input: 'number', inputLabel: 'Amount (৳)', inputAttributes: { min: 1 }, showCancelButton: true });
-            const v = parseInt(r.value); if (!r.isConfirmed || !(v > 0)) return;
-            return applyUser(uid, { bonus: FV.increment(act === 'addbonus' ? v : -v) }, { bonusDelta: act === 'addbonus' ? v : -v });
         }
         if (act === 'points') { const r = await Swal.fire({ title: 'Set points', input: 'number', inputValue: Math.floor(u.points || 0), showCancelButton: true }); if (!r.isConfirmed) return; return applyUser(uid, { points: parseInt(r.value) || 0 }, { points: r.value }); }
         const map = { ban: [{ banned: true }, 'Ban this user?'], unban: [{ banned: false }, 'Unban this user?'], reseller: [{ role: 'reseller' }, 'Make this user a Reseller?'],
@@ -1958,7 +1914,7 @@
     async function delNotice(id) { const r = await Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true }); if (r.isConfirmed) db.collection('notices').doc(id).delete(); }
 
     // ---- promo codes ----
-    const PTYPES = { cash: 'Cash (user gets ৳)', discount_percent: 'Order Discount %', discount_flat: 'Order Discount ৳', bonus_percent: 'Add-Money Bonus %' };
+    const PTYPES = { cash: 'Cash (user gets ৳)', discount_percent: 'Order Discount %', discount_flat: 'Order Discount ৳', bonus_percent: 'Old deposit bonus (no longer works)' };
     let _unP = null;
     function genPromo() { document.getElementById('p-code').value = Math.random().toString(36).slice(2, 8).toUpperCase(); }
     function loadPromos() {
@@ -2050,8 +2006,6 @@ async function akLoad() {
         document.getElementById('ak-gprice').value = (s.apiLikePrice == null || s.apiLikePrice === '') ? '' : s.apiLikePrice;
         document.getElementById('ak-grate').value = (s.apiRateLimit == null || s.apiRateLimit === '') ? '' : s.apiRateLimit;
         document.getElementById('ak-mindep').value = (s.apiMinDeposit == null || s.apiMinDeposit === '') ? '' : s.apiMinDeposit;
-        document.getElementById('ak-bonus-enabled').checked = s.apiBonusEnabled !== false;
-        document.getElementById('ak-gbprice').value = (s.apiLikeBonusPrice == null || s.apiLikeBonusPrice === '') ? '' : s.apiLikeBonusPrice;
         akRender();
     } catch (e) {
         document.getElementById('ak-list').innerHTML = '<tr><td colspan="9" class="text-center py-6" style="color:#f87171">' + akEsc(e.message) + '</td></tr>';
@@ -2081,12 +2035,12 @@ function akRender() {
     document.getElementById('ak-logs').innerHTML = (akData.logs || []).length ? akData.logs.map(l => '<tr><td class="text-xs text-gray-400">' + akTime(l.createdAt) + '</td><td>' + akEsc(names[l.userId] || (l.userId || '').slice(0, 6)) + '<br><span class="text-xs text-gray-500">' + akEsc(l.label || '—') + '</span></td><td class="font-mono text-xs">' + akEsc(l.uid) + '</td><td>' + akEsc(l.region) + '</td><td>' + (l.kind === 'info' ? akBadge('Lookup', '#1e3a8a', '#93c5fd') : res(l.result)) + '</td><td>' + (l.kind === 'info' ? '—' : akEsc(l.likes)) + '</td><td>' + (l.price ? '৳' + akEsc(l.price) : '—') + '</td></tr>').join('') : '<tr><td colspan="7" class="text-center text-gray-400 py-6">No API activity yet.</td></tr>';
 }
 async function akSaveSettings() {
-    const en = document.getElementById('ak-enabled').checked, pr = document.getElementById('ak-gprice').value.trim(), rl = document.getElementById('ak-grate').value.trim(), md = document.getElementById('ak-mindep').value.trim(), bp = document.getElementById('ak-gbprice').value.trim(), be = document.getElementById('ak-bonus-enabled').checked;
+    const en = document.getElementById('ak-enabled').checked, pr = document.getElementById('ak-gprice').value.trim(), rl = document.getElementById('ak-grate').value.trim(), md = document.getElementById('ak-mindep').value.trim();
     if ((pr !== '' && !(+pr >= 0)) || (rl !== '' && !(+rl >= 1))) { Swal.fire('Error', 'Price ও rate limit এ সঠিক সংখ্যা দিন', 'error'); return; }
     const FVd = firebase.firestore.FieldValue;
     try {
         showLoading();
-        await db.collection('settings').doc('general').set({ apiEnabled: en, apiLikePrice: pr === '' ? FVd.delete() : Math.round(+pr), apiRateLimit: rl === '' ? FVd.delete() : Math.round(+rl), apiMinDeposit: md === '' ? 100 : Math.max(0, Math.round(+md)), apiLikeBonusPrice: bp === '' ? 10 : Math.max(0, Math.round(+bp)), apiBonusEnabled: be }, { merge: true });
+        await db.collection('settings').doc('general').set({ apiEnabled: en, apiLikePrice: pr === '' ? FVd.delete() : Math.round(+pr), apiRateLimit: rl === '' ? FVd.delete() : Math.round(+rl), apiMinDeposit: md === '' ? 100 : Math.max(0, Math.round(+md)) }, { merge: true });
         hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false }); akLoad();
     } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
 }
@@ -2223,7 +2177,6 @@ function alRenderRows() {
             <div><label class="block text-[11px] text-gray-400 mb-1">Days (যত দিন)</label><input class="flat-input" type="number" min="1" data-k="days" data-i="${i}" value="${p.days}"></div>
             <div><label class="block text-[11px] text-gray-400 mb-1">Price ৳</label><input class="flat-input" type="number" min="0" data-k="price" data-i="${i}" value="${p.price}"></div>
             <div><label class="block text-[11px] text-gray-400 mb-1">Reseller price ৳</label><input class="flat-input" type="number" min="0" data-k="resellerPrice" data-i="${i}" value="${p.resellerPrice == null ? '' : p.resellerPrice}" placeholder="optional"></div>
-            <div class="col-span-2"><label class="block text-[11px] text-gray-400 mb-1">API বোনাস প্রাইস ৳ (API ইউজারের মেইন ব্যালেন্স না থাকলে বোনাস থেকে কাটবে)</label><input class="flat-input" type="number" min="0" data-k="apiBonusPrice" data-i="${i}" value="${p.apiBonusPrice == null ? '' : p.apiBonusPrice}" placeholder="খালি = সাধারণ বোনাস রুল"></div>
         </div>
         <label class="block text-[11px] text-gray-400 mt-3 mb-1">Details (ইউজার প্যাকেজ কার্ডে দেখবে — যত খুশি লিখতে পারেন, নতুন লাইনও কাজ করবে)</label>
         <textarea class="flat-input" rows="9" maxlength="1500" style="min-height:190px;resize:vertical;line-height:1.6" data-k="desc" data-i="${i}" placeholder="যেমন:&#10;✅ প্রতিদিন ২২০+ লাইক যাবে&#10;🕓 প্রতিদিন ভোর ৪:০৫ এ অটো সেন্ড&#10;🎮 একটি UID তে ৩০ দিন">${esc(p.desc || '')}</textarea>
@@ -2237,7 +2190,6 @@ function alReadRows() {
         else if (k === 'name') rows[i].name = el.value.trim();
         else if (k === 'desc') rows[i].desc = el.value.replace(/\s+$/, '');
         else if (k === 'resellerPrice') rows[i].resellerPrice = el.value === '' ? null : Math.max(0, Math.round(+el.value));
-        else if (k === 'apiBonusPrice') rows[i].apiBonusPrice = el.value === '' ? null : Math.max(0, Math.round(+el.value));
         else rows[i][k] = Math.round(+el.value);
     });
     return rows;
@@ -2252,7 +2204,7 @@ async function loadAutoLike() {
         document.getElementById('al-min').value = g.sendMinute == null ? 5 : g.sendMinute;
         document.getElementById('al-fee').value = g.changeFee == null ? 10 : g.changeFee;
         document.getElementById('al-offmsg').value = g.offMsg || '';
-        alPk = Array.isArray(g.packages) ? g.packages.map(p => ({ id: p.id, name: p.name || '', days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, apiBonusPrice: p.apiBonusPrice == null ? null : p.apiBonusPrice, active: p.active !== false, desc: p.desc || '' })) : AL_DEFAULT_PK.map(p => Object.assign({}, p));
+        alPk = Array.isArray(g.packages) ? g.packages.map(p => ({ id: p.id, name: p.name || '', days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, active: p.active !== false, desc: p.desc || '' })) : AL_DEFAULT_PK.map(p => Object.assign({}, p));
         alRenderRows();
         document.getElementById('al-st-time').innerText = String(g.sendHour == null ? 4 : g.sendHour).padStart(2, '0') + ':' + String(g.sendMinute == null ? 5 : g.sendMinute).padStart(2, '0');
         document.getElementById('al-st-fee').innerText = g.changeFee == null ? 10 : g.changeFee;
@@ -2311,7 +2263,7 @@ async function adsLoadAll() {
         document.getElementById('ads-enabled').checked = j.enabled === true;
         document.getElementById('ads-off').value = j.offMsg || '';
         document.getElementById('ads-min').value = j.minSeconds;
-        document.getElementById('ads-bonus').value = j.bonus;
+        document.getElementById('ads-reward').value = (j.reward != null ? j.reward : j.bonus);
         document.getElementById('ads-limit').value = j.dailyLimit;
         document.getElementById('ads-ban').checked = j.banOnFast !== false;
         document.getElementById('ads-site').value = j.siteUrl || '';
@@ -2327,7 +2279,7 @@ async function adsSave() {
         showLoading();
         const j = await adsCall('setConfig', {
             enabled: document.getElementById('ads-enabled').checked, offMsg: document.getElementById('ads-off').value.trim(),
-            minSeconds: document.getElementById('ads-min').value, bonus: document.getElementById('ads-bonus').value, dailyLimit: document.getElementById('ads-limit').value,
+            minSeconds: document.getElementById('ads-min').value, reward: document.getElementById('ads-reward').value, dailyLimit: document.getElementById('ads-limit').value,
             banOnFast: document.getElementById('ads-ban').checked, siteUrl: document.getElementById('ads-site').value.trim(),
             steps: adsSteps, codes: { pageScripts: '', banners: adsBanList.filter(x => String(x).trim()) } });
         adsSteps = j.steps || adsSteps; adsRenderSteps(); adsBanList = adsBanList.filter(x => String(x).trim()); adsRenderBanners();
@@ -2428,7 +2380,7 @@ async function alSave() {
     if (isNaN(hr) || hr < 0 || hr > 23 || isNaN(mn) || mn < 0 || mn > 59) return SA('Invalid time', 'ঘণ্টা 0-23 এবং মিনিট 0-59 এর মধ্যে দিন', 'warning');
     if (isNaN(fee) || fee < 0) return SA('Invalid fee', 'UID Change ফি সঠিক দিন', 'warning');
     for (const p of rows) { if (!p.name) p.name = p.days + ' Days'; if (!(p.days >= 1 && p.days <= 365) || !(p.price >= 0)) return SA('Invalid package', 'প্রতিটি প্যাকেজের দিন (1-365) ও দাম সঠিক দিন', 'warning'); }
-    const clean = rows.map(p => ({ id: String(p.id), name: p.name, days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, apiBonusPrice: p.apiBonusPrice == null ? null : p.apiBonusPrice, active: p.active !== false, desc: String(p.desc || '').slice(0, 1500) }));
+    const clean = rows.map(p => ({ id: String(p.id), name: p.name, days: p.days, price: p.price, resellerPrice: p.resellerPrice == null ? null : p.resellerPrice, active: p.active !== false, desc: String(p.desc || '').slice(0, 1500) }));
     try {
         showLoading();
         await db.collection('settings').doc('autolike').set({ enabled: document.getElementById('al-enabled').checked, sendHour: hr, sendMinute: mn, changeFee: fee, offMsg: document.getElementById('al-offmsg').value.trim(), packages: clean }, { merge: true });

@@ -598,8 +598,7 @@ function authMsg(e) {
                     <div id="hero-role-badge"></div>
                 </div>
                 <div class="text-xs text-slate-400 mb-1">Main balance</div>
-                <div class="text-3xl font-extrabold text-brand-600 mb-1">BDT <span id="hero-bal">0.00</span></div>
-                <div class="text-xs font-bold text-amber-600 mb-4"><i class="fa-solid fa-gift mr-1"></i>Bonus: BDT <span id="hero-bonus">0.00</span></div>
+                <div class="text-3xl font-extrabold text-brand-600 mb-4">BDT <span id="hero-bal">0.00</span></div>
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="document.getElementById('services-list').scrollIntoView({behavior:'smooth'})" class="py-3 rounded-2xl text-white font-bold bg-gradient-to-r from-brand-600 to-brand-700 shadow-md shadow-brand-500/20 text-xs tracking-wide"><i class="fa-solid fa-bolt mr-1.5"></i>Top up</button>
                     <button onclick="showSec('addmoney')" class="py-3 rounded-2xl font-bold border border-brand-200/80 bg-white/90 text-brand-900 hover:bg-brand-50 text-xs shadow-sm"><i class="fa-solid fa-wallet mr-1.5"></i>Add money</button>
@@ -711,7 +710,7 @@ function authMsg(e) {
             </div>
 
             <div class="grid grid-cols-3 gap-2 mb-3">
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="dl-balance">0</span></div><div class="text-[10px] font-bold text-amber-600">Bonus BDT <span id="dl-bonus">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="dl-balance">0</span></div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Price</div><div class="text-base font-extrabold text-rose-600">BDT <span id="dl-price">6</span></div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">You’ll get</div><div class="text-base font-extrabold text-emerald-600"><span id="dl-likes">220</span>+</div></div>
             </div>
@@ -742,7 +741,7 @@ function authMsg(e) {
                     <p class="text-[11px] text-brand-600 font-semibold">Buy a password • open your bot link • log in</p>
                 </div>
             </div>
-            <div class="vip-card py-3 text-center mb-3"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="tcp-balance">0</span></div><div class="text-[10px] font-bold text-amber-600">Bonus BDT <span id="tcp-bonus">0</span></div></div>
+            <div class="vip-card py-3 text-center mb-3"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="tcp-balance">0</span></div></div>
             <div class="vip-card p-3.5 mb-3">
                 <div class="text-[12px] font-extrabold text-slate-700 mb-2">Choose a package</div>
                 <div id="tcp-pk-grid" class="grid grid-cols-2 gap-2.5"><div class="col-span-2 text-center py-6 text-slate-400"><i class="fas fa-spinner fa-spin text-brand-600"></i></div></div>
@@ -765,7 +764,7 @@ function authMsg(e) {
             <div id="al-mine"></div>
 
             <div class="grid grid-cols-3 gap-2 mb-3">
-                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="al-balance">0</span></div><div class="text-[10px] font-bold text-amber-600">Bonus BDT <span id="al-bonus">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="al-balance">0</span></div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Sent daily at</div><div class="text-sm font-extrabold text-rose-600 mt-0.5" id="al-time">4:05 AM</div></div>
                 <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Each day</div><div class="text-base font-extrabold text-emerald-600"><span id="al-likes">220</span>+</div></div>
             </div>
@@ -862,9 +861,6 @@ function authMsg(e) {
                     </div>
                     <label class="text-xs font-bold text-slate-700 mb-1.5 block">Amount (BDT)</label>
                     <input id="new-amount-input" type="number" min="10" placeholder="Minimum BDT 10" class="zp-input mb-5">
-                    <label class="text-xs font-bold text-slate-700 mb-1.5 block"><i class="fa-solid fa-gift text-brand-600 mr-1"></i>Bonus promo code (optional)</label>
-                    <input id="dep-promo" placeholder="PROMO CODE" class="zp-input mb-2 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()">
-                    <p id="dep-promo-msg" class="zp-sub mb-4"></p>
                     <button onclick="startGateway()" class="zp-btn w-full"><i class="fas fa-shield-alt mr-2"></i>Pay securely</button>
                 </div>
             </div>
@@ -909,17 +905,12 @@ function authMsg(e) {
                     <span>Wallet balance:</span>
                     <span class="font-bold text-brand-600">BDT <span id="acc-profile-balance">0</span></span>
                 </div>
-                <div class="flex justify-between text-xs text-slate-600 py-1 border-b border-slate-100">
-                    <span><i class="fa-solid fa-gift text-amber-500 mr-1"></i>Bonus:</span>
-                    <span class="font-bold text-amber-600">BDT <span id="acc-profile-bonus">0</span></span>
-                </div>
-                <p class="zp-sub">Bonus comes from promo codes and deposit bonuses. You can spend it on top-ups and likes (not on ID purchases).</p>
             </div>
 
             <div class="vip-card p-4 mb-4">
                 <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-ticket text-brand-600 mr-1.5"></i>Promo code</div>
                 <div class="flex gap-2"><input id="profile-promo" placeholder="Enter code" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="redeemPromo()" class="px-4 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-800 text-white text-xs font-bold">Redeem</button></div>
-                <p class="zp-sub mt-2">Redeem cash codes here. Use discount codes when ordering, and bonus codes when adding money to your wallet.</p>
+                <p class="zp-sub mt-2">Redeem cash codes here — the money goes straight to your main balance. Use discount codes when ordering.</p>
             </div>
 
             <div class="vip-card p-4 mb-4" id="ref-card">
@@ -961,9 +952,9 @@ function authMsg(e) {
         <!-- Ads / Earn -->
         <section id="ads-sec" class="hidden animate-fade-in pb-28">
             <div class="lb-hero">
-                <span class="lb-chip"><i class="fa-solid fa-gift"></i> FREE BONUS</span>
+                <span class="lb-chip"><i class="fa-solid fa-coins"></i> EARN MONEY</span>
                 <div class="lb-title" style="font-size:30px">Watch &amp; Earn</div>
-                <div class="lb-sub">Finish every step below, one by one, and the bonus is added to your account.</div>
+                <div class="lb-sub">Finish every step below, one by one, and real money is added to your main balance.</div>
                 <div class="ads-reward" id="ads-reward" style="display:none"><i class="fa-solid fa-coins"></i><span></span></div>
                 <div class="ads-bar"><i id="ads-bar-fill" style="width:0%"></i></div>
                 <div class="ads-prog" id="ads-prog"></div>
@@ -1006,7 +997,7 @@ function authMsg(e) {
         <div class="max-w-md mx-auto flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
             <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>Home</span></button>
             <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
-            <button id="nav-ads" class="mhx-bolt" onclick="showSec('ads')" aria-label="Watch and earn bonus"><i class="fa-solid fa-gift"></i></button>
+            <button id="nav-ads" class="mhx-bolt" onclick="showSec('ads')" aria-label="Watch ads and earn money"><i class="fa-solid fa-coins"></i></button>
             <button id="nav-addmoney" onclick="showSec('addmoney')" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></button>
             <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></button>
         </div>
@@ -1036,7 +1027,7 @@ function authMsg(e) {
     let currentUser = null;
     let userData = {};
     let generalSettings = {};
-    let userBalance = 0, userBonus = 0;
+    let userBalance = 0;
     let selectedProduct = null;
     let selectedGameId = null;
     let selectedGameName = "";
@@ -1078,7 +1069,7 @@ function authMsg(e) {
                     await sleep(4000);
                 }
                 if (data && data.ok) {
-                    Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and BDT ${data.amount} has been added!` + (data.bonus?`<br><b>🎁 Bonus BDT ${data.bonus}</b>`:'') + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
+                    Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and BDT ${data.amount} has been added!` + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
                 } else if (lastErr) {
                     Swal.fire('Payment problem', lastErr + ' — If money was deducted, please contact support with your payment time and amount.', 'error');
                 } else {
@@ -1096,7 +1087,7 @@ function authMsg(e) {
                     const r = await fetch(`${BACKEND_URL}/syncPayments`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: '{}' });
                     const j = await r.json().catch(() => ({}));
                     if (j.credited && j.credited.length) {
-                        const tot = j.credited.reduce((a, c) => a + (c.amount || 0) + (c.bonus || 0), 0);
+                        const tot = j.credited.reduce((a, c) => a + (c.amount || 0), 0);
                         Swal.fire({ icon: 'success', title: 'Payment received!', text: `BDT ${tot} has been added to your wallet.` });
                     }
                 } catch (e) {}
@@ -1258,7 +1249,6 @@ function authMsg(e) {
                 userData = doc.data();
                 if (userData.banned) { Swal.fire({icon:"error",title:"Account banned",text:"Your account has been banned. Please contact support.",allowOutsideClick:false}).then(()=>auth.signOut()); return; }
                 userBalance = userData.balance || 0;
-                userBonus = userData.bonus || 0;
                 const userName = userData.name || "User";
                 const totalDep = userData.totalDeposit || 0;
                 const role = userData.role || 'user';
@@ -1266,8 +1256,6 @@ function authMsg(e) {
                 document.getElementById('header-balance').innerText = userBalance;
                 document.getElementById('hero-name').innerText = userName;
                 document.getElementById('hero-bal').innerText = userBalance.toFixed(2);
-                document.getElementById('hero-bonus').innerText = Number(userBonus).toFixed(2);
-                document.getElementById('acc-profile-bonus').innerText = userBonus;
                 document.getElementById('topup-balance-display').innerText = userBalance.toFixed(2);
                 document.getElementById('acc-profile-name').innerText = userName;
                 pfPaintAvatars(userName);
@@ -1405,11 +1393,9 @@ function authMsg(e) {
         if(!playerId && selectedGameType !== 'code') return Swal.fire('Heads up', 'Please enter the Player ID (UID)!', 'warning');
         if(!selectedProduct) return Swal.fire('Heads up', 'Please select a package!', 'warning');
         if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
-        let payWith = 'balance';
-        if (bonusOn('topup') && Number(userBonus || 0) > 0) { payWith = await chooseWallet(0, 'topup', true); if (!payWith) return; }
         mhxBusy('Placing your order…', 'Securing your package & updating your wallet.');
         try {
-            const r = await api('/placeOrder', { payWith, gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
+            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
             document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
             Swal.fire({icon:'success', title:'Congratulations!', html:'Your order has been submitted successfully!' + (r.discount?`<br><b>Discount BDT ${r.discount} — Paid BDT ${r.price}</b>`:'')});
             showSec('home');
@@ -1726,10 +1712,9 @@ function authMsg(e) {
         if(!currentUser) { showSec('auth'); return; }
         const amount = forced ? parseInt(forced) : parseInt(document.getElementById('new-amount-input').value);
         if(!amount || amount < 10) { Swal.fire('Heads up', 'The minimum deposit is BDT 10', 'warning'); return; }
-        const promoEl = document.getElementById('dep-promo');
         mhxBusy('Creating your payment link…', 'Securing your transaction with the payment gateway.');
         try {
-            const data = await api('/createPayment', { amount: amount, origin: window.location.origin, promoCode: promoEl ? promoEl.value.trim() : '' });
+            const data = await api('/createPayment', { amount: amount, origin: window.location.origin });
             if(!data.paymentUrl) throw new Error('Payment link not found');
             await mhxDone('Your link is ready!', 'Taking you to the secure payment page…', 1200);
             window.location.href = data.paymentUrl;
@@ -1758,16 +1743,6 @@ function authMsg(e) {
             Swal.fire({icon:'success', title:'Congratulations!', text:`BDT ${r.amount} has been added to your wallet`});
         } catch (e) { Swal.fire('Oops', e.message, 'error'); }
     }
-    document.addEventListener('input', (ev) => {
-        if (ev.target.id !== 'dep-promo') return;
-        const msg = document.getElementById('dep-promo-msg'), code = ev.target.value.trim(), amt = parseInt(document.getElementById('new-amount-input').value) || 0;
-        clearTimeout(window._depT); if (!code || !currentUser) { msg.innerText = ''; return; }
-        window._depT = setTimeout(async () => {
-            try { const r = await api('/checkPromo', { code: code, context: 'deposit', amount: amt });
-                msg.style.color = '#059669'; msg.innerText = `✅ ${r.value}% bonus` + (r.bonus ? ` (BDT ${r.bonus} on this amount)` : ''); }
-            catch (e) { msg.style.color = '#dc2626'; msg.innerText = e.message; }
-        }, 600);
-    });
 
     // ================= notifications (admin broadcast) =================
     let noticesCache = [], noticesFirstLoad = true;
@@ -1827,25 +1802,12 @@ let dlRegion = ''; try { dlRegion = (localStorage.getItem('dlRegion') || '').toU
 if (!DL_REGIONS.includes(dlRegion)) dlRegion = '';
 let dlCfg = { price: 6, resellerPrice: null, likes: 220, enabled: true, offMsg: '' };
 let dlBusy = false, dlReqId = null, dlReqKey = '';
-let bonusCfg = { topup: true, dailyLike: true, autoLike: true, tcp: true }, bonusPct = { topup: 100, dailyLike: 100, autoLike: 100, tcp: 100 };
-function effPrice(price, wallet, product) { return wallet === 'bonus' ? Math.ceil(price * (Number(bonusPct[product]) || 100) / 100) : price; }
-function bonusSync(j) { if (j && j.bonusOk) bonusCfg = j.bonusOk; if (j && j.bonusPct) bonusPct = j.bonusPct; }
-function bonusOn(p) { return bonusCfg[p] !== false; }
-const walletName = w => w === 'bonus' ? 'Bonus' : 'Main balance';
-// Returns 'balance' | 'bonus' | null (null = cancelled or not enough money). skipCheck: price unknown on the page, the server checks.
-async function chooseWallet(price, product, skipCheck) {
-    const bal = Number(userBalance || 0), bon = Number(userBonus || 0);
-    const bonPrice = effPrice(price, 'bonus', product);
-    const canBal = skipCheck || bal >= price, canBon = bonusOn(product) && bon > 0 && (skipCheck || bon >= bonPrice);
-    if (!canBal && !canBon) {
-        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Main balance: <b>BDT ${bal}</b>` + (bonusOn(product) ? `<br>Bonus: <b>BDT ${bon}</b>` : '') + `<br>Required: <b>BDT ${price}</b>` + (bonusOn(product) && bonPrice !== price ? ` <span style="font-size:12px">(with Bonus: BDT ${bonPrice})</span>` : ''), showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
-        if (x.isConfirmed) showSec('addmoney'); return null;
-    }
-    if (canBal && !canBon) return 'balance';
-    if (!canBal && canBon) return 'bonus';
-    const x = await Swal.fire({ title: 'Pay from', input: 'radio', inputValue: bal >= price ? 'balance' : 'bonus', showCancelButton: true, confirmButtonText: 'Continue', cancelButtonText: 'Cancel',
-        inputOptions: { balance: 'Main balance — BDT ' + bal, bonus: 'Bonus — BDT ' + bon } });
-    return x.isConfirmed ? (x.value || 'balance') : null;
+// One wallet only: the main balance. Returns true if it is enough, else offers "Add money".
+async function checkBalance(price) {
+    const bal = Number(userBalance || 0);
+    if (bal >= price) return true;
+    const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Main balance: <b>BDT ${bal}</b><br>Required: <b>BDT ${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
+    if (x.isConfirmed) showSec('addmoney'); return false;
 }
 async function dlPoll(reqId) {
     // the connection dropped: ask the server what happened to this request. object = result, null = never reached the server, undefined = still unknown
@@ -1872,13 +1834,13 @@ function dlMyPrice() {
 }
 function dlUpdateInfo() {
     const set = (id, v) => setTxt(document.getElementById(id), v);
-    set('dl-balance', Number(userBalance || 0).toFixed(2).replace(/\.00$/, '')); set('dl-bonus', Number(userBonus || 0).toFixed(2).replace(/\.00$/, ''));
+    set('dl-balance', Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
     set('dl-price', dlMyPrice()); set('dl-likes', dlCfg.likes);
     set('dl-home-price', dlMyPrice()); set('dl-home-likes', dlCfg.likes);
 }
 async function dlLoadCfg() {
     try {
-        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json(); bonusSync(j);
+        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json();
         if (r.ok && j) dlCfg = { price: j.price, resellerPrice: j.resellerPrice, likes: j.likes, enabled: j.enabled !== false, offMsg: j.offMsg || '' };
     } catch (e) {}
     dlUpdateInfo();
@@ -1914,7 +1876,7 @@ function dlRenderResult(r) {
             <div class="bg-white/80 rounded-2xl px-3 py-1">
                 ${dlRow('🎮 UID', esc(r.uid))}${dlRow('👤 Player', esc(r.player))}${dlRow('🌍 Server', esc(r.region))}
                 ${dlRow('📦 Package', esc(r.package))}${dlRow('🔑 Order no.', `${esc(r.orderNo)} <i class="fa-regular fa-copy text-brand-500 cursor-pointer ml-1" onclick="dlCopy('${esc(r.orderNo)}')"></i>`)}
-                ${dlRow('💰 Cost', 'BDT ' + esc(r.price))}${dlRow('💳 Paid from', walletName(r.payWith))}${dlRow('🕐 Time', esc(r.time) + ' (BDT)')}
+                ${dlRow('💰 Cost', 'BDT ' + esc(r.price))}${dlRow('💳 Paid from', 'Main balance')}${dlRow('🕐 Time', esc(r.time) + ' (BDT)')}
             </div>
             <button onclick="document.getElementById('dl-result').innerHTML='';window.scrollTo({top:0,behavior:'smooth'})" class="zp-btn w-full text-xs mt-3 py-3">Send likes to another UID</button>
         </div>`);
@@ -1947,9 +1909,9 @@ async function dlSend() {
     if (!dlRegion) { const b = document.getElementById('dl-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
     if (!dlCfg.enabled) { Swal.fire('Service paused', dlCfg.offMsg || '🔥 The Daily Like service is paused for a moment. Please try again later.', 'info'); return; }
     const price = dlMyPrice();
-    const pw = await chooseWallet(price, 'dailyLike'); if (!pw) return;
-    const shown = effPrice(price, pw, 'dailyLike');
-    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>BDT ${shown}</b><br>Pay from: <b>${walletName(pw)}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
+    if (!(await checkBalance(price))) return;
+    const shown = price;
+    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>BDT ${shown}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
     if (!c.isConfirmed) return;
 
     const key = uid + '|' + dlRegion;
@@ -1960,7 +1922,7 @@ async function dlSend() {
     const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 120000);
     try {
         const token = await currentUser.getIdToken();
-        const res = await fetch(BACKEND_URL + '/dailyLike', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ uid, region: dlRegion, reqId: dlReqId, payWith: pw }) });
+        const res = await fetch(BACKEND_URL + '/dailyLike', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ uid, region: dlRegion, reqId: dlReqId }) });
         let j = {}; try { j = await res.json(); } catch (e) {}
         if (!res.ok) {
             if (res.status !== 409) dlReqId = null;
@@ -2107,7 +2069,7 @@ function copySupportPin(btn) {
 let tcpCfg = { enabled: true, packages: [], offMsg: '' }, tcpPkg = null, tcpBusy = false, tcpReqId = null;
 const tcpPrice = p => (currentUser && userData && (userData.role === 'reseller' || userData.role === 'admin') && p.resellerPrice != null) ? p.resellerPrice : p.price;
 async function tcpLoadCfg() {
-    try { const r = await fetch(BACKEND_URL + '/tcpInfo'); const j = await r.json(); if (r.ok && j.packages) tcpCfg = { enabled: j.enabled !== false, packages: j.packages, offMsg: j.offMsg || '' }; bonusSync(j); } catch (e) {}
+    try { const r = await fetch(BACKEND_URL + '/tcpInfo'); const j = await r.json(); if (r.ok && j.packages) tcpCfg = { enabled: j.enabled !== false, packages: j.packages, offMsg: j.offMsg || '' }; } catch (e) {}
     const hp = document.getElementById('tcp-home-price'); if (hp && tcpCfg.packages.length) hp.innerText = Math.min.apply(null, tcpCfg.packages.map(tcpPrice));
     tcpRenderPkgs();
 }
@@ -2118,8 +2080,8 @@ function tcpRenderPkgs() {
 }
 function tcpPick(id) { tcpPkg = id; tcpRenderPkgs(); }
 function tcpOpen() {
-    const b = document.getElementById('tcp-balance'), n = document.getElementById('tcp-bonus');
-    if (b) b.innerText = userBalance; if (n) n.innerText = userBonus;
+    const b = document.getElementById('tcp-balance');
+    if (b) b.innerText = userBalance;
     tcpLoadCfg();
 }
 async function tcpBuy() {
@@ -2128,15 +2090,15 @@ async function tcpBuy() {
     if (!tcpCfg.enabled) { Swal.fire('Service paused', tcpCfg.offMsg || 'TCP Board is paused for a moment. Please try again later.', 'info'); return; }
     const pkg = tcpCfg.packages.find(p => p.id === tcpPkg); if (!pkg) { Swal.fire('Heads up', 'Please choose a package', 'warning'); return; }
     const price = tcpPrice(pkg);
-    const pw = await chooseWallet(price, 'tcp'); if (!pw) return;
-    const shown = effPrice(price, pw, 'tcp');
+    if (!(await checkBalance(price))) return;
+    const shown = price;
     const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + shown, cancelButtonText: 'Cancel',
-        html: `Package: <b>${esc(pkg.name)}</b><br>Price: <b>BDT ${shown}</b><br>Pay from: <b>${walletName(pw)}</b><div style="font-size:11px;color:#5f7a6e;margin-top:8px">The timer starts at your first login on the TCP board.</div>` });
+        html: `Package: <b>${esc(pkg.name)}</b><br>Price: <b>BDT ${shown}</b><div style="font-size:11px;color:#5f7a6e;margin-top:8px">The timer starts at your first login on the TCP board.</div>` });
     if (!c.isConfirmed) return;
     if (!tcpReqId) tcpReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32);
     tcpBusy = true; const btn = document.getElementById('tcp-btn'); btn.disabled = true; btn.style.opacity = '.6';
     try {
-        const j = await api('/tcpBuy', { packageId: pkg.id, reqId: tcpReqId, payWith: pw }); tcpReqId = null;
+        const j = await api('/tcpBuy', { packageId: pkg.id, reqId: tcpReqId }); tcpReqId = null;
         await Swal.fire({ icon: 'success', title: 'Purchased! 🎉', html: `Your password:<br><b style="font-family:monospace;font-size:16px">${esc(j.key)}</b><br><div style="font-size:12px;margin-top:8px">Find it anytime in <b>Profile → My TCP Bot</b>.</div>` });
         tcpMy();
     } catch (e) { Swal.fire('Couldn’t buy', e.message || 'Please try again', 'error'); }
@@ -2328,7 +2290,7 @@ function lbOpen() {
 function lbClose() { clearInterval(lbTimer); lbTimer = null; }
 document.addEventListener('visibilitychange', () => { if (!document.hidden && lbTimer && Date.now() - lbAt > 15000) lbLoad(false); });
 
-// ================= ADS / EARN (shortener steps -> bonus) =================
+// ================= ADS / EARN (shortener steps -> real money in the main balance) =================
 // Ads are NOT on the normal site. The ad codes only come from the server when this page is opened, and the page reloads clean when you leave it.
 (function () {   // user came back from a shortener:  /?ads=KEY  -> remember the key, tidy the address bar
     try {
@@ -2353,7 +2315,7 @@ async function adsPending() {
         if (j.finished) adsShowAll = true;
         showSec('ads');
         if (j.finished) {
-            await Swal.fire({ icon: 'success', title: j.reward > 0 ? 'BDT ' + j.reward + ' bonus added!' : 'All steps completed!', html: '<div class="mhx-sub">' + (j.reward > 0 ? 'Every step is done. Your bonus is now in your account.' : 'Every step is done.') + '</div>', confirmButtonText: 'Awesome' });
+            await Swal.fire({ icon: 'success', title: j.reward > 0 ? 'BDT ' + j.reward + ' added to your balance!' : 'All steps completed!', html: '<div class="mhx-sub">' + (j.reward > 0 ? 'Every step is done. The money is now in your main balance.' : 'Every step is done.') + '</div>', confirmButtonText: 'Awesome' });
             adsShowAll = false; if (adsData) adsRender();
         } else apiToast('success', 'Step ' + j.done + ' of ' + j.total + ' completed ✓');
     } catch (e) { Swal.close(); showSec('ads'); Swal.fire('Oops', e.message, 'error'); }
@@ -2402,15 +2364,15 @@ async function adsLoad(quiet) {
 function adsRender() {
     const d = adsData, box = document.getElementById('ads-body'); if (!d) return;
     const rw = document.getElementById('ads-reward');
-    if (d.bonus > 0 && d.enabled) { rw.style.display = ''; rw.querySelector('span').textContent = 'Reward: BDT ' + d.bonus + ' bonus'; } else rw.style.display = 'none';
+    if (d.reward > 0 && d.enabled) { rw.style.display = ''; rw.querySelector('span').textContent = 'Reward: BDT ' + d.reward + ' in your balance'; } else rw.style.display = 'none';
     const dn = adsShowAll ? d.total : d.done;
     document.getElementById('ads-bar-fill').style.width = (d.total ? Math.round(dn / d.total * 100) : 0) + '%';
     setTxt(document.getElementById('ads-prog'), d.enabled && d.total ? dn + ' / ' + d.total + ' steps completed' : '');
-    if (!d.enabled) { box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-gift" style="font-size:30px;color:#6ee7b7"></i><div style="margin-top:10px">' + esc(d.offMsg || 'No bonus tasks are available right now. Please check back later.') + '</div></div>'; return; }
+    if (!d.enabled) { box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-gift" style="font-size:30px;color:#6ee7b7"></i><div style="margin-top:10px">' + esc(d.offMsg || 'No earning tasks are available right now. Please check back later.') + '</div></div>'; return; }
     const lim = !!(d.dailyLimit && d.roundsToday >= d.dailyLimit && !adsShowAll);
     let h = '';
     if (d.dailyLimit) h += '<div class="lb-me">Today: ' + d.roundsToday + ' / ' + d.dailyLimit + ' rounds completed</div>';
-    if (lim) h += '<div class="lb-me">You reached today’s limit. Come back tomorrow for more bonus!</div>';
+    if (lim) h += '<div class="lb-me">You reached today’s limit. Come back tomorrow to earn more!</div>';
     d.steps.forEach((s, i) => {
         const done = adsShowAll || s.done, cur = !done && i === d.done && !lim, cls = done ? 'done' : cur ? 'cur' : 'lock';
         h += '<div class="ads-step ' + cls + '"><div class="ads-ck">' + (done ? '<i class="fa-solid fa-check"></i>' : cur ? (i + 1) : '<i class="fa-solid fa-lock" style="font-size:14px"></i>') + '</div>' +
@@ -2565,7 +2527,7 @@ function apiRender(d) {
         const left = Math.max(0, apiThr - apiPaid);
         h += '<div class="vip-card p-5 mb-4 text-center"><div class="w-14 h-14 mx-auto rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl mb-3"><i class="fas fa-lock"></i></div>' +
             '<div class="font-extrabold text-slate-800 mb-1">Deposit BDT ' + apiThr + ' to unlock the API</div>' +
-            '<p class="zp-sub leading-relaxed">Just <b>BDT ' + left + '</b> more to deposit and the API unlocks. Only real deposits count — bonuses, promo credits and any other money in your balance don’t count.</p>' +
+            '<p class="zp-sub leading-relaxed">Just <b>BDT ' + left + '</b> more to deposit and the API unlocks. Only real deposits count — ad earnings, promo credits and any other free money in your balance don’t count.</p>' +
             '<button onclick="showSec(\'addmoney\')" class="zp-btn w-full text-sm mt-3"><i class="fas fa-wallet mr-1.5"></i>Add money to wallet</button></div>';
     } else if (!d.enabled) {
         h += '<div class="vip-card p-4 mb-4 text-center zp-sub"><i class="fas fa-circle-pause text-amber-500 mr-1"></i>The API system is paused for the moment.</div>';
@@ -2653,7 +2615,7 @@ function alHomeUpdate() {
     if (p && alCfg.packages.length) p.innerText = Math.min.apply(null, alCfg.packages.map(alPrice));
 }
 async function alLoadCfg() {
-    try { const r = await fetch(BACKEND_URL + '/autoLikeInfo'); const j = await r.json(); if (r.ok && j && j.packages) alCfg = { enabled: j.enabled !== false, packages: j.packages, sendTime: j.sendTime || '04:05', changeFee: j.changeFee, offMsg: j.offMsg || '' }; bonusSync(j); } catch (e) {}
+    try { const r = await fetch(BACKEND_URL + '/autoLikeInfo'); const j = await r.json(); if (r.ok && j && j.packages) alCfg = { enabled: j.enabled !== false, packages: j.packages, sendTime: j.sendTime || '04:05', changeFee: j.changeFee, offMsg: j.offMsg || '' }; } catch (e) {}
     alHomeUpdate(); alRenderPkgs();
 }
 function alRenderServers() {
@@ -2680,7 +2642,7 @@ function alRenderPkgs() {
     }).join('');
 }
 function alUpdateInfo() {
-    setTxt(document.getElementById('al-bonus'), Number(userBonus || 0).toFixed(2).replace(/\.00$/, '')); const e = document.getElementById('al-balance'); setTxt(e, Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
+    const e = document.getElementById('al-balance'); setTxt(e, Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
     const t = document.getElementById('al-time'); if (t) setTxt(t, alFmtTime(alCfg.sendTime));
     const l = document.getElementById('al-likes'); if (l && typeof dlCfg !== 'undefined') setTxt(l, dlCfg.likes);
 }
@@ -2720,11 +2682,11 @@ async function alBuy() {
     if (!/^\d{5,15}$/.test(uid)) { Swal.fire('Heads up', 'Please enter a valid UID (numbers only, 5–15 digits)', 'warning'); return; }
     if (!alRegion) { const b = document.getElementById('al-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
     const price = alPrice(pkg);
-    const pw = await chooseWallet(price, 'autoLike'); if (!pw) return;
-    const shown = effPrice(price, pw, 'autoLike');
+    if (!(await checkBalance(price))) return;
+    const shown = price;
     const act = alMine && alMine.status === 'active';
     const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + shown, cancelButtonText: 'Cancel',
-        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>BDT ${shown}</b><br>Pay from: <b>${walletName(pw)}</b>
+        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>BDT ${shown}</b>
         <div style="font-size:11px;color:#5f7a6e;margin-top:8px">${act ? 'These days will be added to your running subscription. ' : 'This UID will be locked to your subscription (you can change it later for a small fee). '}No refund if a daily like can’t be delivered.</div>` });
     if (!c.isConfirmed) return;
     const key = pkg.id + '|' + uid + '|' + alRegion;
@@ -2732,7 +2694,7 @@ async function alBuy() {
     alBusy = true;
     const btn = document.getElementById('al-btn'), bt = document.getElementById('al-btn-txt'), old = bt.innerText; btn.disabled = true; btn.style.opacity = '.6'; bt.innerText = 'Processing...';
     try {
-        const j = await api('/autoLikeBuy', { packageId: pkg.id, uid, region: alRegion, reqId: alReqId, payWith: pw }); alReqId = null;
+        const j = await api('/autoLikeBuy', { packageId: pkg.id, uid, region: alRegion, reqId: alReqId }); alReqId = null;
         await alLoadMine(true);
         Swal.fire({ icon: 'success', title: 'Auto Like activated! 🎉', html: `<b>${esc(pkg.name)}</b> for UID <b>${esc(uid)}</b>.<br>The first like goes out ${alMine ? alFmtDay(alMine.nextDate) + ' at ' : 'at '}<b>${alFmtTime(alCfg.sendTime)}</b> (BD time), then every day.` });
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2766,21 +2728,18 @@ async function alMy() {
 }
 async function alChangeUid(m) {
     const fee = alCfg.changeFee;
-    const bonusPay = bonusOn('autoLike') && Number(userBonus || 0) >= effPrice(fee, 'bonus', 'autoLike') && fee > 0;
-    const payHtml = bonusPay ? `<select id="al-new-pay" class="swal2-select" style="margin:6px 0;width:80%"><option value="balance">Pay from: Main balance (BDT ${Number(userBalance || 0)})</option><option value="bonus">Pay from: Bonus (BDT ${Number(userBonus || 0)})</option></select>` : '';
     const opts = DL_REGIONS.map(r => `<option value="${r}" ${r === m.region ? 'selected' : ''}>${r}</option>`).join('');
     const x = await Swal.fire({
         title: 'Change UID', confirmButtonText: 'Pay BDT ' + fee + ' & change', showCancelButton: true, focusConfirm: false,
         html: `<div style="font-size:12px;color:#5f7a6e;margin-bottom:8px">Current: <b>${esc(m.uid)}</b> (${esc(m.region)})<br>Changing the UID costs <b>BDT ${fee}</b>, taken from your wallet. Your remaining days stay the same.</div>
             <input id="al-new-uid" class="swal2-input" inputmode="numeric" maxlength="15" placeholder="New UID" style="margin:6px 0">
-            <select id="al-new-region" class="swal2-select" style="margin:6px 0;width:80%">${opts}</select>${payHtml}`,
+            <select id="al-new-region" class="swal2-select" style="margin:6px 0;width:80%">${opts}</select>`,
         preConfirm: () => {
             const u = (document.getElementById('al-new-uid').value || '').replace(/\D/g, ''), r = document.getElementById('al-new-region').value;
             if (!/^\d{5,15}$/.test(u)) { Swal.showValidationMessage('Enter a valid UID (5–15 digits)'); return false; }
             if (u === m.uid && r === m.region) { Swal.showValidationMessage('This is already your current UID'); return false; }
-            const pw = (document.getElementById('al-new-pay') || {}).value || 'balance';
-            if ((pw === 'bonus' ? (userBonus || 0) : (userBalance || 0)) < fee) { Swal.showValidationMessage('Not enough ' + (pw === 'bonus' ? 'bonus' : 'balance') + ' — you need BDT ' + fee); return false; }
-            return { uid: u, region: r, payWith: pw };
+            if ((userBalance || 0) < fee) { Swal.showValidationMessage('Not enough balance — you need BDT ' + fee); return false; }
+            return { uid: u, region: r };
         }
     });
     if (!x.isConfirmed) return;
@@ -2917,7 +2876,7 @@ async function idsBuy(i) {
     if (it.closed) { idsClosedInfo(it); return; }
     if (!currentUser) { showSec('auth'); return; }
     const bal = Math.floor(Number(userData && userData.balance) || 0);
-    const r = await Swal.fire({ icon: 'question', title: 'Buy this ID?', html: '<div class="mhx-sub"><b>' + esc(it.title) + '</b><br>Price: <b>BDT ' + esc(it.price) + '</b><br>Your balance: BDT ' + bal + '<br><span style="font-size:11px;color:#8a6d00">IDs can only be bought with your main balance (not bonus).</span></div>', showCancelButton: true, confirmButtonText: 'Buy for BDT ' + it.price, cancelButtonText: 'Cancel' });
+    const r = await Swal.fire({ icon: 'question', title: 'Buy this ID?', html: '<div class="mhx-sub"><b>' + esc(it.title) + '</b><br>Price: <b>BDT ' + esc(it.price) + '</b><br>Your balance: BDT ' + bal + '</div>', showCancelButton: true, confirmButtonText: 'Buy for BDT ' + it.price, cancelButtonText: 'Cancel' });
     if (!r.isConfirmed) return;
     mhxBusy('Processing your order…', 'Please do not close this page.');
     try {
