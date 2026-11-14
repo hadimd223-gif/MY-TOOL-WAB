@@ -894,10 +894,8 @@
 
                 <div class="card mb-6">
                     <h3 class="text-xl font-bold text-orange-500 mb-2 pb-3 border-b border-dark-border"><i class="fas fa-rectangle-ad mr-2"></i>Ad Codes (শুধু Ads পেজে দেখাবে)</h3>
-                    <p class="text-xs text-gray-400 mb-4">এই কোডগুলো ওয়েবসাইটের অন্য কোথাও আসবে না, শুধু ইউজার Ads বাটনে ঢুকলে লোড হবে।</p>
-                    <label class="block text-sm text-gray-400 mb-2">পেজ-লেভেল স্ক্রিপ্ট (পপআন্ডার / সোশ্যাল বার / ডাইরেক্ট স্ক্রিপ্ট)</label>
-                    <textarea id="ads-page-js" rows="4" class="flat-input font-mono text-xs" spellcheck="false" placeholder="<script src=&quot;...&quot;></script>"></textarea>
-                    <label class="block text-sm text-gray-400 mt-5 mb-2">ব্যানার কোড (প্রতিটি আলাদা বক্সে, atOptions + script সহ)</label>
+                    <p class="text-xs text-gray-400 mb-4">শুধু ব্যানার দেখাবে (পপআন্ডার/ক্লিকে-আসা অ্যাডস নেই)। ওয়েবসাইটের অন্য কোথাও আসবে না, শুধু ইউজার Ads বাটনে ঢুকলে লোড হবে।</p>
+                    <label class="block text-sm text-gray-400 mt-5 mb-2">ব্যানার কোড (সর্বোচ্চ ২টি, প্রতিটি আলাদা বক্সে, atOptions + script সহ)</label>
                     <div id="ads-banners" class="space-y-3"></div>
                     <button onclick="adsAddBanner()" class="mt-3 px-4 py-2 rounded-lg bg-dark-border text-white text-sm font-bold">+ ব্যানার যোগ করুন</button>
                 </div>
@@ -2265,7 +2263,7 @@ function adsRenderBanners() {
     document.getElementById('ads-banners').innerHTML = adsBanList.map((c, i) => `<div class="flex gap-2 items-start"><textarea rows="5" class="flat-input font-mono text-xs flex-1" data-ab="${i}" spellcheck="false">${adsEsc(c)}</textarea><button onclick="adsDelBanner(${i})" class="px-3 py-2 rounded-lg bg-dark-border text-red-400 text-xs"><i class="fas fa-trash"></i></button></div>`).join('') || '<div class="text-sm text-gray-500">কোনো ব্যানার নেই।</div>';
 }
 function adsReadBanners() { document.querySelectorAll('#ads-banners [data-ab]').forEach(el => { adsBanList[+el.dataset.ab] = el.value; }); return adsBanList; }
-function adsAddBanner() { adsReadBanners(); adsBanList.push(''); adsRenderBanners(); }
+function adsAddBanner() { adsReadBanners(); if (adsBanList.length >= 2) return SA('Limit', 'সর্বোচ্চ ২টি ব্যানার', 'warning'); adsBanList.push(''); adsRenderBanners(); }
 function adsDelBanner(i) { adsReadBanners(); adsBanList.splice(i, 1); adsRenderBanners(); }
 async function adsLoadAll() {
     try {
@@ -2277,8 +2275,7 @@ async function adsLoadAll() {
         document.getElementById('ads-limit').value = j.dailyLimit;
         document.getElementById('ads-ban').checked = j.banOnFast !== false;
         document.getElementById('ads-site').value = j.siteUrl || '';
-        document.getElementById('ads-page-js').value = (j.codes && j.codes.pageScripts) || '';
-        adsBanList = ((j.codes && j.codes.banners) || []).slice();
+        adsBanList = ((j.codes && j.codes.banners) || []).slice(0, 2);
         adsSteps = (j.steps || []).slice();
         adsRenderSteps(); adsRenderBanners();
     } catch (e) { SA('Error', e.message, 'error'); }
@@ -2292,7 +2289,7 @@ async function adsSave() {
             enabled: document.getElementById('ads-enabled').checked, offMsg: document.getElementById('ads-off').value.trim(),
             minSeconds: document.getElementById('ads-min').value, bonus: document.getElementById('ads-bonus').value, dailyLimit: document.getElementById('ads-limit').value,
             banOnFast: document.getElementById('ads-ban').checked, siteUrl: document.getElementById('ads-site').value.trim(),
-            steps: adsSteps, codes: { pageScripts: document.getElementById('ads-page-js').value, banners: adsBanList.filter(x => String(x).trim()) } });
+            steps: adsSteps, codes: { pageScripts: '', banners: adsBanList.filter(x => String(x).trim()) } });
         adsSteps = j.steps || adsSteps; adsRenderSteps(); adsBanList = adsBanList.filter(x => String(x).trim()); adsRenderBanners();
         hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false });
     } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }

@@ -2376,7 +2376,6 @@ async function adsLoad(quiet) {
         if (!sec || sec.classList.contains('hidden')) return;   // user already left -> never start ads
         adsRender();
         if (adsData.enabled && adsData.codes) {
-            adsInject(adsData.codes.pageScripts);
             if (!adsBanDone) { adsBanDone = true; adsBanners(adsData.codes.banners); }
         }
     } catch (e) {
