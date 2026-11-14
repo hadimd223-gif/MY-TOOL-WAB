@@ -324,6 +324,10 @@ function authMsg(e) {
         @keyframes lbSk{to{background-position:-200% 0}}
         .lb-me{margin:4px 2px 12px;padding:12px 16px;border-radius:20px;background:#ecfdf5;border:1px dashed #6ee7b7;color:#065f46;font-size:12.5px;font-weight:700;text-align:center}
 
+        /* Ads button: floats exactly in the middle, above the bar; the 5 small buttons stay evenly spaced */
+        #nav-ads.mhx-bolt{position:absolute;left:50%;top:-44px;margin:0;width:58px;height:58px;font-size:22px;transform:translateX(-50%)}
+        #nav-ads.mhx-bolt:active{transform:translateX(-50%) scale(.92)}
+
         /* ===== Ads / Earn ===== */
         .ads-reward{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:8px 15px;border-radius:99px;background:rgba(255,255,255,.95);color:#065f46;font-weight:800;font-size:13px}
         .ads-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.28);margin-top:16px;overflow:hidden}
@@ -996,7 +1000,7 @@ function authMsg(e) {
 
     <!-- Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 z-50">
-        <div class="max-w-md mx-auto flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
+        <div class="relative max-w-md mx-auto flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
             <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>Home</span></button>
             <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
             <button id="nav-leaders" onclick="showSec('leaders')" class="nav-item"><i class="fa-solid fa-trophy"></i><span>Top</span></button>
