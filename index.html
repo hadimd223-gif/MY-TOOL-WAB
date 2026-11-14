@@ -324,6 +324,21 @@ function authMsg(e) {
         @keyframes lbSk{to{background-position:-200% 0}}
         .lb-me{margin:4px 2px 12px;padding:12px 16px;border-radius:20px;background:#ecfdf5;border:1px dashed #6ee7b7;color:#065f46;font-size:12.5px;font-weight:700;text-align:center}
 
+        /* ===== Ads / Earn ===== */
+        .ads-reward{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:8px 15px;border-radius:99px;background:rgba(255,255,255,.95);color:#065f46;font-weight:800;font-size:13px}
+        .ads-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.28);margin-top:16px;overflow:hidden}
+        .ads-bar i{display:block;height:100%;border-radius:99px;background:#fff;transition:width .6s ease}
+        .ads-prog{margin-top:8px;font-size:12px;font-weight:800;opacity:.95}
+        .ads-step{display:flex;align-items:center;gap:12px;padding:14px;border-radius:22px;background:rgba(255,255,255,.92);border:1px solid #fff;box-shadow:0 8px 22px rgba(5,150,105,.07);margin-bottom:10px;transition:.25s}
+        .ads-step.cur{outline:2px solid #34d399;outline-offset:1px}
+        .ads-step.lock{opacity:.55}
+        .ads-ck{width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;background:#e9f8f1;color:#5f7a6e;border:2px solid #d8ece2}
+        .ads-step.done .ads-ck{background:linear-gradient(135deg,#34d399,#059669);color:#fff;border-color:#fff;box-shadow:0 6px 14px rgba(5,150,105,.32);animation:adsPop .45s ease}
+        @keyframes adsPop{0%{transform:scale(.6)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+        .ads-go{flex:none;padding:10px 20px;border-radius:16px;border:0;color:#fff;font-weight:800;font-size:13px;background:linear-gradient(135deg,#6ee7b7,#10b981 55%,#059669);box-shadow:0 8px 18px rgba(5,150,105,.3)}
+        .ads-go:active{transform:scale(.95)}
+        .ads-slot{margin:0 auto 12px;overflow:hidden}
+
         /* ===== Profile edit ===== */
         .av-wrap{position:relative;width:88px;height:88px;margin:0 auto 12px}
         .av-wrap .av-img{width:100%;height:100%;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:800;background:linear-gradient(135deg,#34d399,#059669);box-shadow:0 10px 24px rgba(5,150,105,.3);border:3px solid #fff}
@@ -937,6 +952,20 @@ function authMsg(e) {
             <div id="lb-body"></div>
         </section>
 
+        <!-- Ads / Earn -->
+        <section id="ads-sec" class="hidden animate-fade-in pb-28">
+            <div class="lb-hero">
+                <span class="lb-chip"><i class="fa-solid fa-gift"></i> FREE BONUS</span>
+                <div class="lb-title" style="font-size:30px">Watch &amp; Earn</div>
+                <div class="lb-sub">Finish every step below, one by one, and the bonus is added to your account.</div>
+                <div class="ads-reward" id="ads-reward" style="display:none"><i class="fa-solid fa-coins"></i><span></span></div>
+                <div class="ads-bar"><i id="ads-bar-fill" style="width:0%"></i></div>
+                <div class="ads-prog" id="ads-prog"></div>
+            </div>
+            <div id="ads-body" class="mt-4"></div>
+            <div id="ads-banners" class="mt-3"></div>
+        </section>
+
         <!-- Get API (resellers) -->
         <section id="api-sec" class="hidden animate-fade-in pb-24">
             <button onclick="showSec('home')" class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1.5"><i class="fas fa-arrow-left"></i> Go back</button>
@@ -970,7 +999,8 @@ function authMsg(e) {
         <div class="max-w-md mx-auto flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
             <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>Home</span></button>
             <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
-            <button id="nav-leaders" class="mhx-bolt" onclick="showSec('leaders')" aria-label="Leaderboard"><i class="fa-solid fa-trophy"></i></button>
+            <button id="nav-leaders" onclick="showSec('leaders')" class="nav-item"><i class="fa-solid fa-trophy"></i><span>Top</span></button>
+            <button id="nav-ads" class="mhx-bolt" onclick="showSec('ads')" aria-label="Watch and earn bonus"><i class="fa-solid fa-gift"></i></button>
             <button id="nav-addmoney" onclick="showSec('addmoney')" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></button>
             <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></button>
         </div>
@@ -1204,6 +1234,7 @@ function authMsg(e) {
             document.getElementById('header-login-container').classList.add('hidden');
             document.getElementById('header-balance-container').classList.remove('hidden');
             loadUserData(user.uid);
+            adsAfterAuth();
         } else {
             currentUser = null;
             userData = {};
@@ -1566,7 +1597,7 @@ function authMsg(e) {
     }
 
     function showSec(secId) {
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'tcp' || secId === 'api' || secId === 'idcode') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'tcp' || secId === 'api' || secId === 'idcode' || secId === 'ads') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -1585,6 +1616,7 @@ function authMsg(e) {
         if(secId === 'idsell') idsOpen();
         if(secId === 'idcode') idcOpen();
         if(secId === 'leaders') lbOpen(); else lbClose();
+        if(secId === 'ads') adsOpen(); else adsClose(secId);
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
@@ -2283,6 +2315,119 @@ function lbOpen() {
 }
 function lbClose() { clearInterval(lbTimer); lbTimer = null; }
 document.addEventListener('visibilitychange', () => { if (!document.hidden && lbTimer && Date.now() - lbAt > 15000) lbLoad(false); });
+
+// ================= ADS / EARN (shortener steps -> bonus) =================
+// Ads are NOT on the normal site. The ad codes only come from the server when this page is opened, and the page reloads clean when you leave it.
+(function () {   // user came back from a shortener:  /?ads=KEY  -> remember the key, tidy the address bar
+    try {
+        const p = new URLSearchParams(location.search), k = p.get('ads');
+        if (k) { localStorage.setItem('mhx_ads_key', k.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40)); p.delete('ads'); const q = p.toString(); history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); }
+    } catch (e) {}
+})();
+let adsData = null, adsBusy = false, adsVis = null, adsBanDone = false, adsShowAll = false;
+function adsAfterAuth() {
+    let go = null; try { go = sessionStorage.getItem('mhx_go'); sessionStorage.removeItem('mhx_go'); } catch (e) {}
+    if (go && !/^(home|ads|auth)$/.test(go) && document.getElementById(go + '-sec')) showSec(go);
+    adsPending();
+}
+async function adsPending() {
+    let k = null; try { k = localStorage.getItem('mhx_ads_key'); } catch (e) {}
+    if (!k || !currentUser || adsBusy) return;
+    adsBusy = true; try { localStorage.removeItem('mhx_ads_key'); } catch (e) {}
+    mhxBusy('Checking your step…', 'Please wait a moment…');
+    try {
+        const j = await api('/adsComplete', { key: k });
+        Swal.close();
+        if (j.finished) adsShowAll = true;
+        showSec('ads');
+        if (j.finished) {
+            await Swal.fire({ icon: 'success', title: j.reward > 0 ? 'BDT ' + j.reward + ' bonus added!' : 'All steps completed!', html: '<div class="mhx-sub">' + (j.reward > 0 ? 'Every step is done. Your bonus is now in your account.' : 'Every step is done.') + '</div>', confirmButtonText: 'Awesome' });
+            adsShowAll = false; if (adsData) adsRender();
+        } else apiToast('success', 'Step ' + j.done + ' of ' + j.total + ' completed ✓');
+    } catch (e) { Swal.close(); showSec('ads'); Swal.fire('Oops', e.message, 'error'); }
+    finally { adsBusy = false; }
+}
+function adsOpen() {
+    adsLoad(false);
+    if (adsVis) document.removeEventListener('visibilitychange', adsVis);
+    adsVis = () => { if (!document.hidden && !adsBusy) adsLoad(true); };   // coming back from the shortener tab -> refresh the ticks
+    document.addEventListener('visibilitychange', adsVis);
+}
+function adsClose(next) {
+    if (adsVis) { document.removeEventListener('visibilitychange', adsVis); adsVis = null; }
+    const bn = document.getElementById('ads-banners'); if (bn) bn.innerHTML = ''; adsBanDone = false;
+    if (window.__adsInjected) {   // page-level ad scripts can't be unloaded -> reload so nothing keeps running on the normal site
+        window.__adsInjected = false; try { sessionStorage.setItem('mhx_go', next || 'home'); } catch (e) {}
+        location.reload();
+    }
+}
+async function adsLoad(quiet) {
+    const box = document.getElementById('ads-body');
+    if (!quiet || !adsData) box.innerHTML = '<div class="lb-sk"></div><div class="lb-sk"></div><div class="lb-sk"></div>';
+    try {
+        adsData = await api('/adsStatus', {});
+        const sec = document.getElementById('ads-sec');
+        if (!sec || sec.classList.contains('hidden')) return;   // user already left -> never start ads
+        adsRender();
+        if (adsData.enabled && adsData.codes) {
+            adsInject(adsData.codes.pageScripts);
+            if (!adsBanDone) { adsBanDone = true; adsBanners(adsData.codes.banners); }
+        }
+    } catch (e) {
+        if (!quiet || !adsData) box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-wifi" style="font-size:30px;color:#6ee7b7"></i><div style="margin:10px 0 14px">' + esc(e.message) + '</div><button class="mhx-btn mhx-btn-primary" onclick="adsLoad(false)">Try again</button></div>';
+    }
+}
+function adsRender() {
+    const d = adsData, box = document.getElementById('ads-body'); if (!d) return;
+    const rw = document.getElementById('ads-reward');
+    if (d.bonus > 0 && d.enabled) { rw.style.display = ''; rw.querySelector('span').textContent = 'Reward: BDT ' + d.bonus + ' bonus'; } else rw.style.display = 'none';
+    const dn = adsShowAll ? d.total : d.done;
+    document.getElementById('ads-bar-fill').style.width = (d.total ? Math.round(dn / d.total * 100) : 0) + '%';
+    setTxt(document.getElementById('ads-prog'), d.enabled && d.total ? dn + ' / ' + d.total + ' steps completed' : '');
+    if (!d.enabled) { box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-gift" style="font-size:30px;color:#6ee7b7"></i><div style="margin-top:10px">' + esc(d.offMsg || 'No bonus tasks are available right now. Please check back later.') + '</div></div>'; return; }
+    const lim = !!(d.dailyLimit && d.roundsToday >= d.dailyLimit && !adsShowAll);
+    let h = '';
+    if (d.dailyLimit) h += '<div class="lb-me">Today: ' + d.roundsToday + ' / ' + d.dailyLimit + ' rounds completed</div>';
+    if (lim) h += '<div class="lb-me">You reached today’s limit. Come back tomorrow for more bonus!</div>';
+    d.steps.forEach((s, i) => {
+        const done = adsShowAll || s.done, cur = !done && i === d.done && !lim, cls = done ? 'done' : cur ? 'cur' : 'lock';
+        h += '<div class="ads-step ' + cls + '"><div class="ads-ck">' + (done ? '<i class="fa-solid fa-check"></i>' : cur ? (i + 1) : '<i class="fa-solid fa-lock" style="font-size:14px"></i>') + '</div>' +
+            '<div class="lb-mid"><div class="lb-nm">' + esc(s.name) + '</div><div class="zp-sub" style="margin-top:3px">' + (done ? 'Completed' : cur ? 'Tap Start, finish the link, then come back' : 'Finish the previous step first') + '</div></div>' +
+            (done ? '<span class="lb-you" style="margin:0">DONE</span>' : cur ? '<button class="ads-go" onclick="adsStart(' + i + ')">Start</button>' : '') + '</div>';
+    });
+    if (d.warn) h += '<p class="zp-sub" style="text-align:center;margin:12px 8px">Please complete every step properly. Skipping through too quickly can get your account banned.</p>';
+    box.innerHTML = h;
+}
+async function adsStart(i) {
+    if (adsBusy) return; adsBusy = true;
+    const w = window.open('', '_blank');   // opened right inside the tap so phone popup-blockers allow it
+    try {
+        const j = await api('/adsStart', { step: i });
+        if (w) { try { w.opener = null; } catch (e) {} w.location.href = j.url; apiToast('info', 'Finish the step, then come back here'); } else location.href = j.url;
+    } catch (e) { if (w) w.close(); Swal.fire('Oops', e.message, 'error'); }
+    finally { adsBusy = false; }
+}
+function adsInject(html) {   // page-level ad scripts: only while this page is open
+    if (window.__adsInjected || !String(html || '').trim()) return;
+    window.__adsInjected = true;
+    try { const h = document.createElement('div'); h.id = 'ads-page-scripts'; h.style.display = 'none'; h.appendChild(document.createRange().createContextualFragment(html)); document.body.appendChild(h); } catch (e) {}
+}
+function adsBanners(list) {   // every banner lives in its own sandboxed iframe, so its code can't touch the site (and document.write works)
+    const box = document.getElementById('ads-banners'); if (!box) return; box.innerHTML = '';
+    (list || []).forEach(code => {
+        if (!String(code || '').trim()) return;
+        const mw = /['"]?width['"]?\s*:\s*(\d+)/i.exec(code), mh = /['"]?height['"]?\s*:\s*(\d+)/i.exec(code), w = mw ? +mw[1] : 300, h = mh ? +mh[1] : 250;
+        const wrap = document.createElement('div'); wrap.className = 'ads-slot';
+        const fr = document.createElement('iframe');
+        fr.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation');
+        fr.setAttribute('scrolling', 'no'); fr.setAttribute('title', 'Advertisement');
+        fr.style.cssText = 'border:0;display:block;transform-origin:0 0;width:' + w + 'px;height:' + h + 'px';
+        fr.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}</style></head><body>' + code + '</body></html>';
+        wrap.appendChild(fr); box.appendChild(wrap);
+        const sc = Math.min(1, Math.max(120, box.clientWidth - 4) / w);
+        fr.style.transform = 'scale(' + sc + ')'; wrap.style.width = Math.round(w * sc) + 'px'; wrap.style.height = Math.round(h * sc) + 'px';
+    });
+}
 
 // ================= GET API (reseller API keys) =================
 let apiInfo = null, apiBusy = false, apiDocIdx = 0, apiCfg = {};
