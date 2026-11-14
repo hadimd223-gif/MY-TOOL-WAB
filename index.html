@@ -1827,15 +1827,18 @@ let dlRegion = ''; try { dlRegion = (localStorage.getItem('dlRegion') || '').toU
 if (!DL_REGIONS.includes(dlRegion)) dlRegion = '';
 let dlCfg = { price: 6, resellerPrice: null, likes: 220, enabled: true, offMsg: '' };
 let dlBusy = false, dlReqId = null, dlReqKey = '';
-let bonusCfg = { topup: true, dailyLike: true, autoLike: true };
+let bonusCfg = { topup: true, dailyLike: true, autoLike: true, tcp: true }, bonusPct = { topup: 100, dailyLike: 100, autoLike: 100, tcp: 100 };
+function effPrice(price, wallet, product) { return wallet === 'bonus' ? Math.ceil(price * (Number(bonusPct[product]) || 100) / 100) : price; }
+function bonusSync(j) { if (j && j.bonusOk) bonusCfg = j.bonusOk; if (j && j.bonusPct) bonusPct = j.bonusPct; }
 function bonusOn(p) { return bonusCfg[p] !== false; }
 const walletName = w => w === 'bonus' ? 'Bonus' : 'Main balance';
 // Returns 'balance' | 'bonus' | null (null = cancelled or not enough money). skipCheck: price unknown on the page, the server checks.
 async function chooseWallet(price, product, skipCheck) {
     const bal = Number(userBalance || 0), bon = Number(userBonus || 0);
-    const canBal = skipCheck || bal >= price, canBon = bonusOn(product) && bon > 0 && (skipCheck || bon >= price);
+    const bonPrice = effPrice(price, 'bonus', product);
+    const canBal = skipCheck || bal >= price, canBon = bonusOn(product) && bon > 0 && (skipCheck || bon >= bonPrice);
     if (!canBal && !canBon) {
-        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Main balance: <b>BDT ${bal}</b>` + (bonusOn(product) ? `<br>Bonus: <b>BDT ${bon}</b>` : '') + `<br>Required: <b>BDT ${price}</b>`, showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
+        const x = await Swal.fire({ icon: 'error', title: 'Low balance!', html: `Main balance: <b>BDT ${bal}</b>` + (bonusOn(product) ? `<br>Bonus: <b>BDT ${bon}</b>` : '') + `<br>Required: <b>BDT ${price}</b>` + (bonusOn(product) && bonPrice !== price ? ` <span style="font-size:12px">(with Bonus: BDT ${bonPrice})</span>` : ''), showCancelButton: true, confirmButtonText: 'Add money', cancelButtonText: 'Cancel' });
         if (x.isConfirmed) showSec('addmoney'); return null;
     }
     if (canBal && !canBon) return 'balance';
@@ -1875,7 +1878,7 @@ function dlUpdateInfo() {
 }
 async function dlLoadCfg() {
     try {
-        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json(); if (j && j.bonusOk) bonusCfg = j.bonusOk;
+        const r = await fetch(BACKEND_URL + '/dailyLikeInfo'); const j = await r.json(); bonusSync(j);
         if (r.ok && j) dlCfg = { price: j.price, resellerPrice: j.resellerPrice, likes: j.likes, enabled: j.enabled !== false, offMsg: j.offMsg || '' };
     } catch (e) {}
     dlUpdateInfo();
@@ -1945,7 +1948,8 @@ async function dlSend() {
     if (!dlCfg.enabled) { Swal.fire('Service paused', dlCfg.offMsg || '🔥 The Daily Like service is paused for a moment. Please try again later.', 'info'); return; }
     const price = dlMyPrice();
     const pw = await chooseWallet(price, 'dailyLike'); if (!pw) return;
-    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>BDT ${price}</b><br>Pay from: <b>${walletName(pw)}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
+    const shown = effPrice(price, pw, 'dailyLike');
+    const c = await Swal.fire({ title: 'Confirm', html: `UID: <b>${esc(uid)}</b> (${esc(dlRegion)})<br>Likes: <b>${dlCfg.likes}+</b><br>Price: <b>BDT ${shown}</b><br>Pay from: <b>${walletName(pw)}</b>`, icon: 'question', showCancelButton: true, confirmButtonText: 'Send likes', cancelButtonText: 'Cancel' });
     if (!c.isConfirmed) return;
 
     const key = uid + '|' + dlRegion;
@@ -2103,7 +2107,7 @@ function copySupportPin(btn) {
 let tcpCfg = { enabled: true, packages: [], offMsg: '' }, tcpPkg = null, tcpBusy = false, tcpReqId = null;
 const tcpPrice = p => (currentUser && userData && (userData.role === 'reseller' || userData.role === 'admin') && p.resellerPrice != null) ? p.resellerPrice : p.price;
 async function tcpLoadCfg() {
-    try { const r = await fetch(BACKEND_URL + '/tcpInfo'); const j = await r.json(); if (r.ok && j.packages) tcpCfg = { enabled: j.enabled !== false, packages: j.packages, offMsg: j.offMsg || '' }; } catch (e) {}
+    try { const r = await fetch(BACKEND_URL + '/tcpInfo'); const j = await r.json(); if (r.ok && j.packages) tcpCfg = { enabled: j.enabled !== false, packages: j.packages, offMsg: j.offMsg || '' }; bonusSync(j); } catch (e) {}
     const hp = document.getElementById('tcp-home-price'); if (hp && tcpCfg.packages.length) hp.innerText = Math.min.apply(null, tcpCfg.packages.map(tcpPrice));
     tcpRenderPkgs();
 }
@@ -2124,9 +2128,10 @@ async function tcpBuy() {
     if (!tcpCfg.enabled) { Swal.fire('Service paused', tcpCfg.offMsg || 'TCP Board is paused for a moment. Please try again later.', 'info'); return; }
     const pkg = tcpCfg.packages.find(p => p.id === tcpPkg); if (!pkg) { Swal.fire('Heads up', 'Please choose a package', 'warning'); return; }
     const price = tcpPrice(pkg);
-    const pw = await chooseWallet(price, 'autoLike'); if (!pw) return;
-    const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + price, cancelButtonText: 'Cancel',
-        html: `Package: <b>${esc(pkg.name)}</b><br>Price: <b>BDT ${price}</b><br>Pay from: <b>${walletName(pw)}</b><div style="font-size:11px;color:#5f7a6e;margin-top:8px">The timer starts at your first login on the TCP board.</div>` });
+    const pw = await chooseWallet(price, 'tcp'); if (!pw) return;
+    const shown = effPrice(price, pw, 'tcp');
+    const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + shown, cancelButtonText: 'Cancel',
+        html: `Package: <b>${esc(pkg.name)}</b><br>Price: <b>BDT ${shown}</b><br>Pay from: <b>${walletName(pw)}</b><div style="font-size:11px;color:#5f7a6e;margin-top:8px">The timer starts at your first login on the TCP board.</div>` });
     if (!c.isConfirmed) return;
     if (!tcpReqId) tcpReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32);
     tcpBusy = true; const btn = document.getElementById('tcp-btn'); btn.disabled = true; btn.style.opacity = '.6';
@@ -2648,7 +2653,7 @@ function alHomeUpdate() {
     if (p && alCfg.packages.length) p.innerText = Math.min.apply(null, alCfg.packages.map(alPrice));
 }
 async function alLoadCfg() {
-    try { const r = await fetch(BACKEND_URL + '/autoLikeInfo'); const j = await r.json(); if (r.ok && j && j.packages) alCfg = { enabled: j.enabled !== false, packages: j.packages, sendTime: j.sendTime || '04:05', changeFee: j.changeFee, offMsg: j.offMsg || '' }; } catch (e) {}
+    try { const r = await fetch(BACKEND_URL + '/autoLikeInfo'); const j = await r.json(); if (r.ok && j && j.packages) alCfg = { enabled: j.enabled !== false, packages: j.packages, sendTime: j.sendTime || '04:05', changeFee: j.changeFee, offMsg: j.offMsg || '' }; bonusSync(j); } catch (e) {}
     alHomeUpdate(); alRenderPkgs();
 }
 function alRenderServers() {
@@ -2716,9 +2721,10 @@ async function alBuy() {
     if (!alRegion) { const b = document.getElementById('al-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your game region (e.g. BD, IND, PK)', 'warning'); return; }
     const price = alPrice(pkg);
     const pw = await chooseWallet(price, 'autoLike'); if (!pw) return;
+    const shown = effPrice(price, pw, 'autoLike');
     const act = alMine && alMine.status === 'active';
-    const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + price, cancelButtonText: 'Cancel',
-        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>BDT ${price}</b><br>Pay from: <b>${walletName(pw)}</b>
+    const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Pay BDT ' + shown, cancelButtonText: 'Cancel',
+        html: `Package: <b>${esc(pkg.name)}</b> (${pkg.days} days)<br>UID: <b>${esc(uid)}</b> (${esc(alRegion)})<br>Daily like at: <b>${alFmtTime(alCfg.sendTime)}</b> (BD time)<br>Price: <b>BDT ${shown}</b><br>Pay from: <b>${walletName(pw)}</b>
         <div style="font-size:11px;color:#5f7a6e;margin-top:8px">${act ? 'These days will be added to your running subscription. ' : 'This UID will be locked to your subscription (you can change it later for a small fee). '}No refund if a daily like can’t be delivered.</div>` });
     if (!c.isConfirmed) return;
     const key = pkg.id + '|' + uid + '|' + alRegion;
@@ -2760,7 +2766,7 @@ async function alMy() {
 }
 async function alChangeUid(m) {
     const fee = alCfg.changeFee;
-    const bonusPay = bonusOn('autoLike') && Number(userBonus || 0) >= fee && fee > 0;
+    const bonusPay = bonusOn('autoLike') && Number(userBonus || 0) >= effPrice(fee, 'bonus', 'autoLike') && fee > 0;
     const payHtml = bonusPay ? `<select id="al-new-pay" class="swal2-select" style="margin:6px 0;width:80%"><option value="balance">Pay from: Main balance (BDT ${Number(userBalance || 0)})</option><option value="bonus">Pay from: Bonus (BDT ${Number(userBonus || 0)})</option></select>` : '';
     const opts = DL_REGIONS.map(r => `<option value="${r}" ${r === m.region ? 'selected' : ''}>${r}</option>`).join('');
     const x = await Swal.fire({

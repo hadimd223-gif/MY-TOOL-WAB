@@ -298,14 +298,31 @@
                     <h3 class="text-xl font-bold text-amber-400 mb-1"><i class="fas fa-gift mr-2"></i>Bonus Wallet Control (কোথায় বোনাস খরচ করা যাবে)</h3>
                     <p class="text-xs text-gray-400 mb-4">প্রোমো কোড ও ডিপোজিট বোনাসের টাকা ইউজারের <b class="text-white">Bonus</b> ব্যালেন্সে জমা হয়, মেইন ব্যালেন্সে নয়। নিচে টিক দেওয়া প্রোডাক্টে ইউজার চাইলে বোনাস দিয়ে কিনতে পারবে (তখন শুধু বোনাস থেকে কাটবে)। টিক তুলে দিলে ওই প্রোডাক্ট শুধু মেইন ব্যালেন্স দিয়ে হবে।</p>
                     <div class="space-y-2 mb-4 text-sm text-gray-200">
-                        <label class="flex items-center gap-2"><input type="checkbox" id="bn-topup"> গেম টপ-আপ (সব সার্ভিস) — আলাদা সার্ভিস বন্ধ করতে Services পেজে "Bonus" বাটন</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="bn-daily"> Daily Like</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="bn-auto"> Auto Like (প্যাকেজ ও UID চেঞ্জ ফি)</label>
+                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-topup"> গেম টপ-আপ (সব সার্ভিস) <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-topup" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
+                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-daily"> Daily Like <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-daily" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
+                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-auto"> Auto Like (প্যাকেজ ও UID চেঞ্জ ফি) <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-auto" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
+                        <label class="flex items-center gap-2 flex-wrap"><input type="checkbox" id="bn-tcp"> TCP Board (পাসওয়ার্ড/প্যাকেজ) <span class="ml-auto flex items-center gap-1 text-xs text-gray-400">বোনাসে দাম <input type="number" min="1" max="1000" id="bnp-tcp" class="flat-input" style="width:80px;padding:6px" placeholder="100"> %</span></label>
+                        <p class="text-xs text-gray-400 pt-1">"বোনাসে দাম %": বোনাস দিয়ে কিনলে আসল দামের কত শতাংশ কাটবে। 100 = একই দাম, 50 = অর্ধেক দাম, 150 = দেড়গুণ। মেইন ব্যালেন্সের দাম এতে বদলায় না।</p>
                         <label class="flex items-center gap-2 opacity-70"><input type="checkbox" disabled> ID Sell — <b class="text-rose-400">সবসময় শুধু মেইন ব্যালেন্স</b> (বোনাস দিয়ে আইডি কেনা যায় না)</label>
                     </div>
                     <button onclick="saveBonusCfg()" class="flat-btn"><i class="fas fa-save mr-1"></i> Save</button>
                 </div>
 
+
+                <div class="card mb-6 md:mb-8" style="border:1px solid #22c55e">
+                    <h3 class="text-xl font-bold text-green-400 mb-1"><i class="fas fa-fire mr-2"></i>Daily Like Control (দাম ও সেটিংস)</h3>
+                    <p class="text-xs text-gray-400 mb-4">এখান থেকে Daily Like-এর দাম কমান-বাড়ান, চালু/বন্ধ করুন। বোনাস দিয়ে কেনার দাম উপরের Bonus Wallet Control থেকে ঠিক হয়।</p>
+                    <div class="space-y-3 text-sm text-gray-200">
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dl-enabled" checked> Daily Like সার্ভিস চালু</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div><label class="block text-sm text-gray-400 mb-2">দাম (৳)</label><input type="number" min="0" id="dl-price" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">রিসেলার দাম (৳, খালি = সাধারণ নিয়ম)</label><input type="number" min="0" id="dl-rprice" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">লাইক সংখ্যা (শুধু দেখানোর জন্য)</label><input type="number" min="0" id="dl-amount" class="flat-input"></div>
+                        </div>
+                        <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="dl-off" class="flat-input"></div>
+                    </div>
+                    <button onclick="saveDailyLikeCfg()" class="flat-btn mt-4"><i class="fas fa-save mr-1"></i> Save</button>
+                </div>
                 <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
@@ -1823,15 +1840,33 @@
             const d = (await db.collection('settings').doc('bonus').get()).data() || {};
             const on = k => d[k] !== false;
             const set = (id, v) => { const e = document.getElementById(id); if (e) e.checked = v; };
-            set('bn-topup', on('topup')); set('bn-daily', on('dailyLike')); set('bn-auto', on('autoLike'));
+            set('bn-topup', on('topup')); set('bn-daily', on('dailyLike')); set('bn-auto', on('autoLike')); set('bn-tcp', 'tcp' in d ? d.tcp !== false : on('autoLike'));
+            const pv = (id, k) => { const e = document.getElementById(id); if (e) e.value = d[k + 'Pct'] || 100; };
+            pv('bnp-topup', 'topup'); pv('bnp-daily', 'dailyLike'); pv('bnp-auto', 'autoLike'); pv('bnp-tcp', 'tcp');
+            const g = (await db.collection('settings').doc('general').get()).data() || {}, sv = (id, v) => { const e = document.getElementById(id); if (e) e.value = v == null ? '' : v; };
+            const dlOn = document.getElementById('dl-enabled'); if (dlOn) dlOn.checked = !(g.dailyLikeEnabled === false || ['off', 'false', '0'].includes(String(g.dailyLikeEnabled).toLowerCase()));
+            sv('dl-price', g.dailyLikePrice != null ? g.dailyLikePrice : 6); sv('dl-rprice', g.dailyLikeResellerPrice); sv('dl-amount', g.dailyLikeAmount != null ? g.dailyLikeAmount : 220); sv('dl-off', g.dailyLikeOffMsg);
         } catch (e) {}
     }
     async function saveBonusCfg() {
         const g = id => !!(document.getElementById(id) || {}).checked;
         try {
             showLoading();
-            await db.collection('settings').doc('bonus').set({ topup: g('bn-topup'), dailyLike: g('bn-daily'), autoLike: g('bn-auto') }, { merge: true });
+            const pc = id => { const v = parseInt((document.getElementById(id) || {}).value, 10); return v >= 1 && v <= 1000 ? v : 100; };
+            await db.collection('settings').doc('bonus').set({ topup: g('bn-topup'), dailyLike: g('bn-daily'), autoLike: g('bn-auto'), tcp: g('bn-tcp'),
+                topupPct: pc('bnp-topup'), dailyLikePct: pc('bnp-daily'), autoLikePct: pc('bnp-auto'), tcpPct: pc('bnp-tcp') }, { merge: true });
             hideLoading(); Swal.fire('Saved', 'Bonus settings updated', 'success');
+        } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+    }
+    async function saveDailyLikeCfg() {
+        const v = id => (document.getElementById(id) || {}).value;
+        const num = (id, def) => { const x = parseInt(v(id), 10); return isNaN(x) || x < 0 ? def : x; };
+        try {
+            showLoading();
+            const rp = String(v('dl-rprice') || '').trim();
+            await db.collection('settings').doc('general').set({ dailyLikeEnabled: !!document.getElementById('dl-enabled').checked, dailyLikePrice: num('dl-price', 6),
+                dailyLikeResellerPrice: rp === '' ? '' : num('dl-rprice', 0), dailyLikeAmount: num('dl-amount', 220), dailyLikeOffMsg: String(v('dl-off') || '').trim().slice(0, 200) }, { merge: true });
+            hideLoading(); Swal.fire('Saved', 'Daily Like settings updated', 'success');
         } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
     (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'settings') loadBonusCfg(); return r; }; })();
