@@ -153,9 +153,9 @@
     <div id="login-modal" class="fixed inset-0 bg-dark-bg z-50 flex items-center justify-center p-4">
         <div class="card w-full max-w-md border border-dark-border">
             <h2 class="text-3xl font-bold text-orange-500 mb-8 text-center tracking-wider">MHX ADMIN</h2>
-            <input type="email" id="admin-email" placeholder="Admin Email" class="flat-input mb-4">
-            <input type="password" id="admin-password" placeholder="Password" class="flat-input mb-8">
-            <button onclick="loginAdmin()" class="flat-btn w-full text-lg">LOGIN</button>
+            <p class="text-sm text-gray-400 text-center mb-6">শুধু অ্যাডমিন অ্যাকাউন্ট দিয়ে লগইন করা যাবে</p>
+            <button id="admin-google-btn" onclick="loginAdminGoogle()" class="flat-btn w-full text-lg flex items-center justify-center gap-3"><i class="fab fa-google"></i> Sign in with Google</button>
+            <p class="text-xs text-gray-500 text-center mt-4">যে Google অ্যাকাউন্টে ওয়েবসাইটে লগইন করে Firestore-এ <b class="text-gray-300">role = admin</b> দেওয়া আছে, সেটি দিয়ে লগইন করুন।</p>
         </div>
     </div>
 
@@ -213,6 +213,7 @@
                 <i class="fas fa-image w-8 text-center"></i> Banners
             </a>
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
+            <a href="#" onclick="switchView('dailylike');return false" id="nav-dailylike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-fire w-8 text-center"></i> Daily Like</a>
             <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
             <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP Board</a>
             <a href="#" onclick="switchView('ads');return false" id="nav-ads" class="nav-link flex items-center px-4 py-3"><i class="fas fa-gift w-8 text-center"></i> Ads / Earn</a>
@@ -309,20 +310,6 @@
                 </div>
 
 
-                <div class="card mb-6 md:mb-8" style="border:1px solid #22c55e">
-                    <h3 class="text-xl font-bold text-green-400 mb-1"><i class="fas fa-fire mr-2"></i>Daily Like Control (দাম ও সেটিংস)</h3>
-                    <p class="text-xs text-gray-400 mb-4">এখান থেকে Daily Like-এর দাম কমান-বাড়ান, চালু/বন্ধ করুন। বোনাস দিয়ে কেনার দাম উপরের Bonus Wallet Control থেকে ঠিক হয়।</p>
-                    <div class="space-y-3 text-sm text-gray-200">
-                        <label class="flex items-center gap-2"><input type="checkbox" id="dl-enabled" checked> Daily Like সার্ভিস চালু</label>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <div><label class="block text-sm text-gray-400 mb-2">দাম (৳)</label><input type="number" min="0" id="dl-price" class="flat-input"></div>
-                            <div><label class="block text-sm text-gray-400 mb-2">রিসেলার দাম (৳, খালি = সাধারণ নিয়ম)</label><input type="number" min="0" id="dl-rprice" class="flat-input"></div>
-                            <div><label class="block text-sm text-gray-400 mb-2">লাইক সংখ্যা (শুধু দেখানোর জন্য)</label><input type="number" min="0" id="dl-amount" class="flat-input"></div>
-                        </div>
-                        <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="dl-off" class="flat-input"></div>
-                    </div>
-                    <button onclick="saveDailyLikeCfg()" class="flat-btn mt-4"><i class="fas fa-save mr-1"></i> Save</button>
-                </div>
                 <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
@@ -966,7 +953,41 @@
                 </div>
             </div>
 
-            <div id="view-autolike" class="view-section hidden">
+            <div id="view-dailylike" class="view-section hidden">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <div class="card text-center"><div id="dlv-s-today" class="text-2xl font-extrabold text-white">-</div><div class="text-xs text-gray-400 mt-1">আজকের অর্ডার</div></div>
+                <div class="card text-center"><div id="dlv-s-today-rev" class="text-2xl font-extrabold text-green-400">-</div><div class="text-xs text-gray-400 mt-1">আজকের আয় (৳)</div></div>
+                <div class="card text-center"><div id="dlv-s-total" class="text-2xl font-extrabold text-white">-</div><div class="text-xs text-gray-400 mt-1">সর্বশেষ অর্ডার (লোড হয়েছে)</div></div>
+                <div class="card text-center"><div id="dlv-s-bonus" class="text-2xl font-extrabold text-amber-400">-</div><div class="text-xs text-gray-400 mt-1">বোনাস দিয়ে কেনা</div></div>
+            </div>
+            <div class="card mb-6" style="border:1px solid #22c55e">
+                <h3 class="text-xl font-bold text-green-400 mb-1"><i class="fas fa-fire mr-2"></i>Daily Like Control</h3>
+                <p class="text-xs text-gray-400 mb-4">দাম, চালু/বন্ধ ও বোনাস সেটিংস এখান থেকেই। Save চাপলেই ওয়েবসাইটে সাথে সাথে কার্যকর হবে।</p>
+                <div class="space-y-3 text-sm text-gray-200">
+                    <label class="flex items-center gap-2"><input type="checkbox" id="dl-enabled" checked> Daily Like সার্ভিস চালু</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div><label class="block text-sm text-gray-400 mb-2">দাম (৳)</label><input type="number" min="0" id="dl-price" class="flat-input"></div>
+                        <div><label class="block text-sm text-gray-400 mb-2">রিসেলার দাম (৳, খালি = সাধারণ নিয়ম)</label><input type="number" min="0" id="dl-rprice" class="flat-input"></div>
+                        <div><label class="block text-sm text-gray-400 mb-2">লাইক সংখ্যা (শুধু দেখানোর জন্য)</label><input type="number" min="0" id="dl-amount" class="flat-input"></div>
+                    </div>
+                    <div class="rounded-xl border border-dark-border p-4 space-y-2">
+                        <div class="font-bold text-amber-400"><i class="fas fa-gift mr-1"></i>বোনাস দিয়ে কেনা</div>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dl-bonus-on"> বোনাস ব্যালেন্স দিয়ে Daily Like কেনা যাবে</label>
+                        <div class="flex items-center gap-2 flex-wrap"><span class="text-gray-400">বোনাসে দাম</span><input type="number" min="1" max="1000" id="dl-bonus-pct" class="flat-input" style="width:90px;padding:6px" placeholder="100"><span class="text-gray-400">% (100 = একই দাম, 50 = অর্ধেক, 150 = দেড়গুণ)</span></div>
+                        <div class="text-xs text-gray-400" id="dl-bonus-preview"></div>
+                    </div>
+                    <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="dl-off" class="flat-input"></div>
+                </div>
+                <button onclick="saveDailyLikeCfg()" class="flat-btn mt-4"><i class="fas fa-save mr-1"></i> Save</button>
+            </div>
+            <div class="card">
+                <div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold text-orange-500"><i class="fas fa-list mr-2"></i>সাম্প্রতিক Daily Like অর্ডার</h3><button onclick="loadDailyLike()" class="flat-btn text-xs py-2 px-3"><i class="fas fa-rotate mr-1"></i>Refresh</button></div>
+                <input type="text" id="dlv-search" oninput="dlvRender()" class="flat-input mb-3" placeholder="UID / ইমেইল দিয়ে খুঁজুন">
+                <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-gray-400"><tr><th class="py-2 pr-3">সময়</th><th class="pr-3">ইউজার</th><th class="pr-3">UID</th><th class="pr-3">সার্ভার</th><th class="pr-3">লাইক</th><th class="pr-3">দাম</th><th class="pr-3">পেমেন্ট</th></tr></thead><tbody id="dlv-rows" class="text-white"></tbody></table></div>
+            </div>
+        </div>
+
+        <div id="view-autolike" class="view-section hidden">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div class="card text-center"><div class="text-xs text-gray-400">Active subscribers</div><div class="text-3xl font-extrabold text-orange-500" id="al-st-active">0</div></div>
                     <div class="card text-center"><div class="text-xs text-gray-400">Total subscriptions</div><div class="text-3xl font-extrabold text-white" id="al-st-total">0</div></div>
@@ -1048,7 +1069,7 @@
             if (user) {
                 try {
                     const me = (await db.collection('users').doc(user.uid).get()).data() || {};
-                    if (me.role !== 'admin') { await auth.signOut(); Swal.fire('Access denied', 'This account is not an admin. In Firebase Console > Firestore > users > your document, set role = admin.', 'error'); return; }
+                    if (me.role !== 'admin') { const who = (user.email || '') + ' (UID: ' + user.uid + ')'; await auth.signOut(); Swal.fire('Access denied', 'এই অ্যাকাউন্টটি অ্যাডমিন নয়: ' + who + '. Firebase Console > Firestore > users > এই UID-র ডকুমেন্টে role = admin বসান। (ডকুমেন্ট না থাকলে আগে একবার মূল ওয়েবসাইটে এই Google অ্যাকাউন্ট দিয়ে লগইন করুন।)', 'error'); return; }
                 } catch (e) { await auth.signOut(); Swal.fire('Error', e.message, 'error'); return; }
                 document.getElementById('login-modal').style.display = 'none';
                 document.getElementById('sidebar').classList.remove('hidden');
@@ -1061,18 +1082,28 @@
             }
         });
 
-        function loginAdmin() {
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-password').value;
-            if (!email || !pass) {
-                Swal.fire('Error', 'Please enter both email and password', 'error');
-                return;
-            }
-            showLoading();
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => hideLoading())
-                .catch(err => { hideLoading(); Swal.fire('Error', err.message, 'error'); });
+        let adminGBusy = false;
+        function adminInApp() { return /FBAN|FBAV|Instagram|Line\/|; wv\)|WebView|Messenger|TikTok/i.test(navigator.userAgent); }
+        async function loginAdminGoogle() {
+            if (adminGBusy) return;
+            if (adminInApp()) { Swal.fire('Browser-এ খুলুন', 'Google অ্যাপের ভেতরের ব্রাউজারে সাইন-ইন ব্লক করে। লিংকটি Chrome বা Safari-তে খুলুন।', 'info'); return; }
+            adminGBusy = true;
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email'); provider.addScope('profile');
+            provider.setCustomParameters({ prompt: 'select_account' });
+            try {
+                await auth.signInWithPopup(provider);   // straight from the click, so the browser doesn't block it
+            } catch (e) {
+                const c = (e && e.code) || '';
+                if (c === 'auth/cancelled-popup-request' || c === 'auth/popup-closed-by-user') { /* user closed it */ }
+                else if (c === 'auth/popup-blocked' || c === 'auth/operation-not-supported-in-this-environment' || c === 'auth/web-storage-unsupported') {
+                    try { await auth.signInWithRedirect(provider); return; } catch (e2) { Swal.fire('Google login failed', e2.message, 'error'); }
+                } else if (c === 'auth/unauthorized-domain') {
+                    Swal.fire('Domain not allowed', 'Firebase Console → Authentication → Settings → Authorized domains-এ এই অ্যাডমিন সাইটের ডোমেইন (' + location.hostname + ') যোগ করুন।', 'error');
+                } else { Swal.fire('Google login failed', (e && e.message) || String(e), 'error'); }
+            } finally { adminGBusy = false; }
         }
+        auth.getRedirectResult().catch(e => { if (e && e.code && e.code !== 'auth/no-auth-event') Swal.fire('Google login failed', e.message, 'error'); });
 
         function logoutAdmin() {
             auth.signOut();
@@ -1111,6 +1142,7 @@
                 promos: "Promo Codes",
                 apikeys: "API Key Management",
                 autolike: "Auto Like Management",
+                dailylike: "Daily Like",
                 tcp: "TCP Board",
                 ads: "Ads / Earn System",
                 theme: "Theme & Colors",
@@ -1154,6 +1186,7 @@
             if(viewId === 'notices') loadNotices();
             if(viewId === 'promos') loadPromos();
             if(viewId === 'autolike') loadAutoLike();
+            if(viewId === 'dailylike') loadDailyLike();
             if(viewId === 'tcp') tcpLoadAll();
             if(viewId === 'ads') adsLoadAll();
         }
@@ -1781,7 +1814,8 @@
     setTimeout(()=>{const c=document.getElementById('set-bkash');const cd=c&&c.closest('.card');if(cd&&!cd.querySelector('#set-api-key'))cd.style.display='none'},1500);
     // sub-admin permissions: owner (no perms field) sees everything
     auth.onAuthStateChanged(async u=>{if(!u)return;try{const d=(await db.collection('users').doc(u.uid).get()).data()||{};if(d.role==='admin'&&d.perms){
-      const map={users:'nav-users',deposits:'nav-deposits',orders:'nav-orders',products:'nav-services',settings:'nav-settings'};
+      const map={users:'nav-users',deposits:'nav-deposits',orders:'nav-orders',products:'nav-services',settings:'nav-settings',settings2:'nav-dailylike'};
+      d.perms.settings2=d.perms.settings;
       Object.entries(map).forEach(([k,id])=>{if(!d.perms[k]){const e=document.getElementById(id);if(e)e.style.display='none'}})}}catch(e){}});
 
     // ================= PRO ADMIN v3 =================
@@ -1843,9 +1877,7 @@
             set('bn-topup', on('topup')); set('bn-daily', on('dailyLike')); set('bn-auto', on('autoLike')); set('bn-tcp', 'tcp' in d ? d.tcp !== false : on('autoLike'));
             const pv = (id, k) => { const e = document.getElementById(id); if (e) e.value = d[k + 'Pct'] || 100; };
             pv('bnp-topup', 'topup'); pv('bnp-daily', 'dailyLike'); pv('bnp-auto', 'autoLike'); pv('bnp-tcp', 'tcp');
-            const g = (await db.collection('settings').doc('general').get()).data() || {}, sv = (id, v) => { const e = document.getElementById(id); if (e) e.value = v == null ? '' : v; };
-            const dlOn = document.getElementById('dl-enabled'); if (dlOn) dlOn.checked = !(g.dailyLikeEnabled === false || ['off', 'false', '0'].includes(String(g.dailyLikeEnabled).toLowerCase()));
-            sv('dl-price', g.dailyLikePrice != null ? g.dailyLikePrice : 6); sv('dl-rprice', g.dailyLikeResellerPrice); sv('dl-amount', g.dailyLikeAmount != null ? g.dailyLikeAmount : 220); sv('dl-off', g.dailyLikeOffMsg);
+
         } catch (e) {}
     }
     async function saveBonusCfg() {
@@ -1858,14 +1890,52 @@
             hideLoading(); Swal.fire('Saved', 'Bonus settings updated', 'success');
         } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
+    let dlvOrders = [];
+    const dlvEsc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    function dlvPreview() {
+        const pr = parseInt(document.getElementById('dl-price').value, 10) || 0, pc = parseInt(document.getElementById('dl-bonus-pct').value, 10);
+        const pct = pc >= 1 && pc <= 1000 ? pc : 100;
+        document.getElementById('dl-bonus-preview').textContent = 'এখন: মেইন ব্যালেন্সে ৳' + pr + ' • বোনাসে ৳' + Math.ceil(pr * pct / 100);
+    }
+    ['dl-price', 'dl-bonus-pct'].forEach(id => document.addEventListener('input', e => { if (e.target && e.target.id === id) dlvPreview(); }));
+    async function loadDailyLike() {
+        const sv = (id, v) => { const e = document.getElementById(id); if (e) e.value = v == null ? '' : v; };
+        try {
+            const g = (await db.collection('settings').doc('general').get()).data() || {};
+            const b = (await db.collection('settings').doc('bonus').get()).data() || {};
+            document.getElementById('dl-enabled').checked = !(g.dailyLikeEnabled === false || ['off', 'false', '0'].includes(String(g.dailyLikeEnabled).toLowerCase()));
+            sv('dl-price', g.dailyLikePrice != null ? g.dailyLikePrice : 6); sv('dl-rprice', g.dailyLikeResellerPrice);
+            sv('dl-amount', g.dailyLikeAmount != null ? g.dailyLikeAmount : 220); sv('dl-off', g.dailyLikeOffMsg);
+            document.getElementById('dl-bonus-on').checked = b.dailyLike !== false; sv('dl-bonus-pct', b.dailyLikePct || 100);
+            dlvPreview();
+        } catch (e) { Swal.fire('Error', e.message, 'error'); }
+        try {
+            const snap = await db.collection('orders').orderBy('date', 'desc').limit(400).get();
+            dlvOrders = snap.docs.map(d => d.data()).filter(o => o.type === 'dailylike');
+        } catch (e) { dlvOrders = []; }
+        const day = d => d.toLocaleDateString('en-CA'), today = day(new Date());
+        const tod = dlvOrders.filter(o => o.date && o.date.toDate && day(o.date.toDate()) === today);
+        document.getElementById('dlv-s-today').innerText = tod.length;
+        document.getElementById('dlv-s-today-rev').innerText = tod.reduce((a, o) => a + (Number(o.price) || 0), 0);
+        document.getElementById('dlv-s-total').innerText = dlvOrders.length;
+        document.getElementById('dlv-s-bonus').innerText = dlvOrders.filter(o => o.payWith === 'bonus').length;
+        dlvRender();
+    }
+    function dlvRender() {
+        const q = (document.getElementById('dlv-search').value || '').trim().toLowerCase();
+        const rows = dlvOrders.filter(o => !q || String(o.playerId || '').toLowerCase().includes(q) || String(o.userEmail || '').toLowerCase().includes(q)).slice(0, 150);
+        document.getElementById('dlv-rows').innerHTML = rows.length ? rows.map(o => `<tr class="border-t border-dark-border"><td class="py-2 pr-3 whitespace-nowrap">${o.date && o.date.toDate ? o.date.toDate().toLocaleString() : '—'}</td><td class="pr-3">${dlvEsc(o.userEmail || o.userName)}</td><td class="pr-3 font-mono">${dlvEsc(o.playerId)}</td><td class="pr-3">${dlvEsc(o.server)}</td><td class="pr-3">${dlvEsc(o.productName)}</td><td class="pr-3">৳${dlvEsc(o.price)}</td><td class="pr-3">${o.payWith === 'bonus' ? '<span style="color:#fbbf24">Bonus</span>' : 'Main'}</td></tr>`).join('') : '<tr><td colspan="7" class="text-center text-gray-500 py-6">কোনো অর্ডার নেই</td></tr>';
+    }
     async function saveDailyLikeCfg() {
         const v = id => (document.getElementById(id) || {}).value;
         const num = (id, def) => { const x = parseInt(v(id), 10); return isNaN(x) || x < 0 ? def : x; };
+        const pc = parseInt(v('dl-bonus-pct'), 10);
         try {
             showLoading();
             const rp = String(v('dl-rprice') || '').trim();
             await db.collection('settings').doc('general').set({ dailyLikeEnabled: !!document.getElementById('dl-enabled').checked, dailyLikePrice: num('dl-price', 6),
                 dailyLikeResellerPrice: rp === '' ? '' : num('dl-rprice', 0), dailyLikeAmount: num('dl-amount', 220), dailyLikeOffMsg: String(v('dl-off') || '').trim().slice(0, 200) }, { merge: true });
+            await db.collection('settings').doc('bonus').set({ dailyLike: !!document.getElementById('dl-bonus-on').checked, dailyLikePct: pc >= 1 && pc <= 1000 ? pc : 100 }, { merge: true });
             hideLoading(); Swal.fire('Saved', 'Daily Like settings updated', 'success');
         } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
