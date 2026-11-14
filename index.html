@@ -961,7 +961,6 @@ function authMsg(e) {
             </div>
             <div id="ads-body" class="mt-4"></div>
             <div id="ads-banners" class="mt-3"></div>
-            <div id="ads-adsense" class="mt-3"></div>
         </section>
 
         <!-- Get API (resellers) -->
@@ -2321,18 +2320,19 @@ async function adsPending() {
     } catch (e) { Swal.close(); showSec('ads'); Swal.fire('Oops', e.message, 'error'); }
     finally { adsBusy = false; }
 }
-function adsAdsense() {   // Google AdSense: loaded ONLY while the Ads page is open
-    if (window.__gadsOn) return; const box = document.getElementById('ads-adsense'); if (!box) return;
+// Ad network codes (loaded ONLY while the Ads page is open)
+const MHX_AD_SCRIPT = 'https://afders.org/1/04fc849de368c0ae9940fbb6520499ec';
+const MHX_AD_BANNERS = [
+    "<script>atOptions = { 'key' : 'c215dbc932b62d555d871d74cefd7671', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };<\/script><script src=\"https://bicea.org/22/c215dbc932b62d555d871d74cefd7671\"><\/script>",
+    "<script>atOptions = { 'key' : '5e6a60e6fbcbaead3ad207791840874a', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };<\/script><script src=\"https://bicea.org/22/5e6a60e6fbcbaead3ad207791840874a\"><\/script>"
+];
+function adsAdsense() {
+    if (window.__gadsOn) return;
     window.__gadsOn = true;
-    box.innerHTML = '<ins class="adsbygoogle" style="display:block;text-align:center;margin-bottom:12px" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-9467019896900554" data-ad-slot="7362137816"></ins>' +
-        '<ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-6n+ef+1v-2l-g" data-ad-client="ca-pub-9467019896900554" data-ad-slot="8483647794"></ins>';
-    const sc = document.createElement('script'); sc.async = true; sc.crossOrigin = 'anonymous';
-    sc.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9467019896900554';
-    sc.onload = () => { try { box.querySelectorAll('ins.adsbygoogle').forEach(() => (window.adsbygoogle = window.adsbygoogle || []).push({})); } catch (e) {} };
+    const sc = document.createElement('script'); sc.async = true; sc.src = MHX_AD_SCRIPT; sc.setAttribute('data-cfasync', 'false');
     document.head.appendChild(sc);
 }
 function adsOpen() {
-    adsAdsense();
     adsLoad(false);
     if (adsVis) document.removeEventListener('visibilitychange', adsVis);
     adsVis = () => { if (!document.hidden && !adsBusy) adsLoad(true); };   // coming back from the shortener tab -> refresh the ticks
@@ -2341,7 +2341,7 @@ function adsOpen() {
 function adsClose(next) {
     if (adsVis) { document.removeEventListener('visibilitychange', adsVis); adsVis = null; }
     const bn = document.getElementById('ads-banners'); if (bn) bn.innerHTML = ''; adsBanDone = false;
-    if (window.__gadsOn) {   // AdSense script can't be unloaded -> reload so no ads ever show outside the Ads page
+    if (window.__gadsOn) {   // the ad script can't be unloaded -> reload so no ads ever show outside the Ads page
         window.__gadsOn = false; try { sessionStorage.setItem('mhx_go', next || 'home'); } catch (e) {}
         location.reload();
     }
@@ -2355,7 +2355,8 @@ async function adsLoad(quiet) {
         if (!sec || sec.classList.contains('hidden')) return;   // user already left -> never start ads
         adsRender();
         if (adsData.enabled && adsData.codes) {
-            if (!adsBanDone) { adsBanDone = true; adsBanners(adsData.codes.banners); }
+            adsAdsense();   // ad script starts only here: Ads page is open AND ads are switched on
+            if (!adsBanDone) { adsBanDone = true; adsBanners(MHX_AD_BANNERS); }
         }
     } catch (e) {
         if (!quiet || !adsData) box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-wifi" style="font-size:30px;color:#6ee7b7"></i><div style="margin:10px 0 14px">' + esc(e.message) + '</div><button class="mhx-btn mhx-btn-primary" onclick="adsLoad(false)">Try again</button></div>';
