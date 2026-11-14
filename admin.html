@@ -153,9 +153,7 @@
     <div id="login-modal" class="fixed inset-0 bg-dark-bg z-50 flex items-center justify-center p-4">
         <div class="card w-full max-w-md border border-dark-border">
             <h2 class="text-3xl font-bold text-orange-500 mb-8 text-center tracking-wider">MHX ADMIN</h2>
-            <input type="email" id="admin-email" placeholder="Admin Email" class="flat-input mb-4">
-            <input type="password" id="admin-password" placeholder="Password" class="flat-input mb-8">
-            <button onclick="loginAdmin()" class="flat-btn w-full text-lg">LOGIN</button>
+            <button onclick="loginAdmin()" class="flat-btn w-full text-lg flex items-center justify-center gap-3"><svg width="22" height="22" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Google দিয়ে লগইন</button>
         </div>
     </div>
 
@@ -1064,16 +1062,17 @@
         });
 
         function loginAdmin() {
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-password').value;
-            if (!email || !pass) {
-                Swal.fire('Error', 'Please enter both email and password', 'error');
-                return;
-            }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
             showLoading();
-            auth.signInWithEmailAndPassword(email, pass)
+            auth.signInWithPopup(provider)
                 .then(() => hideLoading())
-                .catch(err => { hideLoading(); Swal.fire('Error', err.message, 'error'); });
+                .catch(err => {
+                    if (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment') { auth.signInWithRedirect(provider); return; }
+                    hideLoading();
+                    if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') return;
+                    Swal.fire('Error', err.message, 'error');
+                });
         }
 
         function logoutAdmin() {
