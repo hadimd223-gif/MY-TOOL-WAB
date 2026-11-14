@@ -2362,10 +2362,6 @@ function adsOpen() {
 function adsClose(next) {
     if (adsVis) { document.removeEventListener('visibilitychange', adsVis); adsVis = null; }
     const bn = document.getElementById('ads-banners'); if (bn) bn.innerHTML = ''; adsBanDone = false;
-    if (window.__adsInjected) {   // page-level ad scripts can't be unloaded -> reload so nothing keeps running on the normal site
-        window.__adsInjected = false; try { sessionStorage.setItem('mhx_go', next || 'home'); } catch (e) {}
-        location.reload();
-    }
 }
 async function adsLoad(quiet) {
     const box = document.getElementById('ads-body');
@@ -2412,11 +2408,6 @@ async function adsStart(i) {
     } catch (e) { if (w) w.close(); Swal.fire('Oops', e.message, 'error'); }
     finally { adsBusy = false; }
 }
-function adsInject(html) {   // page-level ad scripts: only while this page is open
-    if (window.__adsInjected || !String(html || '').trim()) return;
-    window.__adsInjected = true;
-    try { const h = document.createElement('div'); h.id = 'ads-page-scripts'; h.style.display = 'none'; h.appendChild(document.createRange().createContextualFragment(html)); document.body.appendChild(h); } catch (e) {}
-}
 function adsBanners(list) {   // every banner lives in its own sandboxed iframe, so its code can't touch the site (and document.write works)
     const box = document.getElementById('ads-banners'); if (!box) return; box.innerHTML = '';
     (list || []).forEach(code => {
@@ -2424,7 +2415,7 @@ function adsBanners(list) {   // every banner lives in its own sandboxed iframe,
         const mw = /['"]?width['"]?\s*:\s*(\d+)/i.exec(code), mh = /['"]?height['"]?\s*:\s*(\d+)/i.exec(code), w = mw ? +mw[1] : 300, h = mh ? +mh[1] : 250;
         const wrap = document.createElement('div'); wrap.className = 'ads-slot';
         const fr = document.createElement('iframe');
-        fr.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation');
+        fr.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox');
         fr.setAttribute('scrolling', 'no'); fr.setAttribute('title', 'Advertisement');
         fr.style.cssText = 'border:0;display:block;transform-origin:0 0;width:' + w + 'px;height:' + h + 'px';
         fr.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}</style></head><body>' + code + '</body></html>';
