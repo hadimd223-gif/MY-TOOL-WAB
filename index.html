@@ -40,7 +40,7 @@
         .mhx-bolt{width:56px;height:56px;border-radius:50%;border:4px solid #f7fdfa;background:linear-gradient(135deg,#6ee7b7,#10b981 55%,#059669);color:#fff;font-size:22px;margin:-26px 6px 0;box-shadow:0 12px 24px rgba(5,150,105,0.4);flex:none;transition:transform 0.2s}
         .mhx-bolt:active{transform:scale(0.92)}
         
-        #fab-support{position:fixed;right:max(16px,calc(50% - 208px));bottom:92px;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 10px 24px rgba(16,185,129,0.35);z-index:45}
+        #fab-support{position:fixed;right:16px;bottom:92px;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 10px 24px rgba(16,185,129,0.35);z-index:45}
         
         .hidden{display:none!important}
         .animate-fade-in{animation:fadeInUp 0.35s ease-out forwards}
@@ -325,7 +325,7 @@ function authMsg(e) {
         .lb-me{margin:4px 2px 12px;padding:12px 16px;border-radius:20px;background:#ecfdf5;border:1px dashed #6ee7b7;color:#065f46;font-size:12.5px;font-weight:700;text-align:center}
 
         /* Leaderboard: floating button stacked right above the Support button */
-        #nav-leaders{position:fixed;right:max(16px,calc(50% - 208px));bottom:150px;z-index:50;width:50px;height:50px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;cursor:pointer;
+        #nav-leaders{position:fixed;right:16px;bottom:150px;z-index:50;width:50px;height:50px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;cursor:pointer;
             background:linear-gradient(135deg,#6ee7b7,#059669);box-shadow:0 10px 24px rgba(5,150,105,.38);transition:transform .2s ease,box-shadow .2s ease}
         #nav-leaders:active{transform:scale(.92)}
         #nav-leaders.active-tab{box-shadow:0 0 0 5px rgba(52,211,153,.35),0 10px 24px rgba(5,150,105,.45)}
@@ -523,7 +523,7 @@ function authMsg(e) {
 </head>
 <body class="select-none bg-[#f7fdfa]">
 
-<div id="app-content" class="relative max-w-md mx-auto min-h-screen shadow-2xl pb-16">
+<div id="app-content" class="relative w-full min-h-screen pb-16">
     <!-- Header -->
     <header class="sticky top-0 z-40 flex justify-between items-center px-4 py-3.5 bg-white/80 backdrop-blur-xl border-b border-brand-50/60 shadow-sm">
         <div class="flex items-center gap-3 min-w-0">
@@ -854,7 +854,7 @@ function authMsg(e) {
 
         <!-- Add Money / Wallet Section -->
         <section id="addmoney-sec" class="hidden animate-fade-in pb-24 min-h-screen">
-            <div class="max-w-md mx-auto">
+            <div class="w-full">
                 <div class="vip-card p-6 mb-4">
                     <div class="flex items-center gap-3 mb-5">
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center text-xl shadow-md"><i class="fas fa-wallet"></i></div>
@@ -1003,7 +1003,7 @@ function authMsg(e) {
 
     <!-- Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 z-50">
-        <div class="max-w-md mx-auto flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
+        <div class="w-full flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
             <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>Home</span></button>
             <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
             <button id="nav-ads" class="mhx-bolt" onclick="showSec('ads')" aria-label="Watch ads and earn money"><i class="fa-solid fa-coins"></i></button>
