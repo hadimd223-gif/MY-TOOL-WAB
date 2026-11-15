@@ -947,7 +947,7 @@ function authMsg(e) {
             <div class="lb-hero">
                 <span class="lb-chip"><i class="fa-solid fa-trophy"></i> TOP WALLETS</span>
                 <div class="lb-title">Leaderboard</div>
-                <div class="lb-sub">Everyone with money in their wallet, ranked live. Highest balance first.</div>
+                <div class="lb-sub">Ranked live by the money added to each wallet. Spending never lowers your place.</div>
                 <button type="button" class="lb-refresh" id="lb-refresh" onclick="lbLoad(true)" aria-label="Refresh"><i class="fa-solid fa-rotate"></i></button>
             </div>
             <div id="lb-body"></div>
@@ -2264,7 +2264,7 @@ function lbPic(r) {
 function lbPod(r, rank) {
     if (!r) return '<div class="lb-pc" style="opacity:.55"><div class="lb-av"><div class="pic"><i class="fa-solid fa-user" style="color:#c3dfd1"></i></div></div><div class="lb-nm" style="color:#8aa89b">Waiting…</div></div>';
     const crown = rank === 1 ? '<span class="lb-vip"><i class="fa-solid fa-crown"></i> VIP</span>' : '';
-    const tag = rank === 1 ? '<div class="lb-tag">TOP BALANCE</div>' : '';
+    const tag = rank === 1 ? '<div class="lb-tag">TOP WALLET</div>' : '';
     const medal = rank === 1 ? '<i class="fa-solid fa-crown" style="font-size:.8em"></i>' : rank;
     return '<div class="lb-pc r' + rank + (r.mine ? ' mine' : '') + '" style="--rc:' + LB_RING[rank] + ';--rs:' + LB_GLOW[rank] + '">' + crown +
         '<div class="lb-av"><div class="pic">' + lbPic(r) + '</div><span class="lb-medal">' + medal + '</span></div>' +
@@ -2276,10 +2276,10 @@ function lbRender(d) {
     if (!rows.length) { box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-trophy" style="font-size:38px;color:#6ee7b7"></i><div style="margin-top:12px;font-weight:800;color:#33443c">No one is on the board yet</div><div style="margin-top:4px">Add money to your wallet and take the #1 spot!</div></div>'; return; }
     let h = '<div class="lb-podium">' + lbPod(rows[1], 2) + lbPod(rows[0], 1) + lbPod(rows[2], 3) + '</div>';
     if (currentUser) {
-        const mb = Number(userData && userData.balance || 0);
-        if (d.me && d.me.rank) h += '<div class="lb-me">You are ranked #' + d.me.rank + ' with ' + lbMoney(mb) + ' in your wallet</div>';
-        else if (mb > 0) h += '<div class="lb-me">Your balance: ' + lbMoney(mb) + ' · tap “See more” to find your rank</div>';
-        else h += '<div class="lb-me">Your balance: ৳0 · add money to join the leaderboard</div>';
+        const ms = Number(d.me && d.me.score || 0);
+        if (d.me && d.me.rank) h += '<div class="lb-me">You are ranked #' + d.me.rank + ' with ' + lbMoney(ms) + '</div>';
+        else if (ms > 0) h += '<div class="lb-me">Your score: ' + lbMoney(ms) + ' · tap “See more” to find your rank</div>';
+        else h += '<div class="lb-me">Your score: ৳0 · add money to join the leaderboard</div>';
     }
     const top = rows[0].balance || 1;
     for (let i = 3; i < rows.length; i++) {

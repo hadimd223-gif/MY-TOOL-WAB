@@ -1519,7 +1519,7 @@
                         await db.runTransaction(async (t) => {
                             const uDoc = await t.get(userRef);
                             const newBal = (uDoc.data()?.balance || 0) + amount;
-                            t.update(userRef, {balance: newBal});
+                            t.update(userRef, amount > 0 ? {balance: newBal, lbScore: FV.increment(amount)} : {balance: newBal});
                             t.update(depRef, {status: 'approved'});
                         });
                         hideLoading();
@@ -1749,7 +1749,7 @@
         preConfirm:()=>{const perms={};document.querySelectorAll('.m-perm').forEach(c=>perms[c.dataset.k]=c.checked);
           return{amt:parseInt(document.getElementById('m-amt').value)||0,pts:parseInt(document.getElementById('m-pts').value)||0,role:document.getElementById('m-role').value,ban:document.getElementById('m-ban').checked,perms}}});
       if(!r.isConfirmed)return;const v=r.value;
-      try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt)up.balance=FV.increment(v.amt);
+      try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt){up.balance=FV.increment(v.amt);if(v.amt>0)up.lbScore=FV.increment(v.amt);}
         await db.collection('users').doc(uid).update(up);
         await db.collection('adminLogs').add({at:FV.serverTimestamp(),by:(auth.currentUser||{}).email||'',target:uid,change:{balanceDelta:v.amt,role:v.role,banned:v.ban,points:v.pts}});
         hideLoading();Swal.fire({icon:'success',title:'Updated',timer:1200,showConfirmButton:false})}catch(e){hideLoading();Swal.fire('Error',e.message,'error')}}
@@ -1880,7 +1880,7 @@
         if (act === 'add' || act === 'deduct') {
             const r = await Swal.fire({ title: act === 'add' ? 'Add money' : 'Deduct money', input: 'number', inputLabel: 'Amount (৳)', inputAttributes: { min: 1 }, showCancelButton: true });
             const v = parseInt(r.value); if (!r.isConfirmed || !(v > 0)) return;
-            return applyUser(uid, { balance: FV.increment(act === 'add' ? v : -v) }, { balanceDelta: act === 'add' ? v : -v });
+            return applyUser(uid, act === 'add' ? { balance: FV.increment(v), lbScore: FV.increment(v) } : { balance: FV.increment(-v) }, { balanceDelta: act === 'add' ? v : -v });
         }
         if (act === 'points') { const r = await Swal.fire({ title: 'Set points', input: 'number', inputValue: Math.floor(u.points || 0), showCancelButton: true }); if (!r.isConfirmed) return; return applyUser(uid, { points: parseInt(r.value) || 0 }, { points: r.value }); }
         const map = { ban: [{ banned: true }, 'Ban this user?'], unban: [{ banned: false }, 'Unban this user?'], reseller: [{ role: 'reseller' }, 'Make this user a Reseller?'],
