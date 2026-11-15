@@ -1568,6 +1568,7 @@
                             t.update(depRef, {status: 'approved'});
                         });
                         hideLoading();
+                        tgNotify({kind:'deposit',userId:userId,amount:amount});
                         Swal.fire('Approved', 'Balance added successfully', 'success');
                     } catch(e) {
                         hideLoading();
@@ -1797,6 +1798,7 @@
       try{showLoading();const up={role:v.role,banned:v.ban,points:v.pts,perms:v.role==='admin'?v.perms:FV.delete()};if(v.amt)up.balance=FV.increment(v.amt);
         await db.collection('users').doc(uid).update(up);
         await db.collection('adminLogs').add({at:FV.serverTimestamp(),by:(auth.currentUser||{}).email||'',target:uid,change:{balanceDelta:v.amt,role:v.role,banned:v.ban,points:v.pts}});
+        if(v.amt)tgNotify({kind:'balance',userId:uid,amount:v.amt});if(!!v.ban!==!!u.banned)tgNotify({kind:v.ban?'ban':'unban',userId:uid});
         hideLoading();Swal.fire({icon:'success',title:'Updated',timer:1200,showConfirmButton:false})}catch(e){hideLoading();Swal.fire('Error',e.message,'error')}}
     async function findByPin(){const r=await Swal.fire({title:'Find by Support Pin',input:'text',inputPlaceholder:'e.g. A1B2C3',showCancelButton:true});if(!r.isConfirmed)return;
       const t=r.value.trim().toUpperCase(),u=allUsers.find(x=>pinOf(x)===t);u?manageUser(u.id):Swal.fire('Not found','No user with this pin','error')}
@@ -2809,6 +2811,16 @@ async function alSendOne(id) {
         Swal.fire({ title: E(it.title), width: 520, html: '<div style="max-height:380px;overflow:auto;text-align:left;font-size:13px">' + rows + '</div>', confirmButtonText: 'Close' });
     };
 })();
+</script>
+
+<script>
+// ===== Telegram channel notification for admin-panel actions (fire and forget, never blocks the admin) =====
+async function tgNotify(body) {
+    try {
+        const user = auth.currentUser; if (!user) return; const tk = await user.getIdToken();
+        fetch(MHX_API_BACKEND + '/adminTgNotify', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body) }).catch(() => {});
+    } catch (e) {}
+}
 </script>
 
 <script>
