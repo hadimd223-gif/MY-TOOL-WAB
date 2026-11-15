@@ -1458,7 +1458,7 @@ function authMsg(e) {
             document.getElementById('ref-count').innerText = r.count;
             document.getElementById('ref-earned').innerText = r.earned;
             const holdTxt = r.holdMinutes ? (r.holdMinutes >= 60 ? Math.round(r.holdMinutes / 60) + ' hour(s)' : r.holdMinutes + ' minute(s)') : '';
-            document.getElementById('ref-info').innerText = `Share your code with a friend. When they create a new account you’ll get BDT ${r.bonus}` + (holdTxt ? ` (added after a security check, up to ${holdTxt})` : '') + `, plus ${r.percent}% commission on every deposit they make. Fake, bot or multiple accounts are banned automatically.` + (r.pending ? ` ${r.pending} referral(s) waiting for verification.` : '');
+            document.getElementById('ref-info').innerText = `Share your code with a friend. When they create a new account you’ll get BDT ${r.bonus}` + (holdTxt ? ` (added after a security check, up to ${holdTxt})` : '') + `, plus ${r.percent}% commission on every deposit they make` + (r.adsPercent > 0 ? ` and ${r.adsPercent}% of the money they earn from Ads` : '') + `. Fake, bot or multiple accounts are banned automatically.` + (r.pending ? ` ${r.pending} referral(s) waiting for verification.` : '');
         } catch (e) { document.getElementById('ref-code').innerText = '------'; }
     }
     async function copyRef(kind) {

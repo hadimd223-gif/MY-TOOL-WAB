@@ -182,6 +182,9 @@
             <a href="#" onclick="switchView('maintenance');return false" id="nav-maintenance" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-screwdriver-wrench w-8 text-center"></i> Maintenance
             </a>
+            <a href="#" onclick="switchView('referral');return false" id="nav-referral" class="nav-link flex items-center px-4 py-3">
+                <i class="fas fa-user-plus w-8 text-center"></i> Referral Settings
+            </a>
             <a href="#" onclick="switchView('withdraw');return false" id="nav-withdraw" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-money-bill-transfer w-8 text-center"></i> Withdraw Requests <span id="wd-nav-badge" class="ml-2 px-2 py-0.5 rounded-full text-xs font-bold hidden" style="background:#dc2626;color:#fff"></span>
             </a>
@@ -482,6 +485,20 @@
                 </div>
             </div>
 
+
+            <div id="view-referral" class="view-section hidden">
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-user-plus mr-2"></i>Referral Settings</h3>
+                    <p class="text-xs text-gray-400 mb-4">কেউ রেফার করলে কত টাকা পাবে এবং কত % কমিশন পাবে — এখান থেকে যেকোনো সময় বদলানো যায়। নতুন মান সাথে সাথে চালু হয়।</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div><label class="block text-xs text-gray-400 mb-1">প্রতি রেফারে বোনাস (৳)</label><input id="rf-bonus" type="number" min="0" class="flat-input"></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">ডিপোজিট কমিশন (%)</label><input id="rf-dep" type="number" min="0" max="100" step="0.1" class="flat-input"></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">Ads আর্নিং কমিশন (%)</label><input id="rf-ads" type="number" min="0" max="100" step="0.1" class="flat-input"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">Ads কমিশন: রেফার-হওয়া ইউজার অ্যাডস দেখে যত টাকা পাবে, তার এই % রেফারারের ব্যালেন্সে যাবে (ইউজারের টাকা কমবে না)। ০ দিলে বন্ধ।</p>
+                    <div class="mt-4"><button class="flat-btn py-2 px-4" onclick="rfSave()"><i class="fas fa-save mr-1"></i> Save</button></div>
+                </div>
+            </div>
 
             <div id="view-withdraw" class="view-section hidden">
                 <div class="card mb-6">
@@ -1129,6 +1146,7 @@
                 theme: "Theme & Colors",
                 idsell: "ID Sell",
                 maintenance: "Website Maintenance",
+                referral: "Referral Settings",
                 withdraw: "Withdraw Requests",
                 antifraud: "Anti-Fraud & Auto-Ban"
             };
@@ -1145,6 +1163,7 @@
             if(viewId === 'maintenance' && window.mtLoad) mtLoad();
             if(viewId === 'antifraud' && window.afLoad) afLoad();
             if(viewId === 'withdraw' && window.wdLoad) wdLoad();
+            if(viewId === 'referral' && window.rfLoad) rfLoad();
             if(viewId === 'settings') loadSettings();
             if(viewId === 'categories') loadCategories();
             if(viewId === 'services') loadServices();
@@ -2790,6 +2809,26 @@ async function alSendOne(id) {
         Swal.fire({ title: E(it.title), width: 520, html: '<div style="max-height:380px;overflow:auto;text-align:left;font-size:13px">' + rows + '</div>', confirmButtonText: 'Close' });
     };
 })();
+</script>
+
+<script>
+// ===== REFERRAL SETTINGS (admin) =====
+async function rfCall(body) {
+    const user = auth.currentUser; if (!user) throw new Error('Login required');
+    const tk = await user.getIdToken();
+    const r = await fetch(MHX_API_BACKEND + '/adminReferral', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body || {}) });
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+    return j;
+}
+function rfFill(j) { document.getElementById('rf-bonus').value = j.bonus; document.getElementById('rf-dep').value = j.depositPercent; document.getElementById('rf-ads').value = j.adsPercent; }
+async function rfLoad() { try { rfFill(await rfCall({ action: 'getConfig' })); } catch (e) { Swal.fire('Error', e.message, 'error'); } }
+async function rfSave() {
+    try {
+        const j = await rfCall({ action: 'setConfig', bonus: document.getElementById('rf-bonus').value, depositPercent: document.getElementById('rf-dep').value, adsPercent: document.getElementById('rf-ads').value });
+        rfFill(j); Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Saved', showConfirmButton: false, timer: 1200 });
+    } catch (e) { Swal.fire('Error', e.message, 'error'); }
+}
 </script>
 
 <script>
