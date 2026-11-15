@@ -182,6 +182,9 @@
             <a href="#" onclick="switchView('maintenance');return false" id="nav-maintenance" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-screwdriver-wrench w-8 text-center"></i> Maintenance
             </a>
+            <a href="#" onclick="switchView('withdraw');return false" id="nav-withdraw" class="nav-link flex items-center px-4 py-3">
+                <i class="fas fa-money-bill-transfer w-8 text-center"></i> Withdraw Requests <span id="wd-nav-badge" class="ml-2 px-2 py-0.5 rounded-full text-xs font-bold hidden" style="background:#dc2626;color:#fff"></span>
+            </a>
             <a href="#" onclick="switchView('antifraud');return false" id="nav-antifraud" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-user-shield w-8 text-center"></i> Anti-Fraud <span id="af-nav-badge" class="ml-2 px-2 py-0.5 rounded-full text-xs font-bold hidden" style="background:#dc2626;color:#fff"></span>
             </a>
@@ -479,6 +482,21 @@
                 </div>
             </div>
 
+
+            <div id="view-withdraw" class="view-section hidden">
+                <div class="card mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                        <h3 class="text-xl font-bold text-orange-500"><i class="fas fa-money-bill-transfer mr-2"></i>Withdraw Requests</h3>
+                        <span id="wd-stat" class="px-3 py-1 rounded-full text-xs font-bold" style="background:#78350f;color:#fcd34d">Pending: 0</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <input id="wd-q" class="flat-input" style="flex:1;min-width:200px" placeholder="Search: withdraw code (WD-XXXX-XXXX) / number / email" onkeydown="if(event.key==='Enter')wdLoad()">
+                        <button class="flat-btn py-2 px-4" onclick="wdLoad()"><i class="fas fa-search mr-1"></i> Search</button>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="wd-chips"></div>
+                </div>
+                <div id="wd-list"></div>
+            </div>
 
             <div id="view-antifraud" class="view-section hidden">
                 <div class="card mb-6">
@@ -1105,6 +1123,7 @@
                 theme: "Theme & Colors",
                 idsell: "ID Sell",
                 maintenance: "Website Maintenance",
+                withdraw: "Withdraw Requests",
                 antifraud: "Anti-Fraud & Auto-Ban"
             };
             
@@ -1119,6 +1138,7 @@
             if(viewId === 'idsell' && window.idsLoad) idsLoad();
             if(viewId === 'maintenance' && window.mtLoad) mtLoad();
             if(viewId === 'antifraud' && window.afLoad) afLoad();
+            if(viewId === 'withdraw' && window.wdLoad) wdLoad();
             if(viewId === 'settings') loadSettings();
             if(viewId === 'categories') loadCategories();
             if(viewId === 'services') loadServices();
@@ -2764,6 +2784,70 @@ async function alSendOne(id) {
         Swal.fire({ title: E(it.title), width: 520, html: '<div style="max-height:380px;overflow:auto;text-align:left;font-size:13px">' + rows + '</div>', confirmButtonText: 'Close' });
     };
 })();
+</script>
+
+<script>
+// ===== WITHDRAW REQUESTS (admin) =====
+let wdFilter = 'all';
+const wdE = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+async function wdCall(body) {
+    const user = auth.currentUser; if (!user) throw new Error('Login required');
+    const tk = await user.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 45000);
+    try {
+        const r = await fetch(MHX_API_BACKEND + '/adminWithdraw', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body || {}) });
+        let j = {}; try { j = await r.json(); } catch (e) {}
+        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+        return j;
+    } catch (e) { if (e.name === 'AbortError') throw new Error('Server timeout'); throw e; } finally { clearTimeout(t); }
+}
+function wdChips() {
+    const L = [['all', 'All'], ['pending', 'Pending'], ['success', 'Success'], ['cancelled', 'Cancelled']];
+    document.getElementById('wd-chips').innerHTML = L.map(([k, n]) => `<button class="px-4 py-2 rounded-full text-xs font-bold" style="${wdFilter === k ? 'background:#f97316;color:#fff' : 'background:#1f2430;color:#9ca3af'}" onclick="wdFilter='${k}';wdLoad()">${n}</button>`).join('');
+}
+function wdCopy(txt, btn) { navigator.clipboard.writeText(txt).then(() => { const o = btn.innerHTML; btn.innerHTML = 'Copied'; setTimeout(() => btn.innerHTML = o, 1200); }); }
+function wdCard(x) {
+    const m = { pending: ['#78350f', '#fcd34d', 'PENDING'], success: ['#14532d', '#86efac', 'SUCCESS'], cancelled: ['#7f1d1d', '#fca5a5', 'CANCELLED'] }[x.status] || ['#374151', '#d1d5db', x.status];
+    const dt = x.ts ? new Date(x.ts).toLocaleString() : '—';
+    const btn = (st, label, bg) => `<button class="flat-btn text-xs py-2 px-4 ${x.status === st ? 'opacity-40' : ''}" style="background:${bg}" ${x.status === st && st !== 'cancelled' ? 'disabled' : ''} onclick="wdSet('${x.code}','${st}')">${label}</button>`;
+    return `<div class="card mb-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div><span class="text-orange-400 font-bold">${wdE(x.code)}</span> <span class="text-xs text-gray-500 ml-2">${wdE(dt)}</span></div>
+            <span class="zp-b" style="background:${m[0]};color:${m[1]}">${m[2]}</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+            <div><div class="text-xs text-gray-400">Amount</div><div class="text-white text-2xl font-bold">৳${wdE(x.amount)}</div><div class="text-xs text-gray-300 mt-1">via <b>${wdE(x.method)}</b></div></div>
+            <div><div class="text-xs text-gray-400">Send to number</div>
+                <div class="flex items-center gap-2 flex-wrap"><b class="text-white text-lg tracking-wide">${wdE(x.number)}</b>
+                <button class="flat-btn flat-btn-outline text-xs py-1 px-3" onclick="wdCopy('${wdE(x.number)}',this)"><i class="fas fa-copy mr-1"></i>Copy</button></div></div>
+            <div><div class="text-xs text-gray-400">User</div><b class="text-white">${wdE(x.userName || 'N/A')}</b><br><span class="text-xs text-gray-400 break-all">${wdE(x.userEmail)}</span><br><span class="text-xs text-gray-500 break-all">${wdE(x.userId)}</span></div>
+            ${x.status === 'cancelled' && x.reason ? `<div><div class="text-xs text-gray-400">Cancel reason</div><span class="text-red-300">${wdE(x.reason)}</span></div>` : ''}
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4">${btn('success', 'Confirm', '#16a34a')}${btn('cancelled', 'Cancel', '#7f1d1d')}${btn('pending', 'Pending', '#b45309')}</div>
+    </div>`;
+}
+async function wdSet(code, status) {
+    let reason = '';
+    if (status === 'cancelled') {
+        const r = await Swal.fire({ title: 'Cancel reason', input: 'text', inputPlaceholder: 'কেন ক্যান্সেল করছেন? (ইউজার দেখতে পাবে)', showCancelButton: true, confirmButtonText: 'Cancel request', inputValidator: v => !v.trim() && 'কারণ লিখুন' });
+        if (!r.isConfirmed) return; reason = r.value.trim();
+    } else {
+        const txt = status === 'success' ? 'আপনি কি ইউজারের নাম্বারে টাকা পাঠিয়েছেন? Success করবেন?' : 'Pending করবেন?';
+        const c = await Swal.fire({ title: 'Confirm', text: txt, icon: 'question', showCancelButton: true }); if (!c.isConfirmed) return;
+    }
+    try { await wdCall({ action: 'update', code, status, reason }); Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Updated', showConfirmButton: false, timer: 1200 }); wdLoad(); }
+    catch (e) { Swal.fire('Error', e.message, 'error'); }
+}
+async function wdLoad() {
+    wdChips(); const box = document.getElementById('wd-list'); box.innerHTML = '<div class="text-gray-400 text-sm p-4">Loading…</div>';
+    try {
+        const j = await wdCall({ action: 'list', q: document.getElementById('wd-q').value, filter: wdFilter });
+        if (j.stats) {
+            document.getElementById('wd-stat').textContent = 'Pending: ' + j.stats.pending + ' (৳' + j.stats.pendingAmount + ')';
+            const bd = document.getElementById('wd-nav-badge'); if (bd) { bd.textContent = j.stats.pending; bd.classList.toggle('hidden', !j.stats.pending); }
+        }
+        box.innerHTML = j.items.length ? j.items.map(wdCard).join('') : '<div class="card text-gray-400 text-sm">কোনো withdraw request পাওয়া যায়নি।</div>';
+    } catch (e) { box.innerHTML = '<div class="card text-red-400 text-sm">' + wdE(e.message) + '</div>'; }
+}
 </script>
 
 <script>
