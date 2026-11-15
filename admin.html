@@ -211,6 +211,7 @@
                 <i class="fas fa-image w-8 text-center"></i> Banners
             </a>
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
+            <a href="#" onclick="switchView('dailylike');return false" id="nav-dailylike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-fire w-8 text-center"></i> Daily Like Price</a>
             <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
             <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP BOT</a>
             <a href="#" onclick="switchView('ads');return false" id="nav-ads" class="nav-link flex items-center px-4 py-3"><i class="fas fa-gift w-8 text-center"></i> Ads / Earn</a>
@@ -291,7 +292,7 @@
                 </div>
             </div>
 
-            <div id="view-settings" class="view-section hidden">
+            <div id="view-dailylike" class="view-section hidden">
                 <div class="card mb-6 md:mb-8" style="border:1px solid #22c55e">
                     <h3 class="text-xl font-bold text-green-400 mb-1"><i class="fas fa-fire mr-2"></i>Daily Like Control (দাম ও সেটিংস)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখান থেকে Daily Like-এর দাম কমান-বাড়ান, চালু/বন্ধ করুন।</p>
@@ -306,6 +307,9 @@
                     </div>
                     <button onclick="saveDailyLikeCfg()" class="flat-btn mt-4"><i class="fas fa-save mr-1"></i> Save</button>
                 </div>
+            </div>
+
+            <div id="view-settings" class="view-section hidden">
                 <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
@@ -1094,6 +1098,7 @@
                 notices: "Broadcast Notifications",
                 promos: "Promo Codes",
                 apikeys: "API Key Management",
+                dailylike: "Daily Like Price Control",
                 autolike: "Auto Like Management",
                 tcp: "TCP BOT",
                 ads: "Ads / Earn System",
@@ -1835,7 +1840,7 @@
             hideLoading(); Swal.fire('Saved', 'Daily Like settings updated', 'success');
         } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
-    (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'settings') loadDailyLikeCfg(); return r; }; })();
+    (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'dailylike') loadDailyLikeCfg(); return r; }; })();
 
     // ---- send password reset email to a user ----
     async function sendResetMail(email) {
