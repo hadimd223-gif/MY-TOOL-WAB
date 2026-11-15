@@ -2422,7 +2422,9 @@ const WD_MIN = 200; let wdMethod = '';
 function wdPick(m) { wdMethod = m; document.querySelectorAll('.wd-m').forEach(b => b.classList.toggle('on', b.dataset.m === m)); }
 async function wdOpen() {
     const bal = Number((userData && userData.balance) || 0);
-    if (bal < WD_MIN) return Swal.fire('Not enough balance', 'Minimum withdraw is BDT ' + WD_MIN + '. Your balance: BDT ' + bal, 'info');
+    let inf; try { inf = await api('/withdrawInfo', {}); } catch (e) { return Swal.fire('Oops', e.message, 'error'); }
+    if (!inf.open) return Swal.fire({ icon: 'warning', title: 'Withdraw বন্ধ আছে', text: inf.message, customClass: { popup: 'mhx-pop' }, confirmButtonText: 'OK' });
+    if (bal < WD_MIN) return Swal.fire({ icon: 'error', title: 'Request Cancelled', text: 'মিনিমাম উইথড্র ৳' + WD_MIN + '। আপনার ব্যালেন্স ৳' + bal + ' — ' + WD_MIN + ' টাকার কম হলে উইথড্র রিকোয়েস্ট যাবে না।', customClass: { popup: 'mhx-pop' }, confirmButtonText: 'OK' });
     wdMethod = '';
     const r = await Swal.fire({
         title: 'Withdraw', customClass: { popup: 'mhx-pop' }, showCancelButton: true, confirmButtonText: 'Confirm', focusConfirm: false, showLoaderOnConfirm: true, allowOutsideClick: () => !Swal.isLoading(),
@@ -2434,7 +2436,7 @@ async function wdOpen() {
         preConfirm: async () => {
             const amt = Math.floor(Number(document.getElementById('wd-amt').value)), n1 = document.getElementById('wd-num').value.trim(), n2 = document.getElementById('wd-num2').value.trim();
             if (!wdMethod) return Swal.showValidationMessage('Select bKash or Nagad');
-            if (!amt || amt < WD_MIN) return Swal.showValidationMessage('Minimum withdraw is BDT ' + WD_MIN);
+            if (!amt || amt < WD_MIN) return Swal.showValidationMessage('Cancelled: minimum withdraw is BDT ' + WD_MIN);
             if (amt > bal) return Swal.showValidationMessage('You only have BDT ' + bal);
             if (!/^(\+?88)?01[3-9]\d{8}$/.test(n1)) return Swal.showValidationMessage('Enter a valid number (01XXXXXXXXX)');
             if (n1 !== n2) return Swal.showValidationMessage('The two numbers do not match');
