@@ -212,7 +212,7 @@
             </a>
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
             <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
-            <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP Board</a>
+            <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP BOT</a>
             <a href="#" onclick="switchView('ads');return false" id="nav-ads" class="nav-link flex items-center px-4 py-3"><i class="fas fa-gift w-8 text-center"></i> Ads / Earn</a>
             <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
             <a href="#" onclick="switchView('promos')" id="nav-promos" class="nav-link flex items-center px-4 py-3"><i class="fas fa-ticket-alt w-8 text-center"></i> Promo Codes</a>
@@ -694,13 +694,13 @@
                     <h3 class="text-xl font-bold text-orange-500 mb-4">Create Promo Code</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex gap-2"><input id="p-code" class="flat-input uppercase" placeholder="CODE (e.g. EID20)"><button onclick="genPromo()" class="flat-btn px-4" title="Generate"><i class="fas fa-dice"></i></button></div>
-                        <select id="p-type" class="flat-input"><option value="cash">Cash — user gets ৳ in wallet</option><option value="discount_percent">Order discount — percent (%)</option><option value="discount_flat">Order discount — fixed ৳</option></select>
+                        <select id="p-type" class="flat-input"><option value="cash">Cash — user gets ৳ in wallet</option><option value="discount_percent">Order discount — percent (%)</option><option value="discount_flat">Order discount — fixed ৳</option><option value="bonus_percent">Deposit bonus — extra % on every deposit</option></select>
                         <input id="p-value" type="number" step="any" class="flat-input" placeholder="Value (৳ or %)">
                         <input id="p-max" type="number" class="flat-input" placeholder="Max users (0 = unlimited)">
                         <div><label class="block text-xs text-gray-400 mb-1">Expiry date &amp; time (optional)</label><input id="p-exp" type="datetime-local" class="flat-input"></div>
                         <input id="p-note" class="flat-input" placeholder="Note (only you see this)">
                     </div>
-                    <p class="text-xs text-gray-500 mt-3">Each user can use a code only once. Cash codes are redeemed from the Profile page, discount codes at order time.</p>
+                    <p class="text-xs text-gray-500 mt-3">Each user can use a code only once. Cash codes are redeemed from the Profile page, discount codes at order time, and Deposit bonus codes are entered in the Add Money page (Promo Code box) — the % is added on top of the amount the user deposits.</p>
                     <button onclick="savePromo()" class="flat-btn mt-5 w-full md:w-auto"><i class="fas fa-plus mr-2"></i>Save Promo Code</button>
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-orange-500 mb-4">All promo codes</h3>
@@ -908,7 +908,7 @@
                     <div class="card">
                         <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-sliders-h mr-2"></i>TCP Settings & Prices</h3>
                         <div class="space-y-4">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="tcp-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">TCP Board বিক্রি চালু</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="tcp-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">TCP BOT বিক্রি চালু</span></label>
                             <div><label class="block text-sm text-gray-400 mb-2">TCP বোর্ডের পাবলিক URL (TCP সার্ভার চালু হলে নিজে থেকেই বসে যায়; চাইলে হাতে দিন)</label><input type="text" id="tcp-url" class="flat-input" placeholder="https://..."></div>
                             <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="tcp-off" class="flat-input"></div>
                             <div class="grid grid-cols-2 gap-4">
@@ -1095,7 +1095,7 @@
                 promos: "Promo Codes",
                 apikeys: "API Key Management",
                 autolike: "Auto Like Management",
-                tcp: "TCP Board",
+                tcp: "TCP BOT",
                 ads: "Ads / Earn System",
                 theme: "Theme & Colors",
                 idsell: "ID Sell",
@@ -1914,7 +1914,7 @@
     async function delNotice(id) { const r = await Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true }); if (r.isConfirmed) db.collection('notices').doc(id).delete(); }
 
     // ---- promo codes ----
-    const PTYPES = { cash: 'Cash (user gets ৳)', discount_percent: 'Order Discount %', discount_flat: 'Order Discount ৳', bonus_percent: 'Old deposit bonus (no longer works)' };
+    const PTYPES = { cash: 'Cash (user gets ৳)', discount_percent: 'Order Discount %', discount_flat: 'Order Discount ৳', bonus_percent: 'Deposit Bonus % (extra on deposit)' };
     let _unP = null;
     function genPromo() { document.getElementById('p-code').value = Math.random().toString(36).slice(2, 8).toUpperCase(); }
     function loadPromos() {
@@ -1931,7 +1931,8 @@
     async function savePromo() {
         const code = document.getElementById('p-code').value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, ''), type = document.getElementById('p-type').value, value = parseFloat(document.getElementById('p-value').value);
         if (!code || !(value > 0)) return SA('Missing data', 'Enter a code and a value greater than 0', 'warning');
-        if (type.includes('percent') && value > 100) return SA('Invalid', 'Percent cannot be above 100', 'warning');
+        if (type.includes('percent') && type !== 'bonus_percent' && value > 100) return SA('Invalid', 'Percent cannot be above 100', 'warning');
+        if (type === 'bonus_percent' && value > 1000) return SA('Invalid', 'Deposit bonus cannot be above 1000%', 'warning');
         const exp = document.getElementById('p-exp').value, ref = db.collection('promos').doc(code), old = await ref.get();
         if (old.exists) { const r = await Swal.fire({ title: 'Code exists', text: 'Overwrite settings? (used count is kept)', icon: 'question', showCancelButton: true }); if (!r.isConfirmed) return; }
         try { showLoading(); await ref.set({ code: code, type: type, value: value, maxUses: parseInt(document.getElementById('p-max').value) || 0, expiresAtMs: exp ? new Date(exp).getTime() : 0,

@@ -643,27 +643,24 @@ function authMsg(e) {
             </div>
 
 
-            <div onclick="showSec('tcp')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition mb-5" style="background:linear-gradient(135deg,#047857,#10b981 55%,#34d399)">
-                <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-satellite-dish"></i></div>
-                <div class="relative flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-satellite-dish"></i></div>
-                    <div class="min-w-0 flex-1">
-                        <div class="font-extrabold text-[15px] leading-tight">TCP Board</div>
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div onclick="showSec('tcp')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#047857,#10b981 55%,#34d399)">
+                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-satellite-dish"></i></div>
+                        <div class="font-extrabold text-[15px] leading-tight">TCP BOT</div>
                         <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Emote bot for your squad • from BDT <b id="tcp-home-price">–</b></div>
+                        <div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Buy <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
-                    <div class="bg-white text-brand-600 text-[11px] font-extrabold px-3 py-2 rounded-xl inline-flex items-center flex-shrink-0">Buy <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
-            </div>
-
-            <div onclick="showSec('idsell')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition mb-5" style="background:linear-gradient(135deg,#047857,#10b981 55%,#6ee7b7)">
-                <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-id-card"></i></div>
-                <div class="relative flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl flex-shrink-0"><i class="fa-solid fa-id-card"></i></div>
-                    <div class="min-w-0 flex-1">
+                <div onclick="showSec('idsell')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#0f766e,#14b8a6 55%,#6ee7b7)">
+                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-id-card"></i></div>
                         <div class="font-extrabold text-[15px] leading-tight">ID Sell</div>
                         <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Ready-made IDs • watch the video before you buy</div>
+                        <div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Browse <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
-                    <div class="bg-white text-brand-600 text-[11px] font-extrabold px-3 py-2 rounded-xl inline-flex items-center flex-shrink-0">Browse <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
             </div>
 
@@ -731,13 +728,13 @@ function authMsg(e) {
         </section>
 
 
-        <!-- TCP Board Section -->
+        <!-- TCP BOT Section -->
         <section id="tcp-sec" class="hidden animate-fade-in pb-10">
             <div class="vip-card p-3.5 flex items-center gap-3 mb-3 relative">
                 <button onclick="showSec('home')" class="text-slate-500 hover:text-brand-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 absolute top-3.5 right-3.5"><i class="fas fa-times"></i></button>
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md" style="background:linear-gradient(135deg,#047857,#10b981 55%,#34d399)"><i class="fa-solid fa-satellite-dish"></i></div>
                 <div>
-                    <h3 class="font-bold text-slate-800 text-sm">TCP Board</h3>
+                    <h3 class="font-bold text-slate-800 text-sm">TCP BOT</h3>
                     <p class="text-[11px] text-brand-600 font-semibold">Buy a password • open your bot link • log in</p>
                 </div>
             </div>
@@ -863,6 +860,13 @@ function authMsg(e) {
                     <input id="new-amount-input" type="number" min="10" placeholder="Minimum BDT 10" class="zp-input mb-5">
                     <button onclick="startGateway()" class="zp-btn w-full"><i class="fas fa-shield-alt mr-2"></i>Pay securely</button>
                 </div>
+                <div class="vip-card p-4 mb-4">
+                    <button type="button" onclick="depPromoToggle()" class="w-full flex items-center justify-between text-sm font-extrabold text-slate-800"><span><i class="fa-solid fa-ticket text-brand-600 mr-2"></i>Promo Code</span><i id="dep-promo-caret" class="fa-solid fa-chevron-down text-slate-400 text-xs"></i></button>
+                    <div id="dep-promo-box" class="hidden mt-3">
+                        <div class="flex gap-2"><input id="dep-promo" placeholder="ENTER PROMO CODE" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase();depPromoReset()"><button id="dep-promo-btn" type="button" onclick="depPromoConfirm()" class="px-4 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-800 text-white text-xs font-bold whitespace-nowrap">Promo Confirm</button></div>
+                        <p id="dep-promo-msg" class="zp-sub mt-2"></p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -941,9 +945,9 @@ function authMsg(e) {
         <!-- Leaderboard -->
         <section id="leaders-sec" class="hidden animate-fade-in pb-28">
             <div class="lb-hero">
-                <span class="lb-chip"><i class="fa-solid fa-trophy"></i> TOP DEPOSITORS</span>
+                <span class="lb-chip"><i class="fa-solid fa-trophy"></i> TOP WALLETS</span>
                 <div class="lb-title">Leaderboard</div>
-                <div class="lb-sub">The players who deposited the most with us. Top 20, updated live.</div>
+                <div class="lb-sub">Everyone with money in their wallet, ranked live. Highest balance first.</div>
                 <button type="button" class="lb-refresh" id="lb-refresh" onclick="lbLoad(true)" aria-label="Refresh"><i class="fa-solid fa-rotate"></i></button>
             </div>
             <div id="lb-body"></div>
@@ -1068,7 +1072,7 @@ function authMsg(e) {
                     await sleep(4000);
                 }
                 if (data && data.ok) {
-                    Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and BDT ${data.amount} has been added!` + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
+                    Swal.fire({icon:'success',title:'Success!',html:`Your payment was successful and BDT ${data.amount} has been added!` + (data.bonus>0?`<br><b>🎁 + BDT ${data.bonus} deposit bonus added!</b>`:'') + (data.promoted?'<br><b>🎉 You’re now a reseller!</b>':'')});
                 } else if (lastErr) {
                     Swal.fire('Payment problem', lastErr + ' — If money was deducted, please contact support with your payment time and amount.', 'error');
                 } else {
@@ -1707,13 +1711,31 @@ function authMsg(e) {
     }
 
     // ================= payments =================
+    let depPromo = null;   // a confirmed deposit-bonus code: { code, pct }
+    function depPromoToggle() {
+        const b = document.getElementById('dep-promo-box'), c = document.getElementById('dep-promo-caret');
+        b.classList.toggle('hidden'); c.className = 'fa-solid text-slate-400 text-xs ' + (b.classList.contains('hidden') ? 'fa-chevron-down' : 'fa-chevron-up');
+    }
+    function depPromoReset() { depPromo = null; const m = document.getElementById('dep-promo-msg'); if (m) { m.innerText = ''; m.style.color = ''; } }
+    async function depPromoConfirm() {
+        if (!currentUser) { showSec('auth'); return; }
+        const code = document.getElementById('dep-promo').value.trim(), msg = document.getElementById('dep-promo-msg'), btn = document.getElementById('dep-promo-btn');
+        if (!code) { Swal.fire('Heads up', 'Please enter a promo code', 'warning'); return; }
+        btn.disabled = true; btn.style.opacity = '.6'; msg.style.color = ''; msg.innerText = 'Checking…';
+        try {
+            const r = await api('/checkPromo', { code: code, context: 'deposit' });
+            depPromo = { code: code.toUpperCase(), pct: Number(r.value) || 0 };
+            msg.style.color = '#059669'; msg.innerText = '✅ Promo confirmed! You will get ' + depPromo.pct + '% extra bonus on your next deposit.';
+        } catch (e) { depPromo = null; msg.style.color = '#dc2626'; msg.innerText = e.message || 'Invalid promo code'; }
+        finally { btn.disabled = false; btn.style.opacity = ''; }
+    }
     async function startGateway(forced) {
         if(!currentUser) { showSec('auth'); return; }
         const amount = forced ? parseInt(forced) : parseInt(document.getElementById('new-amount-input').value);
         if(!amount || amount < 10) { Swal.fire('Heads up', 'The minimum deposit is BDT 10', 'warning'); return; }
         mhxBusy('Creating your payment link…', 'Securing your transaction with the payment gateway.');
         try {
-            const data = await api('/createPayment', { amount: amount, origin: window.location.origin });
+            const data = await api('/createPayment', { amount: amount, origin: window.location.origin, promoCode: depPromo ? depPromo.code : '' });
             if(!data.paymentUrl) throw new Error('Payment link not found');
             await mhxDone('Your link is ready!', 'Taking you to the secure payment page…', 1200);
             window.location.href = data.paymentUrl;
@@ -2086,7 +2108,7 @@ function tcpOpen() {
 async function tcpBuy() {
     if (tcpBusy) return;
     if (!currentUser) { showSec('auth'); return; }
-    if (!tcpCfg.enabled) { Swal.fire('Service paused', tcpCfg.offMsg || 'TCP Board is paused for a moment. Please try again later.', 'info'); return; }
+    if (!tcpCfg.enabled) { Swal.fire('Service paused', tcpCfg.offMsg || 'TCP BOT is paused for a moment. Please try again later.', 'info'); return; }
     const pkg = tcpCfg.packages.find(p => p.id === tcpPkg); if (!pkg) { Swal.fire('Heads up', 'Please choose a package', 'warning'); return; }
     const price = tcpPrice(pkg);
     if (!(await checkBalance(price))) return;
@@ -2115,8 +2137,8 @@ async function tcpMy() {
     mhxBusy('Loading…', 'Fetching your TCP bots.');
     let j; try { j = await api('/tcpMine', {}); } catch (e) { Swal.close(); Swal.fire('Error', e.message || 'Please try again', 'error'); return; }
     Swal.close();
-    if (!j.keys.length) { const x = await Swal.fire({ icon: 'info', title: 'No TCP bot yet', text: 'You haven’t bought a TCP Board password.', showCancelButton: true, confirmButtonText: 'See packages', cancelButtonText: 'Close' }); if (x.isConfirmed) showSec('tcp'); return; }
-    const url = j.tcpUrl ? `<a href="${esc(j.tcpUrl)}" target="_blank" rel="noopener" style="display:block;background:#059669;color:#fff;font-weight:800;border-radius:12px;padding:10px;margin-bottom:10px;text-decoration:none;word-break:break-all">🔗 Open TCP Board</a>` : '<div style="color:#b45309;font-size:12px;margin-bottom:10px">The bot link isn’t ready yet. Contact @mhxffv111</div>';
+    if (!j.keys.length) { const x = await Swal.fire({ icon: 'info', title: 'No TCP bot yet', text: 'You haven’t bought a TCP BOT password.', showCancelButton: true, confirmButtonText: 'See packages', cancelButtonText: 'Close' }); if (x.isConfirmed) showSec('tcp'); return; }
+    const url = j.tcpUrl ? `<a href="${esc(j.tcpUrl)}" target="_blank" rel="noopener" style="display:block;background:#059669;color:#fff;font-weight:800;border-radius:12px;padding:10px;margin-bottom:10px;text-decoration:none;word-break:break-all">🔗 Open TCP BOT</a>` : '<div style="color:#b45309;font-size:12px;margin-bottom:10px">The bot link isn’t ready yet. Contact @mhxffv111</div>';
     const rows = j.keys.map(k => `<div style="border:1px solid #d1fae5;border-radius:12px;padding:8px;margin-bottom:8px;text-align:left"><div style="font-size:11px;color:#5f7a6e">${esc(k.label)} • ${esc(tcpLeft(k, j.now))}</div><div style="display:flex;gap:6px;align-items:center;margin-top:4px"><b style="font-family:monospace;font-size:13px;flex:1;word-break:break-all">${esc(k.key)}</b><button class="swal2-confirm swal2-styled" style="margin:0;padding:4px 10px;font-size:11px" onclick="navigator.clipboard&&navigator.clipboard.writeText('${esc(k.key)}');this.innerText='Copied'">Copy</button></div></div>`).join('');
     Swal.fire({ title: 'My TCP Bot', html: url + rows + '<div style="font-size:11px;color:#5f7a6e">Contact: @mhxffv111</div>', confirmButtonText: 'Close' });
 }
@@ -2226,8 +2248,8 @@ async function pfEditName() {
     if (r.isConfirmed && r.value && !r.value.same) apiToast('success', 'Name updated');
 }
 
-// ================= LEADERBOARD (top 20 by deposit) =================
-let lbTimer = null, lbData = null, lbAt = 0, lbBusy = false;
+// ================= LEADERBOARD (everyone with a balance, live, 20 per page) =================
+let lbLimit = 20, lbTimer = null, lbData = null, lbAt = 0, lbBusy = false;
 const LB_RING = { 1: 'linear-gradient(135deg,#fde047,#f59e0b)', 2: 'linear-gradient(135deg,#f1f5f9,#94a3b8)', 3: 'linear-gradient(135deg,#6ee7b7,#b45309)' };
 const LB_GLOW = { 1: 'rgba(245,158,11,.4)', 2: 'rgba(148,163,184,.4)', 3: 'rgba(180,83,9,.3)' };
 const LB_PASTEL = [['#a7f3d0', '#065f46'], ['#bbf7d0', '#166534'], ['#fde68a', '#854d0e'], ['#fecdd3', '#9f1239'], ['#bae6fd', '#075985'], ['#e9d5ff', '#6b21a8']];
@@ -2241,11 +2263,11 @@ function lbPic(r) {
 function lbPod(r, rank) {
     if (!r) return '<div class="lb-pc" style="opacity:.55"><div class="lb-av"><div class="pic"><i class="fa-solid fa-user" style="color:#c3dfd1"></i></div></div><div class="lb-nm" style="color:#8aa89b">Waiting…</div></div>';
     const crown = rank === 1 ? '<span class="lb-vip"><i class="fa-solid fa-crown"></i> VIP</span>' : '';
-    const tag = rank === 1 ? '<div class="lb-tag">TOP DEPOSITOR</div>' : '';
+    const tag = rank === 1 ? '<div class="lb-tag">TOP BALANCE</div>' : '';
     const medal = rank === 1 ? '<i class="fa-solid fa-crown" style="font-size:.8em"></i>' : rank;
     return '<div class="lb-pc r' + rank + (r.mine ? ' mine' : '') + '" style="--rc:' + LB_RING[rank] + ';--rs:' + LB_GLOW[rank] + '">' + crown +
         '<div class="lb-av"><div class="pic">' + lbPic(r) + '</div><span class="lb-medal">' + medal + '</span></div>' +
-        '<div class="lb-nm">' + esc(r.name) + (r.mine ? '<span class="lb-you">YOU</span>' : '') + '</div><div class="lb-amt">' + lbMoney(r.deposit) + '</div>' + tag + '</div>';
+        '<div class="lb-nm">' + esc(r.name) + (r.mine ? '<span class="lb-you">YOU</span>' : '') + '</div><div class="lb-amt">' + lbMoney(r.balance) + '</div>' + tag + '</div>';
 }
 function lbRender(d) {
     const box = document.getElementById('lb-body'); if (!box) return;
@@ -2253,16 +2275,19 @@ function lbRender(d) {
     if (!rows.length) { box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-trophy" style="font-size:38px;color:#6ee7b7"></i><div style="margin-top:12px;font-weight:800;color:#33443c">No one is on the board yet</div><div style="margin-top:4px">Add money to your wallet and take the #1 spot!</div></div>'; return; }
     let h = '<div class="lb-podium">' + lbPod(rows[1], 2) + lbPod(rows[0], 1) + lbPod(rows[2], 3) + '</div>';
     if (currentUser) {
-        if (d.me && d.me.rank) h += '<div class="lb-me">You are ranked #' + d.me.rank + ' with ' + lbMoney(userData.totalDeposit) + ' deposited</div>';
-        else h += '<div class="lb-me">Your total deposit: ' + lbMoney(userData.totalDeposit) + ' · deposit more to enter the Top ' + (d.size || 20) + '</div>';
+        const mb = Number(userData && userData.balance || 0);
+        if (d.me && d.me.rank) h += '<div class="lb-me">You are ranked #' + d.me.rank + ' with ' + lbMoney(mb) + ' in your wallet</div>';
+        else if (mb > 0) h += '<div class="lb-me">Your balance: ' + lbMoney(mb) + ' · tap “See more” to find your rank</div>';
+        else h += '<div class="lb-me">Your balance: ৳0 · add money to join the leaderboard</div>';
     }
-    const top = rows[0].deposit || 1;
+    const top = rows[0].balance || 1;
     for (let i = 3; i < rows.length; i++) {
-        const r = rows[i], w = Math.max(4, Math.round(r.deposit / top * 100));
+        const r = rows[i], w = Math.max(4, Math.round(r.balance / top * 100));
         h += '<div class="lb-row' + (r.mine ? ' mine' : '') + '"><div class="lb-rk">#' + r.rank + '</div><div class="lb-av"><div class="pic">' + lbPic(r) + '</div></div>' +
             '<div class="lb-mid"><div class="lb-nm">' + esc(r.name) + (r.mine ? '<span class="lb-you">YOU</span>' : '') + '</div><div class="lb-bar"><i style="width:' + w + '%"></i></div></div>' +
-            '<div class="lb-amt">' + lbMoney(r.deposit) + '</div></div>';
+            '<div class="lb-amt">' + lbMoney(r.balance) + '</div></div>';
     }
+    if (d.hasMore) h += '<div style="text-align:center;margin:14px 0 6px"><button class="mhx-btn mhx-btn-primary" id="lb-more" onclick="lbMore()">See more <i class="fa-solid fa-chevron-down" style="margin-left:6px"></i></button></div>';
     box.innerHTML = h;
 }
 async function lbLoad(manual) {
@@ -2271,7 +2296,7 @@ async function lbLoad(manual) {
     const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 12000);
     try {
         const hd = {}; if (currentUser) { try { hd.Authorization = 'Bearer ' + await currentUser.getIdToken(); } catch (e) {} }
-        const r = await fetch(BACKEND_URL + '/leaderboard', { signal: ctl.signal, headers: hd, cache: 'no-store' });
+        const r = await fetch(BACKEND_URL + '/leaderboard?limit=' + lbLimit, { signal: ctl.signal, headers: hd, cache: 'no-store' });
         const j = await r.json(); if (!r.ok || !j.ok) throw new Error(j.error || 'failed');
         lbData = j; lbAt = Date.now(); lbRender(j);
     } catch (e) {
@@ -2279,15 +2304,17 @@ async function lbLoad(manual) {
         else if (manual) apiToast('error', 'Couldn’t refresh');
     } finally { clearTimeout(t); lbBusy = false; if (btn) setTimeout(() => btn.classList.remove('spin'), 400); }
 }
+function lbMore() { lbLimit += 20; const b = document.getElementById('lb-more'); if (b) { b.disabled = true; b.style.opacity = '.6'; } lbBusy = false; lbLoad(false); }
 function lbOpen() {
+    lbLimit = 20;
     const box = document.getElementById('lb-body');
     if (lbData) lbRender(lbData); else box.innerHTML = '<div class="lb-sk" style="height:210px;margin-top:30px"></div><div class="lb-sk"></div><div class="lb-sk"></div><div class="lb-sk"></div>';
-    if (!lbData || Date.now() - lbAt > 15000) lbLoad(false);
+    lbLoad(false);
     clearInterval(lbTimer);
-    lbTimer = setInterval(() => { if (!document.hidden) lbLoad(false); }, 45000);   // "live": quietly refreshes while the page is open
+    lbTimer = setInterval(() => { if (!document.hidden) lbLoad(false); }, 10000);   // "live": quietly refreshes while the page is open
 }
 function lbClose() { clearInterval(lbTimer); lbTimer = null; }
-document.addEventListener('visibilitychange', () => { if (!document.hidden && lbTimer && Date.now() - lbAt > 15000) lbLoad(false); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && lbTimer && Date.now() - lbAt > 8000) lbLoad(false); });
 
 // ================= ADS / EARN (shortener steps -> real money in the main balance) =================
 // Ads are NOT on the normal site. The ad codes only come from the server when this page is opened, and the page reloads clean when you leave it.
