@@ -488,6 +488,11 @@
 
             <div id="view-referral" class="view-section hidden">
                 <div class="card mb-6">
+                    <h3 class="text-lg font-bold text-white mb-1"><i class="fab fa-telegram mr-2"></i>Telegram Channel Notification</h3>
+                    <p class="text-xs text-gray-400 mb-3">ওয়েবসাইটের নোটিফিকেশন চ্যানেলে যাচ্ছে কি না এখান থেকে টেস্ট করুন। না গেলে Telegram কী কারণ বলছে সেটা এখানে দেখাবে।</p>
+                    <button class="flat-btn py-2 px-4" onclick="tgTest()"><i class="fas fa-paper-plane mr-1"></i> Send test message</button>
+                </div>
+                <div class="card mb-6">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-user-plus mr-2"></i>Referral Settings</h3>
                     <p class="text-xs text-gray-400 mb-4">কেউ রেফার করলে কত টাকা পাবে এবং কত % কমিশন পাবে — এখান থেকে যেকোনো সময় বদলানো যায়। নতুন মান সাথে সাথে চালু হয়।</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1626,7 +1631,7 @@
             if (newBal) {
                 showLoading();
                 db.collection('users').doc(uid).update({balance: parseInt(newBal)})
-                  .then(() => { hideLoading(); Swal.fire('Success', 'Balance updated successfully', 'success'); })
+                  .then(() => { hideLoading(); if (parseInt(newBal) - Number(currentBal) !== 0) tgNotify({ kind: 'balance', userId: uid, amount: parseInt(newBal) - Number(currentBal) }); Swal.fire('Success', 'Balance updated successfully', 'success'); })
                   .catch(err => { hideLoading(); Swal.fire('Error', err.message, 'error'); });
             }
         }
@@ -1751,7 +1756,7 @@
         const u=q.docs[0].data();
         const e=await Swal.fire({title:u.email,showCancelButton:true,confirmButtonText:'Save',html:`<label>Role</label><select id="u-role" class="swal2-select"><option>user</option><option>reseller</option><option>admin</option></select><label>Balance</label><input id="u-bal" type="number" class="swal2-input" value="${u.balance||0}">`,
           didOpen:()=>{document.getElementById('u-role').value=u.role||'user'},preConfirm:()=>({role:document.getElementById('u-role').value,balance:+document.getElementById('u-bal').value})});
-        if(e.isConfirmed){await q.docs[0].ref.update(e.value);Swal.fire('Updated','','success')}
+        if(e.isConfirmed){await q.docs[0].ref.update(e.value);const dl=(+e.value.balance||0)-(+u.balance||0);if(dl)tgNotify({kind:'balance',userId:q.docs[0].id,amount:dl});Swal.fire('Updated','','success')}
     }
     const likeBusy=new Set();
     db.collection('orders').where('type','==','like').where('status','==','pending').onSnapshot(async snap=>{
@@ -1823,6 +1828,7 @@
     async function logAdmin(target, change) { try { await db.collection('adminLogs').add({ at: FV.serverTimestamp(), by: (auth.currentUser || {}).email || '', target: target, change: change }); } catch (e) {} }
     async function applyUser(uid, upd, change) {
         try { showLoading(); await db.collection('users').doc(uid).update(upd); await logAdmin(uid, change); hideLoading();
+            if (change && change.balanceDelta) tgNotify({ kind: 'balance', userId: uid, amount: change.balanceDelta }); if (upd && typeof upd.banned === 'boolean') tgNotify({ kind: upd.banned ? 'ban' : 'unban', userId: uid });
             Swal.fire({ icon: 'success', title: 'Done', timer: 1000, showConfirmButton: false }); setTimeout(() => qcShow(uid), 700);
         } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
     }
@@ -2818,8 +2824,19 @@ async function alSendOne(id) {
 async function tgNotify(body) {
     try {
         const user = auth.currentUser; if (!user) return; const tk = await user.getIdToken();
-        fetch(MHX_API_BACKEND + '/adminTgNotify', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body) }).catch(() => {});
+        fetch(MHX_API_BACKEND + '/adminTgNotify', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(body) })
+            .then(async r => { if (!r.ok) { let j = {}; try { j = await r.json(); } catch (e) {} console.warn('Telegram notify failed:', j.error || r.status); Swal.fire({ toast: true, position: 'top', icon: 'warning', title: 'Telegram notify failed: ' + (j.error || r.status), showConfirmButton: false, timer: 4000 }); } })
+            .catch(e => console.warn('Telegram notify error', e));
     } catch (e) {}
+}
+async function tgTest() {
+    try {
+        const user = auth.currentUser; const tk = await user.getIdToken();
+        const r = await fetch(MHX_API_BACKEND + '/adminTgTest', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: '{}' });
+        let j = {}; try { j = await r.json(); } catch (e) {}
+        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+        Swal.fire('Sent', 'চ্যানেলে টেস্ট মেসেজ গেছে ✅', 'success');
+    } catch (e) { Swal.fire('Failed', e.message, 'error'); }
 }
 </script>
 
