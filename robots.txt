@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mhxtoolsff.vercel.app/sitemap.xml
