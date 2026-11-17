@@ -339,12 +339,6 @@ function authMsg(e) {
         @keyframes lbSk{to{background-position:-200% 0}}
         .lb-me{margin:4px 2px 12px;padding:12px 16px;border-radius:20px;background:#f0f9ff;border:1px dashed #9bdcfc;color:#0369a1;font-size:12.5px;font-weight:700;text-align:center}
 
-        /* Leaderboard: floating button stacked right above the Support button */
-        #nav-leaders{position:fixed;right:16px;bottom:150px;z-index:50;width:50px;height:50px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;cursor:pointer;
-            background:linear-gradient(135deg,#9bdcfc,#0ea5e9);box-shadow:0 10px 24px rgba(14,165,233,.38);transition:transform .2s ease,box-shadow .2s ease}
-        #nav-leaders:active{transform:scale(.92)}
-        #nav-leaders.active-tab{box-shadow:0 0 0 5px rgba(125,211,252,.35),0 10px 24px rgba(14,165,233,.45)}
-
         /* ===== Ads / Earn ===== */
         .ads-reward{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:8px 15px;border-radius:99px;background:rgba(255,255,255,.95);color:#0369a1;font-weight:800;font-size:13px}
         .ads-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.28);margin-top:16px;overflow:hidden}
@@ -961,17 +955,6 @@ function authMsg(e) {
         </section>
 
 
-        <!-- Leaderboard -->
-        <section id="leaders-sec" class="hidden animate-fade-in pb-28">
-            <div class="lb-hero">
-                <span class="lb-chip"><i class="fa-solid fa-trophy"></i> TOP DEPOSITORS</span>
-                <div class="lb-title">Leaderboard</div>
-                <div class="lb-sub">Ranked by total money added (deposits, ads, bonus). Spending never lowers your rank.</div>
-                <button type="button" class="lb-refresh" id="lb-refresh" onclick="lbLoad(true)" aria-label="Refresh"><i class="fa-solid fa-rotate"></i></button>
-            </div>
-            <div id="lb-body"></div>
-        </section>
-
         <!-- Ads / Earn -->
         <section id="ads-sec" class="hidden animate-fade-in pb-28">
             <button type="button" class="mhx-btn mhx-btn-primary" style="width:100%;margin-bottom:12px" onclick="wdOpen()"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw Now</button>
@@ -1026,7 +1009,6 @@ function authMsg(e) {
             <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></button>
         </div>
     </nav>
-    <button id="nav-leaders" type="button" onclick="showSec('leaders')" aria-label="Leaderboard"><i class="fa-solid fa-trophy"></i></button>
     <a id="fab-support" href="https://t.me/mhxffv111" target="_blank" rel="noopener"><i class="fa-solid fa-headset"></i></a>
 </div>
 
@@ -1187,7 +1169,7 @@ function authMsg(e) {
         let snap = null;
         try { snap = await ref.get(); } catch (e) { snap = null; }
         if (snap && snap.exists) return null;
-        await ref.set({ name: user.displayName || (user.email || 'User').split('@')[0], email: user.email || '', balance: 0, lbScore: 0, totalDeposit: 0, role: 'user', createdAt: new Date(), photoURL: user.photoURL || '' });
+        await ref.set({ name: user.displayName || (user.email || 'User').split('@')[0], email: user.email || '', balance: 0, totalDeposit: 0, role: 'user', createdAt: new Date(), photoURL: user.photoURL || '' });
         return applyPendingRef();
     }
     function googleErr(e) {
@@ -1632,7 +1614,6 @@ function authMsg(e) {
         if(secId === 'api') apiOpen();
         if(secId === 'idsell') idsOpen();
         if(secId === 'idcode') idcOpen();
-        if(secId === 'leaders') lbOpen(); else lbClose();
         if(secId === 'ads') adsOpen(); else adsClose(secId);
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -2268,74 +2249,6 @@ async function pfEditName() {
     });
     if (r.isConfirmed && r.value && !r.value.same) apiToast('success', 'Name updated');
 }
-
-// ================= LEADERBOARD (everyone with a balance, live, 20 per page) =================
-let lbLimit = 20, lbTimer = null, lbData = null, lbAt = 0, lbBusy = false;
-const LB_RING = { 1: 'linear-gradient(135deg,#fde047,#f59e0b)', 2: 'linear-gradient(135deg,#f1f5f9,#94a3b8)', 3: 'linear-gradient(135deg,#9bdcfc,#b45309)' };
-const LB_GLOW = { 1: 'rgba(245,158,11,.4)', 2: 'rgba(148,163,184,.4)', 3: 'rgba(180,83,9,.3)' };
-const LB_PASTEL = [['#bae6fd', '#0369a1'], ['#bbf7d0', '#166534'], ['#fde68a', '#854d0e'], ['#fecdd3', '#9f1239'], ['#bae6fd', '#075985'], ['#e9d5ff', '#6b21a8']];
-function lbMoney(n) { return '৳' + Number(n || 0).toLocaleString('en-US'); }
-function lbPic(r) {
-    if (r.avatar && String(r.avatar).indexOf('data:image/') === 0) return '<img alt="" loading="lazy" decoding="async" src="' + r.avatar + '">';
-    const nm = String(r.name || 'U'); let h = 0; for (let i = 0; i < nm.length; i++) h = (h * 31 + nm.charCodeAt(i)) >>> 0;
-    const c = LB_PASTEL[h % LB_PASTEL.length], ini = Array.from(nm.trim()).slice(0, 2).join('').toUpperCase();
-    return '<span style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:' + c[0] + ';color:' + c[1] + '">' + esc(ini) + '</span>';
-}
-function lbPod(r, rank) {
-    if (!r) return '<div class="lb-pc" style="opacity:.55"><div class="lb-av"><div class="pic"><i class="fa-solid fa-user" style="color:#c3d4df"></i></div></div><div class="lb-nm" style="color:#8a9ca8">Waiting…</div></div>';
-    const crown = rank === 1 ? '<span class="lb-vip"><i class="fa-solid fa-crown"></i> VIP</span>' : '';
-    const tag = rank === 1 ? '<div class="lb-tag">TOP TOTAL</div>' : '';
-    const medal = rank === 1 ? '<i class="fa-solid fa-crown" style="font-size:.8em"></i>' : rank;
-    return '<div class="lb-pc r' + rank + (r.mine ? ' mine' : '') + '" style="--rc:' + LB_RING[rank] + ';--rs:' + LB_GLOW[rank] + '">' + crown +
-        '<div class="lb-av"><div class="pic">' + lbPic(r) + '</div><span class="lb-medal">' + medal + '</span></div>' +
-        '<div class="lb-nm">' + esc(r.name) + (r.mine ? '<span class="lb-you">YOU</span>' : '') + '</div><div class="lb-amt">' + lbMoney(r.score) + '</div>' + tag + '</div>';
-}
-function lbRender(d) {
-    const box = document.getElementById('lb-body'); if (!box) return;
-    const rows = (d && d.rows) || [];
-    if (!rows.length) { box.innerHTML = '<div class="lb-empty"><i class="fa-solid fa-trophy" style="font-size:38px;color:#9bdcfc"></i><div style="margin-top:12px;font-weight:800;color:#333d44">No one is on the board yet</div><div style="margin-top:4px">Add money to your wallet and take the #1 spot!</div></div>'; return; }
-    let h = '<div class="lb-podium">' + lbPod(rows[1], 2) + lbPod(rows[0], 1) + lbPod(rows[2], 3) + '</div>';
-    if (currentUser) {
-        const ms = Number((d.me && d.me.score) || (userData && userData.lbScore) || 0);
-        if (d.me && d.me.rank) h += '<div class="lb-me">You are ranked #' + d.me.rank + ' with ' + lbMoney(d.me.score) + ' total added</div>';
-        else if (ms > 0) h += '<div class="lb-me">Your total: ' + lbMoney(ms) + ' · tap “See more” to find your rank</div>';
-        else h += '<div class="lb-me">Total added: ৳0 · add money to join the leaderboard</div>';
-    }
-    const top = rows[0].score || 1;
-    for (let i = 3; i < rows.length; i++) {
-        const r = rows[i], w = Math.max(4, Math.round(r.score / top * 100));
-        h += '<div class="lb-row' + (r.mine ? ' mine' : '') + '"><div class="lb-rk">#' + r.rank + '</div><div class="lb-av"><div class="pic">' + lbPic(r) + '</div></div>' +
-            '<div class="lb-mid"><div class="lb-nm">' + esc(r.name) + (r.mine ? '<span class="lb-you">YOU</span>' : '') + '</div><div class="lb-bar"><i style="width:' + w + '%"></i></div></div>' +
-            '<div class="lb-amt">' + lbMoney(r.score) + '</div></div>';
-    }
-    if (d.hasMore) h += '<div style="text-align:center;margin:14px 0 6px"><button class="mhx-btn mhx-btn-primary" id="lb-more" onclick="lbMore()">See more <i class="fa-solid fa-chevron-down" style="margin-left:6px"></i></button></div>';
-    box.innerHTML = h;
-}
-async function lbLoad(manual) {
-    if (lbBusy) return; lbBusy = true;
-    const btn = document.getElementById('lb-refresh'); if (btn && manual) btn.classList.add('spin');
-    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 12000);
-    try {
-        const hd = {}; if (currentUser) { try { hd.Authorization = 'Bearer ' + await currentUser.getIdToken(); } catch (e) {} }
-        const r = await fetch(BACKEND_URL + '/leaderboard?limit=' + lbLimit, { signal: ctl.signal, headers: hd, cache: 'no-store' });
-        const j = await r.json(); if (!r.ok || !j.ok) throw new Error(j.error || 'failed');
-        lbData = j; lbAt = Date.now(); lbRender(j);
-    } catch (e) {
-        if (!lbData) document.getElementById('lb-body').innerHTML = '<div class="lb-empty"><i class="fa-solid fa-wifi" style="font-size:30px;color:#9bdcfc"></i><div style="margin:10px 0 14px">Couldn’t load the leaderboard.</div><button class="mhx-btn mhx-btn-primary" onclick="lbLoad(true)">Try again</button></div>';
-        else if (manual) apiToast('error', 'Couldn’t refresh');
-    } finally { clearTimeout(t); lbBusy = false; if (btn) setTimeout(() => btn.classList.remove('spin'), 400); }
-}
-function lbMore() { lbLimit += 20; const b = document.getElementById('lb-more'); if (b) { b.disabled = true; b.style.opacity = '.6'; } lbBusy = false; lbLoad(false); }
-function lbOpen() {
-    lbLimit = 20;
-    const box = document.getElementById('lb-body');
-    if (lbData) lbRender(lbData); else box.innerHTML = '<div class="lb-sk" style="height:210px;margin-top:30px"></div><div class="lb-sk"></div><div class="lb-sk"></div><div class="lb-sk"></div>';
-    lbLoad(false);
-    clearInterval(lbTimer);
-    lbTimer = setInterval(() => { if (!document.hidden) lbLoad(false); }, 10000);   // "live": quietly refreshes while the page is open
-}
-function lbClose() { clearInterval(lbTimer); lbTimer = null; }
-document.addEventListener('visibilitychange', () => { if (!document.hidden && lbTimer && Date.now() - lbAt > 8000) lbLoad(false); });
 
 // ================= ADS / EARN (shortener steps -> real money in the main balance) =================
 // Ads are NOT on the normal site. The ad codes only come from the server when this page is opened, and the page reloads clean when you leave it.
