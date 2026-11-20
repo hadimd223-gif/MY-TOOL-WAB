@@ -19,18 +19,18 @@
                 extend: {
                     colors: {
                         dark: {
-                            bg: '#09090B',
-                            panel: '#18181A',
-                            border: '#27272A'
+                            bg: '#f7fdfa',
+                            panel: '#ffffff',
+                            border: '#d8ece2'
                         },
                         orange: {
-                            500: '#F49E0B',
-                            600: '#D98A00',
-                            hover: '#FFB640'
+                            500: '#10b981',
+                            600: '#059669',
+                            hover: '#34d399'
                         }
                     },
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Outfit', 'sans-serif'],
                     }
                 }
             }
@@ -998,10 +998,24 @@
                     <div class="card"><h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-bell mr-2"></i>নোটিফিকেশন ব্রডকাস্ট</h3>
                         <input id="tb-title" class="flat-input mb-2" placeholder="টাইটেল" value="Tournament"><textarea id="tb-msg" rows="3" class="flat-input" placeholder="মেসেজ"></textarea>
                         <button onclick="tBroadcast()" class="mt-3 px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">সবাইকে পাঠান</button></div>
-                    <div class="card"><h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-wallet mr-2"></i>ব্যালেন্স যোগ/কমানো (Tournament)</h3>
-                        <input id="ta-uid" class="flat-input mb-2" placeholder="User UID"><input id="ta-amt" type="number" class="flat-input" placeholder="+100 বা -50">
-                        <div class="flex gap-2 mt-3"><button onclick="tAdjust()" class="px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Apply</button><button onclick="tUsers()" class="px-4 py-2 rounded-lg bg-dark-border text-white text-sm font-bold">ইউজার লিস্ট</button></div>
-                        <div id="ta-users" class="mt-3 text-xs text-gray-300 max-h-60 overflow-auto"></div></div>
+                    <div class="card"><h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-user-cog mr-2"></i>ইউজার ম্যানেজ (ID দিয়ে)</h3>
+                        <div class="flex gap-2"><input id="ta-uid" inputmode="numeric" class="flat-input" placeholder="ইউজার আইডি (নাম্বার)"><button onclick="tFind()" class="flat-btn" style="padding:10px 16px">খুঁজুন</button></div>
+                        <div id="ta-info" class="mt-3 text-sm hidden"></div>
+                        <input id="ta-amt" type="number" min="1" inputmode="numeric" class="flat-input mt-3" placeholder="টাকার পরিমাণ লিখুন">
+                        <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="tAdjust('add')" class="flat-btn"><i class="fas fa-plus-circle mr-1"></i>ব্যালেন্স যোগ করুন</button><button onclick="tAdjust('sub')" class="flat-btn flat-btn-danger"><i class="fas fa-minus-circle mr-1"></i>ব্যালেন্স কাটুন</button></div>
+                        <input id="ta-reason" class="flat-input mt-4" placeholder="ব্যান করার কারণ (বাধ্যতামূলক)">
+                        <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="tBan(true)" class="flat-btn flat-btn-danger"><i class="fas fa-ban mr-1"></i>ব্যান করুন</button><button onclick="tBan(false)" class="flat-btn flat-btn-outline"><i class="fas fa-unlock mr-1"></i>আনব্যান করুন</button></div>
+                        <button onclick="tUsers()" class="mt-4 text-xs text-orange-500 underline">সব ইউজারের লিস্ট</button>
+                        <div id="ta-users" class="mt-3 text-xs max-h-60 overflow-auto"></div></div>
+                </div>
+
+                <div class="card mt-6">
+                    <div class="flex flex-wrap items-center gap-3 mb-3"><h3 class="text-xl font-bold text-orange-500 flex-1"><i class="fas fa-layer-group mr-2"></i>Level Requirement</h3>
+                        <div class="flex items-center gap-2"><span class="text-xs text-gray-400">মিনিমাম লেভেল</span><input id="t-minlvl" type="number" min="0" class="flat-input" style="width:90px"></div>
+                        <button onclick="tSaveCfg()" class="flat-btn" style="padding:10px 16px">Save</button></div>
+                    <p class="text-xs text-gray-400 mb-3">লেভেল কম হওয়ায় যাদের এন্ট্রি ফি কাটা হয়েছে কিন্তু ম্যাচে ঢোকানো হয়নি, তাদের লিস্ট নিচে।</p>
+                    <button onclick="tLowLoad()" class="flat-btn"><i class="fas fa-list mr-2"></i>লিস্ট দেখুন / রিফ্রেশ</button><div id="tl-sum" class="mt-3 text-sm font-bold"></div>
+                    <div class="overflow-x-auto mt-2"><table class="w-full text-sm text-left"><thead class="text-gray-400"><tr><th class="py-2 pr-3">সাপোর্ট কোড</th><th class="pr-3">User ID</th><th class="pr-3">নাম</th><th class="pr-3">গেম আইডি / UID</th><th class="pr-3">লেভেল</th><th class="pr-3">কাটা ৳</th><th class="pr-3">ম্যাচ</th><th>সময়</th></tr></thead><tbody id="tl-rows"></tbody></table></div>
                 </div>
             </div>
             <div id="view-tcp" class="view-section hidden">
@@ -2412,20 +2426,49 @@ const tLocal = ms => { if (!ms) return ''; const d = new Date(+ms - new Date().g
 const tMs = v => v ? new Date(v).getTime() : 0;
 const T_COL = { primary: 'মেইন কালার', bg: 'ব্যাকগ্রাউন্ড', card: 'কার্ড', text: 'লেখা', accent: 'অ্যাকসেন্ট' };
 let tCats = [], tMatches = [];
+let tCurUser = null;
+async function tFind() {
+    const q = document.getElementById('ta-uid').value.trim(), box = document.getElementById('ta-info');
+    try { const j = await tAdm('findUser', { q }); tCurUser = j.user; const u = j.user;
+        box.classList.remove('hidden'); box.innerHTML = `<div class="p-3 rounded-xl border border-dark-border"><b>${tE(u.name)}</b> • ID <b>${u.numId}</b> • পিন <span class="font-mono">${tE(u.pin)}</span><br>ব্যালেন্স: <b class="text-orange-500">৳${u.balance}</b> • জিতেছে: ${u.wins}<br>${u.banned ? '<span style="color:#dc2626;font-weight:700">🚫 ব্যান — ' + tE(u.banReason) + '</span>' : '<span style="color:#059669;font-weight:700">✔ অ্যাকটিভ</span>'}</div>`;
+    } catch (e) { tCurUser = null; box.classList.add('hidden'); SA('Error', e.message, 'error'); }
+}
+async function tAdjust(mode) {
+    const q = document.getElementById('ta-uid').value.trim(), amount = +document.getElementById('ta-amt').value;
+    if (!q || !(amount > 0)) { SA('Heads up', 'ইউজার আইডি ও টাকার পরিমাণ লিখুন', 'warning'); return; }
+    const x = await Swal.fire({ title: (mode === 'add' ? '৳' + amount + ' যোগ করবেন?' : '৳' + amount + ' কাটবেন?'), text: 'ইউজার আইডি: ' + q, icon: 'question', showCancelButton: true });
+    if (!x.isConfirmed) return;
+    try { showLoading(); const j = await tAdm('adjust', { q, amount, mode }); hideLoading(); document.getElementById('ta-amt').value = ''; Swal.fire({ icon: 'success', title: (mode === 'add' ? 'যোগ হয়েছে' : 'কাটা হয়েছে'), text: j.name + ' — নতুন ব্যালেন্স ৳' + j.balance }); tFind(); }
+    catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tBan(on) {
+    const q = document.getElementById('ta-uid').value.trim(), reason = document.getElementById('ta-reason').value.trim();
+    if (!q) { SA('Heads up', 'ইউজার আইডি লিখুন', 'warning'); return; }
+    if (on && !reason) { SA('Heads up', 'ব্যান করার কারণ লিখতে হবে', 'warning'); return; }
+    try { showLoading(); await tAdm(on ? 'ban' : 'unban', { q, reason }); hideLoading(); document.getElementById('ta-reason').value = ''; Swal.fire({ icon: 'success', title: on ? 'ব্যান করা হয়েছে' : 'আনব্যান করা হয়েছে', timer: 1500, showConfirmButton: false }); tFind(); }
+    catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tUsers() { try { const j = await tAdm('userList'); document.getElementById('ta-users').innerHTML = j.users.map(u => `<div class="py-2 border-b border-dark-border cursor-pointer" onclick="document.getElementById('ta-uid').value='${u.numId}';tFind()">${u.banned ? '🚫 ' : ''}<b>${tE(u.name)}</b> — ID <span class="font-mono">${u.numId}</span> — ৳${u.balance}</div>`).join('') || 'কেউ নেই'; } catch (e) { SA('Error', e.message, 'error'); } }
+async function tLowLoad() {
+    try { const j = await tAdm('lowList'); document.getElementById('tl-sum').innerText = j.items.length + ' জন • মোট কাটা ৳' + j.total;
+        document.getElementById('tl-rows').innerHTML = j.items.map(i => `<tr class="border-t border-dark-border"><td class="py-2 pr-3 font-mono">${tE(i.pin)}</td><td class="pr-3">${i.numId || '-'}</td><td class="pr-3">${tE(i.userName)}</td><td class="pr-3">${tE(i.gameName)}<br><span class="text-xs text-gray-400">${tE(i.gameUid)} (${tE(i.region)})</span></td><td class="pr-3" style="color:#dc2626;font-weight:700">${i.level}/${i.need}</td><td class="pr-3">৳${i.fee}</td><td class="pr-3">${tE(i.matchTitle)}</td><td class="text-xs">${new Date(+i.ts).toLocaleString()}</td></tr>`).join('') || '<tr><td class="py-3 text-gray-400">কেউ নেই</td></tr>';
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+
 async function tLoadAll() { await tLoadCfg(); await tCatLoad(); await tMatchLoad(); tWdLoad(); }
 async function tLoadCfg() {
     try {
         const j = await tAdm('getConfig');
         document.getElementById('t-visible').checked = !j.hidden;
         document.getElementById('t-minwd').value = j.minWithdraw; document.getElementById('t-mindep').value = j.minDeposit;
-        document.getElementById('t-reffix').value = j.refFixed; document.getElementById('t-refpct').value = j.refPercent;
+        document.getElementById('t-reffix').value = j.refFixed; document.getElementById('t-minlvl').value = j.minLevel; document.getElementById('t-refpct').value = j.refPercent;
         document.getElementById('t-support').value = j.supportUrl; document.getElementById('t-off').value = j.offMsg || '';
         document.getElementById('t-colors').innerHTML = Object.keys(T_COL).map(k => `<div><label class="block text-xs text-gray-400 mb-1">${T_COL[k]}</label><input type="color" data-tc="${k}" value="${j.colors[k]}" class="w-full h-10 rounded"></div>`).join('');
     } catch (e) { SA('Error', e.message, 'error'); }
 }
 async function tSaveCfg() {
     const colors = {}; document.querySelectorAll('[data-tc]').forEach(e => colors[e.dataset.tc] = e.value);
-    try { showLoading(); await tAdm('setConfig', { hidden: !document.getElementById('t-visible').checked, colors, minWithdraw: +document.getElementById('t-minwd').value, minDeposit: +document.getElementById('t-mindep').value,
+    try { showLoading(); await tAdm('setConfig', { hidden: !document.getElementById('t-visible').checked, colors, minWithdraw: +document.getElementById('t-minwd').value, minLevel: +document.getElementById('t-minlvl').value, minDeposit: +document.getElementById('t-mindep').value,
         refFixed: +document.getElementById('t-reffix').value, refPercent: +document.getElementById('t-refpct').value, supportUrl: document.getElementById('t-support').value.trim(), offMsg: document.getElementById('t-off').value.trim() });
         hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false }); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
 }
@@ -2476,8 +2519,6 @@ async function tWdLoad() {
 }
 async function tWdAct(key, act) { let reason = ''; if (act === 'wdReject') { const x = await Swal.fire({ title: 'কারণ (ঐচ্ছিক) — টাকা ফেরত যাবে', input: 'text', showCancelButton: true }); if (!x.isConfirmed) return; reason = x.value || ''; } try { await tAdm(act, { key, reason }); tWdLoad(); } catch (e) { SA('Error', e.message, 'error'); } }
 async function tBroadcast() { try { showLoading(); const j = await tAdm('broadcast', { title: document.getElementById('tb-title').value, message: document.getElementById('tb-msg').value }); hideLoading(); Swal.fire('Sent', j.queued + ' জনকে পাঠানো হচ্ছে', 'success'); document.getElementById('tb-msg').value = ''; } catch (e) { hideLoading(); SA('Error', e.message, 'error'); } }
-async function tAdjust() { try { await tAdm('adjust', { uid: document.getElementById('ta-uid').value.trim(), amount: +document.getElementById('ta-amt').value }); Swal.fire({ icon: 'success', title: 'Done', timer: 1200, showConfirmButton: false }); } catch (e) { SA('Error', e.message, 'error'); } }
-async function tUsers() { const j = await tAdm('userList'); document.getElementById('ta-users').innerHTML = j.users.map(u => `<div class="py-1 border-b border-dark-border">${tE(u.name)} — ৳${u.balance} — <span class="font-mono cursor-pointer" onclick="document.getElementById('ta-uid').value='${u.uid}'">${u.uid}</span></div>`).join(''); }
 
 // ================= TCP BOARD (admin) =================
 async function tcpCall(action, body) {
@@ -3232,5 +3273,71 @@ button{transition:transform .15s,filter .2s}button:active{transform:scale(.95)}
     }
 })();
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style id="vip-theme">
+/* ===== VIP light-green theme (same look as the main website) ===== */
+:root{--p:#059669;--a:#10b981;--ink:#10201a;--mut:#5f7a6e;--line:#d8ece2;--soft:#ecfdf5}
+html,body{font-family:'Outfit','Noto Serif Bengali',sans-serif!important}
+body{background:radial-gradient(120% 55% at 50% 0%,#d9f5e8 0%,#f0fbf6 48%,#f7fdfa 100%) fixed!important;color:var(--ink)!important}
+#main-content,.bg-dark-bg{background:transparent!important}
+.bg-dark-panel{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.border-dark-border,.border-dark-border\/50{border-color:var(--line)!important}
+.bg-dark-border{background:var(--soft)!important;color:var(--p)!important;border:1px solid var(--line)}
+::-webkit-scrollbar-track{background:#eaf6f0!important}::-webkit-scrollbar-thumb{background:var(--a)!important}
+header,#main-content>div:first-child{box-shadow:0 2px 14px rgba(16,32,26,.05)}
+/* text */
+.text-white{color:var(--ink)!important}
+.flat-btn,.flat-btn *,[class*="bg-orange"].text-white,[class*="bg-red"].text-white,[class*="bg-green"].text-white,[class*="bg-blue"].text-white,[class*="bg-yellow"].text-white,[class*="bg-purple"].text-white,[class*="bg-pink"].text-white,[class*="bg-emerald"].text-white,[class*="bg-indigo"].text-white,[class*="bg-sky"].text-white,[class*="bg-teal"].text-white,[class*="bg-gradient"].text-white,.nav-link.active{color:#fff!important}
+.text-gray-100,.text-gray-200{color:var(--ink)!important}.text-gray-300{color:#3b5448!important}.text-gray-400,.text-gray-500{color:var(--mut)!important}.text-gray-600{color:#7a948a!important}
+.text-orange-400,.text-orange-500,.text-orange-600{color:var(--p)!important}
+.text-green-400,.text-green-500{color:#059669!important}.text-red-400,.text-red-500{color:#dc2626!important}.text-yellow-400,.text-yellow-500{color:#b45309!important}.text-blue-400{color:#2563eb!important}
+.bg-orange-500,.bg-orange-600{background:linear-gradient(135deg,#6ee7b7,#10b981 55%,#059669)!important;box-shadow:0 8px 20px rgba(5,150,105,.28);color:#fff!important}
+button.bg-orange-500:hover{filter:brightness(1.05);transform:translateY(-1px)}
+/* cards / inputs / buttons */
+.card{background:rgba(255,255,255,.85)!important;border:1px solid rgba(255,255,255,.95)!important;border-radius:26px!important;box-shadow:0 14px 34px rgba(16,185,129,.09),0 2px 6px rgba(16,32,26,.04)!important;padding:22px!important}
+.card:hover{border-color:#a7e3c9!important}
+.card h3{letter-spacing:.01em}.card>h3:first-child{color:var(--p)!important}
+.flat-input{background:rgba(255,255,255,.95)!important;border:1.5px solid var(--line)!important;color:var(--ink)!important;border-radius:16px!important;font-weight:600;padding:13px 16px!important}
+.flat-input:focus{border-color:var(--a)!important;box-shadow:0 0 0 4px rgba(16,185,129,.13)}
+.flat-input::placeholder{color:#97b0a5}select.flat-input option{color:var(--ink);background:#fff}
+.flat-btn{background:linear-gradient(135deg,#6ee7b7,#10b981 55%,#059669)!important;border-radius:16px!important;font-weight:800!important;box-shadow:0 10px 22px rgba(5,150,105,.28);transition:transform .2s,box-shadow .2s,filter .2s}
+.flat-btn:hover{box-shadow:0 12px 28px rgba(5,150,105,.38);transform:translateY(-1px)}.flat-btn:active{transform:scale(.96)}
+.flat-btn-danger{background:linear-gradient(135deg,#fca5a5,#ef4444 55%,#dc2626)!important;box-shadow:0 10px 22px rgba(220,38,38,.25)}
+.flat-btn-outline{background:var(--soft)!important;border:1.5px solid #a7e3c9!important;color:var(--p)!important;box-shadow:none}.flat-btn-outline:hover{background:#d1fae5!important;color:var(--p)!important}
+.flat-table-container{background:rgba(255,255,255,.88)!important;border:1px solid var(--line);border-radius:20px!important}
+.flat-table th,table thead th{background:var(--soft)!important;color:var(--p)!important}
+.flat-table th,.flat-table td{border-color:var(--line)!important}.flat-table tr:hover td{background:#f3fbf7!important}
+table td,table th{border-color:var(--line)}
+hr,.divide-dark-border>*{border-color:var(--line)!important}
+#loading-spinner{background:rgba(247,253,250,.8)!important}.spinner{border-color:rgba(16,185,129,.15)!important;border-left-color:var(--a)!important}
+details>summary{color:var(--p)!important}
+/* tiles / pills that used inline dark colours */
+[style*="#18181A"],[style*="#18181a"],[style*="#09090B"],[style*="#09090b"],[style*="#141417"],[style*="#1f1f21"]{background:#fff!important}
+[style*="#27272A"],[style*="#27272a"],[style*="#3f3f46"]{border-color:var(--line)!important}
+.swal2-popup{background:#fff!important;color:var(--ink)!important;border-radius:26px!important}.swal2-title,.swal2-html-container,.swal2-content{color:var(--ink)!important}
+.swal2-input,.swal2-textarea,.swal2-select{background:#fff!important;color:var(--ink)!important;border:1.5px solid var(--line)!important;border-radius:14px!important}
+.swal2-confirm{background:linear-gradient(135deg,#10b981,#059669)!important;border-radius:14px!important}
+/* page title bar */
+#page-title{background:linear-gradient(135deg,#059669,#10b981);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+#mobile-menu-btn{background:var(--soft)!important;color:var(--p)!important;border:1px solid var(--line)}
+/* menu sheet (box buttons) */
+#mx{background:rgba(240,251,246,.9)!important}
+#mx .hd b{color:var(--p)!important}#mx .hd b span{color:var(--ink)!important}
+#mx input{background:#fff!important;border-color:var(--line)!important;color:var(--ink)!important}#mx input:focus{border-color:var(--a)!important}
+#mx .x{background:#fff!important;border-color:var(--line)!important;color:var(--ink)!important}
+#mx .bx{background:rgba(255,255,255,.9)!important;border:1.5px solid var(--line)!important;color:var(--ink)!important;box-shadow:0 10px 26px rgba(16,185,129,.08)}
+#mx .bx:hover{border-color:var(--a)!important;box-shadow:0 14px 30px rgba(16,185,129,.2)!important}
+#mx .bx.cur{background:linear-gradient(160deg,#d1fae5,#fff)!important;border-color:var(--p)!important}
+#mx .ic{background:linear-gradient(135deg,#6ee7b7,#10b981 55%,#059669)!important;box-shadow:0 8px 18px rgba(5,150,105,.32)!important}
+#mx .lo{background:#fff1f1!important;border-color:#fecaca!important;color:#dc2626!important}
+/* theme editor tiles */
+#th-groups .th-row{background:rgba(255,255,255,.9)!important;border:1.5px solid var(--line)!important}
+#th-groups .th-row:hover{border-color:var(--a)!important}
+#th-groups [id^="thsw-"]{box-shadow:0 6px 16px rgba(16,32,26,.15)!important;border:1px solid var(--line)!important}
+.th-pick{border-radius:10px;border:1px solid var(--line)}
+/* smooth feel */
+.view-section:not(.hidden){animation:vIn .4s cubic-bezier(.2,.8,.2,1) both}
+.view-section:not(.hidden)>*{animation:vIn .45s cubic-bezier(.2,.8,.2,1) both}.view-section:not(.hidden)>*:nth-child(2){animation-delay:.05s}.view-section:not(.hidden)>*:nth-child(3){animation-delay:.1s}.view-section:not(.hidden)>*:nth-child(n+4){animation-delay:.15s}
+</style>
 </body>
 </html>
