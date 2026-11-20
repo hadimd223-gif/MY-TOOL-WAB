@@ -219,6 +219,7 @@
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
             <a href="#" onclick="switchView('dailylike');return false" id="nav-dailylike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-fire w-8 text-center"></i> Daily Like Price</a>
             <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
+            <a href="#" onclick="switchView('tourney');return false" id="nav-tourney" class="nav-link flex items-center px-4 py-3"><i class="fas fa-trophy w-8 text-center"></i> Tournament</a>
             <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP BOT</a>
             <a href="#" onclick="switchView('ads');return false" id="nav-ads" class="nav-link flex items-center px-4 py-3"><i class="fas fa-gift w-8 text-center"></i> Ads / Earn</a>
             <a href="#" onclick="switchView('notices')" id="nav-notices" class="nav-link flex items-center px-4 py-3"><i class="fas fa-bullhorn w-8 text-center"></i> Notifications</a>
@@ -953,11 +954,62 @@
                 <button onclick="adsSave()" class="px-6 py-3 rounded-lg bg-orange-500 text-white font-bold"><i class="fas fa-save mr-2"></i>Save সব সেটিংস</button>
             </div>
 
+            <div id="view-tourney" class="view-section hidden">
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-trophy mr-2"></i>Tournament সেটিংস</h3>
+                    <label class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-orange-500/40 mb-4"><input type="checkbox" id="t-visible" class="w-5 h-5 accent-orange-500" checked onchange="tAdm('setHidden',{hidden:!this.checked}).then(()=>Swal.fire({icon:'success',title:this.checked?'Tournament চালু':'Tournament হাইড',timer:1200,showConfirmButton:false}))"><span class="text-sm font-bold text-white">Tournament ওয়েবসাইটে দেখান (বন্ধ করলে হাইড)</span></label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div><label class="block text-xs text-gray-400 mb-1">মিনিমাম উইথড্র ৳</label><input type="number" id="t-minwd" class="flat-input"></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">মিনিমাম ডিপোজিট ৳</label><input type="number" id="t-mindep" class="flat-input"></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">রেফার বোনাস (প্রতি রেফারে ৳)</label><input type="number" id="t-reffix" class="flat-input"></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">রেফার কমিশন % (ডিপোজিটে)</label><input type="number" step="0.1" id="t-refpct" class="flat-input"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                        <div><label class="block text-xs text-gray-400 mb-1">সাপোর্ট টেলিগ্রাম লিংক</label><input id="t-support" class="flat-input" placeholder="https://t.me/..."></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">বন্ধ থাকলে মেসেজ</label><input id="t-off" class="flat-input"></div>
+                    </div>
+                    <div class="grid grid-cols-5 gap-3 mt-4" id="t-colors"></div>
+                    <button onclick="tSaveCfg()" class="mt-4 px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Save</button>
+                </div>
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-th-large mr-2"></i>টুর্নামেন্ট বাটন (হোমের স্কয়ার বাটন)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-2 items-end">
+                        <input id="tc-name" class="flat-input" placeholder="নাম (Lone Wolf 1v1)"><input id="tc-sub" class="flat-input" placeholder="নিচের লেখা"><input id="tc-order" type="number" class="flat-input" placeholder="ক্রম">
+                        <input id="tc-file" type="file" accept="image/*" class="flat-input"><button onclick="tCatSave()" class="px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">বাটন সেভ</button>
+                    </div><input type="hidden" id="tc-id"><div id="tc-list" class="mt-4 space-y-2"></div>
+                </div>
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-gamepad mr-2"></i>ম্যাচ / টুর্নামেন্ট</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <select id="tm-cat" class="flat-input"></select><input id="tm-title" class="flat-input" placeholder="ম্যাচের নাম"><input id="tm-fee" type="number" class="flat-input" placeholder="এন্ট্রি ফি ৳"><input id="tm-prize" type="number" class="flat-input" placeholder="প্রাইজ ৳">
+                        <input id="tm-max" type="number" class="flat-input" placeholder="প্লেয়ার সংখ্যা"><div><label class="text-xs text-gray-400">শুরুর সময় (BD)</label><input id="tm-start" type="datetime-local" class="flat-input"></div>
+                        <div><label class="text-xs text-gray-400">রুম দেখানোর সময় (খালি=শুরুর সময়)</label><input id="tm-reveal" type="datetime-local" class="flat-input"></div><div></div>
+                        <input id="tm-room" class="flat-input" placeholder="Custom Room ID"><input id="tm-pass" class="flat-input" placeholder="Room Password">
+                    </div><input type="hidden" id="tm-id">
+                    <div class="flex gap-2 mt-3"><button onclick="tMatchSave()" class="px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">ম্যাচ সেভ</button><button onclick="tMatchReset()" class="px-4 py-2 rounded-lg bg-dark-border text-white text-sm font-bold">নতুন</button></div>
+                    <div id="tm-list" class="mt-4 space-y-3 text-sm text-white"></div>
+                </div>
+                <div class="card mb-6">
+                    <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-money-bill-wave mr-2"></i>Tournament Withdrawal</h3>
+                    <div class="flex gap-2 mb-3"><input id="tw-q" class="flat-input" placeholder="ইউনিক কী দিয়ে সার্চ (TW-XXXX-XXXX)"><button onclick="tWdLoad()" class="px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Search / Refresh</button></div>
+                    <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-gray-400"><tr><th class="py-2 pr-3">Key</th><th class="pr-3">User</th><th class="pr-3">৳</th><th class="pr-3">Method</th><th class="pr-3">Number</th><th class="pr-3">Status</th><th></th></tr></thead><tbody id="tw-rows" class="text-white"></tbody></table></div>
+                </div>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="card"><h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-bell mr-2"></i>নোটিফিকেশন ব্রডকাস্ট</h3>
+                        <input id="tb-title" class="flat-input mb-2" placeholder="টাইটেল" value="Tournament"><textarea id="tb-msg" rows="3" class="flat-input" placeholder="মেসেজ"></textarea>
+                        <button onclick="tBroadcast()" class="mt-3 px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">সবাইকে পাঠান</button></div>
+                    <div class="card"><h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-wallet mr-2"></i>ব্যালেন্স যোগ/কমানো (Tournament)</h3>
+                        <input id="ta-uid" class="flat-input mb-2" placeholder="User UID"><input id="ta-amt" type="number" class="flat-input" placeholder="+100 বা -50">
+                        <div class="flex gap-2 mt-3"><button onclick="tAdjust()" class="px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-bold">Apply</button><button onclick="tUsers()" class="px-4 py-2 rounded-lg bg-dark-border text-white text-sm font-bold">ইউজার লিস্ট</button></div>
+                        <div id="ta-users" class="mt-3 text-xs text-gray-300 max-h-60 overflow-auto"></div></div>
+                </div>
+            </div>
             <div id="view-tcp" class="view-section hidden">
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8 mb-6">
                     <div class="card">
                         <h3 class="text-xl font-bold text-orange-500 mb-4 pb-3 border-b border-dark-border"><i class="fas fa-sliders-h mr-2"></i>TCP Settings & Prices</h3>
                         <div class="space-y-4">
+                            <label class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-orange-500/40"><input type="checkbox" id="tcp-visible" class="w-5 h-5 accent-orange-500 rounded" checked onchange="tcpToggleVisible(this.checked)"><span class="text-sm font-bold text-white">TCP BOT ওয়েবসাইটে দেখান (বন্ধ করলে ওয়েবসাইট থেকে হাইড হবে)</span></label>
                             <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="tcp-enabled" class="w-5 h-5 accent-orange-500 rounded" checked><span class="text-sm font-bold text-white">TCP BOT বিক্রি চালু</span></label>
                             <div><label class="block text-sm text-gray-400 mb-2">TCP বোর্ডের পাবলিক URL (TCP সার্ভার চালু হলে নিজে থেকেই বসে যায়; চাইলে হাতে দিন)</label><input type="text" id="tcp-url" class="flat-input" placeholder="https://..."></div>
                             <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="tcp-off" class="flat-input"></div>
@@ -986,6 +1038,7 @@
                     </div>
                 </div>
                 <div class="card mb-6">
+                    <div class="flex flex-wrap gap-2 items-center mb-4 p-3 rounded-lg border border-red-500/40"><input type="text" id="tcp-del-n" class="flat-input" style="max-width:160px" placeholder="কয়টা? যেমন 10"><button onclick="tcpDelMany(false)" class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold">এতগুলো ডিলিট (পুরাতন আগে)</button><button onclick="tcpDelMany(true)" class="px-4 py-2 rounded-lg bg-red-700 text-white text-sm font-bold">সব ডিলিট</button></div>
                     <div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold text-orange-500"><i class="fas fa-list mr-2"></i>সব পাসওয়ার্ড</h3><button onclick="tcpLoadKeys()" class="px-3 py-1.5 rounded-lg bg-dark-border text-white text-xs font-bold">Refresh</button></div>
                     <div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-gray-400"><tr><th class="py-2 pr-3">Password</th><th class="pr-3">Label</th><th class="pr-3">Status</th><th class="pr-3">Users</th><th class="pr-3">Ends</th><th></th></tr></thead><tbody id="tcp-keys" class="text-white"></tbody></table></div>
                 </div>
@@ -1147,6 +1200,7 @@
                 dailylike: "Daily Like Price Control",
                 autolike: "Auto Like Management",
                 tcp: "TCP BOT",
+                tourney: "Tournament",
                 ads: "Ads / Earn System",
                 theme: "Theme & Colors",
                 idsell: "ID Sell",
@@ -1194,6 +1248,7 @@
             if(viewId === 'promos') loadPromos();
             if(viewId === 'autolike') loadAutoLike();
             if(viewId === 'tcp') tcpLoadAll();
+            if(viewId === 'tourney') tLoadAll();
             if(viewId === 'ads') adsLoadAll();
         }
 
@@ -2346,6 +2401,84 @@ async function adsSave() {
     } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
 }
 
+// ================= TOURNAMENT (admin) =================
+async function tAdm(action, body) {
+    const tk = await firebase.auth().currentUser.getIdToken();
+    const r = await fetch(MHX_API_BACKEND + '/adminTourney', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify(Object.assign({ action }, body || {})) });
+    const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw new Error(j.error || j.message || 'Error ' + r.status); return j;
+}
+const tE = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const tLocal = ms => { if (!ms) return ''; const d = new Date(+ms - new Date().getTimezoneOffset() * 60000); return d.toISOString().slice(0, 16); };
+const tMs = v => v ? new Date(v).getTime() : 0;
+const T_COL = { primary: 'মেইন কালার', bg: 'ব্যাকগ্রাউন্ড', card: 'কার্ড', text: 'লেখা', accent: 'অ্যাকসেন্ট' };
+let tCats = [], tMatches = [];
+async function tLoadAll() { await tLoadCfg(); await tCatLoad(); await tMatchLoad(); tWdLoad(); }
+async function tLoadCfg() {
+    try {
+        const j = await tAdm('getConfig');
+        document.getElementById('t-visible').checked = !j.hidden;
+        document.getElementById('t-minwd').value = j.minWithdraw; document.getElementById('t-mindep').value = j.minDeposit;
+        document.getElementById('t-reffix').value = j.refFixed; document.getElementById('t-refpct').value = j.refPercent;
+        document.getElementById('t-support').value = j.supportUrl; document.getElementById('t-off').value = j.offMsg || '';
+        document.getElementById('t-colors').innerHTML = Object.keys(T_COL).map(k => `<div><label class="block text-xs text-gray-400 mb-1">${T_COL[k]}</label><input type="color" data-tc="${k}" value="${j.colors[k]}" class="w-full h-10 rounded"></div>`).join('');
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tSaveCfg() {
+    const colors = {}; document.querySelectorAll('[data-tc]').forEach(e => colors[e.dataset.tc] = e.value);
+    try { showLoading(); await tAdm('setConfig', { hidden: !document.getElementById('t-visible').checked, colors, minWithdraw: +document.getElementById('t-minwd').value, minDeposit: +document.getElementById('t-mindep').value,
+        refFixed: +document.getElementById('t-reffix').value, refPercent: +document.getElementById('t-refpct').value, supportUrl: document.getElementById('t-support').value.trim(), offMsg: document.getElementById('t-off').value.trim() });
+        hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false }); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+function tImg(file) { return new Promise((res, rej) => { if (!file) return res(''); const im = new Image(); im.onload = () => { const c = document.createElement('canvas'), s = Math.min(1, 420 / Math.max(im.width, im.height)); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .8)); }; im.onerror = () => rej(new Error('ছবি পড়া যায়নি')); im.src = URL.createObjectURL(file); }); }
+async function tCatLoad() {
+    const j = await tAdm('catList'); tCats = j.cats.sort((a, b) => (a.order || 0) - (b.order || 0));
+    document.getElementById('tc-list').innerHTML = tCats.map(c => `<div class="flex items-center gap-3 p-2 rounded-lg border border-dark-border"><div style="width:46px;height:46px;border-radius:10px;background:#333 center/cover;background-image:url('${tE(c.image)}')"></div><div class="flex-1 text-white text-sm"><b>${tE(c.name)}</b> <span class="text-gray-400">${tE(c.sub)}</span></div>
+        <button class="text-orange-400" onclick="tCatEdit('${c.id}')">edit</button><button class="text-yellow-400" onclick="tCatToggle('${c.id}')">${c.active === false ? 'show' : 'hide'}</button><button class="text-red-400" onclick="tCatDel('${c.id}')"><i class="fas fa-trash"></i></button></div>`).join('') || '<div class="text-gray-400 text-sm">কোনো বাটন নেই</div>';
+    document.getElementById('tm-cat').innerHTML = tCats.map(c => `<option value="${c.id}">${tE(c.name)}</option>`).join('');
+}
+function tCatEdit(id) { const c = tCats.find(x => x.id === id); document.getElementById('tc-id').value = id; document.getElementById('tc-name').value = c.name; document.getElementById('tc-sub').value = c.sub || ''; document.getElementById('tc-order').value = c.order || 0; window.scrollTo(0, 0); }
+async function tCatSave() {
+    try { showLoading(); const id = document.getElementById('tc-id').value, old = tCats.find(x => x.id === id) || {}; const img = await tImg(document.getElementById('tc-file').files[0]);
+        await tAdm('catSave', { id, name: document.getElementById('tc-name').value.trim(), sub: document.getElementById('tc-sub').value.trim(), order: +document.getElementById('tc-order').value || 0, image: img || old.image || '', active: old.active !== false });
+        ['tc-id', 'tc-name', 'tc-sub', 'tc-order', 'tc-file'].forEach(i => document.getElementById(i).value = ''); await tCatLoad(); hideLoading(); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tCatToggle(id) { const c = tCats.find(x => x.id === id); try { await tAdm('catSave', Object.assign({}, c, { active: c.active === false })); tCatLoad(); } catch (e) { SA('Error', e.message, 'error'); } }
+async function tCatDel(id) { const x = await Swal.fire({ title: 'বাটন ডিলিট?', icon: 'warning', showCancelButton: true }); if (!x.isConfirmed) return; try { await tAdm('catDel', { id }); tCatLoad(); } catch (e) { SA('Error', e.message, 'error'); } }
+function tMatchReset() { ['tm-id', 'tm-title', 'tm-fee', 'tm-prize', 'tm-max', 'tm-start', 'tm-reveal', 'tm-room', 'tm-pass'].forEach(i => document.getElementById(i).value = ''); }
+async function tMatchSave() {
+    try { showLoading(); await tAdm('matchSave', { id: document.getElementById('tm-id').value, catId: document.getElementById('tm-cat').value, title: document.getElementById('tm-title').value.trim(), entryFee: +document.getElementById('tm-fee').value, prize: +document.getElementById('tm-prize').value,
+        maxPlayers: +document.getElementById('tm-max').value, startMs: tMs(document.getElementById('tm-start').value), revealMs: tMs(document.getElementById('tm-reveal').value), roomId: document.getElementById('tm-room').value.trim(), roomPass: document.getElementById('tm-pass').value.trim() });
+        hideLoading(); tMatchReset(); tMatchLoad(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1000, showConfirmButton: false }); } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tMatchLoad() {
+    const j = await tAdm('matchList'); tMatches = j.matches;
+    document.getElementById('tm-list').innerHTML = tMatches.map(m => `<div class="p-3 rounded-lg border border-dark-border"><div class="flex flex-wrap items-center gap-2"><b>${tE(m.title)}</b><span class="text-gray-400">${tE((tCats.find(c => c.id === m.catId) || {}).name || '')}</span><span class="text-gray-400">${m.startMs ? new Date(+m.startMs).toLocaleString() : ''}</span>
+        <span>৳${m.entryFee} → ৳${m.prize}</span><span>${m.joined}/${m.maxPlayers}</span><span style="color:${m.status === 'done' ? '#22c55e' : '#eab308'}">${m.status}</span>
+        <span class="ml-auto"><button class="text-orange-400 mr-2" onclick="tMatchEdit('${m.id}')">edit</button>${m.status !== 'done' ? `<button class="text-green-400 mr-2" onclick="tSettle('${m.id}')">winner দিন</button>` : ''}<button class="text-red-400" onclick="tMatchDel('${m.id}')"><i class="fas fa-trash"></i></button></span></div>
+        <div class="text-xs text-gray-400 mt-1">Room: ${tE(m.roomId || '-')} / ${tE(m.roomPass || '-')} • Players: ${(m.players || []).map(p => tE(p.gameName) + ' (' + tE(p.gameUid) + ')').join(', ') || '–'}</div></div>`).join('') || '<div class="text-gray-400">কোনো ম্যাচ নেই</div>';
+}
+function tMatchEdit(id) { const m = tMatches.find(x => x.id === id); const s = (i, v) => document.getElementById(i).value = v == null ? '' : v;
+    s('tm-id', id); s('tm-cat', m.catId); s('tm-title', m.title); s('tm-fee', m.entryFee); s('tm-prize', m.prize); s('tm-max', m.maxPlayers); s('tm-start', tLocal(m.startMs)); s('tm-reveal', tLocal(m.revealMs)); s('tm-room', m.roomId); s('tm-pass', m.roomPass); window.scrollTo(0, 0); }
+async function tMatchDel(id) { const x = await Swal.fire({ title: 'ম্যাচ ডিলিট?', text: 'শেষ না হওয়া ম্যাচ হলে সবাইকে এন্ট্রি ফি ফেরত যাবে', icon: 'warning', showCancelButton: true }); if (!x.isConfirmed) return; try { const j = await tAdm('matchDel', { id }); tMatchLoad(); Swal.fire('Done', j.refunded + ' জনকে রিফান্ড', 'success'); } catch (e) { SA('Error', e.message, 'error'); } }
+async function tSettle(id) {
+    const m = tMatches.find(x => x.id === id), ps = m.players || [];
+    if (!ps.length) { SA('Heads up', 'কেউ জয়েন করেনি', 'warning'); return; }
+    const x = await Swal.fire({ title: 'উইনার ও টাকা', html: `<div style="text-align:left;max-height:300px;overflow:auto">${ps.map((p, i) => `<div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="sw-c${i}"><span style="flex:1">${tE(p.gameName)} (${tE(p.gameUid)})</span><input type="number" id="sw-a${i}" value="${m.prize}" style="width:90px" class="swal2-input"></div>`).join('')}</div>`, showCancelButton: true,
+        preConfirm: () => ps.map((p, i) => ({ uid: p.uid, amount: +document.getElementById('sw-a' + i).value, on: document.getElementById('sw-c' + i).checked })).filter(w => w.on) });
+    if (!x.isConfirmed) return;
+    try { await tAdm('settle', { matchId: id, winners: x.value }); tMatchLoad(); Swal.fire({ icon: 'success', title: 'টাকা যোগ হয়েছে', timer: 1500, showConfirmButton: false }); } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tWdLoad() {
+    try { const j = await tAdm('wdList', { q: document.getElementById('tw-q').value.trim() }), col = { pending: '#eab308', done: '#22c55e', rejected: '#ef4444' };
+        document.getElementById('tw-rows').innerHTML = j.items.map(i => `<tr class="border-t border-dark-border"><td class="py-2 pr-3 font-mono">${tE(i.key)}</td><td class="pr-3">${tE(i.userName)}</td><td class="pr-3">${i.amount}</td><td class="pr-3">${tE(i.method)}</td><td class="pr-3">${tE(i.number)}</td><td class="pr-3" style="color:${col[i.status]}">${i.status}</td>
+        <td class="whitespace-nowrap">${i.status === 'pending' ? `<button class="text-green-400 mr-2" onclick="tWdAct('${i.key}','wdDone')">Paid</button><button class="text-red-400" onclick="tWdAct('${i.key}','wdReject')">Reject</button>` : ''}</td></tr>`).join('') || '<tr><td class="py-3 text-gray-400">কিছু নেই</td></tr>';
+    } catch (e) { SA('Error', e.message, 'error'); }
+}
+async function tWdAct(key, act) { let reason = ''; if (act === 'wdReject') { const x = await Swal.fire({ title: 'কারণ (ঐচ্ছিক) — টাকা ফেরত যাবে', input: 'text', showCancelButton: true }); if (!x.isConfirmed) return; reason = x.value || ''; } try { await tAdm(act, { key, reason }); tWdLoad(); } catch (e) { SA('Error', e.message, 'error'); } }
+async function tBroadcast() { try { showLoading(); const j = await tAdm('broadcast', { title: document.getElementById('tb-title').value, message: document.getElementById('tb-msg').value }); hideLoading(); Swal.fire('Sent', j.queued + ' জনকে পাঠানো হচ্ছে', 'success'); document.getElementById('tb-msg').value = ''; } catch (e) { hideLoading(); SA('Error', e.message, 'error'); } }
+async function tAdjust() { try { await tAdm('adjust', { uid: document.getElementById('ta-uid').value.trim(), amount: +document.getElementById('ta-amt').value }); Swal.fire({ icon: 'success', title: 'Done', timer: 1200, showConfirmButton: false }); } catch (e) { SA('Error', e.message, 'error'); } }
+async function tUsers() { const j = await tAdm('userList'); document.getElementById('ta-users').innerHTML = j.users.map(u => `<div class="py-1 border-b border-dark-border">${tE(u.name)} — ৳${u.balance} — <span class="font-mono cursor-pointer" onclick="document.getElementById('ta-uid').value='${u.uid}'">${u.uid}</span></div>`).join(''); }
+
 // ================= TCP BOARD (admin) =================
 async function tcpCall(action, body) {
     const user = auth.currentUser; if (!user) throw new Error('Login required');
@@ -2379,6 +2512,7 @@ async function tcpLoadCfg() {
     try {
         const j = await tcpCall('getConfig');
         document.getElementById('tcp-enabled').checked = j.enabled !== false;
+        document.getElementById('tcp-visible').checked = j.hidden !== true;
         document.getElementById('tcp-url').value = j.tcpUrl || '';
         document.getElementById('tcp-off').value = j.offMsg || '';
         document.getElementById('tcp-dl-price').value = j.dailyLikePrice;
@@ -2391,10 +2525,22 @@ async function tcpSaveCfg() {
     const rows = tcpReadRows();
     try {
         showLoading();
-        await tcpCall('setConfig', { enabled: document.getElementById('tcp-enabled').checked, tcpUrl: document.getElementById('tcp-url').value.trim(), offMsg: document.getElementById('tcp-off').value.trim(),
+        await tcpCall('setConfig', { hidden: !document.getElementById('tcp-visible').checked, enabled: document.getElementById('tcp-enabled').checked, tcpUrl: document.getElementById('tcp-url').value.trim(), offMsg: document.getElementById('tcp-off').value.trim(),
             dailyLikePrice: document.getElementById('tcp-dl-price').value, dailyLikeResellerPrice: document.getElementById('tcp-dl-rprice').value, packages: rows.map(p => Object.assign({}, p, { name: p.name || (p.days + ' Days') })) });
         hideLoading(); Swal.fire({ icon: 'success', title: 'Saved', timer: 1200, showConfirmButton: false });
     } catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
+}
+async function tcpToggleVisible(on) {
+    try { await tcpCall('setHidden', { hidden: !on }); Swal.fire({ icon: 'success', title: on ? 'TCP BOT এখন দেখা যাবে' : 'TCP BOT হাইড হয়েছে', timer: 1300, showConfirmButton: false }); }
+    catch (e) { document.getElementById('tcp-visible').checked = !on; SA('Error', e.message, 'error'); }
+}
+async function tcpDelMany(all) {
+    const raw = all ? 'all' : document.getElementById('tcp-del-n').value.trim();
+    if (!all && !(+raw > 0)) { SA('Heads up', 'কতগুলো ডিলিট করবেন সংখ্যা লিখুন', 'warning'); return; }
+    const x = await Swal.fire({ title: all ? 'সব পাসওয়ার্ড ডিলিট করবেন?' : raw + 'টি পাসওয়ার্ড ডিলিট করবেন?', text: 'এটা ফেরত আনা যাবে না', icon: 'warning', showCancelButton: true });
+    if (!x.isConfirmed) return;
+    try { showLoading(); const j = await tcpCall('deleteMany', { count: raw }); hideLoading(); Swal.fire({ icon: 'success', title: j.deleted + 'টি ডিলিট হয়েছে', timer: 1500, showConfirmButton: false }); tcpLoadKeys(); }
+    catch (e) { hideLoading(); SA('Error', e.message, 'error'); }
 }
 async function tcpGen() {
     try {

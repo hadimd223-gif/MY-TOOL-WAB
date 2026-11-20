@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tournament</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<style>
+:root{--primary:#7c3aed;--bg:#0f0b1e;--card:#1b1535;--text:#f5f3ff;--accent:#f59e0b;--mut:color-mix(in srgb,var(--text) 55%,transparent);--line:color-mix(in srgb,var(--text) 14%,transparent)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:84px}
+button,input{font:inherit}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.top h1{font-size:18px;margin:0;flex:1}.bal{background:var(--card);border:1px solid var(--primary);border-radius:20px;padding:6px 12px;font-weight:800;color:var(--accent);font-size:14px}
+.pad{padding:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sq{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;aspect-ratio:1/1;display:flex;flex-direction:column;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.sq .im{flex:1;background:color-mix(in srgb,var(--primary) 30%,var(--card)) center/cover no-repeat}
+.sq .tx{padding:9px 10px;text-align:center}.sq b{display:block;font-size:14px}.sq small{color:var(--mut);font-size:11px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;gap:8px;margin:6px 0}.k{color:var(--mut);font-size:11px;text-transform:uppercase}.v{font-weight:800}
+.btn{background:var(--primary);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}.btn.o{background:transparent;border:1px solid var(--primary);color:var(--text)}.btn:disabled{opacity:.5}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+.timer{background:var(--primary);border-radius:12px;padding:8px;text-align:center;font-weight:800;margin-top:10px}
+.pl{font-size:12px;color:var(--mut);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;word-break:break-word}
+.pl span{display:inline-block;background:var(--bg);border-radius:8px;padding:2px 8px;margin:2px;color:var(--text)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:30}
+.nav a{flex:1;text-align:center;font-size:11px;padding:6px 0;color:var(--mut);cursor:pointer;font-weight:700}.nav a.on{color:var(--accent)}.nav a em{display:block;font-style:normal;font-size:20px}
+.fab{position:fixed;right:14px;bottom:92px;width:52px;height:52px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:24px;text-decoration:none;box-shadow:0 6px 16px rgba(0,0,0,.4);z-index:25}
+.li{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer;font-weight:600}
+.av{width:44px;height:44px;border-radius:50%;background:var(--primary) center/cover;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+input.in{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px;margin:5px 0}
+.hide{display:none!important}.mut{color:var(--mut);font-size:12px}.pill{font-size:11px;border-radius:10px;padding:2px 8px;font-weight:700}
+.swal2-popup{background:var(--card)!important;color:var(--text)!important}.swal2-title,.swal2-html-container{color:var(--text)!important}
+.msg{text-align:center;padding:60px 20px;color:var(--mut)}
+</style></head><body>
+<div class="top"><div id="back" class="hide" onclick="goHome()" style="font-size:22px;cursor:pointer">‹</div><h1 id="ttl">🏆 Tournament</h1><div class="bal">৳<span id="bal">0</span></div></div>
+<div id="app"><div class="msg">Loading…</div></div>
+<a id="fab" class="fab hide" target="_blank" rel="noopener">🎧</a>
+<div class="nav" id="nav"><a data-t="home" class="on" onclick="tab('home')"><em>🏠</em>Home</a><a data-t="lb" onclick="tab('lb')"><em>🏅</em>Leaderboard</a><a data-t="ref" onclick="tab('ref')"><em>🎁</em>Refer</a><a data-t="me" onclick="tab('me')"><em>👤</em>Profile</a></div>
+<script>
+const BACKEND="https://9on3qmsyno.apps.bot-hosting.cloud";
+firebase.initializeApp({apiKey:"AIzaSyAJWDIhsO4nAnBvpVZ0FP3kIlHFEU2Ysq4",authDomain:"m-h-x-wab-7abdf.firebaseapp.com",projectId:"m-h-x-wab-7abdf",appId:"1:570748526283:web:3c786486aa3f838188c54e"});
+let me=null,P={},D={cats:[],matches:[]},CFG={},curCat=null,cur='home';
+const $=id=>document.getElementById(id),esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=ms=>new Date(ms).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true});
+async function api(p,b){const t=await me.getIdToken();const r=await fetch(BACKEND+p,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(b||{})});let j={};try{j=await r.json()}catch(e){}if(!r.ok||j.ok===false&&j.error)throw new Error(j.error||j.message||'Error '+r.status);return j}
+const err=e=>Swal.fire('Oops',e.message||String(e),'error');
+function theme(c){const s=document.documentElement.style;for(const k in c)s.setProperty('--'+k,c[k])}
+async function boot(){
+  try{const r=await fetch(BACKEND+'/tInfo');CFG=await r.json();theme(CFG.colors||{});
+    if(CFG.hidden){$('app').innerHTML='<div class="msg">Tournament is currently unavailable.<br><br><a href="index.html" style="color:var(--accent)">← Back to main site</a></div>';$('nav').classList.add('hide');return}
+    if(CFG.supportUrl){$('fab').href=CFG.supportUrl;$('fab').classList.remove('hide')}}catch(e){}
+  firebase.auth().onAuthStateChanged(async u=>{
+    if(!u){$('app').innerHTML='<div class="msg">Please log in on the main site first.<br><br><a class="btn" href="index.html" style="text-decoration:none;display:inline-block">Go to login</a></div>';$('nav').classList.add('hide');return}
+    me=u;try{const q=new URLSearchParams(location.search);const j=await api('/tInit',{ref:q.get('ref')||localStorage.getItem('tref')||''});P=j.profile;CFG=Object.assign(CFG,j);
+      if(q.get('payok')){try{const v=await api('/tDepositVerify',{ref:q.get('payok')});if(v.ok)Swal.fire('Added!','৳'+v.amount+' added to Tournament wallet','success')}catch(e){}history.replaceState({},'',location.pathname)}
+      await loadHome();tab('home')}catch(e){$('app').innerHTML='<div class="msg">'+esc(e.message)+'</div>'}});
+}
+try{const q=new URLSearchParams(location.search).get('ref');if(q)localStorage.setItem('tref',q)}catch(e){}
+async function loadHome(){D=await api('/tHome');$('bal').innerText=D.balance;P.balance=D.balance}
+function setBack(on,t){$('back').classList.toggle('hide',!on);$('ttl').innerText=t||'🏆 Tournament'}
+function goHome(){curCat=null;tab('home')}
+function tab(t){cur=t;document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.t===t));setBack(false);({home:viewHome,lb:viewLb,ref:viewRef,me:viewMe})[t]()}
+async function viewHome(){
+  if(curCat)return viewCat();
+  await loadHome().catch(()=>{});
+  $('app').innerHTML='<div class="pad"><div class="grid">'+(D.cats.length?D.cats.map(c=>`<div class="sq" onclick="openCat('${esc(c.id)}')"><div class="im" style="${c.image?`background-image:url('${esc(c.image)}')`:''}"></div><div class="tx"><b>${esc(c.name)}</b><small>${esc(c.sub)}</small></div></div>`).join(''):'<div class="msg" style="grid-column:1/3">No tournaments yet</div>')+'</div></div>';
+}
+function openCat(id){curCat=id;viewCat()}
+function viewCat(){
+  const c=D.cats.find(x=>x.id===curCat)||{};setBack(true,c.name);
+  const ms=D.matches.filter(m=>m.catId===curCat&&m.status==='open');
+  $('app').innerHTML='<div class="pad">'+(ms.map(matchCard).join('')||'<div class="msg">No matches right now</div>')+'</div>';tick();
+}
+function matchCard(m){const full=m.joined>=m.maxPlayers,pct=Math.round(m.joined/Math.max(1,m.maxPlayers)*100);
+ return `<div class="card"><div class="row"><b style="font-size:16px">${esc(m.title)}</b></div><div class="mut">${fmt(m.startMs)}</div>
+ <div class="row" style="margin-top:12px"><div><div class="k">Win prize</div><div class="v" style="color:var(--accent)">৳${m.prize}</div></div><div><div class="k">Entry fee</div><div class="v">৳${m.entryFee}</div></div><div><div class="k">Players</div><div class="v">${m.joined}/${m.maxPlayers}</div></div></div>
+ <div class="bar"><i style="width:${pct}%"></i></div>
+ <div class="row" style="margin-top:10px">${m.mine?`<button class="btn o" onclick="room('${m.id}')">🔑 Room Details</button><span class="pill" style="background:var(--primary)">Joined ✓</span>`:`<span class="mut">${full?'Full':(m.maxPlayers-m.joined)+' spots left'}</span><button class="btn" ${full||m.startMs<=D.now?'disabled':''} onclick="join('${m.id}')">Join</button>`}</div>
+ <div class="timer" data-s="${m.startMs}">–</div>
+ <div class="pl"><b>Joined players (${m.joined}):</b><br>${m.players.length?m.players.map(n=>`<span>${esc(n)}</span>`).join(''):'<span>No one yet</span>'}</div></div>`}
+let tk=null;function tick(){clearInterval(tk);const f=()=>{document.querySelectorAll('.timer').forEach(e=>{const d=+e.dataset.s-Date.now();if(d<=0){e.innerText='Started / Starting now';return}const h=Math.floor(d/36e5),mi=Math.floor(d%36e5/6e4),s=Math.floor(d%6e4/1e3);e.innerText='STARTS IN  '+String(h).padStart(2,'0')+'h:'+String(mi).padStart(2,'0')+'m:'+String(s).padStart(2,'0')+'s'})};f();tk=setInterval(f,1000)}
+async function join(id){const m=D.matches.find(x=>x.id===id);
+ const r=await Swal.fire({title:'Join: '+m.title,html:`<div class="mut" style="margin-bottom:6px">৳${m.entryFee} will be deducted from your Tournament wallet</div><input id="gn" class="in" placeholder="In-game ID name"><input id="gu" class="in" inputmode="numeric" placeholder="In-game UID">`,showCancelButton:true,confirmButtonText:'Confirm',preConfirm:()=>{const a=$('gn').value.trim(),b=$('gu').value.trim();if(!a||!b){Swal.showValidationMessage('Name and UID required');return false}return{gameName:a,gameUid:b}}});
+ if(!r.isConfirmed)return;try{const j=await api('/tJoin',Object.assign({matchId:id},r.value));$('bal').innerText=j.balance;await loadHome();viewCat();Swal.fire('Joined!','You are in. Room details appear at start time.','success')}catch(e){err(e)}}
+async function room(id){try{const j=await api('/tRoom',{matchId:id});if(!j.ready)return Swal.fire('Not yet','Room ID & password will appear at '+(j.revealMs?fmt(j.revealMs):'start time'),'info');
+ Swal.fire({title:'Room Details',html:`<div class="k">Room ID</div><div class="v" style="font-size:20px">${esc(j.roomId)} <button class="btn o" onclick="cp('${esc(j.roomId)}')">Copy</button></div><br><div class="k">Password</div><div class="v" style="font-size:20px">${esc(j.roomPass||'–')} <button class="btn o" onclick="cp('${esc(j.roomPass)}')">Copy</button></div>`})}catch(e){err(e)}}
+function cp(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>Swal.fire({toast:true,position:'top',title:'Copied',timer:1000,showConfirmButton:false})).catch(()=>prompt('Copy:',t))}
+async function viewLb(){$('app').innerHTML='<div class="msg">Loading…</div>';try{const j=await api('/tLeaderboard');
+ $('app').innerHTML='<div class="pad"><div class="card"><b>🏅 Top winners</b><div class="mut">Day: '+esc(j.date)+' • updates once a day</div></div>'+(j.rows.map((r,i)=>`<div class="li"><div style="width:24px;font-weight:800;color:var(--accent)">${i+1}</div><div class="av" style="${r.photo?`background-image:url('${esc(r.photo)}')`:''}">${r.photo?'':esc(r.name[0]||'?')}</div><div style="flex:1">${esc(r.name)}<div class="mut">${r.wins} wins</div></div><div class="v" style="color:var(--accent)">৳${r.amount}</div></div>`).join('')||'<div class="msg">No winners yet</div>')+'</div>'}catch(e){$('app').innerHTML='<div class="msg">'+esc(e.message)+'</div>'}}
+async function viewRef(){const r=await api('/tInit',{});P=r.profile;const link=location.origin+location.pathname+'?ref='+P.refCode;
+ $('app').innerHTML=`<div class="pad"><div class="card"><b>🎁 Refer & earn (Tournament wallet only)</b><p class="mut">You get ৳${CFG.refFixed!=null?'':''}a bonus per friend who joins and a commission on every deposit they make.</p><div class="k">Your code</div><div class="v" style="font-size:22px">${esc(P.refCode)}</div><div class="k" style="margin-top:10px">Your link</div><div class="mut" style="word-break:break-all">${esc(link)}</div><button class="btn" style="margin-top:10px;width:100%" onclick="cp('${esc(link)}')">Copy link</button></div><div class="grid"><div class="card"><div class="k">Referred</div><div class="v">${P.refCount}</div></div><div class="card"><div class="k">Earned</div><div class="v">৳${P.refEarned}</div></div></div></div>`}
+function viewMe(){$('app').innerHTML=`<div class="pad"><div class="card" style="text-align:center"><div class="av" style="width:76px;height:76px;margin:0 auto;font-size:28px;${P.photo?`background-image:url('${esc(P.photo)}')`:''}" onclick="$('pf').click()">${P.photo?'':esc((P.name||'?')[0])}</div><input type="file" id="pf" accept="image/*" class="hide" onchange="pic(this)"><div class="v" style="font-size:18px;margin-top:8px">${esc(P.name)}</div><div class="mut">Wins: ${P.wins}</div><div class="mut" style="margin-top:6px">Support PIN: <b>${esc(P.supportPin)}</b> <a onclick="cp('${esc(P.supportPin)}')" style="color:var(--accent);cursor:pointer">copy</a></div></div>
+ <div class="card" style="padding:4px 14px"><div class="li" onclick="addMoney()">➕ Add Money</div><div class="li" onclick="withdraw()">💸 Withdraw</div><div class="li" onclick="wdHist()">🧾 Withdraw History</div><div class="li" onclick="rename()">✏️ Change name</div><div class="li" onclick="pass()">🔒 Change password</div><div class="li" onclick="location.href='index.html'">↩ Back to main website</div></div></div>`}
+async function rename(){const r=await Swal.fire({title:'Your name',input:'text',inputValue:P.name,showCancelButton:true});if(!r.isConfirmed)return;try{const j=await api('/tProfile',{name:r.value});P=j.profile;viewMe()}catch(e){err(e)}}
+function pic(inp){const f=inp.files[0];if(!f)return;const im=new Image();im.onload=async()=>{const c=document.createElement('canvas'),s=Math.min(1,160/Math.max(im.width,im.height));c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);try{const j=await api('/tProfile',{photo:c.toDataURL('image/jpeg',.7)});P=j.profile;viewMe()}catch(e){err(e)}};im.src=URL.createObjectURL(f)}
+async function pass(){const r=await Swal.fire({title:'Change password',html:'<input id="p0" type="password" class="in" placeholder="Old password"><input id="p1" type="password" class="in" placeholder="New password"><input id="p2" type="password" class="in" placeholder="New password again">',showCancelButton:true,preConfirm:()=>{const a=$('p0').value,b=$('p1').value,c=$('p2').value;if(!a||b.length<6){Swal.showValidationMessage('New password min 6 characters');return false}if(b!==c){Swal.showValidationMessage('New passwords do not match');return false}return{a,b}}});if(!r.isConfirmed)return;
+ try{const cr=firebase.auth.EmailAuthProvider.credential(me.email,r.value.a);await me.reauthenticateWithCredential(cr);await me.updatePassword(r.value.b);Swal.fire('Done','Password changed (this also changes your main-site password)','success')}catch(e){err(new Error(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential'?'Old password is wrong':e.message))}}
+async function addMoney(){const r=await Swal.fire({title:'Add Money',input:'number',inputLabel:'Min ৳'+CFG.minDeposit,showCancelButton:true});if(!r.isConfirmed)return;try{const j=await api('/tDepositCreate',{amount:+r.value,origin:location.origin});location.href=j.paymentUrl}catch(e){err(e)}}
+async function withdraw(){const r=await Swal.fire({title:'Withdraw',html:`<div class="mut">Balance ৳${P.balance} • Min ৳${CFG.minWithdraw}</div><select id="wm" class="in"><option>bKash</option><option>Nagad</option></select><input id="wa" type="number" class="in" placeholder="Amount"><input id="w1" class="in" inputmode="numeric" placeholder="Number"><input id="w2" class="in" inputmode="numeric" placeholder="Number again">`,showCancelButton:true,preConfirm:()=>({method:$('wm').value,amount:+$('wa').value,number:$('w1').value,number2:$('w2').value})});if(!r.isConfirmed)return;
+ try{const j=await api('/tWdRequest',r.value);await loadHome();Swal.fire({icon:'success',title:'Request sent',html:`Your key:<br><b style="font-size:18px">${esc(j.key)}</b><br><button class="btn o" onclick="cp('${esc(j.key)}')">Copy key</button><div class="mut">Give this key to support if needed.</div>`})}catch(e){err(e)}}
+async function wdHist(){try{const j=await api('/tWdMine');const col={pending:'#eab308',done:'#22c55e',rejected:'#ef4444'};
+ $('app').innerHTML='<div class="pad"><div class="card"><b>Withdraw History</b></div>'+(j.items.map(i=>`<div class="card"><div class="row"><b>৳${i.amount} • ${esc(i.method)}</b><span class="pill" style="background:${col[i.status]};color:#000">${i.status}</span></div><div class="mut">${esc(i.number)} • ${fmt(i.ts)}</div><div class="row"><span class="v" style="font-family:monospace">${esc(i.key)}</span><button class="btn o" onclick="cp('${esc(i.key)}')">Copy</button></div>${i.reason?'<div class="mut">'+esc(i.reason)+'</div>':''}</div>`).join('')||'<div class="msg">No withdrawals yet</div>')+'</div>'}catch(e){err(e)}}
+boot();
+</script></body></html>
