@@ -3155,5 +3155,82 @@ async function afLoad() {
 }
 window.afLoad = afLoad;
 </script>
+<!-- ===== ADMIN UI v2: box menu, smooth animations, button-style theme editor ===== -->
+<style>
+#sidebar,#sidebar-backdrop{display:none!important}
+#mobile-menu-btn{display:inline-flex!important;width:44px;height:44px;border-radius:14px;align-items:center;justify-content:center;background:rgba(249,115,22,.12);transition:transform .2s}
+#mobile-menu-btn:active{transform:scale(.88) rotate(90deg)}
+.view-section:not(.hidden){animation:vIn .38s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+.card{transition:transform .25s,box-shadow .25s,border-color .25s}.card:hover{border-color:rgba(249,115,22,.35)}
+button{transition:transform .15s,filter .2s}button:active{transform:scale(.95)}
+#mx{position:fixed;inset:0;z-index:200;background:rgba(9,9,11,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:none;flex-direction:column;opacity:0;transition:opacity .25s}
+#mx.on{display:flex}#mx.show{opacity:1}
+#mx .hd{display:flex;gap:10px;align-items:center;padding:16px 16px 10px;padding-top:max(16px,env(safe-area-inset-top))}
+#mx .hd b{font-size:20px;color:#f97316;letter-spacing:.12em;font-weight:900;white-space:nowrap}#mx .hd b span{color:#fff}
+#mx input{flex:1;min-width:0;background:#18181b;border:1px solid #27272a;border-radius:14px;padding:11px 14px;color:#fff;outline:none}#mx input:focus{border-color:#f97316}
+#mx .x{width:42px;height:42px;border-radius:14px;background:#18181b;border:1px solid #27272a;color:#fff;font-size:18px}
+#mx .bd{flex:1;overflow-y:auto;padding:6px 16px 120px;-webkit-overflow-scrolling:touch}
+#mx .gr{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(min-width:640px){#mx .gr{grid-template-columns:repeat(4,1fr)}}@media(min-width:1024px){#mx .gr{grid-template-columns:repeat(6,1fr)}}
+#mx .bx{background:linear-gradient(160deg,#1c1c20,#141417);border:1px solid #2a2a30;border-radius:22px;padding:16px 6px 12px;text-align:center;color:#e4e4e7;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:9px;font-size:12px;font-weight:700;line-height:1.25;opacity:0;transform:translateY(18px) scale(.94);transition:transform .2s,border-color .2s,box-shadow .2s}
+#mx.show .bx{animation:bxIn .45s cubic-bezier(.2,.9,.3,1.2) forwards;animation-delay:calc(var(--i)*22ms)}
+@keyframes bxIn{to{opacity:1;transform:none}}
+#mx .bx:hover{border-color:#f97316;box-shadow:0 10px 26px rgba(249,115,22,.18)}#mx .bx:active{transform:scale(.93)}
+#mx .bx.cur{border-color:#f97316;background:linear-gradient(160deg,rgba(249,115,22,.25),#141417)}
+#mx .ic{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#fb923c,#ea580c);display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;box-shadow:0 8px 18px rgba(234,88,12,.35)}
+#mx .ft{padding:0 16px 16px}#mx .lo{width:100%;padding:13px;border-radius:16px;border:1px solid #3f1d1d;background:#2a1212;color:#f87171;font-weight:800}
+/* ---- theme editor: every element is a tile with its own live button ---- */
+#th-groups details{border-radius:22px}#th-groups details>summary{list-style:none;padding:4px 2px}
+#th-groups details>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
+#th-groups .th-row{border:1px solid #2a2a30!important;border-radius:20px;padding:12px!important;background:#141417;transition:border-color .2s,transform .2s}
+#th-groups .th-row:hover{border-color:#f97316!important;transform:translateY(-2px)}
+#th-groups [id^="thsw-"]{width:100%!important;height:46px!important;border-radius:14px!important;box-shadow:0 6px 16px rgba(0,0,0,.35);order:-1;flex:1 1 100%}
+#th-groups .th-row .th-lbl{font-size:11px}
+</style>
+<div id="mx"><div class="hd"><b>MHX<span> ADMIN</span></b><input id="mx-q" placeholder="খুঁজুন…" oninput="mxFilter(this.value)"><button class="x" onclick="mxClose()"><i class="fas fa-times"></i></button></div><div class="bd"><div class="gr" id="mx-gr"></div></div><div class="ft" id="mx-ft"></div></div>
+<script>
+(function () {
+    function links() { return Array.prototype.slice.call(document.querySelectorAll('#sidebar nav a.nav-link')); }
+    window.mxOpen = function () {
+        var cur = (document.querySelector('#sidebar nav a.nav-link.active') || {}).id, gr = document.getElementById('mx-gr'), i = 0;
+        gr.innerHTML = '';
+        links().forEach(function (a) {
+            var ic = a.querySelector('i'), b = document.createElement('div');
+            b.className = 'bx' + (a.id === cur ? ' cur' : ''); b.style.setProperty('--i', i++);
+            b.dataset.t = a.textContent.trim().toLowerCase();
+            b.innerHTML = '<div class="ic">' + (ic ? ic.outerHTML.replace(/w-8|text-center/g, '') : '') + '</div><span>' + a.textContent.trim() + '</span>';
+            b.onclick = function () { mxClose(); setTimeout(function () { a.click(); window.scrollTo(0, 0); }, 120); };
+            gr.appendChild(b);
+        });
+        var lo = document.querySelector('#sidebar [onclick*="ogout"]'), ft = document.getElementById('mx-ft'); ft.innerHTML = '';
+        if (lo) { var l = document.createElement('button'); l.className = 'lo'; l.innerHTML = '<i class="fas fa-sign-out-alt mr-2"></i>Logout'; l.onclick = function () { lo.click(); }; ft.appendChild(l); }
+        document.getElementById('mx-q').value = '';
+        var m = document.getElementById('mx'); m.classList.add('on'); requestAnimationFrame(function () { requestAnimationFrame(function () { m.classList.add('show'); }); });
+    };
+    window.mxClose = function () { var m = document.getElementById('mx'); m.classList.remove('show'); setTimeout(function () { m.classList.remove('on'); }, 250); };
+    window.mxFilter = function (q) { q = q.trim().toLowerCase(); document.querySelectorAll('#mx-gr .bx').forEach(function (b) { b.style.display = !q || b.dataset.t.indexOf(q) > -1 ? '' : 'none'; }); };
+    window.toggleSidebar = function () { var m = document.getElementById('mx'); m.classList.contains('on') ? mxClose() : mxOpen(); };
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') mxClose(); });
+    /* theme editor: always open, plus a free "custom colour" builder at the bottom */
+    var tg = document.getElementById('th-groups');
+    if (tg) {
+        new MutationObserver(function () { tg.querySelectorAll('details').forEach(function (d) { d.open = true; }); }).observe(tg, { childList: true });
+        var c = document.createElement('div'); c.className = 'card mb-6';
+        c.innerHTML = '<h3 class="text-lg font-bold text-orange-500 mb-1"><i class="fas fa-eye-dropper mr-2"></i>কাস্টম কালার (যেকোনো জায়গা)</h3><p class="text-xs text-gray-400 mb-3">তালিকা থেকে জায়গা বেছে নিজের মনমতো কালার দিন। ওপরের তালিকায় না থাকলে "অন্য…" বেছে CSS selector লিখুন।</p>' +
+            '<div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end"><div><label class="block text-xs text-gray-400 mb-1">কোথায়</label><select id="cc-sel" class="flat-input"><option value=".zp-btn">সব মেইন বাটন</option><option value=".vip-card">সব কার্ড</option><option value="header">হেডার</option><option value=".product-card">প্রোডাক্ট কার্ড</option><option value=".nav-item">নিচের নেভিগেশন</option><option value="#fab-support">সাপোর্ট ফ্লোটিং বাটন</option><option value="body">ব্যাকগ্রাউন্ড</option><option value="">অন্য…</option></select><input id="cc-custom" class="flat-input mt-2 hidden" placeholder=".class বা #id"></div>' +
+            '<div><label class="block text-xs text-gray-400 mb-1">ব্যাকগ্রাউন্ড</label><input type="color" id="cc-bg" value="#10b981" class="th-pick" style="width:100%;height:42px"></div><div><label class="block text-xs text-gray-400 mb-1">লেখার কালার</label><input type="color" id="cc-tx" value="#ffffff" class="th-pick" style="width:100%;height:42px"></div><button onclick="ccAdd()" class="flat-btn">যোগ করুন</button></div>';
+        tg.parentNode.insertBefore(c, tg.nextSibling);
+        document.getElementById('cc-sel').onchange = function () { document.getElementById('cc-custom').classList.toggle('hidden', this.value !== ''); };
+        window.ccAdd = function () {
+            var s = document.getElementById('cc-sel').value || document.getElementById('cc-custom').value.trim();
+            if (!s || /[{};]/.test(s)) { Swal.fire('Heads up', 'সঠিক selector দিন', 'warning'); return; }
+            var ta = document.getElementById('th-css'), rule = s + '{' + (s === 'body' ? 'background:' : 'background:') + document.getElementById('cc-bg').value + ' !important;color:' + document.getElementById('cc-tx').value + ' !important}\n';
+            ta.value = (ta.value ? ta.value.replace(/\s*$/, '\n') : '') + rule; window.thSetCss(ta.value);
+            Swal.fire({ icon: 'success', title: 'যোগ হয়েছে — প্রিভিউ দেখে Save চাপুন', timer: 1600, showConfirmButton: false });
+        };
+    }
+})();
+</script>
 </body>
 </html>
