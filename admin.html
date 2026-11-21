@@ -173,6 +173,9 @@
             <a href="#" onclick="switchView('settings')" id="nav-settings" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-cog w-8 text-center"></i> Settings
             </a>
+            <a href="#" onclick="switchView('theme');return false" id="nav-theme" class="nav-link flex items-center px-4 py-3">
+                <i class="fas fa-palette w-8 text-center"></i> Theme &amp; Colors
+            </a>
             <a href="#" onclick="switchView('idsell');return false" id="nav-idsell" class="nav-link flex items-center px-4 py-3">
                 <i class="fas fa-id-card w-8 text-center"></i> ID Sell
             </a>
@@ -314,20 +317,6 @@
             </div>
 
             <div id="view-settings" class="view-section hidden">
-                <div class="card mb-6 md:mb-8" style="border:1px solid #ff7a00">
-                    <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-palette mr-2"></i>Website Theme Color (এক জায়গায় বদলালেই সব জায়গায়)</h3>
-                    <p class="text-xs text-gray-400 mb-4">এখানে একটা মেইন কালার বেছে Save করলে ওয়েবসাইটের বাটন, কার্ড, বর্ডার, ব্যাকগ্রাউন্ড, Tournament পেজ সবকিছুর কালার ওই রঙের সাথে ম্যাচ করে নিজে নিজে বদলে যাবে।</p>
-                    <div class="flex flex-wrap gap-2 mb-4" id="thc-presets"></div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <input type="color" id="thc-pick" value="#ff7a00" style="width:56px;height:44px;border:0;background:none;cursor:pointer" oninput="thcSync(this.value)">
-                        <input type="text" id="thc-hex" class="flat-input" style="max-width:140px" value="#ff7a00" maxlength="7" oninput="thcTyped(this.value)">
-                        <div id="thc-prev" class="flex-1 rounded-xl" style="height:44px;background:linear-gradient(135deg,#ff7a00,#ff9a3c,#ffb36b)"></div>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" class="flat-btn flex-1" onclick="thcSave()"><i class="fas fa-save mr-1"></i> Save Theme Color</button>
-                        <button type="button" class="flat-btn flat-btn-outline" onclick="thcReset()">Default (Orange)</button>
-                    </div>
-                </div>
                 <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
@@ -429,6 +418,57 @@
                         </div>
                         <button onclick="saveSettings('advanced')" class="flat-btn mt-6 w-full">Save Advanced Config</button>
                     </div>
+                </div>
+            </div>
+
+            <div id="view-theme" class="view-section hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
+                    <div>
+                                        <div class="card mb-6" style="border:1px solid #ff7a00">
+                    <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-palette mr-2"></i>মেইন থিম কালার (এক জায়গায় বদলালেই সব জায়গায়)</h3>
+                    <p class="text-xs text-gray-400 mb-4">এখানে একটা মেইন কালার বেছে Save করলে ওয়েবসাইটের বাটন, কার্ড, বর্ডার, ব্যাকগ্রাউন্ড, Tournament পেজ সবকিছুর কালার ওই রঙের সাথে ম্যাচ করে নিজে নিজে বদলে যাবে। নিচের তালিকা থেকে কোনো নির্দিষ্ট জায়গার কালার আলাদা করে দিলে সেটা মেইন কালারের ওপরে প্রাধান্য পাবে।</p>
+                    <div class="flex flex-wrap gap-2 mb-4" id="thc-presets"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <input type="color" id="thc-pick" value="#ff7a00" style="width:56px;height:44px;border:0;background:none;cursor:pointer" oninput="thcSync(this.value)">
+                        <input type="text" id="thc-hex" class="flat-input" style="max-width:140px" value="#ff7a00" maxlength="7" oninput="thcTyped(this.value)">
+                        <div id="thc-prev" class="flex-1 rounded-xl" style="height:44px;background:linear-gradient(135deg,#ff7a00,#ff9a3c,#ffb36b)"></div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" class="flat-btn flex-1" onclick="thcSave()"><i class="fas fa-save mr-1"></i> Save Theme Color</button>
+                        <button type="button" class="flat-btn flat-btn-outline" onclick="thcReset()">Default (Orange)</button>
+                    </div>
+                </div>
+                        <div class="card mb-6">
+                            <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-palette mr-2"></i>ওয়েবসাইটের কালার কাস্টমাইজ (আলাদা আলাদা জায়গা)</h3>
+                            <p class="text-xs text-gray-400 mb-4">প্রতিটি বাটন, কার্ড, হেডার, নেভিগেশন, নোটিশ বার ইত্যাদির কালার নিজের ইচ্ছামতো বদলান। প্রতিটি জায়গায় <b>কালার ১</b> ও <b>কালার ২</b> দিলে দুই সাইডে দুই কালারের গ্রেডিয়েন্ট হবে (যেমন এক সাইড হালকা সাদা, আরেক সাইড গোলাপি)। শুধু একটা কালার দিলে সলিড কালার হবে। ডানের প্রিভিউতে সাথে সাথে দেখতে পাবেন; ঠিক লাগলে <b>Save</b> চাপুন।</p>
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <button onclick="thSave()" class="flat-btn"><i class="fas fa-save mr-2"></i>Save (সবার জন্য চালু করুন)</button>
+                                <button onclick="thResetAll()" class="flat-btn" style="background:#3f3f46"><i class="fas fa-undo mr-2"></i>সব আগের মতো করুন</button>
+                            </div>
+                        </div>
+                        <div id="th-groups"></div>
+                        <div class="card mb-24">
+                            <h3 class="text-lg font-bold text-orange-500 mb-1"><i class="fas fa-code mr-2"></i>Advanced: নিজের CSS (ঐচ্ছিক)</h3>
+                            <p class="text-xs text-gray-400 mb-3">উপরের তালিকায় নেই এমন কিছু বদলাতে চাইলে এখানে CSS লিখুন। যেমন: <code>.vip-card{border-radius:30px}</code></p>
+                            <textarea id="th-css" class="flat-input h-28" style="font-family:monospace;font-size:12px" placeholder="/* custom css */" oninput="thSetCss(this.value)"></textarea>
+                        </div>
+                    </div>
+                    <div class="xl:sticky xl:top-4 self-start">
+                        <div class="card">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-lg font-bold text-orange-500"><i class="fas fa-mobile-screen mr-2"></i>লাইভ প্রিভিউ</h3>
+                                <button onclick="thReloadPreview()" class="text-xs text-gray-400 hover:text-orange-500"><i class="fas fa-rotate mr-1"></i>Reload</button>
+                            </div>
+                            <input id="th-url" class="flat-input mb-3" style="padding:8px 12px;font-size:12px" placeholder="আপনার সাইটের লিংক">
+                            <div style="border:6px solid #27272A;border-radius:28px;overflow:hidden;background:#fff">
+                                <iframe id="th-frame" title="preview" style="width:100%;height:600px;border:0;display:block" onload="thPush()"></iframe>
+                            </div>
+                            <p class="text-[11px] text-gray-500 mt-2">প্রিভিউ না এলে উপরের লিংকে সাইটের ঠিকানা দিয়ে Reload চাপুন (অ্যাডমিন ও সাইট একই ডোমেইনে থাকতে হবে)।</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="position:fixed;right:18px;bottom:18px;z-index:40">
+                    <button onclick="thSave()" class="flat-btn shadow-2xl"><i class="fas fa-save mr-2"></i>Save Colors</button>
                 </div>
             </div>
 
@@ -1185,6 +1225,7 @@
                 tcp: "TCP BOT",
                 tourney: "Tournament",
                 ads: "Ads / Earn System",
+                theme: "Theme & Colors",
                 idsell: "ID Sell",
                 maintenance: "Website Maintenance",
                 referral: "Referral Settings",
@@ -1199,6 +1240,7 @@
             if(pageDescEl) pageDescEl.innerText = `Manage your ${titles[viewId] ? titles[viewId].toLowerCase() : 'platform'}`;
 
             if(viewId === 'dashboard') loadDashboardData();
+            if(viewId === 'theme' && window.thInit) thInit();
             if(viewId === 'idsell' && window.idsLoad) idsLoad();
             if(viewId === 'maintenance' && window.mtLoad) mtLoad();
             if(viewId === 'antifraud' && window.afLoad) afLoad();
@@ -1261,7 +1303,6 @@
                     const d = doc.data();
                     if(document.getElementById('set-sitename')) document.getElementById('set-sitename').value = d.siteName || '';
                     if(document.getElementById('set-lb-enabled')) document.getElementById('set-lb-enabled').checked = d.leaderboardEnabled !== false;
-                    if(window.thcFill) thcFill(d.themeColor);
                     if(document.getElementById('set-logo')) document.getElementById('set-logo').value = d.logoUrl || '';
                     if(document.getElementById('set-notice')) document.getElementById('set-notice').value = d.notice || '';
                     if(document.getElementById('set-applink')) document.getElementById('set-applink').value = d.appLink || '';
@@ -2651,6 +2692,172 @@ async function alSendOne(id) {
 
 
 <script>
+/* ===== Theme & Colors manager ===== */
+(function () {
+    var G = [
+      ['🎨 পেজ ও লেখার রঙ', [
+        ['pageBg','পুরো পেজের ব্যাকগ্রাউন্ড',{c1:'#fff0e0',c2:'#fffaf5',a:180},'page'],
+        ['textMain','প্রধান লেখা (নাম, টাইটেল)',{tx:'#111827'}],
+        ['textMuted','হালকা লেখা (সাব-টেক্সট)',{tx:'#6b7280'}],
+        ['brandText','ব্র্যান্ড কালার লেখা (ব্যালেন্স, আইকন, লিংক)',{tx:'#ff7a00'},'t']
+      ]],
+      ['📌 হেডার ও নিচের নেভিগেশন', [
+        ['header','হেডার (উপরের বার)',{c1:'#ffffff',c2:'',a:90,tx:'#111827',bd:'#fff4e8'}],
+        ['balanceChip','হেডারের ব্যালেন্স বক্স',{c1:'#fff4e8',c2:'',a:135,tx:'#ff7a00',bd:'#ffe8d0'},'tint'],
+        ['avatar','হেডারের প্রোফাইল বাটন',{c1:'#ffb36b',c2:'#e56a00',a:135,tx:'#ffffff'},'g'],
+        ['loginBtn','Login বাটন (হেডার)',{c1:'#ff7a00',c2:'#e56a00',a:90,tx:'#ffffff'},'g'],
+        ['bell','নোটিফিকেশন বেল',{c1:'#fff4e8',c2:'',a:135,tx:'#ff7a00',bd:'#ffe8d0'},'tint'],
+        ['bottomNav','নিচের নেভিগেশন বার',{c1:'#ffffff',c2:'',a:90,bd:'#fff4e8'}],
+        ['navText','নেভিগেশন আইটেমের লেখা',{tx:'#6b7280'}],
+        ['navActive','নেভিগেশনের সিলেক্টেড ট্যাব',{c1:'#fff6ec',c2:'#ffe9d2',a:180,tx:'#ff7a00'},'tint'],
+        ['fab','নিচের ডানের সাপোর্ট বাটন',{c1:'#ffc891',c2:'#ff7a00',a:135,tx:'#ffffff'},'g']
+      ]],
+      ['📢 নোটিশ ও ব্যানার', [
+        ['notice','Notice বক্স (হোমের উপরে)',{c1:'#ffffff',c2:'',a:90,tx:'#e56a00'}],
+        ['ticker','ব্রডকাস্ট টিকার বার',{c1:'#ffffff',c2:'',a:90,tx:'#e56a00'}]
+      ]],
+      ['🏠 হোম পেজ', [
+        ['card','সব কার্ড (সাদা বক্স)',{c1:'#ffffff',c2:'',a:135,bd:'#ffffff'}],
+        ['topupBtn','Top up বাটন',{c1:'#ff7a00',c2:'#e56a00',a:90,tx:'#ffffff'},'g'],
+        ['addMoneyBtn','Add money বাটন',{c1:'#ffffff',c2:'',a:135,tx:'#7c3a00',bd:'#ffc891'}],
+        ['tournamentCard','Tournament কার্ড',{c1:'#ff7a00',c2:'#ffb36b',a:135,tx:'#ffffff'},'g'],
+        ['productCard','প্যাকেজ কার্ড',{c1:'#ffffff',c2:'',a:135,bd:'#fde0c4'}],
+        ['productSel','সিলেক্ট করা প্যাকেজ কার্ড',{c1:'#fff4e8',c2:'',a:135,bd:'#ff7a00'},'tint'],
+        ['uidBtn','UID চেক / অর্ডার বাটন',{c1:'#ff7a00',c2:'#e56a00',a:90,tx:'#ffffff'},'g'],
+        ['dailyIcon','Daily Like পেজের আইকন',{c1:'#ff7a00',c2:'#ffb36b',a:135}],
+        ['autoIcon','Auto Like পেজের আইকন',{c1:'#ff7a00',c2:'#ffb36b',a:135}]
+      ]],
+      ['💳 ওয়ালেট ও পেমেন্ট', [
+        ['walletIcon','ওয়ালেট আইকন',{c1:'#ffb36b',c2:'#e56a00',a:135},'g'],
+        ['payCard','পেমেন্ট মেথড কার্ড',{c1:'#ffffff',c2:'',a:135,bd:'#fde0c4'}],
+        ['paySel','সিলেক্ট করা পেমেন্ট কার্ড',{c1:'#fff4e8',c2:'',a:135,bd:'#ff7a00'},'tint'],
+        ['mainBtn','মূল বাটন (Login, Submit, Pay ইত্যাদি)',{c1:'#ff9a3c',c2:'#ff7a00',a:135,tx:'#ffffff'},'g'],
+        ['input','ইনপুট বক্স',{c1:'#ffffff',c2:'',a:135,tx:'#111827',bd:'#fde0c4'}]
+      ]],
+      ['👤 প্রোফাইল ও লিডারবোর্ড', [
+        ['profileAvatar','প্রোফাইলের বড় ছবির বৃত্ত',{c1:'#ffb36b',c2:'#ff7a00',a:135},'g'],
+        ['resellerBar','রিসেলার প্রোগ্রেস বার',{c1:'#ffb36b',c2:'#e56a00',a:90},'g'],
+        ['promoBtn','Promo Redeem বাটন',{c1:'#ff7a00',c2:'#e56a00',a:90,tx:'#ffffff'},'g'],
+        ['refCard','Referral কোড বক্স',{c1:'#ff7a00',c2:'#ffb36b',a:135,tx:'#ffffff'},'g'],
+        ['leaderHero','Leaderboard হিরো ব্যানার',{c1:'#ff7a00',c2:'#ffc891',a:135,tx:'#ffffff'},'g'],
+        ['leaderBar','Leaderboard বার',{c1:'#ff9a3c',c2:'#ffc891',a:90},'g'],
+        ['profileMenu','প্রোফাইল ড্রপডাউন মেনু',{c1:'#ffffff',c2:'',a:135,bd:'#ffe8d0'}]
+      ]],
+      ['🆔 ID Sell', [
+        ['idListCard','ID Sell পেজের আইডি কার্ড',{c1:'#ffffff',c2:'',a:135,bd:'#ffffff'}],
+        ['idBuyBtn','Buy now / Get Your ID বাটন',{c1:'#ff9a3c',c2:'#ff7a00',a:135,tx:'#ffffff'},'g']
+      ]],
+      ['🔔 পপআপ', [
+        ['popupBg','পপআপ বক্সের ব্যাকগ্রাউন্ড',{c1:'#ffffff',c2:'',a:135,bd:'#ffc891'}],
+        ['popupBtn','পপআপের OK / Confirm বাটন',{c1:'#ff9a3c',c2:'#ff7a00',a:135,tx:'#ffffff'},'g']
+      ]]
+    ];
+    var ANG = [[90,'→ ডান'],[135,'↘ কোণা'],[180,'↓ নিচ'],[45,'↗ উপর-ডান'],[0,'↑ উপর'],[270,'← বাম'],[225,'↙ নিচ-বাম'],[315,'↖ উপর-বাম']];
+    var DEF = {}, META = {}, state = {}, inited = false, timer = null;
+    G.forEach(function (g) { g[1].forEach(function (x) { DEF[x[0]] = x[2]; META[x[0]] = x; }); });
+
+    function hex2rgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+    function rgb2hex(r) { return '#' + r.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
+    function mix(h, t, p) { var a = hex2rgb(h), b = hex2rgb(t); return rgb2hex([a[0] + (b[0] - a[0]) * p, a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p]); }
+    function lighten(h, p) { return mix(h, '#ffffff', p); }
+    function darken(h, p) { return mix(h, '#000000', p); }
+    function isHex(v) { return /^#[0-9a-f]{6}$/i.test(v || ''); }
+    function val(id, f) { var s = state[id]; return (s && s[f] != null) ? s[f] : (DEF[id][f] != null ? DEF[id][f] : ''); }
+    function css(id) { var c1 = val(id, 'c1'), c2 = val(id, 'c2'), a = val(id, 'a'); return c2 && c2 !== c1 ? 'linear-gradient(' + a + 'deg,' + c1 + ',' + c2 + ')' : c1; }
+    function safe(x) { return String(x).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function pick(id, f) {
+        var v = val(id, f), h = isHex(v) ? v : '#ffffff';
+        return '<input type="color" class="th-pick" value="' + h + '" data-id="' + id + '" data-f="' + f + '" oninput="thSet(this)">';
+    }
+
+    function row(x) {
+        var id = x[0], d = x[2], changed = !!state[id], h = '';
+        h += '<div class="th-row" id="thr-' + id + '" style="padding:12px 0;border-top:1px solid #27272A">';
+        h += '<div class="flex items-center justify-between gap-2 mb-2"><div class="text-sm font-semibold ' + (changed ? 'text-orange-400' : 'text-gray-200') + '" id="thl-' + id + '">' + safe(x[1]) + (changed ? ' ●' : '') + '</div>';
+        h += '<button class="text-[11px] text-gray-500 hover:text-orange-500" onclick="thResetOne(\'' + id + '\')"><i class="fas fa-undo mr-1"></i>রিসেট</button></div>';
+        h += '<div class="flex flex-wrap items-center gap-x-4 gap-y-2">';
+        if (d.c1 != null) {
+            h += '<div id="thsw-' + id + '" style="width:44px;height:30px;border-radius:8px;border:1px solid #3f3f46;background:' + css(id) + '"></div>';
+            h += '<label class="th-lbl">কালার ১ ' + pick(id, 'c1') + '</label>';
+            var c2 = val(id, 'c2');
+            h += '<label class="th-lbl">কালার ২ <span id="thc2w-' + id + '">' + pick(id, 'c2') + '</span> <button class="th-mini" onclick="thClear2(\'' + id + '\')">সলিড</button></label>';
+            h += '<label class="th-lbl">দিক <select class="th-sel" data-id="' + id + '" data-f="a" onchange="thSet(this)">' + ANG.map(function (o) { return '<option value="' + o[0] + '"' + (+val(id, 'a') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label>';
+        }
+        if (d.tx != null) h += '<label class="th-lbl">লেখা ' + pick(id, 'tx') + '</label>';
+        if (d.bd != null) h += '<label class="th-lbl">বর্ডার ' + pick(id, 'bd') + '</label>';
+        h += '</div></div>';
+        return h;
+    }
+    function render() {
+        var box = document.getElementById('th-groups'); if (!box) return;
+        box.innerHTML = G.map(function (g, i) {
+            return '<details class="card mb-4" ' + (i < 2 ? 'open' : '') + '><summary class="text-base font-bold text-orange-500 cursor-pointer">' + g[0] + '</summary><div class="mt-2">' + g[1].map(row).join('') + '</div></details>';
+        }).join('');
+    }
+    function refreshRow(id) {
+        var sw = document.getElementById('thsw-' + id); if (sw) sw.style.background = css(id);
+        var l = document.getElementById('thl-' + id);
+        if (l) { var ch = !!state[id]; l.className = 'text-sm font-semibold ' + (ch ? 'text-orange-400' : 'text-gray-200'); l.innerHTML = safe(META[id][1]) + (ch ? ' ●' : ''); }
+    }
+    function touch(id, f, v) {
+        var s = state[id] = state[id] || {}, d = DEF[id];
+        if (f === 'c1' || f === 'c2' || f === 'a') { s.c1 = val(id, 'c1'); s.c2 = val(id, 'c2'); s.a = +val(id, 'a'); }
+        s[f] = f === 'a' ? +v : v;
+        refreshRow(id); push();
+    }
+    window.thSet = function (el) { touch(el.dataset.id, el.dataset.f, el.value); };
+    window.thClear2 = function (id) { touch(id, 'c2', ''); var w = document.getElementById('thc2w-' + id); if (w) w.innerHTML = pick(id, 'c2'); };
+    window.thResetOne = function (id) { delete state[id]; var r = document.getElementById('thr-' + id); if (r) r.outerHTML = row(META[id]); push(); };
+    window.thSetCss = function (v) { if (v.trim()) state.css = v; else delete state.css; push(); };
+    window.thResetAll = async function () {
+        var r = await Swal.fire({ title: 'সব কালার আগের মতো করবেন?', text: 'সাইট আবার আগের ডিফল্ট কালারে ফিরে যাবে।', icon: 'question', showCancelButton: true, confirmButtonText: 'হ্যাঁ, রিসেট' });
+        if (!r.isConfirmed) return;
+        state = {}; render(); document.getElementById('th-css').value = ''; push();
+        await thSave(true);
+    };
+    function push() {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            var f = document.getElementById('th-frame'); if (!f || !f.contentWindow) return;
+            try { f.contentWindow.postMessage({ type: 'mhx-theme-preview', theme: state }, new URL(f.src).origin); } catch (e) {}
+        }, 120);
+    }
+    window.thPush = push;
+    window.thReloadPreview = function () {
+        var u = document.getElementById('th-url').value.trim() || (location.origin + '/');
+        var f = document.getElementById('th-frame'); f.src = u;
+    };
+    window.thSave = async function (silent) {
+        try {
+            var clean = {}; Object.keys(state).forEach(function (k) { if (k === 'css' || state[k]) clean[k] = state[k]; });
+            await db.collection('settings').doc('general').set({ themeJson: JSON.stringify(clean), themeColor: (function () { var c = ((document.getElementById('thc-hex') || {}).value || '').trim().toLowerCase(); return /^#[0-9a-f]{6}$/.test(c) && c !== '#ff7a00' ? c : ''; })() }, { merge: true });
+            if (silent !== true) Swal.fire({ icon: 'success', title: 'Saved!', text: 'ওয়েবসাইটে নতুন কালার চালু হয়ে গেছে।', timer: 1800, showConfirmButton: false });
+        } catch (e) { Swal.fire('Error', e.message || 'Save হয়নি', 'error'); }
+    };
+    window.thInit = async function () {
+        try {
+            var d = (await db.collection('settings').doc('general').get()).data() || {};
+            state = d.themeJson ? JSON.parse(d.themeJson) : {}; if (window.thcFill) thcFill(d.themeColor);
+        } catch (e) { state = {}; }
+        render();
+        document.getElementById('th-css').value = state.css || '';
+        var u = document.getElementById('th-url');
+        if (!inited) { u.value = location.origin + '/'; inited = true; }
+        var f = document.getElementById('th-frame'); if (!f.getAttribute('src')) f.src = u.value;
+        else push();
+    };
+})();
+</script>
+<style>
+    .th-pick{width:38px;height:30px;padding:0;border:1px solid #3f3f46;border-radius:8px;background:none;cursor:pointer;vertical-align:middle}
+    .th-lbl{font-size:12px;color:#a1a1aa;display:inline-flex;align-items:center;gap:6px}
+    .th-sel{background:#09090B;border:1px solid #27272A;color:#fff;border-radius:8px;padding:5px 8px;font-size:12px}
+    .th-mini{font-size:10px;padding:3px 8px;border-radius:6px;background:#27272A;color:#d4d4d8}
+    #view-theme details>summary{list-style:none}
+    #view-theme details>summary::-webkit-details-marker{display:none}
+</style>
+
+<script>
 /* ================= MAINTENANCE ================= */
 (function () {
     function paint(on) {
@@ -3006,6 +3213,11 @@ button{transition:transform .15s,filter .2s}button:active{transform:scale(.95)}
 #mx .bx.cur{border-color:#f97316;background:linear-gradient(160deg,rgba(249,115,22,.25),#141417)}
 #mx .ic{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#fb923c,#ea580c);display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;box-shadow:0 8px 18px rgba(234,88,12,.35)}
 #mx .ft{padding:0 16px 16px}#mx .lo{width:100%;padding:13px;border-radius:16px;border:1px solid #3f1d1d;background:#2a1212;color:#f87171;font-weight:800}
+/* ---- theme editor: every element is a tile with its own live button ---- */
+#th-groups details{border-radius:22px}#th-groups details>summary{list-style:none;padding:4px 2px}
+#th-groups details>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
+#th-groups .th-row{border:1px solid #2a2a30!important;border-radius:20px;padding:12px!important;background:#141417;transition:border-color .2s,transform .2s}
+#th-groups .th-row:hover{border-color:#f97316!important;transform:translateY(-2px)}
 </style>
 <div id="mx"><div class="hd"><b>MHX<span> ADMIN</span></b><input id="mx-q" placeholder="খুঁজুন…" oninput="mxFilter(this.value)"><button class="x" onclick="mxClose()"><i class="fas fa-times"></i></button></div><div class="bd"><div class="gr" id="mx-gr"></div></div><div class="ft" id="mx-ft"></div></div>
 <script>
@@ -3031,6 +3243,24 @@ button{transition:transform .15s,filter .2s}button:active{transform:scale(.95)}
     window.mxFilter = function (q) { q = q.trim().toLowerCase(); document.querySelectorAll('#mx-gr .bx').forEach(function (b) { b.style.display = !q || b.dataset.t.indexOf(q) > -1 ? '' : 'none'; }); };
     window.toggleSidebar = function () { var m = document.getElementById('mx'); m.classList.contains('on') ? mxClose() : mxOpen(); };
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') mxClose(); });
+    /* theme editor: always open, plus a free "custom colour" builder at the bottom */
+    var tg = document.getElementById('th-groups');
+    if (tg) {
+        new MutationObserver(function () { tg.querySelectorAll('details').forEach(function (d) { d.open = true; }); }).observe(tg, { childList: true });
+        var c = document.createElement('div'); c.className = 'card mb-6';
+        c.innerHTML = '<h3 class="text-lg font-bold text-orange-500 mb-1"><i class="fas fa-eye-dropper mr-2"></i>কাস্টম কালার (যেকোনো জায়গা)</h3><p class="text-xs text-gray-400 mb-3">তালিকা থেকে জায়গা বেছে নিজের মনমতো কালার দিন। ওপরের তালিকায় না থাকলে "অন্য…" বেছে CSS selector লিখুন।</p>' +
+            '<div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end"><div><label class="block text-xs text-gray-400 mb-1">কোথায়</label><select id="cc-sel" class="flat-input"><option value=".zp-btn">সব মেইন বাটন</option><option value=".vip-card">সব কার্ড</option><option value="header">হেডার</option><option value=".product-card">প্রোডাক্ট কার্ড</option><option value=".nav-item">নিচের নেভিগেশন</option><option value="#fab-support">সাপোর্ট ফ্লোটিং বাটন</option><option value="body">ব্যাকগ্রাউন্ড</option><option value="">অন্য…</option></select><input id="cc-custom" class="flat-input mt-2 hidden" placeholder=".class বা #id"></div>' +
+            '<div><label class="block text-xs text-gray-400 mb-1">ব্যাকগ্রাউন্ড</label><input type="color" id="cc-bg" value="#ff9a3c" class="th-pick" style="width:100%;height:42px"></div><div><label class="block text-xs text-gray-400 mb-1">লেখার কালার</label><input type="color" id="cc-tx" value="#ffffff" class="th-pick" style="width:100%;height:42px"></div><button onclick="ccAdd()" class="flat-btn">যোগ করুন</button></div>';
+        tg.parentNode.insertBefore(c, tg.nextSibling);
+        document.getElementById('cc-sel').onchange = function () { document.getElementById('cc-custom').classList.toggle('hidden', this.value !== ''); };
+        window.ccAdd = function () {
+            var s = document.getElementById('cc-sel').value || document.getElementById('cc-custom').value.trim();
+            if (!s || /[{};]/.test(s)) { Swal.fire('Heads up', 'সঠিক selector দিন', 'warning'); return; }
+            var ta = document.getElementById('th-css'), rule = s + '{' + (s === 'body' ? 'background:' : 'background:') + document.getElementById('cc-bg').value + ' !important;color:' + document.getElementById('cc-tx').value + ' !important}\n';
+            ta.value = (ta.value ? ta.value.replace(/\s*$/, '\n') : '') + rule; window.thSetCss(ta.value);
+            Swal.fire({ icon: 'success', title: 'যোগ হয়েছে — প্রিভিউ দেখে Save চাপুন', timer: 1600, showConfirmButton: false });
+        };
+    }
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
@@ -3090,6 +3320,11 @@ details>summary{color:var(--p)!important}
 #mx .bx.cur{background:linear-gradient(160deg,#ffe8d0,#fff)!important;border-color:var(--p)!important}
 #mx .ic{background:linear-gradient(135deg,#ffc891,#ff9a3c 55%,#ff7a00)!important;box-shadow:0 8px 18px rgba(255,122,0,.32)!important}
 #mx .lo{background:#fff1f1!important;border-color:#fecaca!important;color:#dc2626!important}
+/* theme editor tiles */
+#th-groups .th-row{background:rgba(255,255,255,.9)!important;border:1.5px solid var(--line)!important}
+#th-groups .th-row:hover{border-color:var(--a)!important}
+#th-groups [id^="thsw-"]{box-shadow:0 6px 16px rgba(17,24,39,.15)!important;border:1px solid var(--line)!important}
+.th-pick{border-radius:10px;border:1px solid var(--line)}
 /* smooth feel */
 .view-section:not(.hidden){animation:vIn .4s cubic-bezier(.2,.8,.2,1) both}
 .view-section:not(.hidden)>*{animation:vIn .45s cubic-bezier(.2,.8,.2,1) both}.view-section:not(.hidden)>*:nth-child(2){animation-delay:.05s}.view-section:not(.hidden)>*:nth-child(3){animation-delay:.1s}.view-section:not(.hidden)>*:nth-child(n+4){animation-delay:.15s}
@@ -3100,9 +3335,10 @@ details>summary{color:var(--p)!important}
     var PRE = [['#ff7a00','Orange'],['#e11d48','Red'],['#db2777','Pink'],['#7c3aed','Purple'],['#2563eb','Blue'],['#0891b2','Cyan'],['#059669','Green'],['#ca8a04','Gold']];
     function ok(v) { return /^#[0-9a-fA-F]{6}$/.test(v); }
     function prev(c) { var e = document.getElementById('thc-prev'); if (e) e.style.background = 'linear-gradient(135deg,' + c + ',' + c + 'cc,' + c + '77)'; }
-    window.thcSync = function (v) { document.getElementById('thc-hex').value = v; prev(v); };
-    window.thcTyped = function (v) { if (ok(v)) { document.getElementById('thc-pick').value = v; prev(v); } };
-    window.thcFill = function (c) { c = ok(c) ? c : '#ff7a00'; document.getElementById('thc-pick').value = c; document.getElementById('thc-hex').value = c; prev(c); };
+    function live(c) { var f = document.getElementById('th-frame'); try { if (f && f.contentWindow) f.contentWindow.postMessage({ type: 'mhx-master-preview', color: c }, location.origin); } catch (e) {} }
+    window.thcSync = function (v) { document.getElementById('thc-hex').value = v; prev(v); live(v); };
+    window.thcTyped = function (v) { if (ok(v)) { document.getElementById('thc-pick').value = v; prev(v); live(v); } };
+    window.thcFill = function (c) { c = ok(c) ? c : '#ff7a00'; var p = document.getElementById('thc-pick'); if (!p) return; p.value = c; document.getElementById('thc-hex').value = c; prev(c); live(c); };
     window.thcSave = async function () {
         var c = document.getElementById('thc-hex').value.trim(); if (!ok(c)) { Swal.fire('Error', 'সঠিক কালার কোড দিন (যেমন #ff7a00)', 'error'); return; }
         try { showLoading(); await db.collection('settings').doc('general').set({ themeColor: c.toLowerCase() === '#ff7a00' ? '' : c.toLowerCase() }, { merge: true }); hideLoading();

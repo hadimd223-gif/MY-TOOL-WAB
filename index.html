@@ -417,8 +417,7 @@ function authMsg(e) {
         @keyframes mhxPulse{50%{opacity:.55}}
         @media (prefers-reduced-motion:reduce){.fa-spinner.fa-spin::before,.ids-sk{animation-duration:2s}}
     </style>
-    <script>try{localStorage.removeItem("mhxThemeCss")}catch(e){}</script>
-<link rel="manifest" href="/manifest.webmanifest">
+    <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -552,6 +551,98 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
 #fab-support,#nav-leaders{background:var(--c1)!important;background-image:none!important}
 .text-emerald-600,.text-emerald-700{color:var(--c1d)!important}
 </style>
+    <style id="mhx-theme"></style>
+    <script>
+    /* ===== MHX Theme engine: colours set from Admin > Theme & Colors ===== */
+    (function () {
+        var SLOTS = {
+            textMain:   { tx: 'body,.text-slate-900,.text-slate-800,.text-slate-700,.lb-nm,.tgp-title' },
+            textMuted:  { tx: '.text-slate-600,.text-slate-500,.text-slate-400,.zp-sub' },
+            brandText:  { tx: '.text-brand-500,.text-brand-600,.text-brand-700,.text-brand-900,.lb-amt' },
+            pageBg:     { bg: 'html,body', fx: 'background-attachment:fixed !important;' },
+            header:     { bg: 'header.sticky', tx: '#header-site-name', bd: 'header.sticky' },
+            bottomNav:  { bg: 'nav.fixed>div', bd: 'nav.fixed>div' },
+            navText:    { tx: '.nav-item' },
+            navActive:  { bg: '.nav-item.active-tab', tx: '.nav-item.active-tab' },
+            card:       { bg: '.vip-card', bd: '.vip-card' },
+            productCard:{ bg: '.product-card', bd: '.product-card' },
+            productSel: { bg: '.product-card.selected', bd: '.product-card.selected' },
+            payCard:    { bg: '.pay-option-card', bd: '.pay-option-card' },
+            paySel:     { bg: '.pay-option-card.selected', bd: '.pay-option-card.selected' },
+            input:      { bg: '.zp-input', tx: '.zp-input', bd: '.zp-input' },
+            notice:     { bg: '#notice-section>div', tx: '#notice-section>div,#notice-section .text-brand-100', glow: 1 },
+            ticker:     { bg: '#top-ticker', tx: '#top-ticker', glow: 1 },
+            mainBtn:    { bg: '.zp-btn', tx: '.zp-btn', glow: 1 },
+            loginBtn:   { bg: '#header-login-container button', tx: '#header-login-container button', glow: 1 },
+            topupBtn:   { bg: '#home-sec .vip-card .grid.grid-cols-2>button:first-child', tx: '#home-sec .vip-card .grid.grid-cols-2>button:first-child', glow: 1 },
+            addMoneyBtn:{ bg: '#home-sec .vip-card .grid.grid-cols-2>button:last-child', tx: '#home-sec .vip-card .grid.grid-cols-2>button:last-child', bd: '#home-sec .vip-card .grid.grid-cols-2>button:last-child' },
+            balanceChip:{ bg: '#header-balance-container div.rounded-2xl', tx: '#header-balance-container div.rounded-2xl', bd: '#header-balance-container div.rounded-2xl' },
+            avatar:     { bg: '#header-avatar', tx: '#header-avatar', glow: 1 },
+            bell:       { bg: '.zp-bell', tx: '.zp-bell', bd: '.zp-bell' },
+            fab:        { bg: '#fab-support', tx: '#fab-support', glow: 1 },
+            dailyIcon:  { bg: '#dailylike-sec .w-14.h-14' },
+            autoIcon:   { bg: '#autolike-sec .w-14.h-14' },
+            uidBtn:     { bg: '#uidCheckBtn', tx: '#uidCheckBtn', glow: 1 },
+            promoBtn:   { bg: '#account-sec button[onclick*=redeemPromo]', tx: '#account-sec button[onclick*=redeemPromo]', glow: 1 },
+            walletIcon: { bg: '#addmoney-sec .w-12.h-12.rounded-2xl' },
+            resellerBar:{ bg: '#reseller-progress-bar' },
+            refCard:    { bg: '#ref-card>.text-white', tx: '#ref-card>.text-white' },
+            leaderHero: { bg: '.lb-hero', tx: '.lb-hero', glow: 1 },
+            leaderBar:  { bg: '.lb-bar i' },
+            idListCard: { bg: '.ids-card', bd: '.ids-card' },
+            idBuyBtn:   { bg: '.ids-buy:not(:disabled),.idc-btn', tx: '.ids-buy,.idc-btn', glow: 1 },
+            profileAvatar: { bg: '.av-wrap .av-img' },
+            popupBtn:   { bg: '.mhx-btn-primary', tx: '.mhx-btn-primary', glow: 1 },
+            popupBg:    { bg: '.swal2-popup.mhx-pop:not(.swal2-toast)', bd: '.swal2-popup.mhx-pop:not(.swal2-toast)' },
+            tournamentCard: { bg: '#t-home-card', tx: '#t-home-card', glow: 1 },
+            profileMenu:{ bg: '#profile-menu', bd: '#profile-menu' }
+        };
+        function ok(v) { return typeof v === 'string' && v.length < 80 && !/[;{}<>\\]/.test(v); }
+        function rgba(c, a) {
+            var m = /^#?([0-9a-f]{6})$/i.exec(c || ''); if (!m) return null;
+            var n = parseInt(m[1], 16);
+            return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
+        }
+        function build(t) {
+            var out = [];
+            if (!t || typeof t !== 'object') return '';
+            Object.keys(SLOTS).forEach(function (id) {
+                var s = SLOTS[id], v = t[id];
+                if (!v || typeof v !== 'object') return;
+                if (s.bg && ok(v.c1)) {
+                    var two = ok(v.c2) && v.c2 && v.c2 !== v.c1;
+                    var ang = isFinite(v.a) ? +v.a : 135;
+                    var bg = two ? 'linear-gradient(' + ang + 'deg,' + v.c1 + ',' + v.c2 + ')' : v.c1;
+                    out.push(s.bg + '{background:' + bg + ' !important;' + (s.fx || '') + '}');
+                    if (s.glow) { var g = rgba(two ? v.c2 : v.c1, 0.38); if (g) out.push(s.bg + '{box-shadow:0 10px 24px ' + g + ' !important}'); }
+                }
+                if (s.tx && ok(v.tx)) out.push(s.tx + '{color:' + v.tx + ' !important}');
+                if (s.bd && ok(v.bd)) out.push(s.bd + '{border-color:' + v.bd + ' !important}');
+            });
+            if (typeof t.css === 'string') out.push(t.css.replace(/[<]/g, ''));
+            return out.join('\n');
+        }
+        function paint(css) { var el = document.getElementById('mhx-theme'); if (el && el.textContent !== css) el.textContent = css; }
+        window.mhxApplyTheme = function (t) {
+            var css = build(t); paint(css);
+            try { localStorage.setItem('mhxThemeCss', css); } catch (e) {}
+            try {
+                var c = t && t.header && t.header.c1, m = document.querySelector('meta[name=theme-color]');
+                if (m) m.setAttribute('content', ok(c) && c ? c : '#ff7a00');
+            } catch (e) {}
+        };
+        try { var cached = localStorage.getItem('mhxThemeCss'); if (cached) paint(cached); } catch (e) {}
+        /* live preview from Admin (same origin only) */
+        window.addEventListener('message', function (e) {
+            if (e.origin !== location.origin || !e.data || e.data.type !== 'mhx-theme-preview') return;
+            paint(build(e.data.theme));
+        });
+        window.addEventListener('message', function (e) {
+            if (e.origin !== location.origin || !e.data || e.data.type !== 'mhx-master-preview') return;
+            try { window.mhxSetTheme(e.data.color || '', true); } catch (x) {}
+        });
+    })();
+    </script>
 <script id="mhx-palette">
 /* One main colour -> every orange shade of the site is re-derived from it (hue/saturation/lightness shift). */
 (function () {
@@ -577,13 +668,14 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         return t;
     }
     function track(el, kind) {
+        if (kind === 'style' && (el.id === 'mhx-theme' || el.id === 'mhx-palette')) return;
         if (kind === 'style') { if (el.__mo === undefined) el.__mo = el.textContent; el.textContent = conv(el.__mo); }
         else { var a = el.getAttribute('style'); if (a === null) return; if (el.__mo === undefined) el.__mo = a; el.setAttribute('style', conv(el.__mo)); }
         if (tracked.indexOf(el) < 0) tracked.push(el);
     }
     function scan(root) {
         if (root.nodeType !== 1) return;
-        if (root.tagName === 'STYLE') { if (root.id !== 'mhx-palette') track(root, 'style'); return; }
+        if (root.tagName === 'STYLE') { if (root.id !== 'mhx-palette' && root.id !== 'mhx-theme') track(root, 'style'); return; }
         if (root.hasAttribute && root.hasAttribute('style')) track(root, 'attr');
         var q = root.querySelectorAll ? root.querySelectorAll('style,[style]') : [];
         for (var i = 0; i < q.length; i++) track(q[i], q[i].tagName === 'STYLE' ? 'style' : 'attr');
@@ -593,11 +685,11 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         var r = h2r(c), o = rgb2hsl(r[0], r[1], r[2]);
         return { h: o[0], s: Math.max(35, o[1]), l: Math.max(30, Math.min(62, o[2])), hexv: c.toLowerCase() };
     }
-    window.mhxSetTheme = function (c) {
+    window.mhxSetTheme = function (c, preview) {
         var p = parse(c);
         if (!p || (Math.abs(p.h - BASE_H) < 1.5 && p.s > 97 && Math.abs(p.l - 50) < 2)) p = null;      /* default orange = leave untouched */
         cur = p;
-        try { if (p) localStorage.setItem('mhxThemeColor', c); else localStorage.removeItem('mhxThemeColor'); } catch (e) {}
+        if (!preview) { try { if (p) localStorage.setItem('mhxThemeColor', c); else localStorage.removeItem('mhxThemeColor'); } catch (e) {} }
         tracked = tracked.filter(function (el) { return el.isConnected; });
         scan(document.documentElement);
         tracked.forEach(function (el) { if (el.tagName === 'STYLE') el.textContent = conv(el.__mo); else el.setAttribute('style', conv(el.__mo)); });
@@ -1195,6 +1287,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
             if (doc.exists) {
                 generalSettings = doc.data();
                 try { mhxSetTheme(generalSettings.themeColor || ''); } catch (e) {}
+                try { if (window.mhxApplyTheme) mhxApplyTheme(generalSettings.themeJson ? JSON.parse(generalSettings.themeJson) : {}); } catch (e) {}
                 lbApplyEnabled();
                 const logoUrl = generalSettings.logoUrl || "/logo.png";
                 const siteName = generalSettings.siteName || "M H X TopUp";
