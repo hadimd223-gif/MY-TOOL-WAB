@@ -628,7 +628,9 @@ main{padding-bottom:96px!important}
 /* M H X specifics */
 .mhx-bolt{background:linear-gradient(135deg,var(--c2),var(--c1))!important;border:4px solid var(--nav)!important;box-shadow:0 10px 22px rgba(var(--c1rgb),.4)!important}
 #nav-leaders{background:var(--c1)!important}
-nav.fixed>div{align-items:flex-end!important}
+nav.fixed>div{align-items:center!important}
+.nav-item{flex:1 1 0;min-width:0;font-size:11px!important}
+.nav-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #header-balance-container{order:2}#header-login-container{order:2}
 #header-avatar{order:3}
 .nav-item.active-tab{background:none!important}
@@ -734,49 +736,6 @@ nav.fixed>div{align-items:flex-end!important}
                 </a>
             </div>
             
-            <div class="grid grid-cols-2 gap-3 mb-5">
-                <div onclick="showSec('dailylike')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-rose-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#ff9a3c,#ef4444 55%,#be185d)">
-                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-fire"></i></div>
-                    <div class="relative">
-                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-fire"></i></div>
-                        <div class="font-extrabold text-[15px] leading-tight">Daily Like</div>
-                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug"><b id="dl-home-likes">220</b>+ likes • only BDT <b id="dl-home-price">6</b></div>
-                        <div class="mt-2.5 bg-white text-rose-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Get likes <i class="fa-solid fa-arrow-right ml-1"></i></div>
-                    </div>
-                </div>
-                <div onclick="showSec('autolike')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#ff7a00,#ffb36b 55%,#f59e0b)">
-                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-robot"></i></div>
-                    <div class="relative">
-                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-robot"></i></div>
-                        <div class="font-extrabold text-[15px] leading-tight">Auto Like</div>
-                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Sent every day at <b id="al-home-time">4:05 AM</b> • from BDT <b id="al-home-price">–</b></div>
-                        <div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Subscribe <i class="fa-solid fa-arrow-right ml-1"></i></div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="grid grid-cols-2 gap-3 mb-5">
-                <div id="t-home-card" onclick="location.href='tournament.html'" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition col-span-2" style="background:linear-gradient(135deg,#6d28d9,#8b5cf6 55%,#f59e0b)"><div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-trophy"></i></div><div class="relative"><div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-trophy"></i></div><div class="font-extrabold text-[15px] leading-tight">Tournament</div><div class="text-[10.5px] opacity-90 mt-0.5">Join custom matches &amp; win real prizes</div><div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Play <i class="fa-solid fa-arrow-right ml-1"></i></div></div></div>
-                <div id="tcp-home-card" onclick="showSec('tcp')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#e56a00,#ff9a3c 55%,#ffb36b)">
-                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-satellite-dish"></i></div>
-                    <div class="relative">
-                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-satellite-dish"></i></div>
-                        <div class="font-extrabold text-[15px] leading-tight">TCP BOT</div>
-                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Emote bot for your squad • from BDT <b id="tcp-home-price">–</b></div>
-                        <div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Buy <i class="fa-solid fa-arrow-right ml-1"></i></div>
-                    </div>
-                </div>
-                <div onclick="showSec('idsell')" class="cursor-pointer rounded-3xl p-3.5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#e56a00,#ff8a1f 55%,#ffc891)">
-                    <div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-id-card"></i></div>
-                    <div class="relative">
-                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl mb-2"><i class="fa-solid fa-id-card"></i></div>
-                        <div class="font-extrabold text-[15px] leading-tight">ID Sell</div>
-                        <div class="text-[10.5px] opacity-90 mt-0.5 leading-snug">Ready-made IDs • watch the video before you buy</div>
-                        <div class="mt-2.5 bg-white text-brand-600 text-[11px] font-extrabold px-2.5 py-1.5 rounded-xl inline-flex items-center">Browse <i class="fa-solid fa-arrow-right ml-1"></i></div>
-                    </div>
-                </div>
-            </div>
 
                         <div id="services-list" class="space-y-6 mb-8 px-1">
                 <div class="text-center py-10 text-slate-400"><i class="fas fa-spinner fa-spin text-brand-600 text-xl"></i> Loading games...</div>
@@ -1055,6 +1014,11 @@ nav.fixed>div{align-items:flex-end!important}
         </section>
 
 
+        <!-- Tournament -->
+        <section id="tournament-sec" class="hidden animate-fade-in pb-28 px-1">
+            <div id="t-home-card" onclick="location.href='tournament.html'" class="cursor-pointer rounded-3xl p-5 text-white relative overflow-hidden shadow-lg shadow-brand-500/25 active:scale-[.98] transition" style="background:linear-gradient(135deg,#6d28d9,#8b5cf6 55%,#f59e0b)"><div class="absolute -right-3 -top-3 text-white/10 text-7xl"><i class="fa-solid fa-trophy"></i></div><div class="relative"><div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-trophy"></i></div><div class="font-extrabold text-lg leading-tight">Tournament</div><div class="text-[12px] opacity-90 mt-1">Join custom matches &amp; win real prizes</div><div class="mt-3 bg-white text-brand-600 text-[12px] font-extrabold px-3 py-2 rounded-xl inline-flex items-center">Play <i class="fa-solid fa-arrow-right ml-1"></i></div></div></div>
+        </section>
+
         <!-- Leaderboard -->
         <section id="leaders-sec" class="hidden animate-fade-in pb-28">
             <div class="lb-hero">
@@ -1115,7 +1079,8 @@ nav.fixed>div{align-items:flex-end!important}
         <div class="w-full flex items-end justify-between px-4 pt-2 pb-3 bg-white/85 backdrop-blur-xl rounded-t-3xl border-t border-brand-50/80 shadow-xl">
             <button id="nav-home" onclick="showSec('home')" class="nav-item active-tab"><i class="fa-solid fa-house"></i><span>Home</span></button>
             <button id="nav-history" onclick="showSec('history')" class="nav-item"><i class="fa-solid fa-box"></i><span>Orders</span></button>
-            <button id="nav-ads" class="mhx-bolt" onclick="showSec('ads')" aria-label="Watch ads and earn money"><i class="fa-solid fa-coins"></i></button>
+            <button id="nav-tournament" onclick="showSec('tournament')" class="nav-item"><i class="fa-solid fa-trophy"></i><span>Tournament</span></button>
+            <button id="nav-ads" onclick="showSec('ads')" class="nav-item" aria-label="Watch ads and earn money"><i class="fa-solid fa-coins"></i><span>Earn</span></button>
             <button id="nav-addmoney" onclick="showSec('addmoney')" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Wallet</span></button>
             <button id="nav-account" onclick="showSec('account')" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></button>
         </div>
@@ -1257,6 +1222,7 @@ nav.fixed>div{align-items:flex-end!important}
         db.collection("settings").doc("general").onSnapshot((doc) => {
             if (doc.exists) {
                 generalSettings = doc.data();
+                lbApplyEnabled();
                 const logoUrl = generalSettings.logoUrl || "/logo.png";
                 const siteName = generalSettings.siteName || "M H X TopUp";
                 document.getElementById('header-logo-img').src = logoUrl;
@@ -1429,7 +1395,8 @@ nav.fixed>div{align-items:flex-end!important}
             cats.sort((x, y) => (Number(x.slot) || 0) - (Number(y.slot) || 0));
             const items = [];
             servicesSnap.forEach(doc => { const item = { id: doc.id, ...doc.data() }; gamesData[doc.id] = item; items.push(item); });
-            const card = item => `<div class="nx-card" onclick="openTopUpPage('${item.id}', '${item.name}', '${item.image}')"><div class="nx-img"><img loading="lazy" decoding="async" src="${item.image}" alt="" onerror="this.src='https://placehold.co/300x300/fff4e8/ff7a00?text=%3F'"></div><p>${item.name}</p></div>`;
+            const SPECIAL = { dailylike: 1, autolike: 1, tcp: 1, idsell: 1, tournament: 1 };
+            const card = item => `<div class="nx-card" onclick="${SPECIAL[item.type] ? (item.type === 'tournament' ? "location.href='tournament.html'" : "showSec('" + item.type + "')") : `openTopUpPage('${item.id}', '${item.name}', '${item.image}')`}"><div class="nx-img"><img loading="lazy" decoding="async" src="${item.image}" alt="" onerror="this.src='https://placehold.co/300x300/fff4e8/ff7a00?text=%3F'"></div><p>${item.name}</p></div>`;
             const title = t => { const w = String(t || '').trim().split(/\s+/); if (w.length < 2) return `<span class="o">${w[0] || ''}</span>`; const last = w.pop(); return w.join(' ') + ` <span class="o">${last}</span>`; };
             const sec = (name, list) => list.length ? `<div class="nx-sec"><div class="nx-sec-h"><i></i><h3>${title(name)}</h3><u></u></div><div class="nx-grid">${list.map(card).join('')}</div></div>` : '';
             let html = ''; const known = new Set(cats.map(c => c.id));
@@ -1707,7 +1674,14 @@ nav.fixed>div{align-items:flex-end!important}
         ffOpenModal(html + '</div>');
     }
 
+    function lbApplyEnabled() {
+        const on = !(generalSettings && generalSettings.leaderboardEnabled === false);
+        const b = document.getElementById('nav-leaders'); if (b) b.style.display = on ? '' : 'none';
+        if (!on) { const sc = document.getElementById('leaders-sec'); if (sc && !sc.classList.contains('hidden')) showSec('home'); }
+    }
+
     function showSec(secId) {
+        if (secId === 'leaders' && generalSettings && generalSettings.leaderboardEnabled === false) secId = 'home';
         if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'tcp' || secId === 'api' || secId === 'idcode' || secId === 'ads') && !currentUser) {
             showSec('auth');
             return;
@@ -2209,7 +2183,7 @@ function tcpApplyVisibility() {
     const c = document.getElementById('tcp-home-card'); if (c) c.style.display = h ? 'none' : '';
     if (h) { const s = document.getElementById('tcp-sec'); if (s && !s.classList.contains('hidden')) showSec('home'); }
 }
-fetch(BACKEND_URL + '/tInfo').then(r => r.json()).then(j => { const c = document.getElementById('t-home-card'); if (c && j.hidden) c.style.display = 'none'; }).catch(() => {});
+fetch(BACKEND_URL + '/tInfo').then(r => r.json()).then(j => { if (j.hidden) { ['t-home-card','nav-tournament'].forEach(i => { const c = document.getElementById(i); if (c) c.style.display = 'none'; }); } }).catch(() => {});
 setTimeout(() => tcpLoadCfg(), 800); setInterval(() => tcpLoadCfg(), 60000);
 async function tcpLoadCfg() {
     try { const r = await fetch(BACKEND_URL + '/tcpInfo'); const j = await r.json(); if (r.ok && j.packages) tcpCfg = { enabled: j.enabled !== false, hidden: j.hidden === true, packages: j.packages, offMsg: j.offMsg || '' }; } catch (e) {}
