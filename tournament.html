@@ -31,7 +31,7 @@ button,input,select{font:inherit}
 .btn{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 60%,#fff),var(--accent) 55%,var(--primary));color:#fff;border:0;border-radius:16px;padding:11px 18px;font-weight:800;cursor:pointer;box-shadow:0 10px 22px color-mix(in srgb,var(--primary) 30%,transparent);transition:transform .2s,box-shadow .2s}
 .btn:hover{box-shadow:0 12px 28px color-mix(in srgb,var(--primary) 40%,transparent)}.btn:active{transform:scale(.95)}
 .btn.o{background:var(--soft);color:var(--primary);box-shadow:none;border:1.5px solid color-mix(in srgb,var(--accent) 35%,#fff)}.btn:disabled{opacity:.5;box-shadow:none}
-.bar{height:9px;border-radius:9px;background:#e6f3ec;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:9px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.bar{height:9px;border-radius:9px;background:#fff1e2;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:9px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
 .timer{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 70%,#fff),var(--primary));color:#fff;border-radius:16px;padding:10px;text-align:center;font-weight:800;margin-top:12px;letter-spacing:.3px}
 .pl{font-size:12px;color:var(--mut);margin-top:12px;border-top:1px dashed var(--line);padding-top:10px;word-break:break-word}
 .pl span{display:inline-block;background:var(--soft);color:var(--primary);border-radius:10px;padding:3px 10px;margin:3px;font-weight:600}
@@ -66,7 +66,7 @@ async function api(p,b){const t=await me.getIdToken();const r=await fetch(BACKEN
 const err=e=>Swal.fire('Oops',e.message||String(e),'error');
 function theme(c){const s=document.documentElement.style;for(const k in c)s.setProperty('--'+k,c[k])}
 async function boot(){
-  try{const r=await fetch(BACKEND+'/tInfo');CFG=await r.json();theme(CFG.colors||{});
+  try{const r=await fetch(BACKEND+'/tInfo');CFG=await r.json();
     if(CFG.hidden){$('app').innerHTML='<div class="msg">Tournament is currently unavailable.<br><br><a href="index.html" style="color:var(--accent)">← Back to main site</a></div>';$('nav').classList.add('hide');return}
     if(CFG.supportUrl){$('fab').href=CFG.supportUrl;$('fab').classList.remove('hide')}}catch(e){}
   firebase.auth().onAuthStateChanged(async u=>{
@@ -119,7 +119,7 @@ async function pass(){const r=await Swal.fire({title:'Change password',html:'<in
 async function addMoney(){const r=await Swal.fire({title:'Add Money',input:'number',inputLabel:'Min ৳'+CFG.minDeposit,showCancelButton:true});if(!r.isConfirmed)return;try{const j=await api('/tDepositCreate',{amount:+r.value,origin:location.origin});location.href=j.paymentUrl}catch(e){err(e)}}
 async function withdraw(){const r=await Swal.fire({title:'Withdraw',html:`<div class="mut">Balance ৳${P.balance} • Min ৳${CFG.minWithdraw}</div><select id="wm" class="in"><option>bKash</option><option>Nagad</option></select><input id="wa" type="number" class="in" placeholder="Amount"><input id="w1" class="in" inputmode="numeric" placeholder="Number"><input id="w2" class="in" inputmode="numeric" placeholder="Number again">`,showCancelButton:true,preConfirm:()=>({method:$('wm').value,amount:+$('wa').value,number:$('w1').value,number2:$('w2').value})});if(!r.isConfirmed)return;
  try{const j=await api('/tWdRequest',r.value);await loadHome();Swal.fire({icon:'success',title:'Request sent',html:`Your key:<br><b style="font-size:18px">${esc(j.key)}</b><br><button class="btn o" onclick="cp('${esc(j.key)}')">Copy key</button><div class="mut">Give this key to support if needed.</div>`})}catch(e){err(e)}}
-async function wdHist(){try{const j=await api('/tWdMine');const col={pending:'#eab308',done:'#22c55e',rejected:'#ef4444'};
+async function wdHist(){try{const j=await api('/tWdMine');const col={pending:'#eab308',done:'#e56a00',rejected:'#ef4444'};
  $('app').innerHTML='<div class="pad view stg"><div class="card"><b>Withdraw History</b></div>'+(j.items.map(i=>`<div class="card"><div class="row"><b>৳${i.amount} • ${esc(i.method)}</b><span class="pill" style="background:${col[i.status]};color:#fff">${i.status}</span></div><div class="mut">${esc(i.number)} • ${fmt(i.ts)}</div><div class="row"><span class="v" style="font-family:monospace">${esc(i.key)}</span><button class="btn o" onclick="cp('${esc(i.key)}')">Copy</button></div>${i.reason?'<div class="mut">'+esc(i.reason)+'</div>':''}</div>`).join('')||'<div class="msg">No withdrawals yet</div>')+'</div>'}catch(e){err(e)}}
 boot();
 </script></body></html>
