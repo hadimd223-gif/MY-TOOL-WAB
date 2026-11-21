@@ -749,7 +749,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         </section>
 
         <!-- Home Section -->
-        <section id="home-sec" class="animate-fade-in pb-8">
+        <section id="home-sec" class="animate-fade-in pb-8" style="padding-bottom:240px;min-height:130vh;display:flex;flex-direction:column">
             <div id="banner-container" class="mb-5 overflow-hidden relative">
                 <div id="slider-wrapper" class="flex h-full w-full transition-transform duration-500 ease-out">
                     <img src="https://placehold.co/600x300/059669/FFF?text=M+H+X+TopUp+VIP" class="w-full h-full object-cover flex-shrink-0">
@@ -757,19 +757,8 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
                 <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-10"></div>
             </div>
 
-            <!-- User Status Card -->
-            <div class="vip-card p-5 mb-5">
-                <div class="flex justify-between items-center mb-1">
-                    <div class="text-sm text-slate-600">Welcome, <b id="hero-name" class="text-slate-900">Guest</b></div>
-                    <div id="hero-role-badge"></div>
-                </div>
-                <div class="text-xs text-slate-400 mb-1">Main balance</div>
-                <div class="text-3xl font-extrabold text-brand-600 mb-4">BDT <span id="hero-bal">0.00</span></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="document.getElementById('services-list').scrollIntoView({behavior:'smooth'})" class="py-3 rounded-2xl text-white font-bold bg-gradient-to-r from-brand-600 to-brand-700 shadow-md shadow-brand-500/20 text-xs tracking-wide"><i class="fa-solid fa-bolt mr-1.5"></i>Top up</button>
-                    <button onclick="showSec('addmoney')" class="py-3 rounded-2xl font-bold border border-brand-200/80 bg-white/90 text-brand-900 hover:bg-brand-50 text-xs shadow-sm"><i class="fa-solid fa-wallet mr-1.5"></i>Add money</button>
-                </div>
-            </div>
+            <!-- (balance / Add money card removed) -->
+            <div style="display:none" aria-hidden="true"><b id="hero-name"></b><div id="hero-role-badge"></div><span id="hero-bal"></span></div>
 
             <!-- Quick Links -->
             <div class="nx-ql">
@@ -789,7 +778,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
                 <div class="text-center py-10 text-slate-400"><i class="fas fa-spinner fa-spin text-brand-600 text-xl"></i> Loading games...</div>
             </div>
 
-            <div class="mt-8 mb-4 px-1">
+            <div id="recent-orders-box" class="mb-4 px-1" style="margin-top:auto;padding-top:96px">
                 <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fas fa-history text-brand-600 mr-2"></i>Recent orders</h3>
                 <div id="latest-orders-list" class="space-y-2.5">
                     <div class="vip-card p-3 animate-pulse flex items-center justify-between">
@@ -1272,6 +1261,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
                 generalSettings = doc.data();
                 try { mhxSetColors({ theme: generalSettings.themeColor, bg: generalSettings.bgColor, text: generalSettings.textColor }); } catch (e) {}
                 lbApplyEnabled();
+                try { const ro = document.getElementById('recent-orders-box'); if (ro) ro.style.display = generalSettings.recentOrdersEnabled === false ? 'none' : ''; } catch (e) {}
                 const logoUrl = generalSettings.logoUrl || "/logo.png";
                 const siteName = generalSettings.siteName || "M H X TopUp";
                 document.getElementById('header-logo-img').src = logoUrl;
