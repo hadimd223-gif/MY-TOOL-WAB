@@ -1467,6 +1467,10 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         document.getElementById('topup-game-title').innerText = gameName;
         document.getElementById('topup-game-img').src = gameImg;
         document.getElementById('game-player-id').value = "";
+        // Like service (API): only the UID is needed, no "Verify" button; likes are sent automatically when the order is placed
+        const isLikeSvc = selectedGameType === 'like';
+        const ucb = document.getElementById('uidCheckBtn'); if (ucb) ucb.style.display = isLikeSvc ? 'none' : '';
+        if (isLikeSvc && !ffServer) { try { ffPickServer('BD'); } catch (e) {} }
         
         showSec('topup');
         const grid = document.getElementById('products-grid');
@@ -1516,11 +1520,14 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         if(!playerId && selectedGameType !== 'code') return Swal.fire('Heads up', 'Please enter the Player ID (UID)!', 'warning');
         if(!selectedProduct) return Swal.fire('Heads up', 'Please select a package!', 'warning');
         if (selectedPaymentMethod === 'instant') return startGateway(selectedProduct.price);
-        mhxBusy('Placing your order…', 'Securing your package & updating your wallet.');
+        const likeSvc = selectedGameType === 'like';
+        if (likeSvc && !/^\d{5,15}$/.test(playerId)) return Swal.fire('Heads up', 'Please enter a valid UID (numbers only)', 'warning');
+        mhxBusy(likeSvc ? 'Sending likes…' : 'Placing your order…', likeSvc ? 'Please wait, this may take up to a minute. Please don’t close the page.' : 'Securing your package & updating your wallet.');
         try {
-            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() });
+            const r = await api('/placeOrder', { gameId: selectedGameId, productId: selectedProduct.id, playerId: playerId, server: ffServer || '', promoCode: document.getElementById('order-promo').value.trim() }, likeSvc ? { timeout: 130000, noRetry: true } : undefined);
             document.getElementById('order-promo').value=''; document.getElementById('order-promo-msg').innerText='';
-            Swal.fire({icon:'success', title:'Congratulations!', html:'Your order has been submitted successfully!' + (r.discount?`<br><b>Discount BDT ${r.discount} — Paid BDT ${r.price}</b>`:'')});
+            if (r.like) Swal.fire({icon:'success', title:'Likes sent! 🎉', html:`<b>${esc(r.player || '')}</b> (UID ${esc(r.uid)})<br>Likes added: <b>+${r.given}</b>` + (r.before != null && r.after != null ? `<br>${r.before} → ${r.after}` : '') + `<br>Paid: <b>BDT ${r.price}</b>`});
+            else Swal.fire({icon:'success', title:'Congratulations!', html:'Your order has been submitted successfully!' + (r.discount?`<br><b>Discount BDT ${r.discount} — Paid BDT ${r.price}</b>`:'')});
             showSec('home');
         } catch(err) { Swal.fire('Oops', err.message, 'error'); }
     }
@@ -1821,12 +1828,13 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
 
     // ================= helpers =================
     function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-    async function api(path, body) {
+    async function api(path, body, opt) {
         if (!currentUser) throw new Error('Please log in first');
-        const token = await currentUser.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 40000);
+        opt = opt || {};
+        const token = await currentUser.getIdToken(), ctl = new AbortController(), t = setTimeout(() => ctl.abort(), opt.timeout || 40000);
         try {
             const go = () => fetch(BACKEND_URL + path, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(body || {}) });
-            let r; try { r = await go(); } catch (e0) { if (e0.name === 'AbortError') throw e0; await new Promise(z => setTimeout(z, 2500)); r = await go(); }
+            let r; try { r = await go(); } catch (e0) { if (e0.name === 'AbortError' || opt.noRetry) throw e0; await new Promise(z => setTimeout(z, 2500)); r = await go(); }
             let j = {}; try { j = await r.json(); } catch (e) {}
             if (!r.ok) throw new Error(j.error || ('Server error ' + r.status));
             return j;
