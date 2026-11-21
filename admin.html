@@ -314,6 +314,20 @@
             </div>
 
             <div id="view-settings" class="view-section hidden">
+                <div class="card mb-6 md:mb-8" style="border:1px solid #ff7a00">
+                    <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-palette mr-2"></i>Website Theme Color (এক জায়গায় বদলালেই সব জায়গায়)</h3>
+                    <p class="text-xs text-gray-400 mb-4">এখানে একটা মেইন কালার বেছে Save করলে ওয়েবসাইটের বাটন, কার্ড, বর্ডার, ব্যাকগ্রাউন্ড, Tournament পেজ সবকিছুর কালার ওই রঙের সাথে ম্যাচ করে নিজে নিজে বদলে যাবে।</p>
+                    <div class="flex flex-wrap gap-2 mb-4" id="thc-presets"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <input type="color" id="thc-pick" value="#ff7a00" style="width:56px;height:44px;border:0;background:none;cursor:pointer" oninput="thcSync(this.value)">
+                        <input type="text" id="thc-hex" class="flat-input" style="max-width:140px" value="#ff7a00" maxlength="7" oninput="thcTyped(this.value)">
+                        <div id="thc-prev" class="flex-1 rounded-xl" style="height:44px;background:linear-gradient(135deg,#ff7a00,#ff9a3c,#ffb36b)"></div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" class="flat-btn flex-1" onclick="thcSave()"><i class="fas fa-save mr-1"></i> Save Theme Color</button>
+                        <button type="button" class="flat-btn flat-btn-outline" onclick="thcReset()">Default (Orange)</button>
+                    </div>
+                </div>
                 <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
                     <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-percent mr-2"></i>Reseller Discount (সব প্রোডাক্ট)</h3>
                     <p class="text-xs text-gray-400 mb-4">এখানে যত % দেবেন, শুধু <b class="text-white">Reseller</b> ইউজাররা ওয়েবসাইটের সব প্রোডাক্টে সেই % ডিসকাউন্ট পাবে। সাধারণ ইউজাররা পাবে না। ০ দিলে ডিসকাউন্ট বন্ধ।</p>
@@ -1247,6 +1261,7 @@
                     const d = doc.data();
                     if(document.getElementById('set-sitename')) document.getElementById('set-sitename').value = d.siteName || '';
                     if(document.getElementById('set-lb-enabled')) document.getElementById('set-lb-enabled').checked = d.leaderboardEnabled !== false;
+                    if(window.thcFill) thcFill(d.themeColor);
                     if(document.getElementById('set-logo')) document.getElementById('set-logo').value = d.logoUrl || '';
                     if(document.getElementById('set-notice')) document.getElementById('set-notice').value = d.notice || '';
                     if(document.getElementById('set-applink')) document.getElementById('set-applink').value = d.appLink || '';
@@ -3079,5 +3094,25 @@ details>summary{color:var(--p)!important}
 .view-section:not(.hidden){animation:vIn .4s cubic-bezier(.2,.8,.2,1) both}
 .view-section:not(.hidden)>*{animation:vIn .45s cubic-bezier(.2,.8,.2,1) both}.view-section:not(.hidden)>*:nth-child(2){animation-delay:.05s}.view-section:not(.hidden)>*:nth-child(3){animation-delay:.1s}.view-section:not(.hidden)>*:nth-child(n+4){animation-delay:.15s}
 </style>
+<script>
+/* ===== Website theme colour (one colour -> whole site) ===== */
+(function () {
+    var PRE = [['#ff7a00','Orange'],['#e11d48','Red'],['#db2777','Pink'],['#7c3aed','Purple'],['#2563eb','Blue'],['#0891b2','Cyan'],['#059669','Green'],['#ca8a04','Gold']];
+    function ok(v) { return /^#[0-9a-fA-F]{6}$/.test(v); }
+    function prev(c) { var e = document.getElementById('thc-prev'); if (e) e.style.background = 'linear-gradient(135deg,' + c + ',' + c + 'cc,' + c + '77)'; }
+    window.thcSync = function (v) { document.getElementById('thc-hex').value = v; prev(v); };
+    window.thcTyped = function (v) { if (ok(v)) { document.getElementById('thc-pick').value = v; prev(v); } };
+    window.thcFill = function (c) { c = ok(c) ? c : '#ff7a00'; document.getElementById('thc-pick').value = c; document.getElementById('thc-hex').value = c; prev(c); };
+    window.thcSave = async function () {
+        var c = document.getElementById('thc-hex').value.trim(); if (!ok(c)) { Swal.fire('Error', 'সঠিক কালার কোড দিন (যেমন #ff7a00)', 'error'); return; }
+        try { showLoading(); await db.collection('settings').doc('general').set({ themeColor: c.toLowerCase() === '#ff7a00' ? '' : c.toLowerCase() }, { merge: true }); hideLoading();
+            Swal.fire({ icon: 'success', title: 'Saved!', text: 'ওয়েবসাইটের সব জায়গার কালার বদলে গেছে।', timer: 1800, showConfirmButton: false });
+        } catch (e) { hideLoading(); Swal.fire('Error', e.message || 'Save হয়নি', 'error'); }
+    };
+    window.thcReset = function () { thcFill('#ff7a00'); thcSave(); };
+    var box = document.getElementById('thc-presets');
+    if (box) box.innerHTML = PRE.map(function (p) { return '<button type="button" onclick="thcFill(\'' + p[0] + '\')" class="flat-btn flat-btn-outline text-xs py-2 px-3" style="display:inline-flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:50%;background:' + p[0] + ';display:inline-block"></span>' + p[1] + '</button>'; }).join('');
+})();
+</script>
 </body>
 </html>
