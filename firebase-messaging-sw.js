@@ -13,3 +13,6 @@ firebase.initializeApp({
 firebase.messaging();
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
+
+// Needed so Chrome treats the site as an installable app. Pass-through only: every request still goes to the network as before.
+self.addEventListener("fetch", () => {});
