@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Users: nobody except admins (and the payment server) can change balance / role / ban
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow list: if isAdmin();
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.role == 'user'
+        && request.resource.data.balance == 0
+        && request.resource.data.get('totalDeposit', 0) == 0
+        && request.resource.data.keys().hasOnly(['name','email','balance','totalDeposit','role','createdAt','photoURL','points','supportPin','phone']);
+      allow update, delete: if isAdmin();
+    }
+
+    // Public content (read by everyone, written only by admin)
+    match /settings/{d}      { allow read: if true; allow write: if isAdmin(); }
+    match /categories/{d}    { allow read: if true; allow write: if isAdmin(); }
+    match /banners/{d}       { allow read: if true; allow write: if isAdmin(); }
+    match /tutorials/{d}     { allow read: if true; allow write: if isAdmin(); }
+    match /notices/{d}       { allow read: if true; allow write: if isAdmin(); }
+    match /recentOrders/{d}  { allow read: if true; allow write: if isAdmin(); }
+    match /services/{s} {
+      allow read: if true; allow write: if isAdmin();
+      match /products/{p} {
+        allow read: if true; allow write: if isAdmin();
+        match /stock/{x} { allow read, write: if isAdmin(); }
+      }
+    }
+
+    // Private to the user + admin (the server writes these)
+    match /orders/{d} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+    match /deposits/{d} { allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin()); allow write: if isAdmin(); }
+    match /payments/{d} { allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin()); allow write: if isAdmin(); }
+
+    // Admin only
+    match /promos/{d}       { allow read, write: if isAdmin(); }
+    match /promoUses/{d}    { allow read, write: if isAdmin(); }
+    match /unpin_codes/{d}  { allow read, write: if isAdmin(); }
+    match /secrets/{d}      { allow read, write: if isAdmin(); }
+    match /admin/{d}        { allow read, write: if isAdmin(); }
+    match /adminLogs/{d}    { allow read, write: if isAdmin(); }
+  }
+}

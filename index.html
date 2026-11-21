@@ -1592,9 +1592,9 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
         const getJ = async (url, strict) => { const res = await fetch(url, { signal: ctl.signal }); let j = null; try { j = await res.json(); } catch (e) {} if (!j || (strict && !res.ok)) throw new Error('bad'); return j; };
         const q = encodeURIComponent(uid) + '&region=' + encodeURIComponent(ffServer) + '&server=' + encodeURIComponent(ffServer);
-        getJ(`${BACKEND_URL}/playerInfo?uid=${q}`, true).catch(e => { if (e.name === 'AbortError') throw e; return getJ(`${FF_INFO_API}?uid=${q}`, false); })
+        getJ(`${BACKEND_URL}/playerInfo?uid=${q}`, true).catch(e => { if (e.name === 'AbortError') throw e; return getJ(`${FF_INFO_API}?uid=${q}`, false).then(d => { if (!ffFind(d, ['nickname', 'nickName', 'name', 'playerName'])) throw new Error('svc'); return d; }); })
             .then(data => { clearTimeout(tm); ffRender(uid, data); })
-            .catch(e => { clearTimeout(tm); ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-triangle-exclamation"></i></div><p>${e.name === 'AbortError' ? 'The server isn’t responding, please try again' : 'We couldn’t verify this right now, please try again shortly'}</p></div>`); });
+            .catch(e => { clearTimeout(tm); ffOpenModal(`<div class="ffm-load"><div class="ffm-err"><i class="fas fa-triangle-exclamation"></i></div><p>${e.name === 'AbortError' ? 'The server isn’t responding, please try again' : 'The UID check service is temporarily unavailable. You can still place your order normally'}</p></div>`); });
     }
 
     // ---------- Floating player-info window ----------
