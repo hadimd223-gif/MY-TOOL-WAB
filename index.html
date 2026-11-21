@@ -551,155 +551,139 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
 #fab-support,#nav-leaders{background:var(--c1)!important;background-image:none!important}
 .text-emerald-600,.text-emerald-700{color:var(--c1d)!important}
 </style>
-    <style id="mhx-theme"></style>
-    <script>
-    /* ===== MHX Theme engine: colours set from Admin > Theme & Colors ===== */
-    (function () {
-        var SLOTS = {
-            textMain:   { tx: 'body,.text-slate-900,.text-slate-800,.text-slate-700,.lb-nm,.tgp-title' },
-            textMuted:  { tx: '.text-slate-600,.text-slate-500,.text-slate-400,.zp-sub' },
-            brandText:  { tx: '.text-brand-500,.text-brand-600,.text-brand-700,.text-brand-900,.lb-amt' },
-            pageBg:     { bg: 'html,body', fx: 'background-attachment:fixed !important;' },
-            header:     { bg: 'header.sticky', tx: '#header-site-name', bd: 'header.sticky' },
-            bottomNav:  { bg: 'nav.fixed>div', bd: 'nav.fixed>div' },
-            navText:    { tx: '.nav-item' },
-            navActive:  { bg: '.nav-item.active-tab', tx: '.nav-item.active-tab' },
-            card:       { bg: '.vip-card', bd: '.vip-card' },
-            productCard:{ bg: '.product-card', bd: '.product-card' },
-            productSel: { bg: '.product-card.selected', bd: '.product-card.selected' },
-            payCard:    { bg: '.pay-option-card', bd: '.pay-option-card' },
-            paySel:     { bg: '.pay-option-card.selected', bd: '.pay-option-card.selected' },
-            input:      { bg: '.zp-input', tx: '.zp-input', bd: '.zp-input' },
-            notice:     { bg: '#notice-section>div', tx: '#notice-section>div,#notice-section .text-brand-100', glow: 1 },
-            ticker:     { bg: '#top-ticker', tx: '#top-ticker', glow: 1 },
-            mainBtn:    { bg: '.zp-btn', tx: '.zp-btn', glow: 1 },
-            loginBtn:   { bg: '#header-login-container button', tx: '#header-login-container button', glow: 1 },
-            topupBtn:   { bg: '#home-sec .vip-card .grid.grid-cols-2>button:first-child', tx: '#home-sec .vip-card .grid.grid-cols-2>button:first-child', glow: 1 },
-            addMoneyBtn:{ bg: '#home-sec .vip-card .grid.grid-cols-2>button:last-child', tx: '#home-sec .vip-card .grid.grid-cols-2>button:last-child', bd: '#home-sec .vip-card .grid.grid-cols-2>button:last-child' },
-            balanceChip:{ bg: '#header-balance-container div.rounded-2xl', tx: '#header-balance-container div.rounded-2xl', bd: '#header-balance-container div.rounded-2xl' },
-            avatar:     { bg: '#header-avatar', tx: '#header-avatar', glow: 1 },
-            bell:       { bg: '.zp-bell', tx: '.zp-bell', bd: '.zp-bell' },
-            fab:        { bg: '#fab-support', tx: '#fab-support', glow: 1 },
-            dailyIcon:  { bg: '#dailylike-sec .w-14.h-14' },
-            autoIcon:   { bg: '#autolike-sec .w-14.h-14' },
-            uidBtn:     { bg: '#uidCheckBtn', tx: '#uidCheckBtn', glow: 1 },
-            promoBtn:   { bg: '#account-sec button[onclick*=redeemPromo]', tx: '#account-sec button[onclick*=redeemPromo]', glow: 1 },
-            walletIcon: { bg: '#addmoney-sec .w-12.h-12.rounded-2xl' },
-            resellerBar:{ bg: '#reseller-progress-bar' },
-            refCard:    { bg: '#ref-card>.text-white', tx: '#ref-card>.text-white' },
-            leaderHero: { bg: '.lb-hero', tx: '.lb-hero', glow: 1 },
-            leaderBar:  { bg: '.lb-bar i' },
-            idListCard: { bg: '.ids-card', bd: '.ids-card' },
-            idBuyBtn:   { bg: '.ids-buy:not(:disabled),.idc-btn', tx: '.ids-buy,.idc-btn', glow: 1 },
-            profileAvatar: { bg: '.av-wrap .av-img' },
-            popupBtn:   { bg: '.mhx-btn-primary', tx: '.mhx-btn-primary', glow: 1 },
-            popupBg:    { bg: '.swal2-popup.mhx-pop:not(.swal2-toast)', bd: '.swal2-popup.mhx-pop:not(.swal2-toast)' },
-            tournamentCard: { bg: '#t-home-card', tx: '#t-home-card', glow: 1 },
-            profileMenu:{ bg: '#profile-menu', bd: '#profile-menu' }
-        };
-        function ok(v) { return typeof v === 'string' && v.length < 80 && !/[;{}<>\\]/.test(v); }
-        function rgba(c, a) {
-            var m = /^#?([0-9a-f]{6})$/i.exec(c || ''); if (!m) return null;
-            var n = parseInt(m[1], 16);
-            return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
-        }
-        function build(t) {
-            var out = [];
-            if (!t || typeof t !== 'object') return '';
-            Object.keys(SLOTS).forEach(function (id) {
-                var s = SLOTS[id], v = t[id];
-                if (!v || typeof v !== 'object') return;
-                if (s.bg && ok(v.c1)) {
-                    var two = ok(v.c2) && v.c2 && v.c2 !== v.c1;
-                    var ang = isFinite(v.a) ? +v.a : 135;
-                    var bg = two ? 'linear-gradient(' + ang + 'deg,' + v.c1 + ',' + v.c2 + ')' : v.c1;
-                    out.push(s.bg + '{background:' + bg + ' !important;' + (s.fx || '') + '}');
-                    if (s.glow) { var g = rgba(two ? v.c2 : v.c1, 0.38); if (g) out.push(s.bg + '{box-shadow:0 10px 24px ' + g + ' !important}'); }
-                }
-                if (s.tx && ok(v.tx)) out.push(s.tx + '{color:' + v.tx + ' !important}');
-                if (s.bd && ok(v.bd)) out.push(s.bd + '{border-color:' + v.bd + ' !important}');
-            });
-            if (typeof t.css === 'string') out.push(t.css.replace(/[<]/g, ''));
-            return out.join('\n');
-        }
-        function paint(css) { var el = document.getElementById('mhx-theme'); if (el && el.textContent !== css) el.textContent = css; }
-        window.mhxApplyTheme = function (t) {
-            var css = build(t); paint(css);
-            try { localStorage.setItem('mhxThemeCss', css); } catch (e) {}
-            try {
-                var c = t && t.header && t.header.c1, m = document.querySelector('meta[name=theme-color]');
-                if (m) m.setAttribute('content', ok(c) && c ? c : '#ff7a00');
-            } catch (e) {}
-        };
-        try { var cached = localStorage.getItem('mhxThemeCss'); if (cached) paint(cached); } catch (e) {}
-        /* live preview from Admin (same origin only) */
-        window.addEventListener('message', function (e) {
-            if (e.origin !== location.origin || !e.data || e.data.type !== 'mhx-theme-preview') return;
-            paint(build(e.data.theme));
-        });
-        window.addEventListener('message', function (e) {
-            if (e.origin !== location.origin || !e.data || e.data.type !== 'mhx-master-preview') return;
-            try { window.mhxSetTheme(e.data.color || '', true); } catch (x) {}
-        });
-    })();
-    </script>
-<script id="mhx-palette">
-/* One main colour -> every orange shade of the site is re-derived from it (hue/saturation/lightness shift). */
+    <style id="mhx-colors"></style>
+<script id="mhx-colors-engine">
+/* ===== MHX Colours: only 3 colours exist (Theme / Background / Text), set in Admin > Theme & Colors.
+   Every other colour of the site (buttons, cards, borders, gradients, muted text, popups ...) is derived from these 3. ===== */
 (function () {
-    var BASE_H = 28.8, tracked = [], cur = null;
+    var DEF = { theme: '#ff7a00', bg: '#fff8f0', text: '#111827' }, BASE_H = 28.8;
+    var cur = null, D = null, tracked = [];
+
+    function isHex(v) { return typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v); }
     function h2r(h) { h = h.replace('#', ''); return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)]; }
+    function r2h(a) { return '#' + a.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
+    function mix(a, b, p) { var x = h2r(a), y = h2r(b); return r2h([x[0] + (y[0] - x[0]) * p, x[1] + (y[1] - x[1]) * p, x[2] + (y[2] - x[2]) * p]); }
+    function lum(h) { var c = h2r(h).map(function (v) { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; }
     function rgb2hsl(r, g, b) { r /= 255; g /= 255; b /= 255; var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, h = 0, s = 0, d = mx - mn;
         if (d) { s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn); h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; } return [h, s * 100, l * 100]; }
     function hsl2rgb(h, s, l) { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; var c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
         if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; } else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; } else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
         return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)]; }
-    function hex(a) { return '#' + a.map(function (v) { return ('0' + Math.max(0, Math.min(255, v)).toString(16)).slice(-2); }).join(''); }
-    function shift(rgb) {
+
+    function norm(c) {
+        c = c || {};
+        return { theme: isHex(c.theme) ? c.theme.toLowerCase() : DEF.theme, bg: isHex(c.bg) ? c.bg.toLowerCase() : DEF.bg, text: isHex(c.text) ? c.text.toLowerCase() : DEF.text };
+    }
+    function isDefault(c) { return c.theme === DEF.theme && c.bg === DEF.bg && c.text === DEF.text; }
+
+    /* everything below is computed from the three colours */
+    function derive(c) {
+        var T = c.theme, B = c.bg, X = c.text, dark = lum(B) < 0.3, th = rgb2hsl.apply(null, h2r(T));
+        var card = dark ? mix(B, '#ffffff', .08) : '#ffffff';
+        var d = { T: T, B: B, X: X, dark: dark, th: th, card: card };
+        d.c2 = mix(T, '#ffffff', .24); d.c1d = mix(T, '#000000', .1);
+        d.soft = mix(card, T, dark ? .14 : .09); d.line = mix(B, T, dark ? .3 : .2);
+        d.muted = mix(X, B, .45); d.faint = mix(X, B, .62); d.x2 = mix(X, B, .15); d.x3 = mix(X, B, .3);
+        d.on = lum(T) > .55 ? '#111827' : '#ffffff';
+        d.rgb = function (h) { return h2r(h).join(','); };
+        d.neu = { '#111827': X, '#1f2937': X, '#374151': d.x2, '#4b5563': d.x3, '#6b7280': d.muted, '#9ca3af': d.faint, '#94a3b8': d.faint, '#cbd5e1': d.line, '#f4f6ff': B, '#f1f5f9': B };
+        return d;
+    }
+
+    /* an old "orange" shade -> same shade of the chosen theme colour */
+    function shiftOrange(rgb) {
+        var o = rgb2hsl(rgb[0], rgb[1], rgb[2]), L = o[2];
+        if (D.dark && L >= 75) return h2r(mix(D.card, D.T, Math.min(.45, (100 - L) / 25 * .35)));
+        var w = L <= 60 ? 1 : Math.max(0, (100 - L) / 40);
+        return hsl2rgb(o[0] + (D.th[0] - BASE_H), Math.min(100, o[1] * D.th[1] / 100), Math.max(2, Math.min(99, L + (D.th[2] - 50) * w)));
+    }
+    function mapRgb(rgb, full) {
         var o = rgb2hsl(rgb[0], rgb[1], rgb[2]);
-        if (o[0] < 20 || o[0] > 34 || o[1] < 50) return rgb;               /* only the orange family is touched */
-        var w = o[2] <= 60 ? 1 : Math.max(0, (100 - o[2]) / 40);
-        return hsl2rgb(o[0] + (cur.h - BASE_H), Math.min(100, o[1] * cur.s / 100), Math.max(2, Math.min(99, o[2] + (cur.l - 50) * w)));
+        if (o[0] >= 20 && o[0] <= 34 && o[1] >= 50) return shiftOrange(rgb);
+        if (full) { var n = D.neu[r2h(rgb)]; if (n) return h2r(n); }
+        return rgb;
     }
     function conv(t) {
-        if (!cur || typeof t !== 'string' || t.indexOf('#') < 0 && t.indexOf('rgb') < 0 && t.indexOf('255') < 0) return t;
-        t = t.replace(/#([0-9a-fA-F]{6})\b/g, function (m, h) { return hex(shift(h2r(h))); });
-        t = t.replace(/rgba?\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})/g, function (m, r, g, b) { var n = shift([+r, +g, +b]); return m.slice(0, m.indexOf('(') + 1) + n[0] + ',' + n[1] + ',' + n[2]; });
-        t = t.replace(/(--c[12]rgb:\s*)(\d+),\s*(\d+),\s*(\d+)/g, function (m, p, r, g, b) { var n = shift([+r, +g, +b]); return p + n[0] + ',' + n[1] + ',' + n[2]; });
+        if (!cur || typeof t !== 'string' || t.indexOf('#') < 0 && t.indexOf('rgb') < 0 && t.indexOf('white') < 0) return t;
+        t = t.replace(/#([0-9a-fA-F]{6})\b/g, function (m, h) { return r2h(mapRgb(h2r(h), true)); });
+        t = t.replace(/rgba?\(\s*(\d{1,3})(?:\s*,\s*|\s+)(\d{1,3})(?:\s*,\s*|\s+)(\d{1,3})\s*(?:([,\/])\s*([^)]*))?\)/g, function (m, r, g, b, sep, a) {
+            var opaque = a == null || /var\(/.test(a) || parseFloat(a) >= 1;
+            var n = mapRgb([+r, +g, +b], opaque);
+            if (n[0] === +r && n[1] === +g && n[2] === +b) return m;
+            return sep === '/' ? 'rgb(' + n.join(' ') + ' / ' + a + ')' : (a == null ? 'rgb(' + n.join(',') + ')' : 'rgba(' + n.join(',') + ',' + a + ')');
+        });
+        /* white surfaces (only where white is used as a background) -> card colour */
+        t = t.replace(/(background(?:-color)?\s*:\s*)(#fff(?:fff)?\b|white\b)/gi, function (m, p) { return p + D.card; });
+        t = t.replace(/(background(?:-color)?\s*:\s*)rgba?\(\s*255(?:\s*,\s*|\s+)255(?:\s*,\s*|\s+)255\s*(?:([,\/])\s*([^)]*))?\)/gi, function (m, p, sep, a) {
+            if (a == null) return p + D.card;
+            if (/var\(/.test(a)) return p + 'rgb(' + D.card.replace('#', '').match(/../g).map(function (x) { return parseInt(x, 16); }).join(' ') + ' / ' + a + ')';
+            var v = /%\s*$/.test(a) ? parseFloat(a) / 100 : parseFloat(a);
+            return v >= .55 ? p + 'rgba(' + D.rgb(D.card) + ',' + a + ')' : m;
+        });
         return t;
     }
+
     function track(el, kind) {
-        if (kind === 'style' && (el.id === 'mhx-theme' || el.id === 'mhx-palette')) return;
-        if (kind === 'style') { if (el.__mo === undefined) el.__mo = el.textContent; el.textContent = conv(el.__mo); }
-        else { var a = el.getAttribute('style'); if (a === null) return; if (el.__mo === undefined) el.__mo = a; el.setAttribute('style', conv(el.__mo)); }
+        if (kind === 'style') {
+            if (el.id === 'mhx-colors') return;
+            if (el.__mo === undefined) el.__mo = el.textContent;
+            el.__cv = conv(el.__mo); if (el.textContent !== el.__cv) el.textContent = el.__cv;
+        } else {
+            var a = el.getAttribute('style'); if (a === null) return;
+            if (a !== el.__cv) el.__mo = a;
+            el.__cv = conv(el.__mo); if (a !== el.__cv) el.setAttribute('style', el.__cv);
+        }
         if (tracked.indexOf(el) < 0) tracked.push(el);
     }
     function scan(root) {
-        if (root.nodeType !== 1) return;
-        if (root.tagName === 'STYLE') { if (root.id !== 'mhx-palette' && root.id !== 'mhx-theme') track(root, 'style'); return; }
+        if (!cur || root.nodeType !== 1) return;
+        if (root.tagName === 'STYLE') { track(root, 'style'); return; }
         if (root.hasAttribute && root.hasAttribute('style')) track(root, 'attr');
         var q = root.querySelectorAll ? root.querySelectorAll('style,[style]') : [];
         for (var i = 0; i < q.length; i++) track(q[i], q[i].tagName === 'STYLE' ? 'style' : 'attr');
     }
-    function parse(c) {
-        if (typeof c !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(c)) return null;
-        var r = h2r(c), o = rgb2hsl(r[0], r[1], r[2]);
-        return { h: o[0], s: Math.max(35, o[1]), l: Math.max(30, Math.min(62, o[2])), hexv: c.toLowerCase() };
+
+    function sheet() {
+        var T = D.T, B = D.B, X = D.X, card = D.card, s = [];
+        s.push(':root{--c1:' + T + ' !important;--c2:' + D.c2 + ' !important;--c1d:' + D.c1d + ' !important;--bg:' + B + ' !important;--card:' + card + ' !important;--card2:' + D.soft + ' !important;--line:' + D.line + ' !important;--ink:' + X + ' !important;--muted:' + D.muted + ' !important;--head:' + card + ' !important;--nav:' + card + ' !important;--c1rgb:' + D.rgb(T) + ' !important;--c2rgb:' + D.rgb(D.c2) + ' !important;--cardrgb:' + D.rgb(card) + ' !important;--primary:' + T + ' !important;--accent:' + D.c2 + ' !important;--on:' + D.on + ' !important;color-scheme:' + (D.dark ? 'dark' : 'light') + '}');
+        s.push('html,body{background:radial-gradient(120% 55% at 50% 0%,' + mix(B, T, .08) + ' 0%,' + B + ' 48%,' + mix(B, card, .5) + ' 100%) fixed !important;background-color:' + B + ' !important;color:' + X + ' !important}');
+        s.push('header.sticky,nav.fixed>div,#profile-menu{background:' + card + ' !important;border-color:' + D.line + ' !important}');
+        s.push('.text-slate-900,.text-slate-800{color:' + X + ' !important}.text-slate-700{color:' + D.x2 + ' !important}.text-slate-600{color:' + D.x3 + ' !important}.text-slate-500{color:' + D.muted + ' !important}.text-slate-400,.text-gray-400{color:' + D.faint + ' !important}');
+        s.push('.text-brand-900{color:' + X + ' !important}');
+        s.push('.bg-white{background-color:' + card + ' !important}.bg-slate-100,.bg-brand-50{background-color:' + D.soft + ' !important}.bg-slate-200,.bg-brand-100{background-color:' + D.line + ' !important}.border-slate-100,.border-slate-200,.border-brand-50,.border-brand-100,.border-white{border-color:' + D.line + ' !important}');
+        s.push('input,select,textarea{color:' + X + '}input::placeholder,textarea::placeholder{color:' + D.faint + '}');
+        s.push('.swal2-popup{background:' + card + ' !important;color:' + X + ' !important}.swal2-title,.swal2-html-container,.swal2-content{color:' + X + ' !important}');
+        if (D.on !== '#ffffff') s.push('.zp-btn,.bg-brand-600,#fab-support,#nav-leaders,.ids-buy,.idc-btn,.mhx-btn-primary,#header-login-container button,.nx-notice .tag,.nx-notice button,.lb-hero{color:' + D.on + ' !important}');
+        return s.join('\n');
     }
-    window.mhxSetTheme = function (c, preview) {
-        var p = parse(c);
-        if (!p || (Math.abs(p.h - BASE_H) < 1.5 && p.s > 97 && Math.abs(p.l - 50) < 2)) p = null;      /* default orange = leave untouched */
-        cur = p;
-        if (!preview) { try { if (p) localStorage.setItem('mhxThemeColor', c); else localStorage.removeItem('mhxThemeColor'); } catch (e) {} }
+
+    function paintMeta() {
+        var m = document.querySelector('meta[name=theme-color]'); if (m) m.setAttribute('content', cur ? D.card : '#ffffff');
+    }
+    window.mhxSetColors = function (c, preview) {
+        c = norm(c);
+        if (!preview) { try { if (isDefault(c)) localStorage.removeItem('mhxColors'); else localStorage.setItem('mhxColors', JSON.stringify(c)); } catch (e) {} }
+        var was = cur;
+        cur = isDefault(c) ? null : c; D = cur ? derive(cur) : null;
+        var st = document.getElementById('mhx-colors'); if (st) st.textContent = cur ? sheet() : '';
         tracked = tracked.filter(function (el) { return el.isConnected; });
-        scan(document.documentElement);
-        tracked.forEach(function (el) { if (el.tagName === 'STYLE') el.textContent = conv(el.__mo); else el.setAttribute('style', conv(el.__mo)); });
-        var m = document.querySelector('meta[name=theme-color]'); if (m) m.setAttribute('content', '#ffffff');
+        if (!cur) { tracked.forEach(function (el) { if (el.tagName === 'STYLE') el.textContent = el.__mo; else el.setAttribute('style', el.__mo); el.__cv = undefined; }); }
+        else { tracked.forEach(function (el) { el.__cv = undefined; if (el.tagName === 'STYLE') { el.textContent = conv(el.__mo); el.__cv = el.textContent; } else { el.__cv = conv(el.__mo); el.setAttribute('style', el.__cv); } }); scan(document.documentElement); }
+        paintMeta();
     };
-    try { var saved = localStorage.getItem('mhxThemeColor'); if (saved) { cur = parse(saved); scan(document.documentElement); } } catch (e) {}
+    try { var saved = JSON.parse(localStorage.getItem('mhxColors') || 'null'); if (saved) { cur = norm(saved); if (isDefault(cur)) cur = null; else { D = derive(cur); var st0 = document.getElementById('mhx-colors'); if (st0) st0.textContent = sheet(); scan(document.documentElement); } } } catch (e) {}
     new MutationObserver(function (muts) {
         if (!cur) return;
-        muts.forEach(function (m) { for (var i = 0; i < m.addedNodes.length; i++) scan(m.addedNodes[i]); });
-    }).observe(document.documentElement, { childList: true, subtree: true });
+        muts.forEach(function (m) {
+            if (m.type === 'attributes') { if (m.target.nodeType === 1) track(m.target, 'attr'); return; }
+            for (var i = 0; i < m.addedNodes.length; i++) scan(m.addedNodes[i]);
+        });
+    }).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+    /* live preview from Admin (same origin only) */
+    window.addEventListener('message', function (e) {
+        if (e.origin !== location.origin || !e.data || e.data.type !== 'mhx-colors-preview') return;
+        try { window.mhxSetColors(e.data.colors || {}, true); } catch (x) {}
+    });
 })();
 </script>
 </head>
@@ -1286,8 +1270,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         db.collection("settings").doc("general").onSnapshot((doc) => {
             if (doc.exists) {
                 generalSettings = doc.data();
-                try { mhxSetTheme(generalSettings.themeColor || ''); } catch (e) {}
-                try { if (window.mhxApplyTheme) mhxApplyTheme(generalSettings.themeJson ? JSON.parse(generalSettings.themeJson) : {}); } catch (e) {}
+                try { mhxSetColors({ theme: generalSettings.themeColor, bg: generalSettings.bgColor, text: generalSettings.textColor }); } catch (e) {}
                 lbApplyEnabled();
                 const logoUrl = generalSettings.logoUrl || "/logo.png";
                 const siteName = generalSettings.siteName || "M H X TopUp";
