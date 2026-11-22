@@ -218,6 +218,7 @@
             </a>
             <a href="#" onclick="switchView('apikeys');return false" id="nav-apikeys" class="nav-link flex items-center px-4 py-3"><i class="fas fa-key w-8 text-center"></i> API Keys</a>
             <a href="#" onclick="switchView('dailylike');return false" id="nav-dailylike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-fire w-8 text-center"></i> Daily Like Price</a>
+            <a href="#" onclick="switchView('guildglory');return false" id="nav-guildglory" class="nav-link flex items-center px-4 py-3"><i class="fas fa-shield-halved w-8 text-center"></i> Guild Glory</a>
             <a href="#" onclick="switchView('autolike');return false" id="nav-autolike" class="nav-link flex items-center px-4 py-3"><i class="fas fa-robot w-8 text-center"></i> Auto Like</a>
             <a href="#" onclick="switchView('tourney');return false" id="nav-tourney" class="nav-link flex items-center px-4 py-3"><i class="fas fa-trophy w-8 text-center"></i> Tournament</a>
             <a href="#" onclick="switchView('tcp');return false" id="nav-tcp" class="nav-link flex items-center px-4 py-3"><i class="fas fa-satellite-dish w-8 text-center"></i> TCP BOT</a>
@@ -313,6 +314,41 @@
                         <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="dl-off" class="flat-input"></div>
                     </div>
                     <button onclick="saveDailyLikeCfg()" class="flat-btn mt-4"><i class="fas fa-save mr-1"></i> Save</button>
+                </div>
+            </div>
+
+            <div id="view-guildglory" class="view-section hidden">
+                <div class="card mb-6 md:mb-8" style="border:1px solid #F49E0B">
+                    <h3 class="text-xl font-bold text-orange-500 mb-1"><i class="fas fa-shield-halved mr-2"></i>Guild Glory Control</h3>
+                    <p class="text-xs text-gray-400 mb-4">কতটা বট ইউজার নিতে পারবে, ফ্রি না পেইড, দাম — সব এখান থেকে। সেভ করলেই সাথে সাথে ওয়েবসাইটে কাজ করবে।</p>
+                    <div class="space-y-4 text-sm text-gray-200">
+                        <label class="flex items-center gap-2"><input type="checkbox" id="gg-enabled" checked> Guild Glory সার্ভিস চালু</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div><label class="block text-sm text-gray-400 mb-2">মোড</label>
+                                <select id="gg-mode" class="flat-input"><option value="free">FREE — ইউজার শুধু ফ্রি বট সংখ্যা নিতে পারবে</option><option value="paid">PAID — ইউজার নিচের সব অপশন নিতে পারবে (টাকা কাটবে)</option></select></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">ফ্রি মোডে সর্বোচ্চ বট (যেমন 4)</label><input type="number" min="1" id="gg-freebots" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">প্রতি বটের দাম (৳) — পেইড মোডে</label><input type="number" min="0" id="gg-price" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">রিসেলার প্রতি বটের দাম (৳, খালি = সাধারণ নিয়ম)</label><input type="number" min="0" id="gg-rprice" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">ফ্রি অর্ডার দিনে কতবার (0 = আনলিমিটেড)</label><input type="number" min="0" id="gg-freedaily" class="flat-input"></div>
+                            <div><label class="block text-sm text-gray-400 mb-2">বন্ধ থাকলে ইউজারকে মেসেজ (ঐচ্ছিক)</label><input type="text" id="gg-off" class="flat-input"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">বট অপশন (ইউজার এই সংখ্যাগুলো দেখবে) — যখন ইচ্ছা যোগ/মুছুন</label>
+                            <div id="gg-opt-chips" class="flex flex-wrap gap-2 mb-3"></div>
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <input type="number" min="1" max="200" id="gg-opt-new" placeholder="যেমন 24" class="flat-input" style="max-width:140px">
+                                <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-4" onclick="ggAdminAdd()">+ Add</button>
+                                <span class="text-xs text-gray-500">Quick:</span>
+                                <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-3" onclick="ggAdminAdd(4)">4</button>
+                                <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-3" onclick="ggAdminAdd(8)">8</button>
+                                <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-3" onclick="ggAdminAdd(12)">12</button>
+                                <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-3" onclick="ggAdminAdd(16)">16</button>
+                                <button type="button" class="flat-btn flat-btn-outline text-xs py-2 px-3" onclick="ggAdminAdd(20)">20</button>
+                            </div>
+                        </div>
+                        <div id="gg-conn" class="text-xs text-gray-400"></div>
+                    </div>
+                    <button onclick="saveGuildGlory()" class="flat-btn mt-4"><i class="fas fa-save mr-1"></i> Save</button>
                 </div>
             </div>
 
@@ -654,6 +690,7 @@
                             <option value="auto-topup">Auto TopUp (API Delivery)</option><option value="like">Like Service (API) — auto send, no admin request</option>
                             <option value="dailylike">Daily Like (পেজ খুলবে)</option>
                             <option value="autolike">Auto Like (পেজ খুলবে)</option>
+                            <option value="guildglory">Guild Glory (পেজ খুলবে)</option>
                             <option value="tcp">TCP BOT (পেজ খুলবে)</option>
                             <option value="idsell">ID Sell (পেজ খুলবে)</option>
                             <option value="tournament">Tournament (পেজ খুলবে)</option>
@@ -1229,6 +1266,7 @@
                 apikeys: "API Key Management",
                 dailylike: "Daily Like Price Control",
                 autolike: "Auto Like Management",
+                guildglory: "Guild Glory Control",
                 tcp: "TCP BOT",
                 tourney: "Tournament",
                 ads: "Ads / Earn System",
@@ -1983,6 +2021,46 @@
         } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
     }
     (function () { const _sv2 = switchView; switchView = function (v) { const r = _sv2.apply(this, arguments); if (v === 'dailylike') loadDailyLikeCfg(); return r; }; })();
+
+
+    // ---- Guild Glory settings ----
+    let ggOptions = [4, 8, 12, 16, 20];
+    function ggAdminChips() {
+        const box = document.getElementById('gg-opt-chips'); if (!box) return;
+        box.innerHTML = ggOptions.map(n => `<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold" style="background:#F49E0B22;border:1px solid #F49E0B;color:#F49E0B">${n} Bots <i class="fas fa-times cursor-pointer" onclick="ggAdminRemove(${n})"></i></span>`).join('') || '<span class="text-xs text-gray-500">কোনো অপশন নেই</span>';
+    }
+    function ggAdminAdd(n) {
+        if (n == null) { n = parseInt((document.getElementById('gg-opt-new') || {}).value, 10); document.getElementById('gg-opt-new').value = ''; }
+        if (isNaN(n) || n < 1 || n > 200) return Swal.fire('Invalid', '1 থেকে 200 এর মধ্যে সংখ্যা দিন', 'warning');
+        if (!ggOptions.includes(n)) ggOptions.push(n);
+        ggOptions.sort((a, b) => a - b); ggAdminChips();
+    }
+    function ggAdminRemove(n) { ggOptions = ggOptions.filter(x => x !== n); ggAdminChips(); }
+    async function loadGuildGlory() {
+        try {
+            const g = (await db.collection('settings').doc('general').get()).data() || {}, sv = (id, v) => { const e = document.getElementById(id); if (e) e.value = v == null ? '' : v; };
+            const on = document.getElementById('gg-enabled'); if (on) on.checked = !(g.gloryEnabled === false || ['off', 'false', '0'].includes(String(g.gloryEnabled).toLowerCase()));
+            sv('gg-mode', String(g.gloryMode || 'free').toLowerCase() === 'paid' ? 'paid' : 'free');
+            sv('gg-freebots', g.gloryFreeBots != null ? g.gloryFreeBots : 4); sv('gg-price', g.gloryPricePerBot != null ? g.gloryPricePerBot : 2);
+            sv('gg-rprice', g.gloryResellerPricePerBot); sv('gg-freedaily', g.gloryFreeDaily != null ? g.gloryFreeDaily : 0); sv('gg-off', g.gloryOffMsg);
+            let o = g.gloryOptions; if (typeof o === 'string') { try { o = JSON.parse(o); } catch (e) { o = o.split(/[,\s]+/); } }
+            ggOptions = (Array.isArray(o) ? o : [4, 8, 12, 16, 20]).map(x => parseInt(x, 10)).filter(x => x >= 1 && x <= 200).sort((a, b) => a - b);
+            ggAdminChips();
+        } catch (e) {}
+    }
+    async function saveGuildGlory() {
+        const v = id => (document.getElementById(id) || {}).value;
+        const num = (id, def) => { const x = parseInt(v(id), 10); return isNaN(x) || x < 0 ? def : x; };
+        try {
+            showLoading();
+            const rp = String(v('gg-rprice') || '').trim();
+            await db.collection('settings').doc('general').set({ gloryEnabled: !!document.getElementById('gg-enabled').checked, gloryMode: v('gg-mode') === 'paid' ? 'paid' : 'free',
+                gloryFreeBots: Math.max(1, num('gg-freebots', 4)), gloryPricePerBot: num('gg-price', 2), gloryResellerPricePerBot: rp === '' ? '' : num('gg-rprice', 0),
+                gloryFreeDaily: num('gg-freedaily', 0), gloryOffMsg: String(v('gg-off') || '').trim().slice(0, 200), gloryOptions: ggOptions.slice() }, { merge: true });
+            hideLoading(); Swal.fire('Saved', 'Guild Glory settings updated', 'success');
+        } catch (e) { hideLoading(); Swal.fire('Error', e.message, 'error'); }
+    }
+    (function () { const _sv3 = switchView; switchView = function (v) { const r = _sv3.apply(this, arguments); if (v === 'guildglory') loadGuildGlory(); return r; }; })();
 
     // ---- send password reset email to a user ----
     async function sendResetMail(email) {

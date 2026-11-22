@@ -837,6 +837,44 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         </section>
 
 
+        <!-- Guild Glory Section -->
+        <section id="guildglory-sec" class="hidden animate-fade-in pb-10">
+            <div class="vip-card p-3.5 flex items-center gap-3 mb-3 relative">
+                <button onclick="showSec('home')" class="text-slate-500 hover:text-brand-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 absolute top-3.5 right-3.5"><i class="fas fa-times"></i></button>
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md" style="background:linear-gradient(135deg,#ff7a00,#ff9a3c 60%,#ffb36b)"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">Guild Glory</h3>
+                    <p class="text-[11px] text-brand-600 font-semibold">Bots join your guild and farm glory</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Your balance</div><div class="text-base font-extrabold text-brand-600">BDT <span id="gg-balance">0</span></div></div>
+                <div class="vip-card py-3 text-center"><div class="text-[10px] text-slate-500 font-semibold">Price</div><div class="text-base font-extrabold text-rose-600" id="gg-price">FREE</div></div>
+            </div>
+
+            <div id="gg-form" class="vip-card p-4 mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-brand-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">1</span>
+                    <h3 class="font-bold text-slate-800 text-xs">How many bots?</h3>
+                </div>
+                <div id="gg-options" class="flex flex-wrap gap-1.5 mb-1"></div>
+                <p id="gg-opt-note" class="zp-sub mb-4"></p>
+
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-brand-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold">2</span>
+                    <h3 class="font-bold text-slate-800 text-xs">Guild ID &amp; region</h3>
+                </div>
+                <input type="tel" inputmode="numeric" id="gg-gid" maxlength="15" placeholder="Guild ID e.g. 3012345678" class="zp-input text-sm py-2.5 mb-3" oninput="this.value=this.value.replace(/\D/g,'')">
+                <div class="text-[11px] font-bold text-slate-600 mb-1.5"><i class="fas fa-server text-brand-600 mr-1"></i>Select region (server) <span class="text-rose-500">*</span></div>
+                <div id="gg-servers" class="flex flex-wrap gap-1.5 mb-4"></div>
+                <button id="gg-btn" onclick="ggSend()" class="zp-btn w-full text-sm"><i class="fa-solid fa-paper-plane mr-1.5"></i>Send bots</button>
+                <p class="zp-sub mt-2.5 leading-relaxed"><i class="fa-solid fa-circle-info text-brand-500 mr-1"></i>The bots send join requests to your guild. Keep your guild open for requests / accept them. If no bot can join, you won’t be charged.</p>
+            </div>
+
+            <div id="gg-result"></div>
+        </section>
+
         <!-- TCP BOT Section -->
         <section id="tcp-sec" class="hidden animate-fade-in pb-10">
             <div class="vip-card p-3.5 flex items-center gap-3 mb-3 relative">
@@ -1433,7 +1471,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
             cats.sort((x, y) => (Number(x.slot) || 0) - (Number(y.slot) || 0));
             const items = [];
             servicesSnap.forEach(doc => { const item = { id: doc.id, ...doc.data() }; gamesData[doc.id] = item; items.push(item); });
-            const SPECIAL = { dailylike: 1, autolike: 1, tcp: 1, idsell: 1, tournament: 1 };
+            const SPECIAL = { dailylike: 1, autolike: 1, guildglory: 1, tcp: 1, idsell: 1, tournament: 1 };
             const card = item => `<div class="nx-card" onclick="${SPECIAL[item.type] ? (item.type === 'tournament' ? "location.href='tournament.html'" : "showSec('" + item.type + "')") : `openTopUpPage('${item.id}', '${item.name}', '${item.image}')`}"><div class="nx-img"><img loading="lazy" decoding="async" src="${item.image}" alt="" onerror="this.src='https://placehold.co/300x300/fff4e8/ff7a00?text=%3F'"></div><p>${item.name}</p></div>`;
             const title = t => { const w = String(t || '').trim().split(/\s+/); if (w.length < 2) return `<span class="o">${w[0] || ''}</span>`; const last = w.pop(); return w.join(' ') + ` <span class="o">${last}</span>`; };
             const sec = (name, list) => list.length ? `<div class="nx-sec"><div class="nx-sec-h"><i></i><h3>${title(name)}</h3><u></u></div><div class="nx-grid">${list.map(card).join('')}</div></div>` : '';
@@ -1727,7 +1765,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
 
     function showSec(secId) {
         if (secId === 'leaders' && generalSettings && generalSettings.leaderboardEnabled === false) secId = 'home';
-        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'tcp' || secId === 'api' || secId === 'idcode' || secId === 'ads') && !currentUser) {
+        if ((secId === 'history' || secId === 'account' || secId === 'addmoney' || secId === 'dailylike' || secId === 'autolike' || secId === 'guildglory' || secId === 'tcp' || secId === 'api' || secId === 'idcode' || secId === 'ads') && !currentUser) {
             showSec('auth');
             return;
         }
@@ -1740,6 +1778,7 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
         if(secId === 'history') loadHistory();
         if(secId === 'account') loadReferral();
         if(secId === 'dailylike') dlOpen();
+        if(secId === 'guildglory') { if (typeof ggOpen === 'function') ggOpen(); } else if (typeof ggStopPoll === 'function') ggStopPoll();
         if(secId === 'autolike') alOpen();
         if(secId === 'tcp') tcpOpen();
         if(secId === 'api') apiOpen();
@@ -2095,6 +2134,139 @@ async function dlSend() {
         clearTimeout(tm); dlBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-fire mr-1.5"></i>Send likes'; dlUpdateInfo();
     }
 }
+
+// ================= GUILD GLORY =================
+const GG_REGIONS = ['BD','IND','PK','SG','ID','TH','VN','TW','BR','SAC','NA','ME','RU','CIS'];
+let ggRegion = ''; try { ggRegion = (localStorage.getItem('ggRegion') || '').toUpperCase(); } catch (e) {}
+if (!GG_REGIONS.includes(ggRegion)) ggRegion = '';
+let ggCfg = { enabled: true, mode: 'free', freeBots: 4, options: [{ bots: 4, locked: false }], pricePerBot: 0, resellerPricePerBot: null, regions: GG_REGIONS, offMsg: '' };
+let ggBots = 0, ggBusy = false, ggReqId = null, ggReqKey = '', ggPollTimer = null, ggDocId = '', ggOrderBots = 0;
+function ggUnit() {
+    if (ggCfg.mode !== 'paid') return 0;
+    const reseller = userData && (userData.role === 'reseller' || userData.role === 'admin');
+    if (reseller) {
+        if (ggCfg.resellerPricePerBot !== null && ggCfg.resellerPricePerBot !== undefined) return ggCfg.resellerPricePerBot;
+        if (generalSettings && generalSettings.resellerDiscount) return Math.round(ggCfg.pricePerBot * (1 - generalSettings.resellerDiscount / 100));
+    }
+    return ggCfg.pricePerBot;
+}
+function ggTotal() { return ggUnit() * (ggBots || 0); }
+async function ggLoadCfg() {
+    try { const r = await fetch(BACKEND_URL + '/guildGloryInfo'); const j = await r.json(); if (r.ok && j && j.options) ggCfg = Object.assign(ggCfg, j); } catch (e) {}
+    const open = ggCfg.options.filter(o => !o.locked).map(o => o.bots);
+    if (!open.includes(ggBots)) ggBots = open.length ? open[0] : 0;
+    ggRender();
+}
+function ggRender() {
+    setTxt(document.getElementById('gg-balance'), Number(userBalance || 0).toFixed(2).replace(/\.00$/, ''));
+    setTxt(document.getElementById('gg-price'), ggCfg.mode === 'paid' ? ('BDT ' + ggTotal()) : 'FREE');
+    const box = document.getElementById('gg-options');
+    if (box) box.innerHTML = ggCfg.options.map(o => o.locked
+        ? `<span class="ffs-chip" style="opacity:.45;cursor:not-allowed" onclick="ggLockedMsg()"><i class="fas fa-lock mr-1"></i>${o.bots}</span>`
+        : `<span class="ffs-chip ${ggBots === o.bots ? 'on' : ''}" onclick="ggPickBots(${o.bots})">${ggBots === o.bots ? '✓ ' : ''}${o.bots} Bots</span>`).join('');
+    const note = document.getElementById('gg-opt-note');
+    if (note) note.textContent = ggCfg.mode === 'paid' ? `BDT ${ggUnit()} per bot • total BDT ${ggTotal()}` : `Free mode: up to ${ggCfg.freeBots} bots per order. Bigger packs are paid-only.`;
+    const sv = document.getElementById('gg-servers');
+    if (sv) sv.innerHTML = GG_REGIONS.map(s => `<span class="ffs-chip ${ggRegion === s ? 'on' : ''}" onclick="ggPickRegion('${s}')">${ggRegion === s ? '✓ ' : ''}${s}</span>`).join('');
+}
+function ggLockedMsg() { Swal.fire('Locked', `Free mode allows only ${ggCfg.freeBots} bots right now.`, 'info'); }
+function ggPickBots(n) { ggBots = n; ggRender(); }
+function ggPickRegion(v) { ggRegion = v; try { localStorage.setItem('ggRegion', v); } catch (e) {} ggRender(); const b = document.getElementById('gg-servers'); if (b) b.classList.remove('ffs-bad'); }
+function ggShow(html) { const box = document.getElementById('gg-result'); box.innerHTML = html; }
+function ggRow(k, v) { return `<div class="dl-row"><span>${k}</span><span>${v}</span></div>`; }
+const GG_STAGES = [['queued', 'Queued'], ['checking', 'Checking guild'], ['generating', 'Preparing bots'], ['joining', 'Sending invites'], ['confirming', 'Confirming'], ['running', 'Bots running']];
+function ggRenderLoading(job) {
+    const idx = Math.max(0, GG_STAGES.findIndex(x => x[0] === (job && job.stage)));
+    const steps = GG_STAGES.map((s, i) => `<div class="flex items-center gap-2 py-1 text-[12px] ${i < idx ? 'text-emerald-600' : (i === idx ? 'text-brand-700 font-extrabold' : 'text-slate-400')}"><i class="fas ${i < idx ? 'fa-circle-check' : (i === idx ? 'fa-spinner fa-spin' : 'fa-circle')} w-4"></i>${s[1]}</div>`).join('');
+    const msg = job && job.message ? `<p class="zp-sub mt-2 text-center">${esc(job.message)}</p>` : '';
+    ggShow(`<div class="dl-card dl-load"><div class="dl-spin"></div><b class="text-brand-700 text-sm">Setting up your bots…</b><div class="mt-3 text-left inline-block">${steps}</div>${msg}<p class="zp-sub mt-2">Please keep this page open. This can take a few minutes.</p></div>`);
+}
+function ggRenderDone(job, meta) {
+    const n = v => (v === null || v === undefined || v === '') ? 'N/A' : Number(v).toLocaleString('en-US');
+    const g = job.guild || {}, gl = job.glory || {}, bots = job.bots || [];
+    const botRows = bots.slice(0, 40).map(b => `<div class="flex justify-between text-[11px] py-1 border-b border-slate-100"><span class="font-bold text-slate-700">${esc(b.name)}</span><span class="text-slate-400">${esc(b.uid)}</span></div>`).join('');
+    ggShow(`<div class="dl-card dl-ok">
+        <div class="text-center mb-3"><div class="text-4xl mb-1">✅</div><h3 class="font-extrabold text-emerald-700 text-base">Bots are in your guild!</h3><p class="zp-sub">Glory farming is running${job.expires_at ? ' until ' + new Date(job.expires_at * 1000).toLocaleString() : ''}.</p></div>
+        <div class="flex gap-2 mb-3">
+            <div class="dl-stat"><small>Before</small><b class="text-slate-700">${n(gl.before)}</b></div>
+            <div class="dl-stat" style="border-color:#ffc891;background:#fff4e8"><small>Gained</small><b class="text-emerald-600">+${n(gl.gained == null ? 0 : gl.gained)}</b></div>
+            <div class="dl-stat"><small>Now</small><b class="text-brand-600">${n(gl.now)}</b></div>
+        </div>
+        <div class="bg-white/80 rounded-2xl px-3 py-1">
+            ${ggRow('🛡️ Guild', esc(g.name || 'N/A'))}${ggRow('🆔 Guild UID', esc(g.guild_id || ''))}${ggRow('⭐ Level', esc(g.level == null ? 'N/A' : g.level))}
+            ${ggRow('🌍 Server', esc(job.region || ''))}${ggRow('🤖 Bots joined', esc(job.joined) + ' / ' + esc(job.bots_requested))}
+            ${meta && meta.price ? ggRow('💰 Cost', 'BDT ' + esc(Math.max(0, (meta.price || 0) - (meta.refunded || 0)))) : ggRow('💰 Cost', 'FREE')}
+            ${meta && meta.refunded ? ggRow('🔄 Refunded', 'BDT ' + esc(meta.refunded)) : ''}
+        </div>
+        ${botRows ? `<div class="mt-3 bg-white/80 rounded-2xl px-3 py-2"><div class="text-[11px] font-extrabold text-slate-600 mb-1">Bot accounts (${bots.length})</div>${botRows}</div>` : ''}
+        <button onclick="ggReset()" class="zp-btn w-full text-xs mt-3 py-3">Send bots to another guild</button>
+    </div>`);
+}
+function ggRenderFail(msg, refunded) {
+    ggShow(`<div class="dl-card dl-bad"><div class="text-center mb-2"><div class="text-4xl mb-1">❌</div><h3 class="font-extrabold text-rose-700 text-base">Couldn’t add bots</h3></div>
+        <div class="bg-white/80 rounded-2xl px-3 py-2 text-[12px] font-bold text-slate-700 text-center">⚠️ ${esc(msg || 'Try again')}</div>
+        <p class="text-center text-[12px] font-bold text-rose-600 mt-3">${refunded ? '💰 BDT ' + esc(refunded) + ' was refunded to your balance.' : '💰 You haven’t been charged.'}</p>
+        <button onclick="ggReset()" class="zp-btn w-full text-xs mt-3 py-3">Try again</button></div>`);
+}
+function ggReset() { ggStopPoll(); ggDocId = ''; try { localStorage.removeItem('ggDoc'); } catch (e) {} ggShow(''); const f = document.getElementById('gg-form'); if (f) f.style.display = ''; }
+function ggStopPoll() { if (ggPollTimer) { clearTimeout(ggPollTimer); ggPollTimer = null; } }
+async function ggPoll() {
+    ggStopPoll(); if (!ggDocId || !currentUser) return;
+    let delay = 4000;
+    try {
+        const token = await currentUser.getIdToken();
+        const r = await fetch(BACKEND_URL + '/guildGloryStatus', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ docId: ggDocId }) });
+        const j = await r.json();
+        if (r.ok && j.found && j.job) {
+            const job = j.job, f = document.getElementById('gg-form'); if (f) f.style.display = 'none';
+            if (job.status === 'failed') { ggRenderFail(job.error || job.message, j.refunded); try { localStorage.removeItem('ggDoc'); } catch (e) {} ggDocId = ''; return; }
+            if (job.status === 'running' || job.status === 'finished') { ggRenderDone(job, j); delay = 15000; if (job.status === 'finished') { try { localStorage.removeItem('ggDoc'); } catch (e) {} return; } }
+            else ggRenderLoading(job);
+        } else if (r.ok && !j.found) { ggReset(); return; }
+    } catch (e) {}
+    const sec = document.getElementById('guildglory-sec');
+    if (sec && !sec.classList.contains('hidden')) ggPollTimer = setTimeout(ggPoll, delay);
+}
+function ggOpen() {
+    ggRender(); ggLoadCfg();
+    if (!ggDocId) { try { ggDocId = localStorage.getItem('ggDoc') || ''; } catch (e) {} }
+    if (ggDocId) ggPoll();
+}
+setInterval(() => { const s = document.getElementById('guildglory-sec'); if (!document.hidden && s && !s.classList.contains('hidden') && !ggBusy) setTxt(document.getElementById('gg-balance'), Number(userBalance || 0).toFixed(2).replace(/\.00$/, '')); }, 1500);
+
+async function ggSend() {
+    if (ggBusy) return;
+    if (!currentUser) { showSec('auth'); return; }
+    if (!ggCfg.enabled) { Swal.fire('Service paused', ggCfg.offMsg || '🛡️ Guild Glory is paused for a moment. Please try again later.', 'info'); return; }
+    if (!ggBots) { Swal.fire('Select bots', 'Please select how many bots you want', 'warning'); return; }
+    const gid = document.getElementById('gg-gid').value.trim();
+    if (!/^\d{4,15}$/.test(gid)) { Swal.fire('Heads up', 'Please enter a valid Guild ID (numbers only)', 'warning'); return; }
+    if (!ggRegion) { const b = document.getElementById('gg-servers'); b.classList.add('ffs-bad', 'ffs-shake'); setTimeout(() => b.classList.remove('ffs-shake'), 600); Swal.fire('Select a region', 'First, please select your guild region (e.g. BD, IND)', 'warning'); return; }
+    const total = ggTotal();
+    if (total > 0 && !(await checkBalance(total))) return;
+    ggBusy = true; const btn = document.getElementById('gg-btn'); btn.disabled = true; btn.style.opacity = '.6'; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>Checking guild...';
+    try {
+        const token = await currentUser.getIdToken(), H = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+        const cr = await fetch(BACKEND_URL + '/guildGloryCheck', { method: 'POST', headers: H, body: JSON.stringify({ guildId: gid, region: ggRegion }) });
+        const cj = await cr.json().catch(() => ({}));
+        if (!cr.ok) { Swal.fire('Guild not found', cj.error || 'Please check the Guild ID and region', 'error'); return; }
+        const g = cj.guild || {};
+        const c = await Swal.fire({ title: 'Confirm', icon: 'question', showCancelButton: true, confirmButtonText: 'Send bots', cancelButtonText: 'Cancel',
+            html: `Guild: <b>${esc(g.name || '')}</b><br>UID: <b>${esc(gid)}</b> (${esc(ggRegion)})${g.level ? '<br>Level: <b>' + esc(g.level) + '</b>' : ''}<br>Bots: <b>${ggBots}</b><br>Price: <b>${total > 0 ? 'BDT ' + total : 'FREE'}</b>` });
+        if (!c.isConfirmed) return;
+        const key = gid + '|' + ggRegion + '|' + ggBots;
+        if (!ggReqId || ggReqKey !== key) { ggReqId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^A-Za-z0-9]/g, '').slice(0, 32); ggReqKey = key; }
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>Sending...';
+        const res = await fetch(BACKEND_URL + '/guildGlory', { method: 'POST', headers: H, body: JSON.stringify({ guildId: gid, region: ggRegion, bots: ggBots, reqId: ggReqId }) });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok) { if (res.status !== 409) ggReqId = null; Swal.fire('Couldn’t start', j.error || ('Server error ' + res.status), 'error'); return; }
+        ggReqId = null; ggDocId = j.docId; try { localStorage.setItem('ggDoc', ggDocId); } catch (e) {}
+        document.getElementById('gg-form').style.display = 'none'; ggRenderLoading({ stage: 'queued' }); ggPoll();
+    } catch (e) {
+        Swal.fire('Connection problem', 'Couldn’t reach the server. If money was deducted it will be refunded automatically; please check again in a minute.', 'warning');
+    } finally { ggBusy = false; btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1.5"></i>Send bots'; ggRender(); }
+}
+window.addEventListener('load', ggLoadCfg);
 </script>
 <script>
 // ================= PUSH NOTIFICATIONS (phone notifications even when the site is closed) =================
