@@ -1058,6 +1058,12 @@ header.sticky,nav.fixed>div{background:#fff!important;border-color:var(--line)!i
                 </div>
             </div>
 
+            <div class="vip-card p-4 mb-4" id="bridge-card">
+                <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-brands fa-telegram text-sky-500 mr-1.5"></i>Telegram Bot wallet</div>
+                <button type="button" onclick="bridgeOpen()" class="w-full py-3 rounded-2xl text-white text-sm font-bold shadow-md active:scale-95 transition" style="background:linear-gradient(135deg,#229ED9,#1c7fb0)"><i class="fa-solid fa-paper-plane mr-2"></i>Send to Telegram Bot</button>
+                <p class="zp-sub mt-2">Move money from your website wallet to your Telegram bot balance using your Telegram User ID.</p>
+            </div>
+
             <div class="vip-card p-4 mb-4">
                 <div class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-ticket text-brand-600 mr-1.5"></i>Promo code</div>
                 <div class="flex gap-2"><input id="profile-promo" placeholder="Enter code" class="zp-input text-sm py-2.5 uppercase" style="letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()"><button onclick="redeemPromo()" class="px-4 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-800 text-white text-xs font-bold">Redeem</button></div>
@@ -2724,6 +2730,33 @@ function adsRender() {
     });
     if (d.warn) h += '<p class="zp-sub" style="text-align:center;margin:12px 8px">Please complete every step properly. Skipping through too quickly can get your account banned.</p>';
     box.innerHTML = h;
+}
+
+// ================= SEND TO TELEGRAM BOT (website balance -> bot balance) =================
+async function bridgeOpen() {
+    if (!currentUser) return showSec('auth');
+    const bal = Math.floor(Number((userData && userData.balance) || 0));
+    if (bal < 1) return Swal.fire({ icon: 'info', title: 'No balance', text: 'You have no money in your wallet to send.', customClass: { popup: 'mhx-pop' }, confirmButtonText: 'OK' });
+    const r = await Swal.fire({
+        title: 'Send to Telegram Bot', customClass: { popup: 'mhx-pop' }, showCancelButton: true, confirmButtonText: 'Send', focusConfirm: false, showLoaderOnConfirm: true, allowOutsideClick: () => !Swal.isLoading(),
+        html: '<div style="font-size:13px;font-weight:700;color:#6b7280;margin-bottom:6px">Wallet balance: BDT ' + bal + '</div>' +
+            '<input id="br-tg" class="swal2-input" type="tel" inputmode="numeric" maxlength="15" placeholder="Your Telegram User ID">' +
+            '<input id="br-amt" class="swal2-input" type="number" inputmode="numeric" min="1" max="' + bal + '" placeholder="Amount">' +
+            '<button type="button" class="ads-go" style="margin-top:10px" onclick="document.getElementById(\'br-amt\').value=' + bal + '">Send all (BDT ' + bal + ')</button>' +
+            '<div style="margin-top:10px;font-size:11px;color:#6b7280">Find your User ID in the bot’s welcome message. You must have started the bot at least once.</div>',
+        preConfirm: async () => {
+            const tg = document.getElementById('br-tg').value.replace(/\D/g, ''), amt = Math.floor(Number(document.getElementById('br-amt').value));
+            if (tg.length < 5) return Swal.showValidationMessage('Enter your Telegram User ID (numbers only)');
+            if (!amt || amt < 1) return Swal.showValidationMessage('Enter an amount');
+            if (amt > bal) return Swal.showValidationMessage('You only have BDT ' + bal);
+            try { return await api('/api/sendToBot', { tgId: tg, amount: amt }, { noRetry: true, timeout: 45000 }); }
+            catch (e) { Swal.showValidationMessage(e.message); return false; }
+        }
+    });
+    if (!r.isConfirmed || !r.value) return;
+    const v = r.value, done = v.status === 'completed';
+    Swal.fire({ icon: done ? 'success' : 'info', title: done ? 'Sent!' : 'On its way', customClass: { popup: 'mhx-pop' }, confirmButtonText: 'OK',
+        html: '<div style="font-weight:700;color:#6b7280">BDT ' + v.amount + (v.name ? ' → ' + esc(v.name) : '') + '</div><div style="margin-top:8px;font-size:13px;color:#6b7280">' + esc(v.message || '') + '</div>' });
 }
 
 // ================= WITHDRAW (balance -> bKash / Nagad) =================
